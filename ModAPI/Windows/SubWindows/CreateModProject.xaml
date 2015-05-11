@@ -1,0 +1,79 @@
+﻿<!--  
+    ModAPI
+    Copyright (C) 2015 FluffyFish / Philipp Mohrenstecher
+  
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    To contact me you can e-mail me at info@fluffyfish.de    
+    -->
+    
+<SubWindows:BaseSubWindow x:Class="ModAPI.Windows.SubWindows.CreateModProject"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:SubWindows="clr-namespace:ModAPI.Windows.SubWindows"
+        xmlns:Utils="clr-namespace:ModAPI.Utils" 
+        Style="{StaticResource SubWindow}"
+        Title="CreateModProject" Height="300" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300" MaxWidth="{Binding ElementName=Window,Path=ActualWidth}" />
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Utils:Language.Key="Labels.ID" Grid.Row="1" Grid.Column="0" Margin="0, 0, 10, 10" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
+            <TextBox x:Name="ID" Grid.Row="1" Grid.Column="1" Margin="0, 0, 0, 5" HorizontalAlignment="Stretch" KeyDown="TextChanged" KeyUp="TextChanged" TextChanged="TextChanged" TextInput="TextChanged" />
+            <Grid x:Name="ErrorID" Grid.Row="2" Grid.Column="1" Margin="0,0,0,5" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Source="/resources/textures/Icons/Icon_Decline.png" Width="20" Grid.Column="0" />
+                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Errors.ID" />
+            </Grid>
+            <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Source="/resources/textures/Icons/Icon_Information.png" Width="20" Grid.Column="0" />
+                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Text" />
+            </Grid>
+            <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right">
+                <Button x:Name="CancelButton" Margin="0, 0, 10, 0" Style="{StaticResource NormalButton}" Click="Cancel">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="0, 0, 5, 0" Source="/resources/textures/Icons/Icon_Decline.png" />
+                        <TextBlock Utils:Language.Key="Buttons.Cancel" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ConfirmButton" Margin="0" Style="{StaticResource NormalButton}" Click="Add">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="0, 0, 5, 0" Source="/resources/textures/Icons/Icon_Add.png" />
+                        <TextBlock Utils:Language.Key="Buttons.Add" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</SubWindows:BaseSubWindow>

@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Classes>
+<!--  
+  <Class Name="PlayerInventory" Namespace="">
+    <Field Name="HasSpear" Type="System.Boolean" />
+    <Field Name="HasAxe" Type="System.Boolean" />
+    <Field Name="HasFireStick" Type="System.Boolean" />
+    <Field Name="HasAxeRusty" Type="System.Boolean" />
+    <Field Name="HasAxeCrafted" Type="System.Boolean" />
+    <Field Name="HasFlareGun" Type="System.Boolean" />
+    <Field Name="HasBow" Type="System.Boolean" />
+    <Field Name="HasLizardBody" Type="System.Boolean" />
+    <Field Name="HasRabbitBody" Type="System.Boolean" />
+    <Field Name="HasTorch" Type="System.Boolean" />
+    <Field Name="Sticks" Type="System.Int32" />
+    <Field Name="Rocks" Type="System.Int32" />
+    <Field Name="Ropes" Type="System.Int32" />
+    <Field Name="Leaves" Type="System.Int32" />
+    <Field Name="Teeth" Type="System.Int32" />
+    <Field Name="Feathers" Type="System.Int32" />
+    <Field Name="Seeds" Type="System.Int32" />
+    <Field Name="Coins" Type="System.Int32" />
+    <Field Name="Notes" Type="System.Int32" />
+    <Field Name="CBoards" Type="System.Int32" />
+    <Field Name="Cloth" Type="System.Int32" />
+    <Field Name="Fish" Type="System.Int32" />
+    <Field Name="Thistle" Type="System.Int32" />
+    <Field Name="AloeVera" Type="System.Int32" />
+    <Field Name="MariGold" Type="System.Int32" />
+    <Field Name="Coneflower" Type="System.Int32" />
+    <Field Name="Batteries" Type="System.Int32" />
+    <Field Name="Booze" Type="System.Int32" />
+    <Field Name="Meds" Type="System.Int32" />
+    <Field Name="Heads" Type="System.Int32" />
+    <Field Name="Arms" Type="System.Int32" />
+    <Field Name="Legs" Type="System.Int32" />
+    <Field Name="Cassettes" Type="System.Int32" />
+    <Field Name="ChocolateBars" Type="System.Int32" />
+    <Field Name="Flares" Type="System.Int32" />
+    <Field Name="Molotovs" Type="System.Int32" />
+    <Field Name="BombTimed" Type="System.Int32" />
+    <Field Name="ThrowFlares" Type="System.Int32" />
+    <Field Name="Sodas" Type="System.Int32" />
+    <Field Name="LizardSkins" Type="System.Int32" />
+    <Field Name="Arrows" Type="System.Int32" />
+    <Field Name="ShownAxeCraft" Type="System.Boolean" />
+    <Field Name="ShownMolotovCraft" Type="System.Boolean" />
+    <Field Name="MissionShow" Type="System.Boolean" />
+    <Field Name="Lizards" Type="System.Int32" />
+    <Field Name="Rabbits" Type="System.Int32" />
+    <Field Name="MedsCrafted" Type="System.Int32" />
+    <Field Name="HasWalkman" Type="System.Boolean" />
+    <Field Name="HasPedometer" Type="System.Boolean" />
+  </Class>
+
+  <Class Name="PlayerItems" Namespace="">
+    <Field Name="Flares" Type="System.Int32" />
+    <Field Name="HasArm" Type="System.Boolean" />
+    <Field Name="HasFish" Type="System.Boolean" />
+    <Field Name="HasHead" Type="System.Boolean" />
+    <Field Name="HasLeg" Type="System.Boolean" />
+    <Field Name="HasLizardBody" Type="System.Boolean" />
+    <Field Name="HasLog" Type="System.Boolean" />
+    <Field Name="HasRabbit" Type="System.Boolean" />
+    <Field Name="HasRabbitBody" Type="System.Boolean" />
+    <Field Name="HasRock" Type="System.Boolean" />
+    <Field Name="HasStick" Type="System.Boolean" />
+    <Field Name="Logs" Type="System.Int32" />
+    <Field Name="RabbitIsAlive" Type="System.Boolean" />
+    <Field Name="StickUpgrade" Type="System.Boolean" />
+  </Class>
+    
+  <Class Name="InventoryItemView" Namespace="Items.Inventory" Base="UnityEngine.ComponentXMLProvider">
+  </Class>
+  
+  <Class Name="Item" Namespace="Items">
+    <Field Name="_id" Type="System.Int32" />
+  </Class>
+  
+  <Class Name="InventoryItem" Namespace="Items.Inventory">
+    <Field Name="_itemId" Type="System.Int32" />
+    <Field Name="_amount" Type="System.Int32" />
+    <Field Name="_maxAmount" Type="System.Int32" />
+  </Class>
+      
+  <Class Name="PlayerInventory" Namespace="Items.Inventory" Base="UnityEngine.ComponentXMLProvider">
+    <Class Name="SerializableItemUpgradeCounter">
+      <Field Name="_upgradeItemId" Type="System.Int32" />
+      <Field Name="_amount" Type="System.Int32" />
+    </Class>
+    <Class Name="SerializableItemUpgradeCounters">
+      <Field Name="_itemId" Type="System.Int32" />
+      <Field Name="_counters" Type="Items.Inventory.PlayerInventory+SerializableItemUpgradeCounter[]" />
+    </Class>
+    
+    <Field Name="_possessedItems" Type="System.Collections.Generic.List`1[Items.Inventory.InventoryItem]" />
+    <Field Name="_equipmentSlots" Type="Items.Inventory.InventoryItemView[]" />
+    <Field Name="_upgradeCounters" Type="Items.Inventory.PlayerInventory+SerializableItemUpgradeCounters[]" />
+  </Class>
+  
+
+  <Class Name="PlayerStats" Namespace="">
+    <Field Name="ArmorVis" Type="System.Int32" />
+    <Field Name="Armor" Type="System.Int32" />
+    <Field Name="BatteryCharge" Type="System.Single" />
+    <Field Name="Energy" Type="System.Single" />
+    <Field Name="Fullness" Type="System.Single" />
+    <Field Name="Health" Type="System.Single" />
+    <Field Name="Stamina" Type="System.Single" />
+  </Class>
+
+  <Class Name="Craft_Structure" Namespace="">
+    <Field Name="Arm" Type="System.Int32" />
+    <Field Name="ArmNeeded" Type="System.Int32" />
+    <Field Name="Head" Type="System.Int32" />
+    <Field Name="HeadNeeded" Type="System.Int32" />
+    <Field Name="InitNeededLeaves" Type="System.Int32" />
+    <Field Name="InitNeededRocks" Type="System.Int32" />
+    <Field Name="InitNeededStick" Type="System.Int32" />
+    <Field Name="InitNeededWood" Type="System.Int32" />
+    <Field Name="Leaves" Type="System.Int32" />
+    <Field Name="LeavesAdded" Type="System.Int32" />
+    <Field Name="LeavesNeeded" Type="System.Int32" />
+    <Field Name="Leg" Type="System.Int32" />
+    <Field Name="LegNeeded" Type="System.Int32" />
+    <Field Name="Rock" Type="System.Int32" />
+    <Field Name="RockAdded" Type="System.Int32" />
+    <Field Name="RockNeeded" Type="System.Int32" />
+    <Field Name="Rope" Type="System.Int32" />
+    <Field Name="RopeAdded" Type="System.Int32" />
+    <Field Name="RopeNeeded" Type="System.Int32" />
+    <Field Name="Stick" Type="System.Int32" />
+    <Field Name="StickAdded" Type="System.Int32" />
+    <Field Name="StickNeeded" Type="System.Int32" />
+    <Field Name="Wood" Type="System.Int32" />
+    <Field Name="WoodAdded" Type="System.Int32" />
+    <Field Name="WoodNeeded" Type="System.Int32" />
+  </Class>
+
+  <Class Name="Clock" Namespace="">
+    <Field Name="Day" Type="System.Int32" />
+  </Class>
+
+  <Class Name="ItemHolder" Namespace="">
+    <Field Name="Items" Type="System.Int32" />
+  </Class>
+
+  <Class Name="LogHolder" Namespace="">
+    <Field Name="Logs" Type="System.Int32" />
+  </Class>
+
+  <Class Name="TheForestAtmosphere" Namespace="">
+    <Field Name="TimeOfDay" Type="System.Single" />
+  </Class>
+
+  <Class Name="Buoyancy" Namespace="">
+    <Field Name="useGUILayout" Type="System.Boolean" />
+    <Field Name="density" Type="System.Single" />
+    <Field Name="slicesPerAxis" Type="System.Int32" />
+    <Field Name="voxelsLimit" Type="System.Int32" />
+    <Field Name="voxelHalfHeight" Type="System.Single" />
+    <Field Name="localArchimedesForce" Type="UnityEngine.Vector3" />
+    <Field Name="Voxels" Type="UnityEngine.Vector3[]" />
+  </Class>-->
+</Classes>

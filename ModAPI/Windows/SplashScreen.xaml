@@ -1,0 +1,51 @@
+﻿<!--  
+    ModAPI
+    Copyright (C) 2015 FluffyFish / Philipp Mohrenstecher
+  
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    To contact me you can e-mail me at info@fluffyfish.de    
+    -->
+    
+<Window x:Class="ModAPI.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="The Forest ModAPI" Height="180" Width="620" WindowStyle="None" Style="{StaticResource SplashScreen}" Loaded="WindowLoaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Cursor="Hand" Activated="WindowActivated" Deactivated="WindowDeactivated" SizeToContent="WidthAndHeight">
+    <Grid Cursor="Hand">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image x:Name="BackgroundImage"
+               HorizontalAlignment="Left" 
+               Width="{Binding RelativeSource={RelativeSource self}, Path=Source.PixelWidth}" 
+               Height="{Binding RelativeSource={RelativeSource self}, Path=Source.PixelHeight}" 
+               VerticalAlignment="Top" 
+               Source="/resources/textures/savegameEditorLogo.png" 
+               Cursor="Hand" 
+               Stretch="Fill" 
+               Opacity="0.4"/>
+        <Image x:Name="ForegroundImage"
+               HorizontalAlignment="Left" 
+               Width="{Binding RelativeSource={RelativeSource self}, Path=Source.PixelWidth}" 
+               Height="{Binding RelativeSource={RelativeSource self}, Path=Source.PixelHeight}" 
+               VerticalAlignment="Top" 
+               Source="/resources/textures/savegameEditorLogo.png" 
+               Cursor="Hand" 
+               Stretch="Fill">
+            <Image.Clip>
+                <RectangleGeometry Rect="0,0,0,180" x:Name="LoadingRect"></RectangleGeometry>
+            </Image.Clip>
+        </Image>
+    </Grid>
+</Window>

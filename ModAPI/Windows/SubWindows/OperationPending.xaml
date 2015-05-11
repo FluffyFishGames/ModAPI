@@ -1,0 +1,62 @@
+﻿<!--  
+    ModAPI
+    Copyright (C) 2015 FluffyFish / Philipp Mohrenstecher
+  
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    To contact me you can e-mail me at info@fluffyfish.de    
+    -->
+    
+<SubWindows:BaseSubWindow x:Class="ModAPI.Windows.SubWindows.OperationPending"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:SubWindows="clr-namespace:ModAPI.Windows.SubWindows"
+        xmlns:Utils="clr-namespace:ModAPI.Utils" 
+        x:Name="Window"
+        Style="{StaticResource SubWindow}"
+        Height="166.304" Width="350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300" MaxWidth="{Binding ElementName=Window,Path=ActualWidth}" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <Grid Margin="0, 0, 0, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" x:Name="CurrentTask" />
+                <ProgressBar x:Name="ProgressBar" Height="25" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Value="55" Grid.Row="1" BorderBrush="#FF7C7C7C" BorderThickness="0" />
+            </Grid>
+        </StackPanel>
+        <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Margin="0,0,5,0" IsEnabled="False" x:Name="CancelButton" Style="{StaticResource NormalButton}" Click="CancelButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Decline.png" />
+                    <TextBlock Utils:Language.Key="Buttons.Cancel" />
+                </StackPanel>
+            </Button>
+            <Button Opacity="0.5" IsEnabled="False" x:Name="ConfirmButton" Margin="0" Style="{StaticResource NormalButton}" Click="ConfirmButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Accept.png" />
+                    <TextBlock Utils:Language.Key="Buttons.Continue" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</SubWindows:BaseSubWindow>

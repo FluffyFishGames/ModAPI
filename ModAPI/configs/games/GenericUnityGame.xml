@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<game id="GenericUnityGame" selectable="false">
+  <name>Generic Unity3D Game</name>
+  <selectFile>*.exe</selectFile>
+  <assemblyPath>%fileBase%_data/Managed/</assemblyPath>
+  <includeAssembly>%fileBase%_data/Managed/Assembly-CSharp-firstpass.dll</includeAssembly>
+  <includeAssembly>%fileBase%_data/Managed/Assembly-CSharp.dll</includeAssembly>
+  <includeAssembly>%fileBase%_data/Managed/Assembly-UnityScript-firstpass.dll</includeAssembly>
+  <includeAssembly>%fileBase%_data/Managed/Assembly-UnityScript.dll</includeAssembly>
+  <copyAssembly>%fileBase%_data/Managed/Boo.Lang.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/Mono.Security.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/UnityScript.Lang.dll</copyAssembly>
+</game>

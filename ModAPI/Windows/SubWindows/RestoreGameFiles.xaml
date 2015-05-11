@@ -1,0 +1,89 @@
+﻿<!--  
+    ModAPI
+    Copyright (C) 2015 FluffyFish / Philipp Mohrenstecher
+  
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    To contact me you can e-mail me at info@fluffyfish.de    
+    -->
+    
+<SubWindows:BaseSubWindow x:Class="ModAPI.Windows.SubWindows.RestoreGameFiles"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:SubWindows="clr-namespace:ModAPI.Windows.SubWindows"
+        xmlns:Utils="clr-namespace:ModAPI.Utils" 
+        x:Name="Window"
+        Style="{StaticResource SubWindow}"
+        Height="300" Width="400"
+                          MaxWidth="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300" MaxWidth="{Binding ElementName=Window,Path=ActualWidth}" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <StackPanel Orientation="Vertical">
+                <TextBlock TextWrapping="Wrap" Utils:Language.Key="NoVersionUpdate" x:Name="NoVersionUpdateText" />
+                <TextBlock TextWrapping="Wrap" Utils:Language.Key="VersionNotFound" x:Name="VersionNotFoundText" />
+                <TextBlock Margin="0,5,0,0" TextWrapping="Wrap" Utils:Language.Key="NoSteamText" x:Name="NoSteamText" />
+                <TextBlock Margin="0,5,0,0" TextWrapping="Wrap" Utils:Language.Key="SteamText" x:Name="SteamText" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Right">
+            <Button x:Name="ActivateVersionUpdate" Margin="0,0,0,10" Style="{StaticResource NormalButton}" Click="ActivateVersionUpdate_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_AutoUpdate.png" />
+                    <TextBlock Utils:Language.Key="Buttons.ActivateVersionUpdate" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="ActivateSteam" Margin="0,0,0,10" Style="{StaticResource NormalButton}" Click="ActivateSteam_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Steam.png" />
+                    <TextBlock Utils:Language.Key="Buttons.ActivateSteam" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="Restore" Margin="0,0,0,10" Style="{StaticResource NormalButton}" Click="Restore_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Download.png" />
+                    <TextBlock Utils:Language.Key="Buttons.Restore" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="Recheck" Margin="0,0,0,10" Style="{StaticResource NormalButton}" Click="Recheck_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Refresh.png" />
+                    <TextBlock Utils:Language.Key="Buttons.Recheck" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="Close" Margin="0,0,0,10" Style="{StaticResource NormalButton}" Click="Close_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Decline.png" />
+                    <TextBlock Utils:Language.Key="Buttons.Close" />
+                </StackPanel>
+            </Button>
+            <!--
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateVersionUpdate">Versionstabellenupdate aktivieren</s:String>
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateSteam">Steamverbindung aktivieren</s:String>
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Restore">Dateien wiederherstellen</s:String>
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Recheck">Erneut prüfen</s:String>
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Close">Schließen</s:String>
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Yes">Ja</s:String>
+                <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">Nein</s:String>
+
+                -->
+        </StackPanel>
+    </Grid>
+</SubWindows:BaseSubWindow>

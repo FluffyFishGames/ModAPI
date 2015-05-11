@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <!-- 
+  Do not change anything in this file.
+  If you change any value in here the ModAPI may not work anymore.
+  I do not give support for modified configurations.
+  -->
+  <Game>TheForest</Game>
+  <UseSteam>false</UseSteam>
+  <Paths>
+    <Languages>resources/langs/</Languages>
+    <Configurations>configs/</Configurations>
+    <GameConfigurations>configs/games/</GameConfigurations>
+    <Libraries>libs/</Libraries>
+    <ModLib>modlib/</ModLib>
+    <Mods>mods/</Mods>
+    <OriginalGameFiles>gamefiles/original/</OriginalGameFiles>
+    <ModdedGameFiles>gamefiles/modded/</ModdedGameFiles>
+    <SavegameBackups>gamefiles/savegames/</SavegameBackups>
+    <Binaries>bin/</Binaries>
+    <Logs>logs/</Logs>
+    <Projects>projects/</Projects>
+  </Paths>
+</Configuration>

@@ -1,0 +1,640 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BFF2C7AE-0E6D-4A69-9359-B69061506877}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ModAPI</RootNamespace>
+    <AssemblyName>ModAPI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <SupportUrl>http://www.modapi.de</SupportUrl>
+    <ProductName>ModAPI</ProductName>
+    <PublisherName>FluffyFish</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ModAPI.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ModAPI.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>DF7FC375FC37E447115427A96DC769781A2C2E9E</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ModAPI_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\libs\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\libs\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\libs\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\libs\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\libs\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Components\Inputs\CheckBox.cs" />
+    <Compile Include="Components\Inputs\Input.cs" />
+    <Compile Include="Components\Inputs\MultilingualTextField.cs" />
+    <Compile Include="Components\Inputs\Slider.cs" />
+    <Compile Include="Components\Inputs\TextField.cs" />
+    <Compile Include="Components\Inputs\TimeDisplay.cs" />
+    <Compile Include="Components\ModProjectButton.xaml.cs">
+      <DependentUpon>ModProjectButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ComboBoxWidthFromItems.cs" />
+    <Compile Include="Components\IGUIComponent.cs" />
+    <Compile Include="Components\Panels\IPanel.cs" />
+    <Compile Include="Components\TabControlEx.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Components\GUIHelper.cs" />
+    <Compile Include="Components\IconTabItem.cs" />
+    <Compile Include="Configurations\GUIConfiguration.cs" />
+    <Compile Include="Data\Models\BaseData.cs" />
+    <Compile Include="Data\Models\BaseXMLProvider.cs" />
+    <Compile Include="Data\Models\ClassDefinition.cs" />
+    <Compile Include="Data\Models\FieldDefinition.cs" />
+    <Compile Include="Data\Models\DataField.cs" />
+    <Compile Include="Data\Models\ISaveableData.cs" />
+    <Compile Include="Data\Models\IXMLProvider.cs" />
+    <Compile Include="Data\Models\ModProject.cs" />
+    <Compile Include="Data\Models\UnityEngine.cs" />
+    <Compile Include="Data\ViewModels\BaseDataViewModel.cs" />
+    <Compile Include="Data\ViewModels\ModButtonViewModel.cs" />
+    <Compile Include="Data\ViewModels\ModProjectButtonViewModel.cs" />
+    <Compile Include="Data\ViewModels\ModProjectsViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\ViewModels\ModProjectViewModel.cs" />
+    <Compile Include="Data\ViewModels\ModsViewModel.cs" />
+    <Compile Include="Data\ViewModels\ModVersionViewModel.cs" />
+    <Compile Include="Data\ViewModels\ModViewModel.cs" />
+    <Compile Include="Data\ViewModels\SettingsViewModel.cs" />
+    <Compile Include="DynamicTypes.cs" />
+    <Compile Include="LanguageList.cs" />
+    <Compile Include="Components\PopupPanel.cs" />
+    <Compile Include="Preloader.cs" />
+    <Compile Include="Components\Scale9.cs" />
+    <Compile Include="Utils\DragAdorner.cs" />
+    <Compile Include="Utils\Language.cs" />
+    <Compile Include="Utils\WebService.cs" />
+    <Compile Include="Utils\XMLHelper.cs" />
+    <Compile Include="Windows\SplashScreen.xaml.cs">
+      <DependentUpon>SplashScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\TabControlContentStretchBehaviour.cs" />
+    <Compile Include="Windows\SubWindows\BaseSubWindow.cs" />
+    <Compile Include="Windows\SubWindows\CreateModProject.xaml.cs">
+      <DependentUpon>CreateModProject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\FirstSetup.xaml.cs">
+      <DependentUpon>FirstSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\OperationPending.xaml.cs">
+      <DependentUpon>OperationPending.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\RemoveModProject.xaml.cs">
+      <DependentUpon>RemoveModProject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\RemoveSelected.xaml.cs">
+      <DependentUpon>RemoveSelected.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\RestoreGameFiles.xaml.cs">
+      <DependentUpon>RestoreGameFiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\SpecifyGamePath.xaml.cs">
+      <DependentUpon>SpecifyGamePath.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\SpecifySteamPath.xaml.cs">
+      <DependentUpon>SpecifySteamPath.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\UpdateAvailable.xaml.cs">
+      <DependentUpon>UpdateAvailable.xaml</DependentUpon>
+    </Compile>
+    <Resource Include="resources\textures\Icons\FluffyFish.png" />
+    <Resource Include="resources\textures\Icons\noAvatar.png" />
+    <Resource Include="resources\textures\Icons\Icon_Login.png" />
+    <Resource Include="resources\textures\Icons\Icon_Logout.png" />
+    <Resource Include="resources\textures\Icons\Loader.png" />
+    <Page Include="Windows\SubWindows\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\UpdateAvailable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="resources\textures\Icons\Icon_Error.png" />
+    <Resource Include="resources\textures\Icons\Lang_VI.png" />
+    <Resource Include="resources\textures\Icons\Lang_ZH.png" />
+    <Resource Include="resources\textures\Icons\Lang_AR.png" />
+    <Resource Include="resources\textures\Icons\Lang_BN.png" />
+    <Resource Include="resources\textures\Icons\Lang_DE.png" />
+    <Resource Include="resources\textures\Icons\Lang_EN.png" />
+    <Resource Include="resources\textures\Icons\Lang_ES.png" />
+    <Resource Include="resources\textures\Icons\Lang_FR.png" />
+    <Resource Include="resources\textures\Icons\Lang_HI.png" />
+    <Resource Include="resources\textures\Icons\Lang_IT.png" />
+    <Resource Include="resources\textures\Icons\Lang_JA.png" />
+    <Resource Include="resources\textures\Icons\Lang_KO.png" />
+    <Resource Include="resources\textures\Icons\Lang_PT.png" />
+    <Resource Include="resources\textures\Icons\Lang_RU.png" />
+    <Resource Include="resources\textures\Icons\Lang_TR.png" />
+    <Resource Include="resources\textures\Icons\Icon_Information.png" />
+    <Resource Include="resources\textures\Icons\Icon_Warning.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Language.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Language_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Controller.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Controller_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTop_Informations.png" />
+    <Resource Include="resources\textures\Icons\IconTop_Informations_Selected.png" />
+    <Page Include="Components\ModProjectButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\CreateModProject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\OperationPending.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\RemoveModProject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\SpecifySteamPath.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="resources\textures\Icons\Icon_Download.png" />
+    <Resource Include="resources\textures\Icons\Icon_AutoUpdate.png" />
+    <Resource Include="resources\textures\Icons\Icon_Refresh.png" />
+    <Resource Include="resources\textures\Icons\Icon_Steam.png" />
+    <Resource Include="resources\textures\Icons\Icon_Browse.png" />
+    <Page Include="Windows\SubWindows\FirstSetup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\RestoreGameFiles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\SpecifyGamePath.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="resources\textures\Icons\DarkClose.png" />
+    <Resource Include="resources\textures\Icons\DarkClose_Hover.png" />
+    <Page Include="Windows\SubWindows\RemoveSelected.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Resource Include="resources\textures\Icons\Icon_Add.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBox_Arrow.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Debug.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Debug_Selected.png" />
+    <Page Include="Dictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Content Include="configs\games\TheForest\Versions.xml" />
+    <Content Include="configs\UserConfiguration.xml" />
+    <Content Include="configs\games\GenericUnityGame.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\games\TheForest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\games\TheForest\GUI.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="favicon.ico" />
+    <Content Include="Ionic.Zip.License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ModAPI.License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Mono.Cecil.License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Configuration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\games\TheForest\DynamicClasses.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Resource Include="resources\textures\NewGUI\FadeBackground.png" />
+    <Content Include="resources\langs\Language.DE.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.EN.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Page Include="Windows\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Windows\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Windows\SplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Resource Include="resources\fonts\BebasNeue.otf" />
+    <Resource Include="resources\fonts\BlissfulThinking.otf" />
+    <Resource Include="resources\fonts\Aller_Bd.ttf" />
+    <None Include="app.manifest" />
+    <None Include="ModAPI.config" />
+    <None Include="ModAPI.pfx" />
+    <None Include="ModAPI_TemporaryKey.pfx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\fonts\kenyan coffee bd.ttf" />
+    <Resource Include="resources\fonts\kenyan coffee rg.ttf" />
+    <Resource Include="resources\fonts\accid___.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Bold Italic.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Bold.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Display Bold Italic.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Display Bold.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Display Italic.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Display Light Italic.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Display Light.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Display Regular.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Italic.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Light Italic.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Light.ttf" />
+    <Resource Include="resources\fonts\Aero Matics Regular.ttf" />
+    <Resource Include="resources\fonts\blue highway bd.ttf" />
+    <Resource Include="resources\fonts\blue highway cd.ttf" />
+    <Resource Include="resources\fonts\blue highway d.ttf" />
+    <Resource Include="resources\fonts\blue highway linocut.ttf" />
+    <Resource Include="resources\fonts\blue highway rg.ttf" />
+    <Resource Include="resources\fonts\gnuolane rg.ttf" />
+    <Resource Include="resources\fonts\Mockup-Bold.otf" />
+    <Resource Include="resources\fonts\Mockup-BoldItalic.otf" />
+    <Resource Include="resources\fonts\Mockup-Italic.otf" />
+    <Resource Include="resources\fonts\Mockup-Regular.otf" />
+    <Resource Include="resources\fonts\YanoneKaffeesatz-Bold.ttf" />
+    <Resource Include="resources\fonts\YanoneKaffeesatz-Light.ttf" />
+    <Resource Include="resources\fonts\YanoneKaffeesatz-Regular.ttf" />
+    <Resource Include="resources\fonts\YanoneKaffeesatz-Thin.ttf" />
+    <Resource Include="resources\fonts\expressway rg.ttf" />
+    <Resource Include="resources\fonts\EleganTech-.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\NewGUI\ArrowDown.png" />
+    <Resource Include="resources\textures\NewGUI\ArrowRight.png" />
+    <Resource Include="resources\textures\NewGUI\Button_Active.png" />
+    <Resource Include="resources\textures\NewGUI\Button_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\Button_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxExpandableItem_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxExpandableItem_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxExpandableItem_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxExpandableLastItem_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxExpandableLastItem_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxExpandableLastItem_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxItem_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxItem_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxItem_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxLastItem_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxLastItem_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxLastItem_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBoxShadow.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBox_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBox_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBox_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ComboBox_Selected.png" />
+    <Resource Include="resources\textures\NewGUI\Counter.png" />
+    <Resource Include="resources\textures\NewGUI\DarkArrowDown.png" />
+    <Resource Include="resources\textures\NewGUI\DarkArrowRight.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Background.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Knob_Active.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Knob_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Knob_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Left_Active.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Left_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Left_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Right_Active.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Right_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\HorizontalScrollbar_Right_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\InnerArea.png" />
+    <Resource Include="resources\textures\NewGUI\Line.png" />
+    <Resource Include="resources\textures\NewGUI\ListItemOn_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ListItemOn_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ListItemOn_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ListItem_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ListItem_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ListItem_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ListVerticalScrollbar_Background.png" />
+    <Resource Include="resources\textures\NewGUI\ListVerticalScrollbar_Knob_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ListVerticalScrollbar_Knob_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ListVerticalScrollbar_Knob_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\Loader.png" />
+    <Resource Include="resources\textures\NewGUI\popupBox.png" />
+    <Resource Include="resources\textures\NewGUI\ProgressBar_Background.png" />
+    <Resource Include="resources\textures\NewGUI\ProgressBar_Fill.png" />
+    <Resource Include="resources\textures\NewGUI\TabBox.png" />
+    <Resource Include="resources\textures\NewGUI\Tab_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\Tab_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\Tab_Selected.png" />
+    <Resource Include="resources\textures\NewGUI\TextButton_Active.png" />
+    <Resource Include="resources\textures\NewGUI\TextButton_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\TextButton_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\TextFieldButton_Active.png" />
+    <Resource Include="resources\textures\NewGUI\TextFieldButton_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\TextFieldButton_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\TextField_Active.png" />
+    <Resource Include="resources\textures\NewGUI\TextField_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\TextField_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\ToggleOn_Active.png" />
+    <Resource Include="resources\textures\NewGUI\ToggleOn_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\ToggleOn_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\Toggle_Active.png" />
+    <Resource Include="resources\textures\NewGUI\Toggle_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\Toggle_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\TopFading.png" />
+    <Resource Include="resources\textures\NewGUI\TopTab_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\TopTab_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\TopTab_Selected.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Background.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Down_Active.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Down_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Down_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Knob_Active.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Knob_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Knob_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Up_Active.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Up_Hover.png" />
+    <Resource Include="resources\textures\NewGUI\VerticalScrollbar_Up_Normal.png" />
+    <Resource Include="resources\textures\NewGUI\WarningBox.png" />
+    <Resource Include="resources\textures\NewGUI\WhitePixel.png" />
+    <Resource Include="resources\textures\NewGUI\Window.png" />
+    <Resource Include="resources\textures\savegameEditorLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\Icons\IconTab_Blueprints.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Blueprints_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Buildings.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Buildings_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Inventory.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Inventory_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Player.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Player_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Settings.png" />
+    <Resource Include="resources\textures\Icons\IconTab_Settings_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTop_CreateMod.png" />
+    <Resource Include="resources\textures\Icons\IconTop_CreateModLib.png" />
+    <Resource Include="resources\textures\Icons\IconTop_CreateModLib_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTop_CreateModProject.png" />
+    <Resource Include="resources\textures\Icons\IconTop_CreateModProject_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTop_CreateMod_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTop_Mods.png" />
+    <Resource Include="resources\textures\Icons\IconTop_Mods_Selected.png" />
+    <Resource Include="resources\textures\Icons\IconTop_Savegame.png" />
+    <Resource Include="resources\textures\Icons\IconTop_Savegame_Selected.png" />
+    <Resource Include="resources\textures\Icons\Icon_Accept.png" />
+    <Resource Include="resources\textures\Icons\Icon_Continue.png" />
+    <Resource Include="resources\textures\Icons\Icon_Decline.png" />
+    <Resource Include="resources\textures\Icons\Icon_Delete.png" />
+    <Resource Include="resources\textures\Icons\Icon_Load.png" />
+    <Resource Include="resources\textures\Icons\Icon_Save.png" />
+    <Resource Include="resources\textures\Icons\Icon_SaveAs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ModAPI_Shared\ModAPI_Shared.csproj">
+      <Project>{535db403-350d-4543-b391-6747ec64bc4c}</Project>
+      <Name>ModAPI_Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\Icons\Close.png" />
+    <Resource Include="resources\textures\Icons\Close_Hover.png" />
+    <Resource Include="resources\textures\Icons\Maximize.png" />
+    <Resource Include="resources\textures\Icons\Maximize_Hover.png" />
+    <Resource Include="resources\textures\Icons\Minimize.png" />
+    <Resource Include="resources\textures\Icons\Minimize_Hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\Icons\Normalize.png" />
+    <Resource Include="resources\textures\Icons\Normalize_Hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\NewGUI\StatusBar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\Icons\SocialIcons.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\NewGUI\sunMeter.png" />
+    <Resource Include="resources\textures\NewGUI\sunThumb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\textures\Buildings\ArmEffigy.png" />
+    <Resource Include="resources\textures\Buildings\BasicFire.png" />
+    <Resource Include="resources\textures\Buildings\BasicWall.png" />
+    <Resource Include="resources\textures\Buildings\DeadFallTrap.png" />
+    <Resource Include="resources\textures\Buildings\FirePit.png" />
+    <Resource Include="resources\textures\Buildings\HappyBirthdayTrap.png" />
+    <Resource Include="resources\textures\Buildings\HouseBoat.png" />
+    <Resource Include="resources\textures\Buildings\HuntingShelter.png" />
+    <Resource Include="resources\textures\Buildings\LargeEffigy.png" />
+    <Resource Include="resources\textures\Buildings\LogCabin.png" />
+    <Resource Include="resources\textures\Buildings\LogHolder.png" />
+    <Resource Include="resources\textures\Buildings\NooseTrap.png" />
+    <Resource Include="resources\textures\Buildings\Platform.png" />
+    <Resource Include="resources\textures\Buildings\RabbitCage.png" />
+    <Resource Include="resources\textures\Buildings\SimpleEffigy.png" />
+    <Resource Include="resources\textures\Buildings\SmallEffigy.png" />
+    <Resource Include="resources\textures\Buildings\SmallGarden.png" />
+    <Resource Include="resources\textures\Buildings\SmallRaft.png" />
+    <Resource Include="resources\textures\Buildings\Stairs.png" />
+    <Resource Include="resources\textures\Buildings\StandingFire.png" />
+    <Resource Include="resources\textures\Buildings\StickHolder.png" />
+    <Resource Include="resources\textures\Buildings\StickMarker.png" />
+    <Resource Include="resources\textures\Buildings\TemporaryShelter.png" />
+    <Resource Include="resources\textures\Buildings\WallDefensive.png" />
+    <Resource Include="resources\textures\Buildings\WallDoorway.png" />
+    <Resource Include="resources\textures\Buildings\WallWindow.png" />
+    <Resource Include="resources\textures\Buildings\WoodBench.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\langs\Language.DE.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.EN.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.1 %28x86 und x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Themes\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
