@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("BaseModLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SOULDRiNKER")]
+[assembly: AssemblyCompany("FluffyFish")]
 [assembly: AssemblyProduct("ModLib")]
 [assembly: AssemblyCopyright("Copyright © 2014")]
 [assembly: AssemblyTrademark("")]

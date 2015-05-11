@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ModAPI Updater")]
 [assembly: AssemblyDescription("Updater for the ModAPI")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Souldrinker")]
+[assembly: AssemblyCompany("FluffyFish")]
 [assembly: AssemblyProduct("ModAPI Updater")]
 [assembly: AssemblyCopyright("Copyright ©2014")]
 [assembly: AssemblyTrademark("")]

@@ -49,19 +49,40 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="I18N">
+      <HintPath>..\libs\I18N.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.CJK">
+      <HintPath>..\libs\I18N.CJK.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.MidEast">
+      <HintPath>..\libs\I18N.MidEast.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.Other">
+      <HintPath>..\libs\I18N.Other.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.Rare">
+      <HintPath>..\libs\I18N.Rare.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.West">
+      <HintPath>..\libs\I18N.West.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\libs\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml">
+      <HintPath>..\libs\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>..\libs\System.Xml.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\SaveGameEditor\lib\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\SaveGameEditor\lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +109,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseSystem.cs" />
     <Compile Include="Resources.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GUI.assetbundle">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
