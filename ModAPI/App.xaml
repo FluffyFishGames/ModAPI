@@ -25,7 +25,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ModAPI;component/src/Dictionary.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ModAPI;component/Dictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
