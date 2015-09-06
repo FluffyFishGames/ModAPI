@@ -24,10 +24,12 @@
   <copyAssembly>%fileBase%_data/Managed/ES2Standalone.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/KGFUtils.Settings.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Data.Tds.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/Mono.Nat.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Posix.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Security.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.WebBrowser.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/MoodkieSecurity.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/MouseLibWin.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/NAudio.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/NAudio.WindowsMediaFormat.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/NSpeex.dll</copyAssembly>
@@ -37,6 +39,7 @@
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.JsonFx.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.Poly2Tri.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/PlayMaker.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/ProMouseDll.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/SteamworksManaged.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Configuration.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Data.dll</copyAssembly>
@@ -52,7 +55,6 @@
   <copyAssembly>%fileBase%_data/Managed/UnityEngine.UI.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/udpkit.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/udpkit.common.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/XInputDotNetPure.dll</copyAssembly>
   <noFamily>OVRCamera</noFamily>
   <noFamily>OVRCameraController</noFamily>
   <noFamily>ObservedList*</noFamily>

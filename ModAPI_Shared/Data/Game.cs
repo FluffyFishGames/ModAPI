@@ -360,12 +360,42 @@ namespace ModAPI.Data
                 Dictionary<string, Dictionary<string, TypeDefinition>> assemblyTypes = new Dictionary<string, Dictionary<string, TypeDefinition>>();
 
                 Dictionary<string, ModuleDefinition> Assemblies = new Dictionary<string,ModuleDefinition>();
+
+                Utils.CustomAssemblyResolver assemblyResolver = new Utils.CustomAssemblyResolver();
+                assemblyResolver.AddPath(ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar);
+
+                List<string> SearchFolders = new List<string>();
+                for (int i = 0; i < GameConfiguration.IncludeAssemblies.Count; i++)
+                {
+                    string assemblyPath = ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.IncludeAssemblies[i]);
+                    string folder = System.IO.Path.GetDirectoryName(assemblyPath);
+                    if (!SearchFolders.Contains(folder))
+                    {
+                        Debug.Log("ModLib: " + GameConfiguration.ID, "Added folder \"" + folder + "\" to assembly resolver.");
+                        SearchFolders.Add(folder);
+                    }
+                }
+                for (int i = 0; i < GameConfiguration.CopyAssemblies.Count; i++)
+                {
+                    string assemblyPath = ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.CopyAssemblies[i]);
+                    string folder = System.IO.Path.GetDirectoryName(assemblyPath);
+                    if (!SearchFolders.Contains(folder))
+                    {
+                        Debug.Log("ModLib: " + GameConfiguration.ID, "Added folder \"" + folder + "\" to assembly resolver.");
+                        SearchFolders.Add(folder);
+                    }
+                }
+                for (int i = 0; i < SearchFolders.Count; i++)
+                    assemblyResolver.AddPath(SearchFolders[i]);
+                
                 foreach (string p in GameConfiguration.IncludeAssemblies) 
                 {
                     string path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                     string key = System.IO.Path.GetFileNameWithoutExtension(path);
-                    
-                    ModuleDefinition module = ModuleDefinition.ReadModule(path);
+
+                    ModuleDefinition module = ModuleDefinition.ReadModule(path, new ReaderParameters() { 
+                        AssemblyResolver = assemblyResolver
+                    });
                     module.AssemblyReferences.Add(new AssemblyNameReference("BaseModLib", new System.Version("1.0.0.0")));
                     assemblyTypes.Add(key, new Dictionary<string, TypeDefinition>());
 

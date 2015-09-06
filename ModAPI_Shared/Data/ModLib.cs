@@ -177,75 +177,106 @@ namespace ModAPI.Data
             Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Successfully parsed BaseModLib.dll and copied in mod library.");
             
             SetProgress(progress, 5f, "ModifyingAssemblies");
+            Utils.CustomAssemblyResolver assemblyResolver = new Utils.CustomAssemblyResolver();
+            assemblyResolver.AddPath(ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar);
+            assemblyResolver.AddPath(libraryPath);
+
+            List<string> SearchFolders = new List<string>();
             for (int i = 0; i < Game.GameConfiguration.IncludeAssemblies.Count; i++)
             {
                 string assemblyPath = ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
-                if (System.IO.File.Exists(assemblyPath))
+                string folder = System.IO.Path.GetDirectoryName(assemblyPath);
+                if (!SearchFolders.Contains(folder))
                 {
-                    try
+                    Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Added folder \"" + folder + "\" to assembly resolver.");
+                    SearchFolders.Add(folder);
+                }
+            }
+            for (int i = 0; i < Game.GameConfiguration.CopyAssemblies.Count; i++)
+            {
+                string assemblyPath = ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.CopyAssemblies[i]);
+                string folder = System.IO.Path.GetDirectoryName(assemblyPath);
+                if (!SearchFolders.Contains(folder))
+                {
+                    Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Added folder \"" + folder + "\" to assembly resolver.");
+                    SearchFolders.Add(folder);
+                }
+            }
+            for (int i = 0; i < SearchFolders.Count; i++)
+                assemblyResolver.AddPath(SearchFolders[i]);
+
+                for (int i = 0; i < Game.GameConfiguration.IncludeAssemblies.Count; i++)
+                {
+                    string assemblyPath = ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
+                    if (System.IO.File.Exists(assemblyPath))
                     {
-                        ModuleDefinition module = ModuleDefinition.ReadModule(assemblyPath);
-                        foreach (TypeDefinition type in module.Types)
+                        try
                         {
-                            if (!CheckName(type.Namespace, Game.GameConfiguration.ExcludeNamespaces) && !CheckName(type.Name, Game.GameConfiguration.ExcludeTypes) && !CheckName(type.FullName, Game.GameConfiguration.NoFamily))
+                            ModuleDefinition module = ModuleDefinition.ReadModule(assemblyPath, new ReaderParameters()
                             {
-
-                                if (type.IsAbstract && type.IsSealed)
+                                AssemblyResolver = assemblyResolver
+                            });
+                            foreach (TypeDefinition type in module.Types)
+                            {
+                                if (!CheckName(type.Namespace, Game.GameConfiguration.ExcludeNamespaces) && !CheckName(type.Name, Game.GameConfiguration.ExcludeTypes) && !CheckName(type.FullName, Game.GameConfiguration.NoFamily))
                                 {
-                                    type.IsAbstract = false;
-                                    type.IsSealed = false;
-                                    type.IsBeforeFieldInit = true;
 
-                                    MethodDefinition constructor = new MethodDefinition(".ctor", MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.Public | MethodAttributes.HideBySig, type.Module.TypeSystem.Void);
-                                    type.Methods.Add(constructor);
-                                }
-
-                                foreach (MethodDefinition m in type.Methods)
-                                {
-                                    if (!m.IsConstructor)
+                                    if (type.IsAbstract && type.IsSealed)
                                     {
-                                        if (!m.IsGetter && !m.IsSetter && !m.IsStatic)
-                                        {
-                                            m.IsVirtual = true;
-                                        }
-                                        if (m.IsPrivate)
-                                        {
-                                            m.IsFamily = true;
-                                        }
-                                        Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Changed private method " + m.FullName + " to protectded");
+                                        type.IsAbstract = false;
+                                        type.IsSealed = false;
+                                        type.IsBeforeFieldInit = true;
+
+                                        MethodDefinition constructor = new MethodDefinition(".ctor", MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.Public | MethodAttributes.HideBySig, type.Module.TypeSystem.Void);
+                                        type.Methods.Add(constructor);
                                     }
-                                }
-                                foreach (FieldDefinition f in type.Fields)
-                                {
-                                    if (f.IsPrivate)
+
+                                    foreach (MethodDefinition m in type.Methods)
                                     {
-                                        f.IsFamily = true;
-                                        Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Changed private field " + f.FullName + " to protectded");
+                                        if (!m.IsConstructor)
+                                        {
+                                            if (!m.IsGetter && !m.IsSetter && !m.IsStatic)
+                                            {
+                                                m.IsVirtual = true;
+                                            }
+                                            if (m.IsPrivate)
+                                            {
+                                                m.IsFamily = true;
+                                            }
+                                            Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Changed private method " + m.FullName + " to protectded");
+                                        }
+                                    }
+                                    foreach (FieldDefinition f in type.Fields)
+                                    {
+                                        if (f.IsPrivate)
+                                        {
+                                            f.IsFamily = true;
+                                            Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Changed private field " + f.FullName + " to protectded");
+                                        }
                                     }
                                 }
                             }
+                            string savePath = System.IO.Path.GetFullPath(libraryPath + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]));
+                            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(savePath));
+                            module.Write(savePath);
+                            Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Saved modified \"" + module.Name + "\".");
                         }
-                        string savePath = System.IO.Path.GetFullPath(libraryPath + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]));
-                        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(savePath));
-                        module.Write(savePath);
-                        Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Saved modified \"" + module.Name + "\".");
+                        catch (Exception e)
+                        {
+                            Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "File couldnt be parsed: \"" + assemblyPath + "\". Exception: " + e.ToString(), Debug.Type.ERROR);
+                            SetProgress(progress, "Error.ModifyAssemblyException");
+                            return;
+                        }
+                        Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Successfully parsed file: \"" + assemblyPath + "\" and copied in mod library.");
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "File couldnt be parsed: \"" + assemblyPath + "\". Exception: "+e.ToString(), Debug.Type.ERROR);
-                        SetProgress(progress, "Error.ModifyAssemblyException");
+                        SetProgress(progress, "Error.ModifyAssemblyFileNotFound");
+                        Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "File not found: \"" + assemblyPath + "\".", Debug.Type.ERROR);
                         return;
                     }
-                    Debug.Log("ModLib: " + this.Game.GameConfiguration.ID, "Successfully parsed file: \""+assemblyPath+"\" and copied in mod library.");
+                    SetProgress(progress, 5f + ((float)i / (float)Game.GameConfiguration.IncludeAssemblies.Count) * 75f);
                 }
-                else
-                {
-                    SetProgress(progress, "Error.ModifyAssemblyFileNotFound");
-                    Debug.Log("ModLib: "+ this.Game.GameConfiguration.ID, "File not found: \""+assemblyPath+"\".", Debug.Type.ERROR);
-                    return;
-                }
-                SetProgress(progress, 5f + ((float)i / (float)Game.GameConfiguration.IncludeAssemblies.Count) * 75f);
-            }
 
             SetProgress(progress, 80f, "CopyingAssemblies");
 

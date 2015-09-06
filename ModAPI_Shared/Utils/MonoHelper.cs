@@ -139,7 +139,17 @@ namespace ModAPI.Utils
             Dictionary<MethodReference, MethodDefinition> InjectedMethods,
             Dictionary<TypeReference, TypeReference> TypesMap)
         {
-            
+			/*
+			 * Fix from magomerdino
+			 * http://www.modapi.de/index.php/User/314-magomerdino/
+			 * http://www.modapi.de/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
+			 * Posted on 08/23/2015
+			 */
+            foreach (ParameterDefinition param in method.Parameters)
+			{
+				param.ParameterType = Resolve(hostModule, param.ParameterType, AddedClasses, TypesMap);
+			}
+			/* End of fix */
             foreach (CustomAttribute attr in method.CustomAttributes)
             {
                 if (attr.Constructor.Module != hostModule)
