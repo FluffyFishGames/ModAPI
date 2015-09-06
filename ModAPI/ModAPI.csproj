@@ -215,11 +215,19 @@
     <Compile Include="Windows\SubWindows\UpdateAvailable.xaml.cs">
       <DependentUpon>UpdateAvailable.xaml</DependentUpon>
     </Compile>
+    <Content Include="resources\langs\Language.ES.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="resources\textures\Icons\FluffyFish.png" />
     <Resource Include="resources\textures\Icons\noAvatar.png" />
     <Resource Include="resources\textures\Icons\Icon_Login.png" />
     <Resource Include="resources\textures\Icons\Icon_Logout.png" />
     <Resource Include="resources\textures\Icons\Loader.png" />
+    <Content Include="resources\langs\Language.ES.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Page Include="Windows\SubWindows\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

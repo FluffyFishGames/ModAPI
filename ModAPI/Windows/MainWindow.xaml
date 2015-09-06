@@ -482,11 +482,19 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Image Height="30" RenderOptions.BitmapScalingMode="HighQuality" Margin="5,0,0,3" Source="/ModAPI;component/resources/textures/Icons/FluffyFish.png" />
-                        <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="12" Foreground="#333333" Margin="5, 8, 0, 0" HorizontalAlignment="Left" Text="{DynamicResource Lang.Window.Copyright}" />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="11" FontWeight="Bold" Foreground="#333333" Margin="5, 2, 0, 0" HorizontalAlignment="Left" Text="{DynamicResource Lang.Window.Copyright}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="15" VerticalAlignment="Top" FontWeight="Black" Foreground="#ff0000" Margin="5, -9, 0, 0"  HorizontalAlignment="Left" Text="♥" />
+                                <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="9" Foreground="#666666" Margin="3, -2, 0, 0"  HorizontalAlignment="Left" Text="Made with love in Engelskirchen, Germany" />
+                            </StackPanel>
+                        </StackPanel>
+<!--
                         <Button Style="{StaticResource FacebookButton}" Margin="10, 0, 0, 0" Width="32" Height="32" Click="ClickFacebook" />
                         <Button Style="{StaticResource TwitterButton}" Margin="5, 0, 0, 0" Width="32" Height="32" Click="ClickTwitter" />
                         <Button Style="{StaticResource YoutubeButton}" Margin="5, 0, 0, 0" Width="32" Height="32" Click="ClickYouTube" />
                         <Button Style="{StaticResource TwitchButton}" Margin="5, 0, 0, 0" Width="32" Height="32" Click="ClickTwitch" />
+                        -->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="12" Foreground="#333333" Margin="0, 8, 5, 0" HorizontalAlignment="Right" Text="{DynamicResource Lang.Window.Version}" />
