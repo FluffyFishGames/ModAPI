@@ -18,6 +18,10 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
+/**
+ * Contributing Authors:
+ * magomerdino | Added a fix to add parameters to resolved methods.
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,9 +33,19 @@ using Mono.Cecil.Cil;
 
 namespace ModAPI.Utils
 {
+    /// <summary>
+    /// Thie MonoHelper is providing methods to resolve method and type references
+    /// within a managed code library to make it easier modifying them.
+    /// </summary>
     public class MonoHelper
     {
 
+        /// <summary>
+        /// CopyField copies a field definition into a new copy which can be added
+        /// to another module.
+        /// </summary>
+        /// <param name="field">The FieldDefinition to copy</param>
+        /// <returns>A copy of the FieldDefinition</returns>
         public static FieldDefinition CopyField(FieldDefinition field)
         {
             FieldDefinition newField = new FieldDefinition(field.Name, field.Attributes, field.FieldType);
@@ -45,6 +59,12 @@ namespace ModAPI.Utils
             return newField;
         }
 
+        /// <summary>
+        /// CopyMethod copies a method definition into a new copy which can be added
+        /// to another module.
+        /// </summary>
+        /// <param name="method">The MethodDefinition to copy</param>
+        /// <returns>A copy of the MethodDefinition</returns>
         public static MethodDefinition CopyMethod(MethodDefinition method) 
         {
             MethodDefinition newMethod = new MethodDefinition(method.Name, method.Attributes, method.ReturnType);
@@ -102,6 +122,13 @@ namespace ModAPI.Utils
             return newMethod;
         }
 
+        /// <summary>
+        /// Remap changes the IL code and make all references provided link to the
+        /// method definitions provided.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="method">The method in which the references should be remapped.</param>
+        /// <param name="NewMethods">A dictionary which describes which method references should be remapped to which new method definitions.</param>
         public static void Remap(
             ModuleDefinition hostModule,
             MethodDefinition method,
@@ -121,6 +148,13 @@ namespace ModAPI.Utils
             }
         }
 
+        /// <summary>
+        /// This method resolves the field type of a field definition.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="field">The field definition to resolve.</param>
+        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
         public static void Resolve(
             ModuleDefinition hostModule,
             FieldDefinition field,
@@ -130,6 +164,16 @@ namespace ModAPI.Utils
             field.FieldType = Resolve(hostModule, field.FieldType, AddedClasses, TypesMap);
         }
 
+        /// <summary>
+        /// This method resolves all references within a method including the IL Code.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="method">The method to resolve.</param>
+        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="AddedFields">Newly added fields to lookup while resolving.</param>
+        /// <param name="AddedMethods">Newly added methods to lookup while resolving.</param>
+        /// <param name="InjectedMethods">Injected methods to lookup while resolving.</param>
+        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
         public static void Resolve(
             ModuleDefinition hostModule,
             MethodDefinition method,
@@ -139,17 +183,17 @@ namespace ModAPI.Utils
             Dictionary<MethodReference, MethodDefinition> InjectedMethods,
             Dictionary<TypeReference, TypeReference> TypesMap)
         {
-			/*
-			 * Fix from magomerdino
-			 * http://www.modapi.de/index.php/User/314-magomerdino/
-			 * http://www.modapi.de/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
-			 * Posted on 08/23/2015
-			 */
+            /*
+	         * Fix from magomerdino
+	         * http://www.modapi.de/index.php/User/314-magomerdino/
+	         * http://www.modapi.de/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
+	         * Posted on 08/23/2015
+	         */
             foreach (ParameterDefinition param in method.Parameters)
-			{
-				param.ParameterType = Resolve(hostModule, param.ParameterType, AddedClasses, TypesMap);
-			}
-			/* End of fix */
+            {
+                param.ParameterType = Resolve(hostModule, param.ParameterType, AddedClasses, TypesMap);
+            }
+            /* End of fix */
             foreach (CustomAttribute attr in method.CustomAttributes)
             {
                 if (attr.Constructor.Module != hostModule)
@@ -183,9 +227,6 @@ namespace ModAPI.Utils
                 }
                 foreach (Instruction instruction in method.Body.Instructions)
                 {
-                  /* if (instruction.Operand != null)
-                        System.Console.WriteLine(instruction.Operand.GetType().FullName);*/
-
                     if (instruction.Operand is GenericInstanceMethod)
                     {
                         GenericInstanceMethod genericInstance = (GenericInstanceMethod)instruction.Operand;
@@ -211,6 +252,15 @@ namespace ModAPI.Utils
             }
         }
 
+        /// <summary>
+        /// This method resolves a type. This method ignores the methods and fields. You have to
+        /// resolve them manually.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="type">The type to resolve.</param>
+        /// <param name="AddedClasses">Newly added classes to lookup while resolving.</param>
+        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <returns></returns>
         protected static TypeReference Resolve(
             ModuleDefinition hostModule,
             TypeReference type,
@@ -266,6 +316,15 @@ namespace ModAPI.Utils
                 
         }
 
+        /// <summary>
+        /// This method resolves a field reference.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="field">The field reference to resolve.</param>
+        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="AddedFields">Newly added fields to lookup while resolving.</param>
+        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <returns>The resolved FieldReference</returns>
         protected static FieldReference Resolve(
             ModuleDefinition hostModule,
             FieldReference field,
@@ -273,9 +332,6 @@ namespace ModAPI.Utils
             Dictionary<FieldReference, FieldDefinition> AddedFields,
             Dictionary<TypeReference, TypeReference> TypesMap)
         {
-            /*field.FieldType = Resolve(hostModule, field.FieldType, AddedClasses);
-            return field;
-            */
             foreach (FieldReference addedField in AddedFields.Keys)
             {
                 if (addedField.FullName == field.FullName || addedField == field)
@@ -307,6 +363,16 @@ namespace ModAPI.Utils
             }
         }
 
+        /// <summary>
+        /// Resolves a method reference. Because of the nature of method references
+        /// this method does not resolve the IL code.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="method">The method reference to resolve.</param>
+        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="AddedMethods">Newly added methods to lookup while resolving.</param>
+        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <returns>The resolved method reference.</returns>
         protected static MethodReference Resolve(
             ModuleDefinition hostModule,
             MethodReference method,
@@ -339,6 +405,15 @@ namespace ModAPI.Utils
             return newReference;
         }
 
+        /// <summary>
+        /// This method resolves a generic instance method.
+        /// </summary>
+        /// <param name="hostModule">The module in which the changes are made.</param>
+        /// <param name="method">The generic instance method to resolve.</param>
+        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="AddedMethods">Newly added methods to lookup while resolving.</param>
+        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <returns>The resolved generic instance method.</returns>
         protected static GenericInstanceMethod Resolve(
             ModuleDefinition hostModule,
             GenericInstanceMethod method,
@@ -350,14 +425,6 @@ namespace ModAPI.Utils
                 return (GenericInstanceMethod)((MethodReference)AddedMethods[method]); //hostModule.Import(
             MethodReference elementMethod = Resolve(hostModule, method.ElementMethod, AddedClasses, AddedMethods, TypesMap);
             GenericInstanceMethod newReference = new GenericInstanceMethod(elementMethod);
-  /*          if (method.Name == "Deserialize")
-            {
-                System.Console.WriteLine(method.Name);
-                System.Console.WriteLine(method.GenericArguments.Count);
-                System.Console.WriteLine(method.Parameters.Count);
-                foreach (ParameterDefinition parameter in method.Parameters)
-                    System.Console.WriteLine(parameter.GetType().FullName);
-            }*/
             foreach (TypeReference type in method.GenericArguments)
             {
                 TypeReference newType = Resolve(hostModule, type, AddedClasses, TypesMap);
@@ -369,22 +436,23 @@ namespace ModAPI.Utils
 
                 newReference.ReturnType = elementMethod.GenericParameters[g.Position];
             }
-/*            if (method.Name == "Deserialize")
-            {
-                System.Console.WriteLine(method);
-                System.Console.WriteLine(newReference);
-            }
-            foreach (ParameterDefinition parameter in method.Parameters)
-                newReference.Parameters.Add(new ParameterDefinition(parameter.Name, parameter.Attributes, Resolve(hostModule, parameter.ParameterType, AddedClasses, TypesMap)));
-            /*
-            if (method.Name == "Deserialize")
-            {
-                System.Console.WriteLine(method);
-                System.Console.WriteLine(newReference);
-            }*/
             return newReference;
         }
 
+        /// <summary>
+        /// This method parses custom attributes offered by the ModAPI to offer
+        /// certain abilities like launching a mod ingame or inmenu.
+        /// </summary>
+        /// <remarks>
+        /// This method adds new elements to the XDocument provided to it.
+        /// This is because you cant scan efficently for all methods with a certain
+        /// attribute. While in-game the ModAPI can use this information to determine
+        /// which methods to call when.
+        /// </remarks>
+        /// <param name="mod">The mod currently parsed.</param>
+        /// <param name="configuration">The configuration file where the attributes are saved for quicker lookup while in-game.</param>
+        /// <param name="method">The method to parse</param>
+        /// <param name="ConfigurationAttributes">A dictionary filled with the attributes to look for.</param>
         public static void ParseCustomAttributes(ModAPI.Data.Mod mod, XDocument configuration, MethodDefinition method, Dictionary<string, TypeDefinition> ConfigurationAttributes)
         {
             for (int k = 0; k < method.CustomAttributes.Count; k++)
