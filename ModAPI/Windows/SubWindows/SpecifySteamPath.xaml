@@ -35,7 +35,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <TextBlock TextWrapping="Wrap" Utils:Language.Key="Text" />
+            <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Utils:Language.Key="Text" />
             <Grid Margin="0, 5, 0, 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

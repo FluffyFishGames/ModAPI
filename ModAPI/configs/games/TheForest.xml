@@ -12,47 +12,31 @@
   <excludeType>Car*</excludeType>
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\The Forest</searchPath>
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\The Forest</searchPath>
-  <copyAssembly>%fileBase%_data/Managed/Accessibility.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/AmplifyColor.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/AmplifyMotion.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/bolt.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/bolt.user.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Boo.Lang.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/ES2.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/ES2Dispose.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/ES2IO.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/ES2Settings.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/ES2Standalone.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/KGFUtils.Settings.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Mono.Data.Tds.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Posix.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Security.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Mono.WebBrowser.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/MoodkieSecurity.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/MouseLibWin.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/NAudio.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/NAudio.WindowsMediaFormat.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/NSpeex.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/mscorlib.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.ClipperLib.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.Ionic.Zip.Reduced.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.JsonFx.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.Poly2Tri.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/PlayMaker.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/ProMouseDll.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Rewired_Core.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/SteamworksManaged.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Configuration.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Data.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Core.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Drawing.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.EnterpriseServices.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Security.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Transactions.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Windows.Forms.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Xml.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/UnityEngine.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/UnityEngine.Analytics.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/UnityEngine.Networking.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/UnityEngine.UI.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/UnityScript.Lang.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/udpkit.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/udpkit.common.dll</copyAssembly>
   <noFamily>OVRCamera</noFamily>

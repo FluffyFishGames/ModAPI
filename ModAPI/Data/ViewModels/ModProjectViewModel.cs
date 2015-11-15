@@ -132,7 +132,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
         newButton.Style = Application.Current.FindResource("NormalButton") as Style;
         newButton.DataContext = LangCode;
         newButton.Click += RemoveLanguage;
-        newButton.Margin = new Thickness(0, 0, 10, 0);
+        newButton.Margin = new Thickness(0, 0, 10, 4);
 
         StackPanel panel = new StackPanel();
         panel.Orientation = Orientation.Horizontal;
@@ -156,6 +156,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
         image2.Margin = new Thickness(5, 0, 0, 0);
         
         TextBlock label = new TextBlock();
+        label.FontSize = 16;
         label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + LangCode);
         panel.Children.Add(label);
         panel.Children.Add(image2);

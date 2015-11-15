@@ -320,6 +320,8 @@ namespace ModAPI
                 panel.Children.Add(image);
 
                 TextBlock label = new TextBlock();
+
+                label.FontSize = 16;
                 label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + LangCode);
                 panel.Children.Add(label);
 
@@ -524,6 +526,7 @@ namespace ModAPI
 
             text.VerticalAlignment = VerticalAlignment.Center;
             text.Text = language.Resource["LangName"] as String;
+            text.FontSize = 16;
 
             panel.Children.Add(text);
             LanguageSelector.Items.Add(c);

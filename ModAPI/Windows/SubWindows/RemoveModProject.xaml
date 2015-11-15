@@ -35,15 +35,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <TextBlock TextWrapping="Wrap" Utils:Language.Key="TextPre" />
-            <TextBlock x:Name="RemoveList" Margin="0, 5, 0, 0" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold" Text="" />
+            <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Utils:Language.Key="TextPre" />
+            <TextBlock Style="{StaticResource NormalLabel}" x:Name="RemoveList" Margin="0, 5, 0, 0" HorizontalAlignment="Stretch" TextWrapping="Wrap" FontWeight="Bold" Text="" />
             <Grid Margin="0,5,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Grid.Column="0" Source="/resources/textures/Icons/Icon_Warning.png" Margin="0,0,5,0" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" TextWrapping="Wrap" Utils:Language.Key="TextPost" VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource NormalLabel}" Grid.Column="1" TextWrapping="Wrap" Utils:Language.Key="TextPost" VerticalAlignment="Center" />
             </Grid>
         </StackPanel>
         <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">

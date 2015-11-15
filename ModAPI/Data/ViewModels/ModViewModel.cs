@@ -136,12 +136,14 @@ public class ModViewModel : INotifyPropertyChanged
                 
                 TextBlock label = new TextBlock();
                 label.SetBinding(TextBlock.TextProperty, "Version");
+                label.Style = (Style) Application.Current.FindResource("HeaderLabel");
                 
                 StackPanel panel2 = new StackPanel();
                 panel2.Orientation = Orientation.Horizontal;
                 TextBlock compatibleLabel = new TextBlock();
                 compatibleLabel.SetResourceReference(TextBlock.TextProperty, "Lang.Mods.Labels.Compatible");
                 compatibleLabel.FontSize = 14;
+                compatibleLabel.Style = (Style) Application.Current.FindResource("NormalLabel");
 
                 compatibleLabel.Margin = new Thickness(0, 0, 5, 0);
                 TextBlock label2 = new TextBlock();

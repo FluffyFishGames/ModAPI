@@ -42,9 +42,9 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Source="/resources/textures/Icons/Icon_Decline.png" Width="20" Grid.Column="0" />
-                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Errors.WrongLogin" />
+                <TextBlock Style="{StaticResource NormalLabel}" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Errors.WrongLogin" />
             </Grid>
-            <TextBlock Margin="0, 0, 0, 5" TextWrapping="Wrap" Utils:Language.Key="Text" />
+            <TextBlock Style="{StaticResource NormalLabel}" Margin="0, 0, 0, 5" TextWrapping="Wrap" Utils:Language.Key="Text" />
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -55,9 +55,9 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Utils:Language.Key="Labels.Username" VerticalAlignment="Center" />
+            <TextBlock Style="{StaticResource NormalLabel}" Grid.Row="0" Grid.Column="0" Utils:Language.Key="Labels.Username" VerticalAlignment="Center" />
             <TextBox x:Name="Username" Grid.Row="0" Grid.Column="1" Text="" VerticalAlignment="Center" />
-            <TextBlock Grid.Row="1" Grid.Column="0" Utils:Language.Key="Labels.Password" VerticalAlignment="Center" />
+            <TextBlock Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="0" Utils:Language.Key="Labels.Password" VerticalAlignment="Center" />
             <PasswordBox x:Name="Password" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" />
         </Grid>
         <StackPanel Margin="0, 10, 0, 0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">

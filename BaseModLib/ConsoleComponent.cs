@@ -126,7 +126,6 @@ namespace ModAPI
                     ModAPI.Console.Command c = ModAPI.Console.GetCommand(command);
                     List<string> possible = ModAPI.Console.GetPossibleValues(input);
                     int lastIndex = input.LastIndexOf(" ");
-                    Console.Write("AC: " + possible.Count, "CORE");
                     try {
                         if (possible.Count > 0)
                         {

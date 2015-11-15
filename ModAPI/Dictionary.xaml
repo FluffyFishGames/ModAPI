@@ -25,26 +25,66 @@
                     xmlns:Components="clr-namespace:ModAPI.Components"
                     xmlns:ComponentsInputs="clr-namespace:ModAPI.Components.Inputs">
 
-    <FontFamily x:Key="BigFont">/resources/Fonts/#Aero Matics</FontFamily>
-    <FontFamily x:Key="NormalFont">/resources/Fonts/#EleganTech™</FontFamily>
+    <FontFamily x:Key="BigFont">/resources/Fonts/#Sansation Bold</FontFamily>
+    <FontFamily x:Key="NormalFont">/resources/Fonts/#Sansation Regular™</FontFamily>
 
     <Style TargetType="{x:Type TreeViewItem}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="FontSize" Value="10" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style x:Key="NormalLabel" TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}"></Setter>
-        <Setter Property="FontSize" Value="10"></Setter>
-        <Setter Property="Foreground" Value="#333333"></Setter>
+        <Setter Property="FontSize" Value="13"></Setter>
+        <Setter Property="Foreground" Value="#ffffff"></Setter>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="WhiteLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
         <Setter Property="Foreground" Value="#ffffff"></Setter>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="HeaderLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
         <Setter Property="FontFamily" Value="{StaticResource BigFont}"></Setter>
-        <Setter Property="FontSize" Value="20"></Setter>
+        <Setter Property="FontSize" Value="16"></Setter>
+        <Setter Property="Effect">
+            <Setter.Value>
+            <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
 
@@ -54,8 +94,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
                     <Grid>
-                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Close.png" />
-                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Close_Hover.png" />
+                        <Image Width="16" Height="16" Source="/resources/textures/Icons/Close.png" />
+                        <Image x:Name="Hover" Width="16" Opacity="0" Source="/resources/textures/Icons/Close_Hover.png" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
@@ -146,8 +186,8 @@
                 <ControlTemplate TargetType="{x:Type ContentControl}">
                     <StackPanel SnapsToDevicePixels="True" Orientation="Horizontal">
                         <Image SnapsToDevicePixels="True" VerticalAlignment="Center" Width="24" Style="{StaticResource ImageStyle}" />
-                        <TextBlock SnapsToDevicePixels="True" Margin="5, 0, 0, 0" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=Label}" />
-                        <Image Width="24" Grid.Column="0" Margin="5,0,0,0" Source="/resources/textures/Icons/Icon_Warning.png" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=ShowWarning}" />
+                        <TextBlock Style="{StaticResource HeaderLabel}" SnapsToDevicePixels="True" Margin="5, 0, 0, 0" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=Label}" />
+                        <Image Width="16" Grid.Column="0" Margin="5,0,0,0" Source="/resources/textures/Icons/Icon_Warning.png" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=ShowWarning}" />
                     </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -174,25 +214,25 @@
                             <TabPanel SnapsToDevicePixels="True" x:Name="HeaderPanel"
                             
                             Panel.ZIndex="1"
-                            Margin="1,-2,0,0"
+                            Margin="0,0,0,0"
                             IsItemsHost="True"
                             KeyboardNavigation.TabIndex="1"
                             Background="Transparent" />
                         </Grid>
-                        <Components:Scale9 Grid.Row="1" Grid.Column="0" x:Name="Scale9Control"
-                                            NormalSource="/resources/textures/NewGUI/TabBox.png" 
+                        <!--<Components:Scale9 Grid.Row="1" Grid.Column="0" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/x.png" 
                                             Border="26, 26, 26, 26"
                                             Overflow="16, 16, 16, 16"
                                             InnerPadding="30, 30, 30, 30"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
-                            <Components:Scale9.InnerContent>
-                                <Grid x:Name="PART_ItemsHolder" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <Components:Scale9.InnerContent>-->
+                                <Grid Grid.Row="1" x:Name="PART_ItemsHolder" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                                 <!--<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <ContentPresenter SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="PART_SelectedContentHost" Margin="4" Content="{TemplateBinding SelectedContent}" />
                                 </Grid>-->
-                            </Components:Scale9.InnerContent>
-                        </Components:Scale9>
+<!--                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>-->
 
                     </Grid>
                 </ControlTemplate>
@@ -203,8 +243,8 @@
     <Style x:Key="PopupTab" TargetType="{x:Type Components:IconTabItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="20" />
-        <Setter Property="Height" Value="52" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Height" Value="40" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
@@ -219,10 +259,10 @@
                                         ActiveSource="/resources/textures/NewGUI/Tab_Hover.png" 
                                         SelectedNormalSource="/resources/textures/NewGUI/Tab_Selected.png"
                                         Selected="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}, Path=IsSelected}"
-                                        Border="16, 16, 16, 16"
+                                        Border="10, 10, 10, 0"
                                         Overflow="0, 0, 0, 0"
-                                        InnerPadding="16 16, 16, 16"
-                                        TextColor="Black"
+                                        InnerPadding="10, 6, 10, 6"
+                                        TextColor="#dddddd"
                                         BlendNormal="True"
                                         SnapsToDevicePixels="True"
                                         ContentOffset="0, 0">
@@ -240,24 +280,14 @@
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Selected">
                                     <Storyboard>
-                                        <DoubleAnimation Duration="0:0:0.1" From="20" To="23" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="FontSize" />
-                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
-                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
-                                        <ThicknessAnimation Duration="0:0:0.1"
-                                            Storyboard.TargetName="Scale9Control"
-                                            Storyboard.TargetProperty="InnerPadding"
-                                            From="16, 16, 16, 16" To="16, 4, 16, 4" />
+                                        <ColorAnimation Duration="0:0:0" From="#dddddd" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <ColorAnimation Duration="0:0:0" From="#dddddd" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Unselected">
                                     <Storyboard>
-                                        <DoubleAnimation Duration="0:0:0.1"  To="20" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="FontSize" />
-                                        <ColorAnimation Duration="0:0:0" To="White"  Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
-                                        <ColorAnimation Duration="0:0:0" To="White"  Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
-                                        <ThicknessAnimation  Duration="0:0:0.1"
-                                            Storyboard.TargetName="Scale9Control"
-                                            Storyboard.TargetProperty="InnerPadding"
-                                            To="16, 16, 16, 16" />
+                                        <ColorAnimation Duration="0:0:0" To="#dddddd"  Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <ColorAnimation Duration="0:0:0" To="#dddddd"  Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -288,7 +318,7 @@
     </Style>
 
     <Style TargetType="{x:Type CheckBox}">
-        <Setter Property="Height" Value="32" />
+        <Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -307,8 +337,8 @@
                                        Overflow="0, 0, 0, 0"
                                        TextColor="#222222"
                                        InnerPadding="0"
-                                       Width="32"
-                                       Height="32"
+                                       Width="24"
+                                       Height="24"
                                        ContentOffset="0, 0">
                         </Components:Scale9>
                         <ContentPresenter VerticalAlignment="Center" Margin="36, 0, 0, 0" />
@@ -345,8 +375,8 @@
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="AllowDrop" Value="true" />
-        <Setter Property="Foreground" Value="#333333" />
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="FontSize" Value="13" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -354,16 +384,25 @@
                     <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
                         <Components:Scale9 x:Name="Scale9Control"
                                        Height="30"
-                                       NormalSource="/resources/textures/NewGUI/TextField_Normal.png" 
-                                       HoverSource="/resources/textures/NewGUI/TextField_Hover.png" 
-                                       ActiveSource="/resources/textures/NewGUI/TextField_Active.png" 
+                                       NormalSource="/resources/textures/NewGUI/Toggle_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Toggle_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/Toggle_Active.png" 
                                        Border="8, 8, 8, 8"
                                        Overflow="0, 0, 0, 0"
-                                       TextColor="#222222"
+                                       TextColor="#ffffff"
                                        InnerPadding="8, 6, 8, 0"
                                        ContentOffset="0, 0">
                             <Components:Scale9.InnerContent>
-                                <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost" />
+                                <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost">
+                                    <ScrollViewer.Effect>
+                                        <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+                                    </ScrollViewer.Effect>
+                                </ScrollViewer>
                             </Components:Scale9.InnerContent>
                         </Components:Scale9>
                         <VisualStateManager.VisualStateGroups>
@@ -413,9 +452,9 @@
                     <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
                         <Components:Scale9 x:Name="Scale9Control"
                                        Height="30"
-                                       NormalSource="/resources/textures/NewGUI/TextField_Normal.png" 
-                                       HoverSource="/resources/textures/NewGUI/TextField_Hover.png" 
-                                       ActiveSource="/resources/textures/NewGUI/TextField_Active.png" 
+                                       NormalSource="/resources/textures/NewGUI/Toggle_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Toggle_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/Toggle_Active.png" 
                                        Border="8, 8, 8, 8"
                                        Overflow="0, 0, 0, 0"
                                        TextColor="#222222"
@@ -457,24 +496,25 @@
     </Style>
 
     <Style x:Key="ListItem" TargetType="{x:Type ListBoxItem}">
-        <Setter Property="Foreground" Value="#222222" />
+        <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
                     <Grid>
                         <Components:Scale9 x:Name="Scale9Control"
+                                       SnapsToDevicePixels="True"
                                        NormalSource="/resources/textures/NewGUI/ListItem_Normal.png" 
-                                       HoverSource="/resources/textures/NewGUI/ListItem_Hover.png" 
+                                       HoverSource="/resources/textures/NewGUI/ListItem_Normal.png" 
                                        ActiveSource="/resources/textures/NewGUI/ListItem_Active.png" 
                                        Selected="{TemplateBinding IsSelected}"
                                        SelectedNormalSource="/resources/textures/NewGUI/ListItemOn_Normal.png" 
-                                       SelectedHoverSource="/resources/textures/NewGUI/ListItemOn_Hover.png" 
+                                       SelectedHoverSource="/resources/textures/NewGUI/ListItemOn_Normal.png" 
                                        SelectedActiveSource="/resources/textures/NewGUI/ListItemOn_Active.png" 
-                                       Border="4, 4, 4, 4"
+                                       Border="5, 5, 5, 5"
                                        Overflow="0, 0, 0, 0"
-                                       TextColor="#222222"
+                                       TextColor="#ffffff"
                                        SelectedTextColor="White"
-                                       InnerPadding="16, 6, 16, 6"
+                                       InnerPadding="12, 6, 12, 6"
                                        ContentOffset="0, 0">
                             <Components:Scale9.InnerContent>
                                 <ContentPresenter VerticalAlignment="Center" x:Name="Content" />
@@ -488,16 +528,8 @@
                                     <VisualTransition GeneratedDuration="0:0:0" From="Selected" To="Unselected" />
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Selected">
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0:0:0" To="White" From="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
-                                        <ColorAnimation Duration="0:0:0" To="White" From="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
-                                    </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Unselected">
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
-                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
-                                    </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CommonStates">
@@ -661,7 +693,7 @@
         </Grid>
     </ControlTemplate>
     <Style TargetType="{x:Type ComboBoxItem}" x:Key="ComboBoxItem">
-        <Setter Property="Height" Value="38" />
+        <Setter Property="Height" Value="32" />
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Template">
             <Setter.Value>
@@ -672,11 +704,11 @@
                                        HoverSource="/resources/textures/NewGUI/ComboBoxItem_Hover.png" 
                                        ActiveSource="/resources/textures/NewGUI/ComboBoxItem_Active.png" 
                                        SelectedNormalSource="/resources/textures/NewGUI/ComboBoxItem_Active.png" 
-                                       Border="16, 10, 32, 16"
+                                       Border="2"
                                        Overflow="0, 0, 0, 0"
                                        TextColor="Black"
                                        SelectedTextColor="White"
-                                       InnerPadding="16, 6, 32, 6"
+                                       InnerPadding="10, 6, 32, 6"
                                        ContentOffset="0, 0">
                             <Components:Scale9.InnerContent>
                                 <ContentPresenter x:Name="Content" />
@@ -810,6 +842,7 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="Height" Value="32" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -820,18 +853,28 @@
                                        HoverSource="/resources/textures/NewGUI/Button_Hover.png" 
                                        ActiveSource="/resources/textures/NewGUI/ComboBox_Selected.png" 
                                        SelectedNormalSource="/resources/textures/NewGUI/ComboBox_Selected.png" 
-                                       Border="16, 10, 16, 16"
-                                       Overflow="4, 0, 4, 8"
-                                       InnerPadding="16, 0, 16, 0"
-                                       ContentOffset="0, -5"> 
+                                       HorizontalAlignment="Stretch"
+                                       Border="6"
+                                       Overflow="0"
+                                       InnerPadding="10, 0, 10, 0"
+                                       ContentOffset="0, 2"> 
                             <Components:Scale9.InnerContent>
                                 <Grid HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="34" />
+                                        <ColumnDefinition Width="24" />
                                     </Grid.ColumnDefinitions>
-                                    <ContentPresenter Margin="0, 0, 0, 4" Grid.Column="0" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                    <Image Margin="10, 0, 0, 0" Grid.Column="1" Width="24" Height="16" VerticalAlignment="Center" Source="/resources/textures/NewGUI/ComboBox_Arrow.png" />
+                                    <ContentPresenter Margin="0, 0, 0, 4" Grid.Column="0" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"  HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <ContentPresenter.Effect>
+                                            <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+                                        </ContentPresenter.Effect>
+                                    </ContentPresenter>
+                                    <Image Margin="10, -2, 0, 0" Grid.Column="1" Width="16" Height="16" VerticalAlignment="Center" Source="/resources/textures/NewGUI/ComboBox_Arrow.png" />
                                 </Grid>
                             </Components:Scale9.InnerContent>
                         </Components:Scale9>
@@ -846,21 +889,22 @@
                         </ToggleButton>
                         <Popup 
                             VerticalOffset="-1"
+                            HorizontalOffset="1"
             Name="Popup"
             Placement="Bottom"
             IsOpen="{TemplateBinding IsDropDownOpen}"
             AllowsTransparency="True" 
             Focusable="False"
             PopupAnimation="Slide">
-                            <Grid Margin="0, 0, 0, 0"
+                            <Grid Margin="0,0,2,0"
               Name="DropDown"
               SnapsToDevicePixels="True"                
               MinWidth="{TemplateBinding ActualWidth}"
               MaxHeight="{TemplateBinding MaxDropDownHeight}">
 
-                                <ScrollViewer Margin="-4, 0, 0, 0" SnapsToDevicePixels="True">
+                                <ScrollViewer Margin="0, 0, 1, 0" SnapsToDevicePixels="True">
                                     <Grid>
-                                        <StackPanel Orientation="Vertical" Margin="0, 0, -6, 0" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        <StackPanel Orientation="Vertical" Margin="0, 0, 0, 0" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                     </Grid>
                                 </ScrollViewer>
                             </Grid>
@@ -1073,6 +1117,11 @@
     </Style>
     
     <Style TargetType="{x:Type Window}" x:Key="Window">
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+        <Setter Property="RenderOptions.ClearTypeHint" Value="Enabled" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Animated" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome GlassFrameThickness="-1" CaptionHeight="0" ResizeBorderThickness="10" />
@@ -1086,16 +1135,25 @@
                 <ControlTemplate TargetType="{x:Type Window}">
                     <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="15">
                         <Border.Background>
-                            <ImageBrush>
+                            <ImageBrush TileMode="Tile" Viewport="0,0,8,8" ViewportUnits="Absolute">
                                 <ImageBrush.ImageSource>
                                     <BitmapImage UriSource="/ModAPI;component/resources/textures/background.png" />
                                 </ImageBrush.ImageSource>
                             </ImageBrush>
                         </Border.Background>
-                        <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Margin}" />
+                        <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="15">
+                            <Border.Background>
+                                <ImageBrush Stretch="UniformToFill">
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="/ModAPI;component/resources/textures/backgroundShadow.png" />
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Border.Background>
+                            <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Margin}" />
 
-                        </Grid>
+                            </Grid>
+                        </Border>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -1114,13 +1172,14 @@
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
                     <Grid>
                         <Components:Scale9 x:Name="Scale9Control"
                                            NormalSource="/resources/textures/NewGUI/Window.png" 
-                                           Border="8, 48, 8, 8"
+                                           Border="8, 52, 8, 8"
                                            Overflow="0"
                                            InnerPadding="0"
                                            ContentOffset="0, 0">
@@ -1173,11 +1232,12 @@
     </Style>
     <Style TargetType="{x:Type Button}" x:Key="NormalButton">
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="Height" Value="35" />
-        <Setter Property="Margin" Value="0, 0, 0, 8"/>
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Margin" Value="0, 0, 0, 0"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="Aliased" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
@@ -1186,14 +1246,23 @@
                                        NormalSource="/resources/textures/NewGUI/Button_Normal.png" 
                                        HoverSource="/resources/textures/NewGUI/Button_Hover.png" 
                                        ActiveSource="/resources/textures/NewGUI/Button_Active.png" 
-                                       Border="16, 10, 16, 16"
-                                       Overflow="4, 0, 4, 10"
-                                       InnerPadding="16, 16, 16, 16"
-                                       TextColor="White"
+                                       Border="12, 10, 12, 16"
+                                       Overflow="0,0,0,0"
+                                       InnerPadding="10,6,10,6"
+                                       TextColor="#ffffff"
                                        VerticalContentAlignment="Center"
-                                       ContentOffset="0, -10">
+                                       ContentOffset="0, 0">
                             <Components:Scale9.InnerContent>
-                                <ContentControl HorizontalAlignment="Left" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+                                <ContentControl Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{TemplateBinding Content}">
+                                    <ContentControl.Effect>
+                                        <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+                                    </ContentControl.Effect>
+                                </ContentControl>
                             </Components:Scale9.InnerContent>
                         </Components:Scale9>
                         <VisualStateManager.VisualStateGroups>
@@ -1414,8 +1483,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
                     <Grid>
-                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Minimize.png" />
-                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Minimize_Hover.png" />
+                        <Image Width="16" Height="16" Source="/resources/textures/Icons/Minimize.png" />
+                        <Image x:Name="Hover" Width="16" Opacity="0" Source="/resources/textures/Icons/Minimize_Hover.png" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
@@ -1441,8 +1510,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
                     <Grid>
-                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Maximize.png" />
-                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Maximize_Hover.png" />
+                        <Image Width="16" Height="16" Source="/resources/textures/Icons/Maximize.png" />
+                        <Image x:Name="Hover" Width="16" Opacity="0" Source="/resources/textures/Icons/Maximize_Hover.png" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
@@ -1468,8 +1537,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
                     <Grid>
-                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Normalize.png" />
-                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Normalize_Hover.png" />
+                        <Image Width="16" Height="16" Source="/resources/textures/Icons/Normalize.png" />
+                        <Image x:Name="Hover" Width="16" Opacity="0" Source="/resources/textures/Icons/Normalize_Hover.png" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
@@ -1490,20 +1559,157 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="PanelCenter">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Components:Scale9
+                            NormalSource="/resources/textures/NewGUI/PanelCenter.png"
+                            Border="10" 
+                            Overflow="0"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch">
+                        </Components:Scale9>
+                        <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="PanelBottom">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Components:Scale9
+                            NormalSource="/resources/textures/NewGUI/PanelBottom.png"
+                            Border="6,0,6,6" 
+                            Overflow="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                        </Components:Scale9>
+                        <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="PanelTop">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Components:Scale9
+                            NormalSource="/resources/textures/NewGUI/PanelTop.png"
+                            Border="6,6,6,0" 
+                            Overflow="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                        </Components:Scale9>
+                        <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="TabBox">
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="{x:Type ContentControl}">
+                <Grid>
+                    <Components:Scale9
+                            NormalSource="/resources/textures/NewGUI/TabBox.png"
+                            Border="10" 
+                            Overflow="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            MinHeight="30">
+                    </Components:Scale9>
+                    <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="PanelSplit">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Components:Scale9
+                            NormalSource="/resources/textures/NewGUI/PanelSplit.png"
+                            Border="4" 
+                            Overflow="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            MinHeight="8">
+                        </Components:Scale9>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type ContentControl}" x:Key="PanelButtons">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid>
+                        <Components:Scale9
+                            NormalSource="/resources/textures/NewGUI/PanelButtons.png"
+                            Border="10" 
+                            Overflow="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            MinHeight="30">
+                        </Components:Scale9>
+                        <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type Components:PopupPanel}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Components:PopupPanel}" x:Name="Parent">
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="8" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <Components:Scale9
-                NormalSource="/resources/textures/NewGUI/PopupBox.png"
-                Border="24"
-                Overflow="16">
+                            Grid.Row="0"
+                            NormalSource="/resources/textures/NewGUI/PanelTop.png"
+                            Border="10" 
+                            Overflow="0"
+                            VerticalAlignment="Top"
+                            Height="40">
+                            <Components:Scale9.InnerContent>
+                                <TextBlock Foreground="#ffffff" Style="{StaticResource HeaderLabel}" FontSize="20" x:Name="TitleElement" HorizontalAlignment="Left" Margin="9,10,0,0" Height="40" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:PopupPanel}}, Path=Title}" VerticalAlignment="Top"/>
+                            </Components:Scale9.InnerContent>
                         </Components:Scale9>
-                        <Grid x:Name="Inner" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                            <ContentPresenter Margin="20" ContentSource="Content"/>
+                        <Components:Scale9
+                            Grid.Row="1"
+                            NormalSource="/resources/textures/NewGUI/PanelSplit.png"
+                            Border="2" 
+                            Overflow="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Height="8">
+                        </Components:Scale9>
+                        <Grid Grid.Row="2" x:Name="Inner" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                         </Grid>
-                        <TextBlock Foreground="#333333" FontFamily="{StaticResource BigFont}" FontSize="30"  x:Name="TitleElement" HorizontalAlignment="Left" Margin="20,15,20,0" Height="40" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:PopupPanel}}, Path=Title}" VerticalAlignment="Top"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -1602,9 +1808,9 @@
                                             HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Left_Hover.png" 
                                             ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Left_Active.png" 
                                             Border="0, 0, 0, 0"
-                                            Overflow="0, 0, 10, 0"
+                                            Overflow="0, 0, 0, 0"
                                             Height="19"
-                                            Width="31"
+                                            Width="18"
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
@@ -1647,9 +1853,9 @@
                                             HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Right_Hover.png" 
                                             ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Right_Active.png" 
                                             Border="0, 0, 0, 0"
-                                            Overflow="10, 0, 0, 0"
+                                            Overflow="0, 0, 0, 0"
                                             Height="19"
-                                            Width="31"
+                                            Width="18"
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
@@ -1693,9 +1899,9 @@
                                             HoverSource="/resources/textures/NewGUI/VerticalScrollbar_Up_Hover.png" 
                                             ActiveSource="/resources/textures/NewGUI/VerticalScrollbar_Up_Active.png" 
                                             Border="0, 0, 0, 0"
-                                            Overflow="0, 0, 0, 10"
+                                            Overflow="0, 0, 0, 0"
                                             Width="19"
-                                            Height="31"
+                                            Height="18"
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
@@ -1738,9 +1944,9 @@
                                             HoverSource="/resources/textures/NewGUI/VerticalScrollbar_Down_Hover.png" 
                                             ActiveSource="/resources/textures/NewGUI/VerticalScrollbar_Down_Active.png" 
                                             Border="0, 0, 0, 0"
-                                            Overflow="0, 10, 0, 0"
+                                            Overflow="0, 0, 0, 0"
                                             Width="19"
-                                            Height="31"
+                                            Height="18"
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
@@ -1799,8 +2005,8 @@
                                             HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Hover.png" 
                                             ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Active.png" 
                                             Border="10, 0, 10, 0"
-                                            Overflow="0, 0, 1, 0"
-                                            Height="18"
+                                            Overflow="0, 0, 0, 0"
+                                            Height="19"
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
@@ -1847,8 +2053,8 @@
                                             HoverSource="/resources/textures/NewGUI/VerticalScrollbar_Knob_Hover.png" 
                                             ActiveSource="/resources/textures/NewGUI/VerticalScrollbar_Knob_Active.png" 
                                             Border="0, 10, 0, 10"
-                                            Overflow="0, 0, 0, 1"
-                                            Width="18"
+                                            Overflow="0, 0, 0, 0"
+                                            Width="19"
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
@@ -1884,16 +2090,11 @@
     <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
         <Grid >
             <Grid.RowDefinitions>
-                <RowDefinition MaxHeight="21"/>
+                <RowDefinition MaxHeight="18"/>
                 <RowDefinition Height="0.00001*"/>
-                <RowDefinition MaxHeight="21"/>
+                <RowDefinition MaxHeight="18"/>
             </Grid.RowDefinitions>
-            <RepeatButton 
-      Grid.Row="0"                           
-      Style="{StaticResource ScrollBarUpButton}"
-      Height="21"
-      Command="ScrollBar.LineUpCommand" />
-            <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+            <Components:Scale9 Grid.RowSpan="3" x:Name="Scale9Control"
                                             NormalSource="/resources/textures/NewGUI/VerticalScrollbar_Background.png" 
                                             Border="0, 10, 0, 10"
                                             Overflow="0, 0, 0, 0"
@@ -1902,6 +2103,12 @@
                                             SnapsToDevicePixels="True"
                                             ContentOffset="0, 0">
             </Components:Scale9>
+            <RepeatButton 
+      Grid.Row="0"                           
+      Style="{StaticResource ScrollBarUpButton}"
+      Height="18"
+      Command="ScrollBar.LineUpCommand" />
+
             <Track 
       Name="PART_Track"
       Grid.Row="1"
@@ -1914,7 +2121,7 @@
                 <Track.Thumb>
                     <Thumb 
           Style="{StaticResource ScrollBarVerticalThumb}" 
-          Margin="1,1,1,0"   />
+          Margin="0,-1,0,-1"   />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton 
@@ -1925,7 +2132,7 @@
             <RepeatButton 
       Grid.Row="2" 
       Style="{StaticResource ScrollBarDownButton}"
-      Height="21"
+      Height="18"
       Command="ScrollBar.LineDownCommand"
       />
         </Grid>
@@ -1941,9 +2148,9 @@
             <RepeatButton 
       Grid.Column="0"                           
       Style="{StaticResource ScrollBarLeftButton}"
-      Width="21"
+      Width="18"
       Command="ScrollBar.LineLeftCommand" />
-            <Components:Scale9 Grid.Column="1" x:Name="Scale9Control"
+            <Components:Scale9 Grid.ColumnSpan="3" x:Name="Scale9Control"
                                             NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Background.png" 
                                             Border="10, 0, 10, 0"
                                             Overflow="0, 0, 0, 0"
@@ -1964,7 +2171,7 @@
                 <Track.Thumb>
                     <Thumb 
           Style="{StaticResource ScrollBarHorizontalThumb}" 
-          Margin="1,1,1,0"   />
+          Margin="0,0,0,0"   />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton 
@@ -1975,7 +2182,7 @@
             <RepeatButton 
       Grid.Column="2" 
       Style="{StaticResource ScrollBarRightButton}"
-      Width="21"
+      Width="18"
       Command="ScrollBar.LineRightCommand"
       />
         </Grid>
@@ -2194,9 +2401,9 @@
                                 <RowDefinition x:Name="BottomRow"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition x:Name="LeftColumn" Width="16"></ColumnDefinition>
+                                <ColumnDefinition x:Name="LeftColumn"></ColumnDefinition>
                                 <ColumnDefinition x:Name="CenterColumn"></ColumnDefinition>
-                                <ColumnDefinition x:Name="RightColumn" Width="16"></ColumnDefinition>
+                                <ColumnDefinition x:Name="RightColumn"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Rectangle SnapsToDevicePixels="True" x:Name="NormalTopLeftRect" Grid.Row="0" Grid.Column="0">
                                 <Rectangle.Fill>
@@ -2661,13 +2868,22 @@
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="AllowDrop" Value="true" />
-        <Setter Property="Foreground" Value="#333333" />
+        <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost" />
+                    <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost">
+                        <ScrollViewer.Effect>
+                            <DropShadowEffect
+              ShadowDepth="1"
+              Direction="330"
+              Color="Black"
+              Opacity="1"
+              BlurRadius="0" />
+                        </ScrollViewer.Effect>
+                    </ScrollViewer>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -2690,12 +2906,12 @@
                     <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
                         <Components:Scale9 x:Name="Scale9Control"
                                        Height="30"
-                                       NormalSource="/resources/textures/NewGUI/TextField_Normal.png" 
-                                       HoverSource="/resources/textures/NewGUI/TextField_Hover.png" 
-                                       ActiveSource="/resources/textures/NewGUI/TextField_Active.png" 
+                                       NormalSource="/resources/textures/NewGUI/Toggle_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Toggle_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/Toggle_Active.png" 
                                        Border="8, 8, 8, 8"
                                        Overflow="0, 0, 0, 0"
-                                       TextColor="#222222"
+                                       TextColor="#ffffff"
                                        InnerPadding="8, 6, 8, 0"
                                        ContentOffset="0, 0">
                             <Components:Scale9.InnerContent>
@@ -2709,7 +2925,7 @@
                                             <ColumnDefinition Width="30" />
                                             <ColumnDefinition Width="20" />
                                         </Grid.ColumnDefinitions>
-                                        <ContentPresenter ClipToBounds="True" Width="30" Margin="0, -5, 0, -2" Grid.Column="0" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                        <ContentPresenter ClipToBounds="True" Width="30" Margin="0, -7, 0, -2" Grid.Column="0" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
                                         <Image Margin="3, 0, 0, 0" Grid.Column="1" Width="20" VerticalAlignment="Center" Source="/resources/textures/NewGUI/ComboBox_Arrow.png" />
                                         <ToggleButton  Grid.ColumnSpan="2"
                             Template="{StaticResource ComboBoxToggleButton}"

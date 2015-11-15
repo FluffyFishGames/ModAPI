@@ -49,7 +49,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Source="/resources/textures/Icons/Icon_Decline.png" Width="20" Grid.Column="0" />
-                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Errors.ID" />
+                <TextBlock Style="{StaticResource NormalLabel}" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Errors.ID" />
             </Grid>
             <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,5">
                 <Grid.ColumnDefinitions>
@@ -57,7 +57,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Source="/resources/textures/Icons/Icon_Information.png" Width="20" Grid.Column="0" />
-                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Text" />
+                <TextBlock Style="{StaticResource NormalLabel}" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Text" />
             </Grid>
             <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right">
                 <Button x:Name="CancelButton" Margin="0, 0, 10, 0" Style="{StaticResource NormalButton}" Click="Cancel">

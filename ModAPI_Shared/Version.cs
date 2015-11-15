@@ -28,7 +28,7 @@ namespace ModAPI
 {
     public class Version
     {
-        public const string Descriptor = "0.2.1b Hotfix 2";
-        public const int Number = 201509063;
+        public const string Descriptor = "0.2.2";
+        public const int Number = 20151101;
     }
 }

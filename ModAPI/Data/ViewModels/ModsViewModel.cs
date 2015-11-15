@@ -197,11 +197,14 @@ public class ModsViewModel : INotifyPropertyChanged
 
                     TextBlock textBlock = new TextBlock();
                     textBlock.SetBinding(TextBlock.TextProperty, "Name");
+                    textBlock.Style = (Style)Application.Current.FindResource("HeaderLabel");
+                
                     panel.Children.Add(textBlock);
 
                     TextBlock textBlock2 = new TextBlock();
                     textBlock2.SetBinding(TextBlock.TextProperty, "Version");
-                    textBlock2.FontSize = 14;
+                    textBlock2.FontSize = 12;
+                    textBlock2.Style = (Style)Application.Current.FindResource("NormalLabel");
                     panel.Children.Add(textBlock2);
                     outerPanel.Children.Add(panel);
 

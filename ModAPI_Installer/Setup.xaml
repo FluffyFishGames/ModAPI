@@ -1,0 +1,16 @@
+﻿<Window x:Class="ModAPI_Installer.Setup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Style="{StaticResource Window}"
+        Loaded="WindowLoaded"
+        ResizeMode="CanResize"
+        Title="Setup" Height="500" Width="600">
+    <Grid>
+
+        <Grid Grid.Row="0" Background="Transparent" Cursor="Hand" x:Name="Mover" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="30">
+            <StackPanel HorizontalAlignment="Right" Margin="0, 2, 10, 0" Orientation="Horizontal">
+                <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Left" Click="CloseWindow"></Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

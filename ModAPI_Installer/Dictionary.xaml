@@ -1,0 +1,2524 @@
+﻿<!--  
+    ModAPI
+    Copyright (C) 2015 FluffyFish / Philipp Mohrenstecher
+  
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    To contact me you can e-mail me at info@fluffyfish.de    
+    -->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Helper="clr-namespace:GUIHelper"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:Components="clr-namespace:ModAPI.Components">
+    <FontFamily x:Key="BigFont">/resources/Fonts/#Aero Matics</FontFamily>
+    <FontFamily x:Key="NormalFont">/resources/Fonts/#EleganTech™</FontFamily>
+
+    <Style TargetType="{x:Type TreeViewItem}">
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="10" />
+    </Style>
+    <Style x:Key="NormalLabel" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}"></Setter>
+        <Setter Property="FontSize" Value="10"></Setter>
+        <Setter Property="Foreground" Value="#333333"></Setter>
+    </Style>
+
+    <Style x:Key="WhiteLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
+        <Setter Property="Foreground" Value="#ffffff"></Setter>
+    </Style>
+
+    <Style x:Key="HeaderLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
+        <Setter Property="FontFamily" Value="{StaticResource BigFont}"></Setter>
+        <Setter Property="FontSize" Value="20"></Setter>
+    </Style>
+
+
+
+    <Style TargetType="{x:Type Button}" x:Key="CloseButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Close.png" />
+                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Close_Hover.png" />
+                        <!--
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type Button}" x:Key="DarkCloseButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Image Width="16" Height="16" Source="/resources/textures/Icons/DarkClose.png" />
+                        <Image x:Name="Hover" Width="16" Height="16" Opacity="0" Source="/resources/textures/Icons/DarkClose_Hover.png" />
+
+                        <!-- <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="RoundLabel">
+        <Setter Property="Height" Value="35" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/Counter.png" 
+                                       Border="16, 0, 16, 0"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="#ffffff"
+                                       VerticalAlignment="Stretch"
+                                       ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=IsSelected}" Value="false">
+                <Setter Property="Source" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=IconSource}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=IsSelected}" Value="true">
+                <Setter Property="Source" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=SelectedIconSource}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="IconItemTab" TargetType="{x:Type ContentControl}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <StackPanel SnapsToDevicePixels="True" Orientation="Horizontal">
+                        <Image SnapsToDevicePixels="True" VerticalAlignment="Center" Width="24" Style="{StaticResource ImageStyle}" />
+                        <TextBlock SnapsToDevicePixels="True" Margin="5, 0, 0, 0" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=Label}" />
+                        <Image Width="24" Grid.Column="0" Margin="5,0,0,0" Source="/resources/textures/Icons/Icon_Warning.png" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:IconTabItem}}, Path=ShowWarning}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="PopupTab" TargetType="{x:Type Components:IconTabItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Height" Value="52" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Components:IconTabItem}" x:Name="Parent">
+                    <Grid SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 5, 0">
+                        <Components:Scale9 x:Name="Scale9Control"
+                                        NormalSource="/resources/textures/NewGUI/Tab_Normal.png" 
+                                        HoverSource="/resources/textures/NewGUI/Tab_Hover.png" 
+                                        ActiveSource="/resources/textures/NewGUI/Tab_Hover.png" 
+                                        SelectedNormalSource="/resources/textures/NewGUI/Tab_Selected.png"
+                                        Selected="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}, Path=IsSelected}"
+                                        Border="16, 16, 16, 16"
+                                        Overflow="0, 0, 0, 0"
+                                        InnerPadding="16 16, 16, 16"
+                                        TextColor="Black"
+                                        BlendNormal="True"
+                                        SnapsToDevicePixels="True"
+                                        ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ContentControl Style="{StaticResource IconItemTab}" SnapsToDevicePixels="True" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{TemplateBinding Header}"/>
+
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Unselected" To="Selected" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Selected" To="Unselected" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.1" From="20" To="23" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="FontSize" />
+                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
+                                        <ThicknessAnimation Duration="0:0:0.1"
+                                            Storyboard.TargetName="Scale9Control"
+                                            Storyboard.TargetProperty="InnerPadding"
+                                            From="16, 16, 16, 16" To="16, 4, 16, 4" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unselected">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.1"  To="20" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="FontSize" />
+                                        <ColorAnimation Duration="0:0:0" To="White"  Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <ColorAnimation Duration="0:0:0" To="White"  Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
+                                        <ThicknessAnimation  Duration="0:0:0.1"
+                                            Storyboard.TargetName="Scale9Control"
+                                            Storyboard.TargetProperty="InnerPadding"
+                                            To="16, 16, 16, 16" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+                                    <VisualTransition GeneratedDuration="0:0:0" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected"
+                   Value="True">
+                            <Setter Property="Panel.ZIndex"
+                    Value="100" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/Toggle_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Toggle_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/Toggle_Active.png" 
+                                       SelectedNormalSource="/resources/textures/NewGUI/ToggleOn_Normal.png" 
+                                       SelectedHoverSource="/resources/textures/NewGUI/ToggleOn_Hover.png" 
+                                       SelectedActiveSource="/resources/textures/NewGUI/ToggleOn_Active.png" 
+                                       Selected="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type CheckBox}}, Path=IsChecked}"
+                                       Border="0"
+                                       HorizontalAlignment="Left"
+                                       BlendNormal="True"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="#222222"
+                                       InnerPadding="0"
+                                       Width="32"
+                                       Height="32"
+                                       ContentOffset="0, 0">
+                        </Components:Scale9>
+                        <ContentPresenter VerticalAlignment="Center" Margin="36, 0, 0, 0" />
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="Foreground" Value="#333333" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       Height="30"
+                                       NormalSource="/resources/textures/NewGUI/TextField_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/TextField_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/TextField_Active.png" 
+                                       Border="8, 8, 8, 8"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="#222222"
+                                       InnerPadding="8, 6, 8, 0"
+                                       ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost" />
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    
+                                </VisualState>
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type PasswordBox}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="Foreground" Value="#333333" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type PasswordBox}">
+                    <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       Height="30"
+                                       NormalSource="/resources/textures/NewGUI/TextField_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/TextField_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/TextField_Active.png" 
+                                       Border="8, 8, 8, 8"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="#222222"
+                                       InnerPadding="8, 6, 8, 0"
+                                       ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost" />
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+
+                                </VisualState>
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ListItem" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Foreground" Value="#222222" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Grid>
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/ListItem_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/ListItem_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/ListItem_Active.png" 
+                                       Selected="{TemplateBinding IsSelected}"
+                                       SelectedNormalSource="/resources/textures/NewGUI/ListItemOn_Normal.png" 
+                                       SelectedHoverSource="/resources/textures/NewGUI/ListItemOn_Hover.png" 
+                                       SelectedActiveSource="/resources/textures/NewGUI/ListItemOn_Active.png" 
+                                       Border="4, 4, 4, 4"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="#222222"
+                                       SelectedTextColor="White"
+                                       InnerPadding="16, 6, 16, 6"
+                                       ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ContentPresenter VerticalAlignment="Center" x:Name="Content" />
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Unselected" To="Selected" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Selected" To="Unselected" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0" To="White" From="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <ColorAnimation Duration="0:0:0" To="White" From="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unselected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <ColorAnimation Duration="0:0:0" From="White" To="#333333" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="SelectedTextColor" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+                                    <VisualTransition GeneratedDuration="0:0:0" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ListScrollViewer" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid>
+                        <Components:Scale9 x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/InnerArea.png" 
+                                            Border="32, 32, 32, 5"
+                                            Overflow="0, 0, 0, 0"
+                                            InnerPadding="0"
+                                            BlendNormal="True"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        </Components:Scale9>
+                        <Grid Margin="1" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ScrollContentPresenter x:Name="ScrollContentPresenter"
+                                                      Cursor="{TemplateBinding Cursor}"
+                                                      Margin="{TemplateBinding Padding}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"/>
+
+                            <Rectangle Grid.Column="1" Grid.Row="1" Fill="#FFE9EEF4"/>
+
+                            <ScrollBar x:Name="PART_VerticalScrollBar" Width="18"
+                                         IsTabStop="False"
+                                         Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                         Grid.Column="1" Grid.Row="0" Orientation="Vertical"
+                                         ViewportSize="{TemplateBinding ViewportHeight}"
+                                         Maximum="{TemplateBinding ScrollableHeight}"
+                                         Minimum="0"
+                                         Value="{TemplateBinding VerticalOffset}"
+                                         Margin="0,-1,-1,-1"/>
+
+                            <ScrollBar x:Name="PART_HorizontalScrollBar" Height="18"
+                                         IsTabStop="False"
+                                         Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                         Grid.Column="0" Grid.Row="1" Orientation="Horizontal"
+                                         ViewportSize="{TemplateBinding ViewportWidth}"
+                                         Maximum="{TemplateBinding ScrollableWidth}"
+                                         Minimum="0"
+                                         Value="{TemplateBinding HorizontalOffset}"
+                                         Margin="-1,0,-1,-1"/>
+
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="List" TargetType="{x:Type ListBox}">
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ListItem}" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <ScrollViewer x:Name="ScrollViewer" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" Style="{StaticResource ListScrollViewer}">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="Transparent" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+    </ControlTemplate>
+    <Style TargetType="{x:Type ComboBoxItem}" x:Key="ComboBoxItem">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Grid>
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/ComboBoxItem_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/ComboBoxItem_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/ComboBoxItem_Active.png" 
+                                       SelectedNormalSource="/resources/textures/NewGUI/ComboBoxItem_Active.png" 
+                                       Border="16, 10, 32, 16"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="Black"
+                                       SelectedTextColor="White"
+                                       InnerPadding="16, 6, 32, 6"
+                                       ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ContentPresenter x:Name="Content" />
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.1" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                        <ColorAnimation Duration="0" From="Black" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Unselected">
+                                    <Storyboard>
+                                        <BooleanAnimationUsingKeyFrames Duration="0:0:0.0" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="Selected">
+                                            <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" From="Black" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <BooleanAnimationUsingKeyFrames Duration="0:0:0.0" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="Selected">
+                                            <DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0" />
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" From="Black" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <BooleanAnimationUsingKeyFrames Duration="0:0:0.01" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="Selected">
+                                            <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+                                            <DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0.01" />
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                                              
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ToggleButton}" x:Key="ComboBoxItemButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/ComboBoxItem_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/ComboBoxItem_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/ComboBoxItem_Active.png" 
+                                       SelectedNormalSource="/resources/textures/NewGUI/ComboBoxItem_Active.png" 
+                                       Selected="{TemplateBinding IsChecked}"
+                                       Border="16, 10, 32, 16"
+                                       Overflow="0, 0, 0, 0"
+                                       TextColor="Black"
+                                       SelectedTextColor="White"
+                                       InnerPadding="16, 6, 32, 6"
+                                       ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <ContentPresenter x:Name="Content" />
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.1" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                        <ColorAnimation Duration="0" From="Black" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Unselected">
+                                    <Storyboard>
+                                        <BooleanAnimationUsingKeyFrames Duration="0:0:0.0" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="Selected">
+                                            <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" From="Black" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <BooleanAnimationUsingKeyFrames Duration="0:0:0.0" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="Selected">
+                                            <DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0" />
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" From="Black" To="White" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="TextColor" />
+                                        <BooleanAnimationUsingKeyFrames Duration="0:0:0.01" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="Selected">
+                                            <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+                                            <DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0.01" />
+                                        </BooleanAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ComboBox}" x:Key="ComboBox">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/Button_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Button_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/ComboBox_Selected.png" 
+                                       SelectedNormalSource="/resources/textures/NewGUI/ComboBox_Selected.png" 
+                                       Border="16, 10, 16, 16"
+                                       Overflow="4, 0, 4, 8"
+                                       InnerPadding="16, 0, 16, 0"
+                                       ContentOffset="0, -5">
+                            <Components:Scale9.InnerContent>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="34" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Margin="0, 0, 0, 4" Grid.Column="0" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    <Image Margin="10, 0, 0, 0" Grid.Column="1" Width="24" Height="16" VerticalAlignment="Center" Source="/resources/textures/NewGUI/ComboBox_Arrow.png" />
+                                </Grid>
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <ToggleButton  
+                            Template="{StaticResource ComboBoxToggleButton}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+            Name="ToggleButton" 
+            Focusable="false"
+            IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+            ClickMode="Press">
+                        </ToggleButton>
+                        <Popup 
+                            VerticalOffset="-1"
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{TemplateBinding IsDropDownOpen}"
+            AllowsTransparency="True" 
+            Focusable="False"
+            PopupAnimation="Slide">
+                            <Grid Margin="0, 0, 0, 0"
+              Name="DropDown"
+              SnapsToDevicePixels="True"                
+              MinWidth="{TemplateBinding ActualWidth}"
+              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+
+                                <ScrollViewer Margin="-4, 0, 0, 0" SnapsToDevicePixels="True">
+                                    <Grid>
+                                        <StackPanel Orientation="Vertical" Margin="0, 0, -6, 0" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </Grid>
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" To="FocusedDropDown" />
+                                    <VisualTransition GeneratedDuration="0:0:0.1" To="Focused" />
+                                    <VisualTransition GeneratedDuration="0:0:0.1" To="Unfocused" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Unfocused" />
+                                <VisualState x:Name="Focused" />
+                                <VisualState x:Name="FocusedDropDown">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                        <DoubleAnimation Duration="0" From="1" To="0" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ComboBox}" x:Key="ComboBoxTopless">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/Button_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Button_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/ComboBox_Selected.png" 
+                                       SelectedNormalSource="/resources/textures/NewGUI/ComboBox_Selected.png" 
+                                       Border="16, 10, 16, 16"
+                                       BorderSize="16, 0, 16, 16"
+                                       Overflow="4, 0, 4, 8"
+                                       InnerPadding="16, 0, 16, 6"
+                                       ContentOffset="0, -2">
+                            <Components:Scale9.InnerContent>
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="34" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Grid.Column="0" Margin="0, 0, 0, 4" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    <Image Margin="10, 0, 0, 0" Grid.Column="1" Width="24" Height="16" VerticalAlignment="Center" Source="/resources/textures/NewGUI/ComboBox_Arrow.png" />
+                                </Grid>
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <ToggleButton  
+                            Template="{StaticResource ComboBoxToggleButton}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+            Name="ToggleButton" 
+            Focusable="false"
+            IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+            ClickMode="Press">
+                        </ToggleButton>
+                        <Popup 
+                            VerticalOffset="-1"
+            Name="Popup"
+            Placement="Bottom"
+            IsOpen="{TemplateBinding IsDropDownOpen}"
+            AllowsTransparency="True" 
+            Focusable="False"
+            PopupAnimation="Slide">
+                            <Grid Margin="4, 0, 4, 0"
+              Name="DropDown"
+              SnapsToDevicePixels="True"                
+              MinWidth="{TemplateBinding ActualWidth}"
+              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+
+                                <ScrollViewer Margin="-4, 0, -4, 0" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                        <!--
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" To="FocusedDropDown" />
+                                    <VisualTransition GeneratedDuration="0:0:0.1" To="Focused" />
+                                    <VisualTransition GeneratedDuration="0:0:0.1" To="Unfocused" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Unfocused" />
+                                <VisualState x:Name="Focused" />
+                                <VisualState x:Name="FocusedDropDown">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                        <DoubleAnimation Duration="0" From="1" To="0" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ContentControl}" x:Key="SubComboBox">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContentControl}">
+                    <Grid Margin="-16, -6, -32, -6" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                        <Popup 
+                            StaysOpen="True"
+                            Name="Popup"
+                            Placement="Right"
+                            HorizontalOffset="-4"
+                            AllowsTransparency="True" 
+                            Focusable="False"
+                              
+                            
+                            PopupAnimation="Slide">
+                            <Grid Margin="4, 0, 4, 0"
+              Name="DropDown"
+              SnapsToDevicePixels="True"                
+              MinWidth="{TemplateBinding ActualWidth}">
+
+                                <ScrollViewer Margin="-4, 0, -4, 0" SnapsToDevicePixels="True">
+                                    <ContentPresenter />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="ToggleButton.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <BooleanAnimationUsingKeyFrames Duration="0:0:0.2" Storyboard.TargetName="Popup" Storyboard.TargetProperty="IsOpen">
+                                        <DiscreteBooleanKeyFrame Value="True" KeyTime="0:0:0.2" />
+                                    </BooleanAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="ToggleButton.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <BooleanAnimationUsingKeyFrames Duration="0:0:0" Storyboard.TargetName="Popup" Storyboard.TargetProperty="IsOpen">
+                                        <DiscreteBooleanKeyFrame Value="False" KeyTime="0:0:0" />
+                                    </BooleanAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Window}" x:Key="Window">
+        <!--<Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome GlassFrameThickness="-1" CaptionHeight="0" ResizeBorderThickness="10" />
+            </Setter.Value>
+        </Setter>-->
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="15">
+                        <Border.Background>
+                            <ImageBrush TileMode="Tile">
+                                <ImageBrush.ImageSource>
+                                    <BitmapImage UriSource="/ModAPI_Installer;component/resources/textures/background.png" />
+                                </ImageBrush.ImageSource>
+                            </ImageBrush>
+                        </Border.Background>
+                        <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Margin}" />
+
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type Window}" x:Key="SubWindow">
+        <!--<Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome GlassFrameThickness="-1" CaptionHeight="0" ResizeBorderThickness="0" />
+            </Setter.Value>
+        </Setter>-->
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="ResizeMode" Value="NoResize" />
+        <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid>
+                        <Components:Scale9 x:Name="Scale9Control"
+                                           NormalSource="/resources/textures/NewGUI/Window.png" 
+                                           Border="8, 48, 8, 8"
+                                           Overflow="0"
+                                           InnerPadding="0"
+                                           ContentOffset="0, 0">
+                            <Components:Scale9.InnerContent>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="48" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Margin="20, 0, 52, 0" Grid.Row="0" Text="{TemplateBinding Title}" HorizontalAlignment="Center" Style="{StaticResource HeaderLabel}" VerticalAlignment="Center" />
+                                    <Button x:Name="PART_Close" Width="16" Height="16" Margin="0, 0, 16, 0" Grid.Row="0" Style="{StaticResource DarkCloseButton}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <ContentPresenter Margin="16, 10, 16, 16" Grid.Row="1" Content="{TemplateBinding Content}" />
+                                    <Rectangle Margin="0, 0, 40, 0" IsHitTestVisible="True" x:Name="PART_Mover" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Fill="Transparent"></Rectangle>
+                                </Grid>
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Window}" x:Key="SplashScreen">
+        <!--<Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome GlassFrameThickness="-1" CaptionHeight="0" ResizeBorderThickness="0" />
+            </Setter.Value>
+        </Setter>-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid Background="Transparent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid x:Name="Mover">
+                            <Label Content="{TemplateBinding Title}" />
+                        </Grid>
+                        <AdornerDecorator Grid.Row="0">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Margin}" />
+                        </AdornerDecorator>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="WindowStyle" Value="None" />
+
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="NormalButton">
+        <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="#222222" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="Margin" Value="0, 0, 0, 8"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Components:Scale9 x:Name="Scale9Control"
+                                       NormalSource="/resources/textures/NewGUI/Button_Normal.png" 
+                                       HoverSource="/resources/textures/NewGUI/Button_Hover.png" 
+                                       ActiveSource="/resources/textures/NewGUI/Button_Active.png" 
+                                       Border="12, 10, 12, 16"
+                                       Overflow="4, 0, 4, 10"
+                                       InnerPadding="16, 16, 16, 16"
+                                       TextColor="#222222"
+                                       VerticalContentAlignment="Center"
+                                       ContentOffset="0, -10">
+                            <Components:Scale9.InnerContent>
+                                <ContentControl HorizontalAlignment="Left" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
+                            </Components:Scale9.InnerContent>
+                        </Components:Scale9>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type Button}" x:Key="FacebookButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Rectangle>
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="0, 0, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="Hover" Opacity="0">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="32, 0, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="TwitterButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Rectangle>
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="0, 32, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="Hover" Opacity="0">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="32, 32, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="YoutubeButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Rectangle>
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="0, 64, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="Hover" Opacity="0">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="32, 64, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="TwitchButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Rectangle>
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="0, 96, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="Hover" Opacity="0">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="/resources/textures/Icons/SocialIcons.png" ViewboxUnits="Absolute" Viewbox="32, 96, 32, 32" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="MinimizeButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Minimize.png" />
+                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Minimize_Hover.png" />
+
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="MaximizeButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Maximize.png" />
+                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Maximize_Hover.png" />
+                        <!--
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        -->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type Button}" x:Key="NormalizeButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
+                    <Grid>
+                        <Image Width="24" Height="24" Source="/resources/textures/Icons/Normalize.png" />
+                        <Image x:Name="Hover" Width="24" Opacity="0" Source="/resources/textures/Icons/Normalize_Hover.png" />
+                        <!--
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        -->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type Components:PopupPanel}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Components:PopupPanel}" x:Name="Parent">
+                    <Grid>
+                        <Components:Scale9
+                NormalSource="/resources/textures/NewGUI/PanelTop.png"
+                Border="8"
+                Overflow="0">
+                        </Components:Scale9>
+                        <Grid x:Name="Inner" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter Margin="20" ContentSource="Content"/>
+                        </Grid>
+                        <TextBlock Foreground="#333333" FontFamily="{StaticResource BigFont}" FontSize="30"  x:Name="TitleElement" HorizontalAlignment="Left" Margin="20,15,20,0" Height="40" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:PopupPanel}}, Path=Title}" VerticalAlignment="Top"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TopTab" TargetType="{x:Type Components:IconTabItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Height" Value="105" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Components:IconTabItem}" x:Name="Parent">
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="16"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image SnapsToDevicePixels="True" IsHitTestVisible="False" Grid.Column="0" Source="/resources/textures/NewGUI/TopFading.png" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" />
+                        <Grid SnapsToDevicePixels="True" Grid.Column="1" Margin="0, 55, 0, 0">
+                            <Components:Scale9 x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/TopTab_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/TopTab_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/TopTab_Hover.png" 
+                                            SelectedNormalSource="/resources/textures/NewGUI/TopTab_Selected.png"
+                                            Selected="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}, Path=IsSelected}"
+                                            Border="16, 64, 16, 40"
+                                            Overflow="0, 55, 0, 0"
+                                            InnerPadding="16, 64, 16, 6"
+                                            BlendNormal="True"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                                <Components:Scale9.InnerContent>
+
+                                    <ContentControl SnapsToDevicePixels="True" Style="{StaticResource IconItemTab}" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Header}"/>
+                                </Components:Scale9.InnerContent>
+                            </Components:Scale9>
+                        </Grid>
+                        <!--
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0" To="Selected" />
+                                    <VisualTransition GeneratedDuration="0:0:0" To="Unselected" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.1" From="20" To="25" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="FontSize" />
+                                        <ThicknessAnimation Duration="0:0:0.1"
+                                            Storyboard.TargetName="Scale9Control"
+                                            Storyboard.TargetProperty="InnerPadding"
+                                            From="16, 64, 16, 6" To="16, 64, 16, 15" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unselected">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.1" To="20" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="FontSize" />
+                                        <ThicknessAnimation Duration="0:0:0.1"
+                                            Storyboard.TargetName="Scale9Control"
+                                            Storyboard.TargetProperty="InnerPadding"
+                                            To="16, 64, 16, 6"  />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+                                    <VisualTransition GeneratedDuration="0:0:0" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarLeftButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Left_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Left_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Left_Active.png" 
+                                            Border="0, 0, 0, 0"
+                                            Overflow="0, 0, 10, 0"
+                                            Height="19"
+                                            Width="31"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ScrollBarRightButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Right_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Right_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Right_Active.png" 
+                                            Border="0, 0, 0, 0"
+                                            Overflow="10, 0, 0, 0"
+                                            Height="19"
+                                            Width="31"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarUpButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/VerticalScrollbar_Up_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/VerticalScrollbar_Up_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/VerticalScrollbar_Up_Active.png" 
+                                            Border="0, 0, 0, 0"
+                                            Overflow="0, 0, 0, 10"
+                                            Width="19"
+                                            Height="31"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ScrollBarDownButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/VerticalScrollbar_Down_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/VerticalScrollbar_Down_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/VerticalScrollbar_Down_Active.png" 
+                                            Border="0, 0, 0, 0"
+                                            Overflow="0, 10, 0, 0"
+                                            Width="19"
+                                            Height="31"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarHorizontalThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Active.png" 
+                                            Border="10, 0, 10, 0"
+                                            Overflow="0, 0, 1, 0"
+                                            Height="18"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <Style x:Key="ScrollBarVerticalThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/VerticalScrollbar_Knob_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/VerticalScrollbar_Knob_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/VerticalScrollbar_Knob_Active.png" 
+                                            Border="0, 10, 0, 10"
+                                            Overflow="0, 0, 0, 1"
+                                            Width="18"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="21"/>
+                <RowDefinition Height="0.00001*"/>
+                <RowDefinition MaxHeight="21"/>
+            </Grid.RowDefinitions>
+            <RepeatButton 
+      Grid.Row="0"                           
+      Style="{StaticResource ScrollBarUpButton}"
+      Height="21"
+      Command="ScrollBar.LineUpCommand" />
+            <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/VerticalScrollbar_Background.png" 
+                                            Border="0, 10, 0, 10"
+                                            Overflow="0, 0, 0, 0"
+                                            InnerPadding="0"
+                                            BlendNormal="True"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+            </Components:Scale9>
+            <Track 
+      Name="PART_Track"
+      Grid.Row="1"
+      IsDirectionReversed="true">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton 
+          Style="{StaticResource ScrollBarPageButton}"
+          Command="ScrollBar.PageUpCommand" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb 
+          Style="{StaticResource ScrollBarVerticalThumb}" 
+          Margin="1,1,1,0"   />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton 
+          Style="{StaticResource ScrollBarPageButton}"
+          Command="ScrollBar.PageDownCommand" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton 
+      Grid.Row="2" 
+      Style="{StaticResource ScrollBarDownButton}"
+      Height="21"
+      Command="ScrollBar.LineDownCommand"
+      />
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="HorizontalScrollBar" TargetType="{x:Type ScrollBar}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="21"/>
+                <ColumnDefinition Width="0.00001*"/>
+                <ColumnDefinition MaxWidth="21"/>
+            </Grid.ColumnDefinitions>
+            <RepeatButton 
+      Grid.Column="0"                           
+      Style="{StaticResource ScrollBarLeftButton}"
+      Width="21"
+      Command="ScrollBar.LineLeftCommand" />
+            <Components:Scale9 Grid.Column="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Background.png" 
+                                            Border="10, 0, 10, 0"
+                                            Overflow="0, 0, 0, 0"
+                                            InnerPadding="0"
+                                            BlendNormal="True"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+            </Components:Scale9>
+            <Track 
+      Name="PART_Track"
+      Grid.Column="1"
+      IsDirectionReversed="false">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton 
+          Style="{StaticResource ScrollBarPageButton}"
+          Command="ScrollBar.PageLeftCommand" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb 
+          Style="{StaticResource ScrollBarHorizontalThumb}" 
+          Margin="1,1,1,0"   />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton 
+          Style="{StaticResource ScrollBarPageButton}"
+          Command="ScrollBar.PageRightCommand" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton 
+      Grid.Column="2" 
+      Style="{StaticResource ScrollBarRightButton}"
+      Width="21"
+      Command="ScrollBar.LineRightCommand"
+      />
+        </Grid>
+
+    </ControlTemplate>
+
+    <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto"/>
+                <Setter Property="Height" Value="18" />
+                <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="Width" Value="18"/>
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TimeSliderThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/sunThumb.png" 
+                                            Border="4"
+                                            Overflow="0, 4, 0, 4"
+                                            InnerPadding="0"
+                                            BlendNormal="True"
+                                            Width="16"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+
+                    </Components:Scale9>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Normal.png" 
+                                            HoverSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Hover.png" 
+                                            ActiveSource="/resources/textures/NewGUI/HorizontalScrollbar_Knob_Active.png" 
+                                            Border="10, 0, 10, 0"
+                                            Overflow="0, 0, 0, 0"
+                                            InnerPadding="0"
+                                            BlendNormal="True"
+                                            Width="24"
+                                            Height="24"
+                                            SnapsToDevicePixels="True"
+                                            ContentOffset="0, 0">
+                        <!--<VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>-->
+                    </Components:Scale9>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Template when the orientation of the Slider is Horizontal.-->
+    <ControlTemplate x:Key="HorizontalSlider" TargetType="{x:Type Slider}">
+        <Grid>
+            <Components:Scale9 x:Name="Scale9Control"
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Background.png" 
+                                            Border="10, 0, 10, 0"
+                                            Overflow="0, 0, 0, 0"
+                                            InnerPadding="0"
+                                            SnapsToDevicePixels="True"
+                                            Height="18"
+                                            ContentOffset="0, 0">
+            </Components:Scale9>
+            <Track x:Name="PART_Track" VerticalAlignment="Center" Margin="0, 2, 0, 0">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TimeHorizontalSlider" TargetType="{x:Type Slider}">
+        <Grid>
+            <Image Source="/ModAPI_Installer;component/resources/textures/NewGUI/sunMeter.png" />
+            <Track x:Name="PART_Track" VerticalAlignment="Stretch" Margin="0, 0, 0, 0">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource TimeSliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <!--Template when the orientation of the Slider is Vertical.-->
+    <ControlTemplate x:Key="VerticalSlider" TargetType="{x:Type Slider}">
+        <Grid>
+
+            <Track x:Name="PART_Track">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type Slider}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="Template" Value="{StaticResource HorizontalSlider}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="MinWidth" Value="21" />
+                <Setter Property="MinHeight" Value="104" />
+                <Setter Property="Template" Value="{StaticResource VerticalSlider}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style TargetType="{x:Type Slider}" x:Key="TimeSlider">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="Template" Value="{StaticResource TimeHorizontalSlider}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style TargetType="{x:Type Components:Scale9}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Components:Scale9}">
+                    <Grid SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid SnapsToDevicePixels="True" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition x:Name="TopRow"></RowDefinition>
+                                <RowDefinition x:Name="CenterRow"></RowDefinition>
+                                <RowDefinition x:Name="BottomRow"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="LeftColumn" Width="16"></ColumnDefinition>
+                                <ColumnDefinition x:Name="CenterColumn"></ColumnDefinition>
+                                <ColumnDefinition x:Name="RightColumn" Width="16"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalTopLeftRect" Grid.Row="0" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalTopLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalTopRect" Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalTop"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalTopRightRect" Grid.Row="0" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalTopRight"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalLeftRect" Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalCenterRect" Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalCenter" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalRightRect" Grid.Row="1" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalBottomLeftRect" Grid.Row="2" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalBottomLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalBottomRect" Grid.Row="2" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalBottom" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="NormalBottomRightRect" Grid.Row="2" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="NormalBottomRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverTopLeftRect" Grid.Row="0" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="HoverTopLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverTopRect" Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="HoverTop"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverTopRightRect" Grid.Row="0" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="HoverTopRight"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverLeftRect" Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="HoverLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverCenterRect" Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="HoverCenter" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverRightRect" Grid.Row="1" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="HoverRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverBottomLeftRect" Grid.Row="2" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="HoverBottomLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverBottomRect" Grid.Row="2" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="HoverBottom" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="HoverBottomRightRect" Grid.Row="2" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="HoverBottomRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveTopLeftRect" Grid.Row="0" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveTopLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveTopRect" Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveTop"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveTopRightRect" Grid.Row="0" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveTopRight"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveLeftRect" Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveCenterRect" Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveCenter" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveRightRect" Grid.Row="1" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveBottomLeftRect" Grid.Row="2" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveBottomLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveBottomRect" Grid.Row="2" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveBottom" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="ActiveBottomRightRect" Grid.Row="2" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="ActiveBottomRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalTopLeftRect" Grid.Row="0" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalTopLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalTopRect" Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalTop"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalTopRightRect" Grid.Row="0" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalTopRight"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalLeftRect" Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalCenterRect" Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalCenter" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalRightRect" Grid.Row="1" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalBottomLeftRect" Grid.Row="2" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalBottomLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalBottomRect" Grid.Row="2" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalBottom" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedNormalBottomRightRect" Grid.Row="2" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedNormalSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=NormalOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedNormalBottomRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverTopLeftRect" Grid.Row="0" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverTopLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverTopRect" Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverTop"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverTopRightRect" Grid.Row="0" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverTopRight"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverLeftRect" Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverCenterRect" Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverCenter" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverRightRect" Grid.Row="1" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverBottomLeftRect" Grid.Row="2" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverBottomLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverBottomRect" Grid.Row="2" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverBottom" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedHoverBottomRightRect" Grid.Row="2" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedHoverSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=HoverOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedHoverBottomRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveTopLeftRect" Grid.Row="0" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveTopLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveTopRect" Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveTop"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveTopRightRect" Grid.Row="0" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveTopRight"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveLeftRect" Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveCenterRect" Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveCenter" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveRightRect" Grid.Row="1" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveBottomLeftRect" Grid.Row="2" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveBottomLeft" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveBottomRect" Grid.Row="2" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <ImageBrush 
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveBottom" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle SnapsToDevicePixels="True" x:Name="SelectedActiveBottomRightRect" Grid.Row="2" Grid.Column="2">
+                                <Rectangle.Fill>
+                                    <ImageBrush
+                        ImageSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=SelectedActiveSource}" 
+                        Opacity="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=ActiveOpacity}" 
+                        ViewboxUnits="Absolute" x:Name="SelectedActiveBottomRight" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
+
+
+                        <Rectangle SnapsToDevicePixels="True" x:Name="MouseRect" IsHitTestVisible="True">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="Transparent" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=InnerPadding}">
+                            <ContentControl IsTabStop="False" SnapsToDevicePixels="True" x:Name="ContentElement" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Components:Scale9}}, Path=InnerContent}" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChromelessTextBox" TargetType="{x:Type TextBox}">
+
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="Foreground" Value="#333333" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <ScrollViewer IsTabStop="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="0" x:Name="PART_ContentHost" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

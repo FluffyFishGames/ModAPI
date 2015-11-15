@@ -40,7 +40,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" x:Name="CurrentTask" />
+                <TextBlock Style="{StaticResource NormalLabel}" Grid.Row="0" x:Name="CurrentTask" />
                 <ProgressBar x:Name="ProgressBar" Height="25" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Value="55" Grid.Row="1" BorderBrush="#FF7C7C7C" BorderThickness="0" />
             </Grid>
         </StackPanel>

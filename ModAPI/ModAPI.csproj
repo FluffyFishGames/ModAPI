@@ -218,6 +218,13 @@
     <Content Include="resources\langs\Language.ES.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="resources\textures\Icons\Icon_CreateMod.png" />
+    <Resource Include="resources\textures\NewGUI\PanelButtons.png" />
+    <Resource Include="resources\textures\backgroundShadow.png" />
+    <Resource Include="resources\textures\NewGUI\PanelBottom.png" />
+    <Resource Include="resources\textures\NewGUI\PanelCenter.png" />
+    <Resource Include="resources\textures\NewGUI\PanelSplit.png" />
+    <Resource Include="resources\textures\NewGUI\PanelTop.png" />
     <Resource Include="resources\textures\Icons\FluffyFish.png" />
     <Resource Include="resources\textures\Icons\noAvatar.png" />
     <Resource Include="resources\textures\Icons\Icon_Login.png" />
@@ -384,9 +391,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="resources\fonts\BebasNeue.otf" />
-    <Resource Include="resources\fonts\BlissfulThinking.otf" />
-    <Resource Include="resources\fonts\Aller_Bd.ttf" />
     <None Include="app.manifest" />
     <None Include="ModAPI.config" />
     <None Include="ModAPI.pfx" />
@@ -396,39 +400,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\fonts\kenyan coffee bd.ttf" />
-    <Resource Include="resources\fonts\kenyan coffee rg.ttf" />
-    <Resource Include="resources\fonts\accid___.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Bold Italic.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Bold.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Display Bold Italic.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Display Bold.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Display Italic.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Display Light Italic.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Display Light.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Display Regular.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Italic.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Light Italic.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Light.ttf" />
-    <Resource Include="resources\fonts\Aero Matics Regular.ttf" />
-    <Resource Include="resources\fonts\blue highway bd.ttf" />
-    <Resource Include="resources\fonts\blue highway cd.ttf" />
-    <Resource Include="resources\fonts\blue highway d.ttf" />
-    <Resource Include="resources\fonts\blue highway linocut.ttf" />
-    <Resource Include="resources\fonts\blue highway rg.ttf" />
-    <Resource Include="resources\fonts\gnuolane rg.ttf" />
-    <Resource Include="resources\fonts\Mockup-Bold.otf" />
-    <Resource Include="resources\fonts\Mockup-BoldItalic.otf" />
-    <Resource Include="resources\fonts\Mockup-Italic.otf" />
-    <Resource Include="resources\fonts\Mockup-Regular.otf" />
-    <Resource Include="resources\fonts\YanoneKaffeesatz-Bold.ttf" />
-    <Resource Include="resources\fonts\YanoneKaffeesatz-Light.ttf" />
-    <Resource Include="resources\fonts\YanoneKaffeesatz-Regular.ttf" />
-    <Resource Include="resources\fonts\YanoneKaffeesatz-Thin.ttf" />
-    <Resource Include="resources\fonts\expressway rg.ttf" />
-    <Resource Include="resources\fonts\EleganTech-.ttf" />
+    <Resource Include="resources\fonts\Sansation_Bold.ttf" />
+    <Resource Include="resources\fonts\Sansation_Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\textures\background.png" />
@@ -495,9 +468,6 @@
     <Resource Include="resources\textures\NewGUI\TextFieldButton_Active.png" />
     <Resource Include="resources\textures\NewGUI\TextFieldButton_Hover.png" />
     <Resource Include="resources\textures\NewGUI\TextFieldButton_Normal.png" />
-    <Resource Include="resources\textures\NewGUI\TextField_Active.png" />
-    <Resource Include="resources\textures\NewGUI\TextField_Hover.png" />
-    <Resource Include="resources\textures\NewGUI\TextField_Normal.png" />
     <Resource Include="resources\textures\NewGUI\ToggleOn_Active.png" />
     <Resource Include="resources\textures\NewGUI\ToggleOn_Hover.png" />
     <Resource Include="resources\textures\NewGUI\ToggleOn_Normal.png" />
@@ -524,26 +494,10 @@
     <Resource Include="resources\textures\savegameEditorLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\textures\Icons\IconTab_Blueprints.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Blueprints_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Buildings.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Buildings_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Inventory.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Inventory_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Player.png" />
-    <Resource Include="resources\textures\Icons\IconTab_Player_Selected.png" />
     <Resource Include="resources\textures\Icons\IconTab_Settings.png" />
     <Resource Include="resources\textures\Icons\IconTab_Settings_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTop_CreateMod.png" />
-    <Resource Include="resources\textures\Icons\IconTop_CreateModLib.png" />
-    <Resource Include="resources\textures\Icons\IconTop_CreateModLib_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTop_CreateModProject.png" />
-    <Resource Include="resources\textures\Icons\IconTop_CreateModProject_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTop_CreateMod_Selected.png" />
     <Resource Include="resources\textures\Icons\IconTop_Mods.png" />
     <Resource Include="resources\textures\Icons\IconTop_Mods_Selected.png" />
-    <Resource Include="resources\textures\Icons\IconTop_Savegame.png" />
-    <Resource Include="resources\textures\Icons\IconTop_Savegame_Selected.png" />
     <Resource Include="resources\textures\Icons\Icon_Accept.png" />
     <Resource Include="resources\textures\Icons\Icon_Continue.png" />
     <Resource Include="resources\textures\Icons\Icon_Decline.png" />
@@ -572,42 +526,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\textures\NewGUI\StatusBar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\textures\Icons\SocialIcons.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\textures\NewGUI\sunMeter.png" />
-    <Resource Include="resources\textures\NewGUI\sunThumb.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\textures\Buildings\ArmEffigy.png" />
-    <Resource Include="resources\textures\Buildings\BasicFire.png" />
-    <Resource Include="resources\textures\Buildings\BasicWall.png" />
-    <Resource Include="resources\textures\Buildings\DeadFallTrap.png" />
-    <Resource Include="resources\textures\Buildings\FirePit.png" />
-    <Resource Include="resources\textures\Buildings\HappyBirthdayTrap.png" />
-    <Resource Include="resources\textures\Buildings\HouseBoat.png" />
-    <Resource Include="resources\textures\Buildings\HuntingShelter.png" />
-    <Resource Include="resources\textures\Buildings\LargeEffigy.png" />
-    <Resource Include="resources\textures\Buildings\LogCabin.png" />
-    <Resource Include="resources\textures\Buildings\LogHolder.png" />
-    <Resource Include="resources\textures\Buildings\NooseTrap.png" />
-    <Resource Include="resources\textures\Buildings\Platform.png" />
-    <Resource Include="resources\textures\Buildings\RabbitCage.png" />
-    <Resource Include="resources\textures\Buildings\SimpleEffigy.png" />
-    <Resource Include="resources\textures\Buildings\SmallEffigy.png" />
-    <Resource Include="resources\textures\Buildings\SmallGarden.png" />
-    <Resource Include="resources\textures\Buildings\SmallRaft.png" />
-    <Resource Include="resources\textures\Buildings\Stairs.png" />
-    <Resource Include="resources\textures\Buildings\StandingFire.png" />
-    <Resource Include="resources\textures\Buildings\StickHolder.png" />
-    <Resource Include="resources\textures\Buildings\StickMarker.png" />
-    <Resource Include="resources\textures\Buildings\TemporaryShelter.png" />
-    <Resource Include="resources\textures\Buildings\WallDefensive.png" />
-    <Resource Include="resources\textures\Buildings\WallDoorway.png" />
-    <Resource Include="resources\textures\Buildings\WallWindow.png" />
-    <Resource Include="resources\textures\Buildings\WoodBench.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\langs\Language.DE.png">
