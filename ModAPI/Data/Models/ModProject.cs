@@ -473,7 +473,11 @@ namespace ModAPI.Data.Models
                 SetProgress(progress, 0f, "Preparing");
                 baseModLib = ModuleDefinition.ReadModule(baseModLibPath);
                 SetProgress(progress, 5f);
-                modModule = ModuleDefinition.ReadModule(modFilePath);
+                Utils.CustomAssemblyResolver assemblyResolver = new Utils.CustomAssemblyResolver();
+                assemblyResolver.AddPath(ModAPI.Configurations.Configuration.GetPath("ModLib") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar);
+                modModule = ModuleDefinition.ReadModule(modFilePath, new ReaderParameters() {
+                    AssemblyResolver = assemblyResolver
+                });
                 SetProgress(progress, 10f);
             } 
             catch (Exception e) 
@@ -487,6 +491,7 @@ namespace ModAPI.Data.Models
             mod.header = new Mod.Header(mod, System.IO.File.ReadAllText(modInfoPath));
             mod.module = modModule;
             MemoryStream stream = new MemoryStream();
+
             mod.module.Write(stream);
             stream.Position = 0;
             mod.originalModule = ModuleDefinition.ReadModule(stream);

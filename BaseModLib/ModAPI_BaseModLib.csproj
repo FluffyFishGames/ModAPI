@@ -81,8 +81,7 @@
       <HintPath>..\libs\System.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\SaveGameEditor\lib\UnityEngine.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\..\Spiele\Steam\SteamApps\common\The Forest\theforest_data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

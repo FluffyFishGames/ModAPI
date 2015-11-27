@@ -1208,7 +1208,7 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + this.Game.GameConfiguration.ID, "Failed parsing versions file.", Debug.Type.ERROR);
+                    Debug.Log("Game: " + this.Game.GameConfiguration.ID, "Failed parsing versions file: "+e.ToString(), Debug.Type.ERROR);
                 }
             }
 

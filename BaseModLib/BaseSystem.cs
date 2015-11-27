@@ -164,9 +164,20 @@ namespace ModAPI
                     while (www.progress < 1)
                     {
                     }
+                    Log.Write("Asset bundle ready: "+www.error, "Core");
+                    Log.Write("Asset bundle: " + www.assetBundle, "Core");
                     if ((www.error == "" || www.error == null) && www.assetBundle != null)
                     {
-                        ModAPI.GUI.Skin = (GUISkin)www.assetBundle.mainAsset;
+                        Log.Write("Asset bundle loaded", "Core");
+                        UnityEngine.Object[] objs = www.assetBundle.LoadAllAssets();
+                        foreach (UnityEngine.Object o in objs)
+                        {
+                            Log.Write("Asset bundle: "+o, "Core");
+                            if (o is GUISkin)
+                            {
+                                ModAPI.GUI.Skin = (GUISkin) o;
+                            }
+                        }
                     }
                 } 
                 catch (Exception e)

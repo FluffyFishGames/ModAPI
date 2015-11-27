@@ -32,6 +32,8 @@ namespace ModAPI
         public bool justOpened = false;
         protected bool addParam = false;
         protected bool submit = false;
+        protected List<string> Last = new List<string>();
+        protected int LastPosition = -1;
 
         void OnGUI()
         {
@@ -69,6 +71,33 @@ namespace ModAPI
                 }
                 else
                 {
+                    if (Event.current.keyCode == KeyCode.DownArrow && Event.current.type == EventType.KeyDown)
+                    {
+                        if (LastPosition > 0)
+                        {
+                            LastPosition--;
+                            if (LastPosition <= 0)
+                            {
+                                input = "";
+                                LastPosition = 0;
+                            }
+                            else
+                            {
+                                input = Last[LastPosition];
+                            }
+                            Event.current.Use();
+                        }
+                    }
+                    if (Event.current.keyCode == KeyCode.UpArrow && Event.current.type == EventType.KeyDown)
+                    {
+                        if (LastPosition < Last.Count - 1)
+                        {
+                            LastPosition++;
+                            input = Last[LastPosition];
+                            Event.current.Use();
+                        }
+                    }
+
                     if ((Event.current.keyCode == KeyCode.BackQuote || Event.current.keyCode == KeyCode.Escape || Event.current.keyCode == KeyCode.Backslash) && Event.current.type == EventType.KeyDown)
                     {
                         ModAPI.Console.Switch();
@@ -92,9 +121,12 @@ namespace ModAPI
                 UnityEngine.GUI.Box(new Rect(x, y, width, height), "Console", UnityEngine.GUI.skin.window);
                 List<string> n = ModAPI.Console.Lines.ToList();
                 n.Reverse();
+                UnityEngine.GUI.enabled = false;
+                UnityEngine.GUI.color = new Color(1f, 1f, 1f, 1f);
                 UnityEngine.GUI.TextArea(new Rect(x + 10f, y + 40f, width - 20f, height - 85f), string.Join("\r\n", n.ToArray()));
+                UnityEngine.GUI.enabled = true;
                 UnityEngine.GUI.SetNextControlName("Input");
-                input = UnityEngine.GUI.TextField(new Rect(x + 10f, y + height - 35f, width - 20f, 25f), input);
+                input = UnityEngine.GUI.TextField(new Rect(x + 10f, y + height - 40f, width - 20f, 25f), input);
                 input = input.Replace("â", "a");
                 input = input.Replace("Â", "A");
                 input = input.Replace("ô", "o");
@@ -127,7 +159,7 @@ namespace ModAPI
                     List<string> possible = ModAPI.Console.GetPossibleValues(input);
                     int lastIndex = input.LastIndexOf(" ");
                     try {
-                        if (possible.Count > 0)
+                        if (possible.Count > 1)
                         {
                             float _left = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(input.Substring(0, lastIndex))).x - 10f;
                             float _right = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(input + ".")).x - 5f;
@@ -142,7 +174,7 @@ namespace ModAPI
                             float maxHeight = 300f;
                             float contentHeight = possible.Count * entryHeight;
                             if (contentHeight > maxHeight) contentHeight = maxHeight;
-                            UnityEngine.GUI.Box(new Rect(x + 10f + _left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "", UnityEngine.GUI.skin.window);
+                            UnityEngine.GUI.Box(new Rect(x + 10f + _left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "");
 
                             int maxNum = possible.Count;
                             int perPage = (int)(contentHeight / entryHeight);
@@ -159,26 +191,26 @@ namespace ModAPI
                             {
                                 if (istartIndex + i == currentAutocompletion)
                                 {
-                                    UnityEngine.GUI.Box(new Rect(x + 10f + _left, y + height - 35f - contentHeight + i * entryHeight, labelWidth + 10f, entryHeight), "");
+                                    UnityEngine.GUI.Box(new Rect(x + 10f + _left, y + height - 40f - contentHeight + i * entryHeight, labelWidth + 10f, entryHeight), "", GUI.Skin.button);
                                 }
-                                UnityEngine.GUI.Label(new Rect(x + 10f + _left + 5f, y + height - 35f - contentHeight + i * entryHeight, labelWidth, entryHeight), possible.ElementAt(istartIndex + i));
+                                UnityEngine.GUI.Label(new Rect(x + 10f + _left + 5f, y + height - 40f - contentHeight + i * entryHeight, labelWidth, entryHeight), possible.ElementAt(istartIndex + i));
                             }
 
                             if (currentAutocompletion > -1)
                             {
                                 string _n = possible[currentAutocompletion].Substring(input.Substring(lastIndex + 1).Length);
-                                UnityEngine.GUI.Label(new Rect(x + 10f + _right, y + height - 35f + 3f, 200f, 20f), _n);
+                                UnityEngine.GUI.Label(new Rect(x + 10f + _right, y + height - 43f + 3f, 200f, 20f), _n);
 
                                 if (addParam)
                                 {
                                     string newInput = input.Substring(0, lastIndex) + " ";
                                     if (possible[currentAutocompletion].Contains(" "))
                                     {
-                                        newInput += "\"" + possible[currentAutocompletion] + "\"";
+                                        newInput += "\"" + possible[currentAutocompletion] + "\" ";
                                     }
                                     else
                                     {
-                                        newInput += possible[currentAutocompletion];
+                                        newInput += possible[currentAutocompletion] + " ";
                                     }
                                     input = newInput;
                                     addParam = false;
@@ -198,7 +230,9 @@ namespace ModAPI
                 if (UnityEngine.GUI.GetNameOfFocusedControl() == "Input" && ((submit && !addParam)) && input.Trim() != "")
                 {
                     ModAPI.Console.ParseInput(input);
+                    Last.Insert(0, input);
                     input = "";
+                    LastPosition = -1;
                     submit = false;
                 }
                 Event.current.mousePosition = new Vector2(0f, 0f);
