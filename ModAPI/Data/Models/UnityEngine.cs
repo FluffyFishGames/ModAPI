@@ -20,16 +20,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 using ModAPI.Data.Models;
 using ModAPI.Utils;
-using System.Xml.Linq;
 
 namespace UnityEngine
 {
-
     public enum HideFlags
     {
         HideAndDontSave
@@ -48,20 +44,19 @@ namespace UnityEngine
 
         public Object()
         {
-
         }
     }
 
-    public class ComponentXMLProvider : Component, ModAPI.Data.Models.IXMLProvider
+    public class ComponentXMLProvider : Component, IXMLProvider
     {
         public virtual XElement GetXML()
         {
-            return ModAPI.Data.Models.XMLParser.GetXML(this);
+            return XMLParser.GetXML(this);
         }
 
         public virtual void SetXML(XElement element)
         {
-            ModAPI.Data.Models.XMLParser.SetXML(this, element);
+            XMLParser.SetXML(this, element);
         }
     }
 
@@ -69,12 +64,13 @@ namespace UnityEngine
     {
         public object[] data;
 
-        public BaseUnity() : base()
+        public BaseUnity()
         {
-
         }
 
-        public BaseUnity(string name) : base(name) { }
+        public BaseUnity(string name) : base(name)
+        {
+        }
 
         public BaseUnity(object[] data)
         {
@@ -84,28 +80,41 @@ namespace UnityEngine
 
     public class Material : BaseUnity
     {
-        public Material(object[] data) : base(data) { }
+        public Material(object[] data) : base(data)
+        {
+        }
     }
 
     public class Texture : BaseUnity
     {
-        public Texture(object[] data) : base(data) { }
+        public Texture(object[] data) : base(data)
+        {
+        }
     }
 
     public class Bounds : BaseUnity
     {
-        public Bounds(object[] data) : base(data) { }
+        public Bounds(object[] data) : base(data)
+        {
+        }
     }
 
     public class ScriptableObject : BaseUnity
     {
-        public ScriptableObject() : base() { }
-        public ScriptableObject(object[] data) : base(data) { }
+        public ScriptableObject()
+        {
+        }
+
+        public ScriptableObject(object[] data) : base(data)
+        {
+        }
     }
 
     public class MeshFilter : BaseUnity
     {
-        public MeshFilter(object[] data) : base(data) { }
+        public MeshFilter(object[] data) : base(data)
+        {
+        }
     }
 
     public class Component : BaseUnity
@@ -113,171 +122,262 @@ namespace UnityEngine
         public byte[] byteData;
         public object[] componentData;
 
-        public Component() : base() {}
-        public Component(object[] data) : base(data) { }
+        public Component()
+        {
+        }
+
+        public Component(object[] data) : base(data)
+        {
+        }
     }
 
     public class GameObject : BaseUnity
     {
-        public GameObject(string name) : base(name) { }
-        public GameObject(object[] data) : base(data) { }
+        public GameObject(string name) : base(name)
+        {
+        }
+
+        public GameObject(object[] data) : base(data)
+        {
+        }
 
         public object GetComponent(Type name)
         {
             return Components[name];
-            
         }
 
         public object AddComponent(Type name)
         {
-            object obj = Activator.CreateInstance(name);
+            var obj = Activator.CreateInstance(name);
             Components.Add(name, obj);
             return obj;
         }
 
-        public Dictionary<Type, object> Components = new Dictionary<Type,object>();
+        public Dictionary<Type, object> Components = new Dictionary<Type, object>();
     }
+
     public class Font : BaseUnity
     {
-        public Font(object[] data) : base(data) { }
+        public Font(object[] data) : base(data)
+        {
+        }
     }
 
     public class AudioClip : BaseUnity
     {
-        public AudioClip(object[] data) : base(data) { }
+        public AudioClip(object[] data) : base(data)
+        {
+        }
     }
 
     public class TextAsset : BaseUnity
     {
-        public TextAsset(object[] data) : base(data) { }
+        public TextAsset(object[] data) : base(data)
+        {
+        }
     }
 
     public class Mesh : BaseUnity
     {
-        public Mesh(object[] data) : base(data) { }
+        public Mesh(object[] data) : base(data)
+        {
+        }
     }
 
     public class AnimationClip : BaseUnity
     {
-        public AnimationClip(object[] data) : base(data) { }
+        public AnimationClip(object[] data) : base(data)
+        {
+        }
     }
 
     public class Texture2D : BaseUnity
     {
-        public Texture2D(object[] data) : base(data) { }
+        public Texture2D(object[] data) : base(data)
+        {
+        }
     }
 
     public class AnimationState : BaseUnity
     {
-        public AnimationState(object[] data) : base(data) { }
+        public AnimationState(object[] data) : base(data)
+        {
+        }
     }
 
     public class WaitForSeconds : BaseUnity
     {
-        public WaitForSeconds(object[] data) : base(data) { }
+        public WaitForSeconds(object[] data) : base(data)
+        {
+        }
     }
 
     public class BoxCollider : Component
     {
-        public BoxCollider(object[] data) : base(data) { }
+        public BoxCollider(object[] data) : base(data)
+        {
+        }
     }
+
     public class Terrain : Component
     {
-        public Terrain(object[] data) : base(data) { }
+        public Terrain(object[] data) : base(data)
+        {
+        }
     }
+
     public class WheelCollider : Collider
     {
-        public WheelCollider(object[] data) : base(data) { }
+        public WheelCollider(object[] data) : base(data)
+        {
+        }
     }
+
     public class MeshCollider : Collider
     {
-        public MeshCollider(object[] data) : base(data) { }
+        public MeshCollider(object[] data) : base(data)
+        {
+        }
     }
+
     public class TerrainCollider : Collider
     {
-        public TerrainCollider(object[] data) : base(data) { }
+        public TerrainCollider(object[] data) : base(data)
+        {
+        }
     }
+
     public class CapsuleCollider : Collider
     {
-        public CapsuleCollider(object[] data) : base(data) { }
+        public CapsuleCollider(object[] data) : base(data)
+        {
+        }
     }
+
     public class SphereCollider : Collider
     {
-        public SphereCollider(object[] data) : base(data) { }
+        public SphereCollider(object[] data) : base(data)
+        {
+        }
     }
+
     public class NavMeshAgent : Component
     {
-        public NavMeshAgent(object[] data) : base(data) { }
+        public NavMeshAgent(object[] data) : base(data)
+        {
+        }
     }
+
     public class Camera : Component
     {
-        public Camera(object[] data) : base(data) { }
+        public Camera(object[] data) : base(data)
+        {
+        }
     }
+
     public class Rigidbody : Component
     {
-        public Rigidbody(object[] data) : base(data) { }
+        public Rigidbody(object[] data) : base(data)
+        {
+        }
     }
+
     public class Renderer : Component
     {
-        public Renderer(object[] data) : base(data) { }
+        public Renderer(object[] data) : base(data)
+        {
+        }
     }
+
     public class ClothRenderer : Component
     {
-        public ClothRenderer(object[] data) : base(data) { }
+        public ClothRenderer(object[] data) : base(data)
+        {
+        }
     }
+
     public class LineRenderer : Component
     {
-        public LineRenderer(object[] data) : base(data) { }
+        public LineRenderer(object[] data) : base(data)
+        {
+        }
     }
+
     public class TrailRenderer : Component
     {
-        public TrailRenderer(object[] data) : base(data) { }
+        public TrailRenderer(object[] data) : base(data)
+        {
+        }
     }
+
     public class ParticleRenderer : Component
     {
-        public ParticleRenderer(object[] data) : base(data) { }
+        public ParticleRenderer(object[] data) : base(data)
+        {
+        }
     }
+
     public class SkinnedMeshRenderer : Component
     {
-        public SkinnedMeshRenderer(object[] data) : base(data) { }
+        public SkinnedMeshRenderer(object[] data) : base(data)
+        {
+        }
     }
+
     public class MeshRenderer : Component
     {
-        public MeshRenderer(object[] data) : base(data) { }
+        public MeshRenderer(object[] data) : base(data)
+        {
+        }
     }
 
     public class AudioListener : Component
     {
-        public AudioListener(object[] data) : base(data) { }
+        public AudioListener(object[] data) : base(data)
+        {
+        }
     }
 
     public class ParticleEmitter : Component
     {
-        public ParticleEmitter(object[] data) : base(data) { }
+        public ParticleEmitter(object[] data) : base(data)
+        {
+        }
     }
 
     public class Cloth : Component
     {
-        public Cloth(object[] data) : base(data) { }
+        public Cloth(object[] data) : base(data)
+        {
+        }
     }
 
     public class Light : Component
     {
-        public Light(object[] data) : base(data) { }
+        public Light(object[] data) : base(data)
+        {
+        }
     }
 
     public class Joint : Component
     {
-        public Joint(object[] data) : base(data) { }
+        public Joint(object[] data) : base(data)
+        {
+        }
     }
 
     public class TextMesh : Component
     {
-        public TextMesh(object[] data) : base(data) { }
+        public TextMesh(object[] data) : base(data)
+        {
+        }
     }
+
     public class Collider : Component
     {
-        public Collider(object[] data) : base(data) { }
+        public Collider(object[] data) : base(data)
+        {
+        }
     }
 
     public class Color : BaseXMLProvider
@@ -318,22 +418,25 @@ namespace UnityEngine
         public float y;
         public float z;
 
-        public Vector3() { }
+        public Vector3()
+        {
+        }
+
         public XElement GetXML()
         {
-            XElement root = new XElement("Vector3");
-            root.Add(new XElement("X", this.x));
-            root.Add(new XElement("Y", this.y));
-            root.Add(new XElement("Z", this.z));
+            var root = new XElement("Vector3");
+            root.Add(new XElement("X", x));
+            root.Add(new XElement("Y", y));
+            root.Add(new XElement("Z", z));
             root.SetAttributeValue("Type", "UnityEngine.Vector3");
             return root;
         }
 
         public void SetXML(XElement element)
         {
-            this.x = XMLHelper.GetXMLElementAsFloat(element, "X", this.x);
-            this.y = XMLHelper.GetXMLElementAsFloat(element, "Y", this.y);
-            this.z = XMLHelper.GetXMLElementAsFloat(element, "Z", this.z);
+            x = XMLHelper.GetXMLElementAsFloat(element, "X", x);
+            y = XMLHelper.GetXMLElementAsFloat(element, "Y", y);
+            z = XMLHelper.GetXMLElementAsFloat(element, "Z", z);
         }
 
         public Vector3(float x, float y, float z)
@@ -347,6 +450,7 @@ namespace UnityEngine
         {
             return x.x == y.x && x.y == y.y && x.z == y.z;
         }
+
         public static bool operator !=(Vector3 x, Vector3 y)
         {
             return !(x == y);
@@ -361,6 +465,7 @@ namespace UnityEngine
         public float w;
 
         public static Vector4 zero = new Vector4(0, 0, 0, 0);
+
         public Vector4(float x, float y, float z, float w)
         {
             this.x = x;
@@ -378,24 +483,27 @@ namespace UnityEngine
         public float z;
         public float w;
 
-        public Quaternion() { }
+        public Quaternion()
+        {
+        }
+
         public XElement GetXML()
         {
-            XElement root = new XElement("Quaternion");
-            root.Add(new XElement("X", this.x));
-            root.Add(new XElement("Y", this.y));
-            root.Add(new XElement("Z", this.z));
-            root.Add(new XElement("W", this.w));
+            var root = new XElement("Quaternion");
+            root.Add(new XElement("X", x));
+            root.Add(new XElement("Y", y));
+            root.Add(new XElement("Z", z));
+            root.Add(new XElement("W", w));
             root.SetAttributeValue("Type", "UnityEngine.Quaternion");
             return root;
         }
 
         public void SetXML(XElement element)
         {
-            this.x = XMLHelper.GetXMLElementAsFloat(element, "X", this.x);
-            this.y = XMLHelper.GetXMLElementAsFloat(element, "Y", this.y);
-            this.z = XMLHelper.GetXMLElementAsFloat(element, "Z", this.z);
-            this.w = XMLHelper.GetXMLElementAsFloat(element, "W", this.w);
+            x = XMLHelper.GetXMLElementAsFloat(element, "X", x);
+            y = XMLHelper.GetXMLElementAsFloat(element, "Y", y);
+            z = XMLHelper.GetXMLElementAsFloat(element, "Z", z);
+            w = XMLHelper.GetXMLElementAsFloat(element, "W", w);
         }
 
         public Quaternion(float x, float y, float z, float w)
@@ -410,6 +518,7 @@ namespace UnityEngine
         {
             return x.x == y.x && x.y == y.y && x.z == y.z && x.w == y.w;
         }
+
         public static bool operator !=(Quaternion x, Quaternion y)
         {
             return !(x == y);
@@ -418,7 +527,6 @@ namespace UnityEngine
 
     public class Transform : BaseXMLProvider
     {
-        public Transform() { }
         public Vector3 localPosition;
         public Quaternion localRotation;
         public Vector3 localScale;

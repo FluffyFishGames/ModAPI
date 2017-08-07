@@ -18,23 +18,12 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
 using ModAPI.Data.Models;
+using ModAPI.Utils;
 
 namespace ModAPI.Components.Inputs
 {
@@ -42,26 +31,26 @@ namespace ModAPI.Components.Inputs
     {
         public static void Add(Grid grid, FieldDefinition field, string label, Binding value, int row, int startColumn)
         {
-            string labelStyle = field.GetExtra("labelstyle", "NormalLabel");
-            string inputStyle = field.GetExtra("inputstyle", "");
+            var labelStyle = field.GetExtra("labelstyle", "NormalLabel");
+            var inputStyle = field.GetExtra("inputstyle", "");
 
             Add(grid, label, value, row, labelStyle, inputStyle, startColumn);
         }
 
         public static void Add(Grid grid, XElement element, string label, Binding value, int row, int startColumn)
         {
-            string labelStyle = Utils.XMLHelper.GetXMLAttributeAsString(element, "LabelStyle", "NormalLabel");
-            string inputStyle = Utils.XMLHelper.GetXMLAttributeAsString(element, "InputStyle", "");
+            var labelStyle = XMLHelper.GetXMLAttributeAsString(element, "LabelStyle", "NormalLabel");
+            var inputStyle = XMLHelper.GetXMLAttributeAsString(element, "InputStyle", "");
 
             Add(grid, label, value, row, labelStyle, inputStyle, startColumn);
         }
 
         public static void Add(Grid grid, string label, Binding value, int row, string labelStyle, string inputStyle, int startColumn)
         {
-            int column = startColumn;
+            var column = startColumn;
             if (label != "")
             {
-                TextBlock labelElement = new TextBlock();
+                var labelElement = new TextBlock();
                 labelElement.Style = App.Instance.Resources[labelStyle] as Style;
                 labelElement.SetResourceReference(TextBlock.TextProperty, label);
                 labelElement.VerticalAlignment = VerticalAlignment.Center;
@@ -73,16 +62,19 @@ namespace ModAPI.Components.Inputs
                 column += 1;
             }
 
-            System.Windows.Controls.TextBox inputElement = new System.Windows.Controls.TextBox();
+            var inputElement = new TextBox();
             inputElement.HorizontalAlignment = HorizontalAlignment.Stretch;
-            inputElement.Margin = new Thickness(column > 0?5:0, 0, 0, 5);
-            if (inputStyle != "") 
-            { 
-                Style s = App.Instance.Resources[inputStyle] as Style;;
-                if (s.TargetType == typeof(System.Windows.Controls.TextBox))
+            inputElement.Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5);
+            if (inputStyle != "")
+            {
+                var s = App.Instance.Resources[inputStyle] as Style;
+                ;
+                if (s.TargetType == typeof(TextBox))
+                {
                     inputElement.Style = s;
+                }
             }
-            inputElement.SetBinding(System.Windows.Controls.TextBox.TextProperty, value);
+            inputElement.SetBinding(TextBox.TextProperty, value);
 
             grid.Children.Add(inputElement);
             Grid.SetColumn(inputElement, column);

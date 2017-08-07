@@ -19,19 +19,17 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ModAPI.Attributes
 {
     /// <summary>
     /// This attribute marks a method to be executed every frame. First parameter defines if this method should only be called while in-game. [static methods only]
     /// </summary>
-    [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class ExecuteEveryFrame : ConfigurationAttribute, IStaticAttribute, INoParametersAttribute
     {
         protected bool OnlyInGame;
+
         public ExecuteEveryFrame(bool OnlyInGame = true)
         {
             this.OnlyInGame = OnlyInGame;

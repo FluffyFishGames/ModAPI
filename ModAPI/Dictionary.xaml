@@ -43,9 +43,9 @@
         </Setter>
     </Style>
     <Style x:Key="NormalLabel" TargetType="{x:Type TextBlock}">
-        <Setter Property="FontFamily" Value="{StaticResource NormalFont}"></Setter>
-        <Setter Property="FontSize" Value="13"></Setter>
-        <Setter Property="Foreground" Value="#ffffff"></Setter>
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect
@@ -59,7 +59,7 @@
     </Style>
 
     <Style x:Key="WhiteLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
-        <Setter Property="Foreground" Value="#ffffff"></Setter>
+        <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect
@@ -73,8 +73,8 @@
     </Style>
 
     <Style x:Key="HeaderLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
-        <Setter Property="FontFamily" Value="{StaticResource BigFont}"></Setter>
-        <Setter Property="FontSize" Value="16"></Setter>
+        <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
+        <Setter Property="FontSize" Value="16" />
         <Setter Property="Effect">
             <Setter.Value>
             <DropShadowEffect
@@ -204,11 +204,11 @@
                 <ControlTemplate TargetType="{x:Type Components:TabControlEx}" x:Name="Parent">
                     <Grid SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid SnapsToDevicePixels="True" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <TabPanel SnapsToDevicePixels="True" x:Name="HeaderPanel"
@@ -339,8 +339,7 @@
                                        InnerPadding="0"
                                        Width="24"
                                        Height="24"
-                                       ContentOffset="0, 0">
-                        </Components:Scale9>
+                                       ContentOffset="0, 0" />
                         <ContentPresenter VerticalAlignment="Center" Margin="36, 0, 0, 0" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="States">
@@ -420,9 +419,7 @@
                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    
-                                </VisualState>
+                                <VisualState x:Name="Pressed" />
                                 <VisualState x:Name="Focused">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
@@ -479,9 +476,7 @@
                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Pressed">
-
-                                </VisualState>
+                                <VisualState x:Name="Pressed" />
                                 <VisualState x:Name="Focused">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
@@ -527,10 +522,8 @@
                                     <VisualTransition GeneratedDuration="0:0:0" From="Unselected" To="Selected" />
                                     <VisualTransition GeneratedDuration="0:0:0" From="Selected" To="Unselected" />
                                 </VisualStateGroup.Transitions>
-                                <VisualState x:Name="Selected">
-                                </VisualState>
-                                <VisualState x:Name="Unselected">
-                                </VisualState>
+                                <VisualState x:Name="Selected" />
+                                <VisualState x:Name="Unselected" />
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualStateGroup.Transitions>
@@ -623,8 +616,7 @@
                                             InnerPadding="0"
                                             BlendNormal="True"
                                             SnapsToDevicePixels="True"
-                                            ContentOffset="0, 0">
-                        </Components:Scale9>
+                                            ContentOffset="0, 0" />
                         <Grid Margin="1" Background="{TemplateBinding Background}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -841,7 +833,7 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Template">
             <Setter.Value>
@@ -885,8 +877,7 @@
             Name="ToggleButton" 
             Focusable="false"
             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
-            ClickMode="Press">
-                        </ToggleButton>
+            ClickMode="Press" />
                         <Popup 
                             VerticalOffset="-1"
                             HorizontalOffset="1"
@@ -958,7 +949,7 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -992,8 +983,7 @@
             Name="ToggleButton" 
             Focusable="false"
             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
-            ClickMode="Press">
-                        </ToggleButton>
+            ClickMode="Press" />
                         <Popup 
                             VerticalOffset="-1"
             Name="Popup"
@@ -1192,7 +1182,7 @@
                                     <TextBlock Margin="20, 0, 52, 0" Grid.Row="0" Text="{TemplateBinding Title}" HorizontalAlignment="Center" Style="{StaticResource HeaderLabel}" VerticalAlignment="Center" />
                                     <Button x:Name="PART_Close" Width="16" Height="16" Margin="0, 0, 16, 0" Grid.Row="0" Style="{StaticResource DarkCloseButton}" HorizontalAlignment="Right" VerticalAlignment="Center" /> 
                                     <ContentPresenter Margin="16, 10, 16, 16" Grid.Row="1" Content="{TemplateBinding Content}" />
-                                    <Rectangle Margin="0, 0, 40, 0" IsHitTestVisible="True" x:Name="PART_Mover" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Fill="Transparent"></Rectangle>
+                                    <Rectangle Margin="0, 0, 40, 0" IsHitTestVisible="True" x:Name="PART_Mover" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Fill="Transparent" />
                                 </Grid>
                             </Components:Scale9.InnerContent>
                         </Components:Scale9>
@@ -1299,18 +1289,18 @@
                 <ControlTemplate TargetType="{x:Type Components:TabControlEx}" x:Name="Parent">
                     <Grid SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="95"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="95" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid SnapsToDevicePixels="True" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                <ColumnDefinition Width="20"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
                             </Grid.ColumnDefinitions>
                             <TabPanel SnapsToDevicePixels="True" Grid.Column="0" x:Name="HeaderPanel"
                             Grid.Row="0"
@@ -1570,8 +1560,7 @@
                             Border="10" 
                             Overflow="0"
                             VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch">
-                        </Components:Scale9>
+                            HorizontalAlignment="Stretch" />
                         <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                     </Grid>
                 </ControlTemplate>
@@ -1589,8 +1578,7 @@
                             Border="6,0,6,6" 
                             Overflow="0"
                             HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                        </Components:Scale9>
+                            VerticalAlignment="Stretch" />
                         <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                     </Grid>
                 </ControlTemplate>
@@ -1608,8 +1596,7 @@
                             Border="6,6,6,0" 
                             Overflow="0"
                             HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                        </Components:Scale9>
+                            VerticalAlignment="Stretch" />
                         <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                     </Grid>
                 </ControlTemplate>
@@ -1629,8 +1616,7 @@
                             Overflow="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            MinHeight="30">
-                    </Components:Scale9>
+                            MinHeight="30" />
                     <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                 </Grid>
             </ControlTemplate>
@@ -1649,8 +1635,7 @@
                             Overflow="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            MinHeight="8">
-                        </Components:Scale9>
+                            MinHeight="8" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -1668,8 +1653,7 @@
                             Overflow="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            MinHeight="30">
-                        </Components:Scale9>
+                            MinHeight="30" />
                         <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                     </Grid>
                 </ControlTemplate>
@@ -1705,8 +1689,7 @@
                             Overflow="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
-                            Height="8">
-                        </Components:Scale9>
+                            Height="8" />
                         <Grid Grid.Row="2" x:Name="Inner" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <ContentPresenter Margin="0,0,0,0" ContentSource="Content"/>
                         </Grid>
@@ -1728,8 +1711,8 @@
                 <ControlTemplate TargetType="{x:Type Components:IconTabItem}" x:Name="Parent">
                     <Grid SnapsToDevicePixels="True">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="16"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Image SnapsToDevicePixels="True" IsHitTestVisible="False" Grid.Column="0" Source="/resources/textures/NewGUI/TopFading.png" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" />
                         <Grid SnapsToDevicePixels="True" Grid.Column="1" Margin="0, 55, 0, 0">
@@ -2101,8 +2084,7 @@
                                             InnerPadding="0"
                                             BlendNormal="True"
                                             SnapsToDevicePixels="True"
-                                            ContentOffset="0, 0">
-            </Components:Scale9>
+                                            ContentOffset="0, 0" />
             <RepeatButton 
       Grid.Row="0"                           
       Style="{StaticResource ScrollBarUpButton}"
@@ -2157,8 +2139,7 @@
                                             InnerPadding="0"
                                             BlendNormal="True"
                                             SnapsToDevicePixels="True"
-                                            ContentOffset="0, 0">
-            </Components:Scale9>
+                                            ContentOffset="0, 0" />
             <Track 
       Name="PART_Track"
       Grid.Column="1"
@@ -2237,9 +2218,7 @@
                                             BlendNormal="True"
                                             Width="16"
                                             SnapsToDevicePixels="True"
-                                            ContentOffset="0, 0">
-                        
-                    </Components:Scale9>
+                                            ContentOffset="0, 0" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -2303,8 +2282,7 @@
                                             InnerPadding="0"
                                             SnapsToDevicePixels="True"
                                             Height="18"
-                                            ContentOffset="0, 0">
-            </Components:Scale9>
+                                            ContentOffset="0, 0" />
             <Track x:Name="PART_Track" VerticalAlignment="Center" Margin="0, 2, 0, 0">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
@@ -2396,14 +2374,14 @@
                     <Grid SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid SnapsToDevicePixels="True" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Grid.RowDefinitions>
-                                <RowDefinition x:Name="TopRow"></RowDefinition>
-                                <RowDefinition x:Name="CenterRow"></RowDefinition>
-                                <RowDefinition x:Name="BottomRow"></RowDefinition>
+                                <RowDefinition x:Name="TopRow" />
+                                <RowDefinition x:Name="CenterRow" />
+                                <RowDefinition x:Name="BottomRow" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition x:Name="LeftColumn"></ColumnDefinition>
-                                <ColumnDefinition x:Name="CenterColumn"></ColumnDefinition>
-                                <ColumnDefinition x:Name="RightColumn"></ColumnDefinition>
+                                <ColumnDefinition x:Name="LeftColumn" />
+                                <ColumnDefinition x:Name="CenterColumn" />
+                                <ColumnDefinition x:Name="RightColumn" />
                             </Grid.ColumnDefinitions>
                             <Rectangle SnapsToDevicePixels="True" x:Name="NormalTopLeftRect" Grid.Row="0" Grid.Column="0">
                                 <Rectangle.Fill>
@@ -2895,7 +2873,7 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="AllowDrop" Value="true" />
@@ -2934,8 +2912,7 @@
             Name="ToggleButton" 
             Focusable="false"
             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
-            ClickMode="Press">
-                                        </ToggleButton>
+            ClickMode="Press" />
                                     </Grid>
                                     <TextBox Style="{StaticResource ChromelessTextBox}" Text="{Binding Path=CurrentText,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent},  UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" />
                                 </Grid>
@@ -2977,9 +2954,7 @@
                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Pressed">
-
-                                </VisualState>
+                                <VisualState x:Name="Pressed" />
                                 <VisualState x:Name="Focused">
                                     <Storyboard>
                                         <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />

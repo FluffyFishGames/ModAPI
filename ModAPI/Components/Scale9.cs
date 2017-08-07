@@ -20,17 +20,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ModAPI.Components
@@ -38,46 +31,56 @@ namespace ModAPI.Components
     /// <summary>
     /// Interaktionslogik für Scale9.xaml
     /// </summary>
-    public partial class Scale9 : ContentControl
+    public class Scale9 : ContentControl
     {
-
-        public static readonly DependencyProperty NormalSourceProperty = DependencyProperty.Register("NormalSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
+        public static readonly DependencyProperty NormalSourceProperty =
+            DependencyProperty.Register("NormalSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
         public static readonly DependencyProperty HoverSourceProperty = DependencyProperty.Register("HoverSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
-        public static readonly DependencyProperty ActiveSourceProperty = DependencyProperty.Register("ActiveSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
-        public static readonly DependencyProperty SelectedNormalSourceProperty = DependencyProperty.Register("SelectedNormalSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
-        public static readonly DependencyProperty SelectedHoverSourceProperty = DependencyProperty.Register("SelectedHoverSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
-        public static readonly DependencyProperty SelectedActiveSourceProperty = DependencyProperty.Register("SelectedActiveSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
+        public static readonly DependencyProperty ActiveSourceProperty =
+            DependencyProperty.Register("ActiveSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
+        public static readonly DependencyProperty SelectedNormalSourceProperty =
+            DependencyProperty.Register("SelectedNormalSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
+        public static readonly DependencyProperty SelectedHoverSourceProperty =
+            DependencyProperty.Register("SelectedHoverSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
+        public static readonly DependencyProperty SelectedActiveSourceProperty =
+            DependencyProperty.Register("SelectedActiveSource", typeof(BitmapSource), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
 
         public static readonly DependencyProperty NormalOpacityProperty = DependencyProperty.Register("NormalOpacity", typeof(Double), typeof(Scale9), new PropertyMetadata(1.0, OnPropertyChanged));
         public static readonly DependencyProperty HoverOpacityProperty = DependencyProperty.Register("HoverOpacity", typeof(Double), typeof(Scale9), new PropertyMetadata(0.0, OnPropertyChanged));
         public static readonly DependencyProperty ActiveOpacityProperty = DependencyProperty.Register("ActiveOpacity", typeof(Double), typeof(Scale9), new PropertyMetadata(0.0, OnPropertyChanged));
 
-        public static readonly DependencyProperty InnerPaddingProperty = DependencyProperty.Register("InnerPadding", typeof(Thickness), typeof(Scale9), new PropertyMetadata(new Thickness(), OnPropertyChanged));
+        public static readonly DependencyProperty InnerPaddingProperty =
+            DependencyProperty.Register("InnerPadding", typeof(Thickness), typeof(Scale9), new PropertyMetadata(new Thickness(), OnPropertyChanged));
         public static readonly DependencyProperty BorderProperty = DependencyProperty.Register("Border", typeof(Thickness), typeof(Scale9), new PropertyMetadata(new Thickness(), OnPropertyChanged));
-        public static readonly DependencyProperty BorderSizeProperty = DependencyProperty.Register("BorderSize", typeof(Thickness), typeof(Scale9), new PropertyMetadata(new Thickness(-1,-1,-1,-1), OnPropertyChanged));
-        public static readonly DependencyProperty OverflowProperty = DependencyProperty.Register("Overflow", typeof(Thickness), typeof(Scale9), new PropertyMetadata(new Thickness(), OnPropertyChanged));
-        public static readonly DependencyProperty ContentOffsetProperty = DependencyProperty.Register("ContentOffset", typeof(Point), typeof(Scale9), new PropertyMetadata(new Point(0, 0), OnPropertyChanged));
+        public static readonly DependencyProperty BorderSizeProperty = DependencyProperty.Register("BorderSize", typeof(Thickness), typeof(Scale9),
+            new PropertyMetadata(new Thickness(-1, -1, -1, -1), OnPropertyChanged));
+        public static readonly DependencyProperty OverflowProperty = DependencyProperty.Register("Overflow", typeof(Thickness), typeof(Scale9),
+            new PropertyMetadata(new Thickness(), OnPropertyChanged));
+        public static readonly DependencyProperty ContentOffsetProperty =
+            DependencyProperty.Register("ContentOffset", typeof(Point), typeof(Scale9), new PropertyMetadata(new Point(0, 0), OnPropertyChanged));
 
         public static readonly DependencyProperty InnerContentProperty = DependencyProperty.Register("InnerContent", typeof(object), typeof(Scale9), new PropertyMetadata(null, OnPropertyChanged));
         public static readonly DependencyProperty BlendNormalProperty = DependencyProperty.Register("BlendNormal", typeof(bool), typeof(Scale9), new PropertyMetadata(false, OnPropertyChanged));
         public static readonly DependencyProperty SelectedProperty = DependencyProperty.Register("Selected", typeof(bool), typeof(Scale9), new PropertyMetadata(false, OnPropertyChanged));
 
-        public static readonly DependencyProperty TextColorProperty = DependencyProperty.Register("TextColor", typeof(Color), typeof(Scale9), new PropertyMetadata(Colors.Transparent, OnPropertyChanged));
-        public static readonly DependencyProperty SelectedTextColorProperty = DependencyProperty.Register("SelectedTextColor", typeof(Color), typeof(Scale9), new PropertyMetadata(Colors.Transparent, OnPropertyChanged));
+        public static readonly DependencyProperty TextColorProperty = DependencyProperty.Register("TextColor", typeof(Color), typeof(Scale9),
+            new PropertyMetadata(Colors.Transparent, OnPropertyChanged));
+        public static readonly DependencyProperty SelectedTextColorProperty =
+            DependencyProperty.Register("SelectedTextColor", typeof(Color), typeof(Scale9), new PropertyMetadata(Colors.Transparent, OnPropertyChanged));
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
             if (depObj != null)
             {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                for (var i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
                 {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    var child = VisualTreeHelper.GetChild(depObj, i);
                     if (child != null && child is T)
                     {
-                        yield return (T)child;
+                        yield return (T) child;
                     }
 
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    foreach (var childOfChild in FindVisualChildren<T>(child))
                     {
                         yield return childOfChild;
                     }
@@ -87,23 +90,30 @@ namespace ModAPI.Components
 
         public static void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            Scale9 myControl = (Scale9)sender;
+            var myControl = (Scale9) sender;
             if ((e.Property.Name == "Selected" || e.Property.Name == "HoverOpacity" || e.Property.Name == "ActiveOpacity") && myControl.BlendNormal)
             {
-                if (myControl.BaseNormalOpacity == 0.0) myControl.BaseNormalOpacity = myControl.NormalOpacity;
+                if (myControl.BaseNormalOpacity == 0.0)
+                {
+                    myControl.BaseNormalOpacity = myControl.NormalOpacity;
+                }
                 double newNormalOpacity = 1.0f;
                 if ((!myControl.Selected && myControl.HoverSource != null) || (myControl.Selected && myControl.SelectedHoverSource != null))
+                {
                     newNormalOpacity -= myControl.HoverOpacity;
+                }
                 if ((!myControl.Selected && myControl.ActiveSource != null) || (myControl.Selected && myControl.SelectedActiveSource != null))
+                {
                     newNormalOpacity -= myControl.ActiveOpacity;
+                }
 
                 myControl.NormalOpacity = myControl.BaseNormalOpacity * newNormalOpacity;
             }
             if (e.Property.Name == "TextColor" || e.Property.Name == "SelectedTextColor" || e.Property.Name == "Selected")
             {
-                IEnumerable<TextBlock> et = FindVisualChildren<TextBlock>(sender);
-                
-                foreach (TextBlock t in et)
+                var et = FindVisualChildren<TextBlock>(sender);
+
+                foreach (var t in et)
                 {
                     try
                     {
@@ -111,23 +121,28 @@ namespace ModAPI.Components
                         if (myControl.Selected)
                         {
                             if (myControl.SelectedTextColor != Colors.Transparent && myControl.SelectedTextColor != Color.FromArgb(0, 255, 255, 255))
+                            {
                                 t.Foreground = new SolidColorBrush(myControl.SelectedTextColor);
+                            }
                         }
                         else
                         {
                             if (myControl.TextColor != Colors.Transparent && myControl.TextColor != Color.FromArgb(0, 255, 255, 255))
+                            {
                                 t.Foreground = new SolidColorBrush(myControl.TextColor);
+                            }
                         }
                         //(t.Foreground as SolidColorBrush).Color = myControl.TextColor;
                     }
                     catch (Exception ex)
                     {
-
                     }
                 }
             }
             if (myControl.TemplateApplied && e.Property.Name == "Selected")
+            {
                 myControl.Refresh();
+            }
         }
 
         public Rectangle NormalTopLeftRect;
@@ -257,16 +272,16 @@ namespace ModAPI.Components
 
         public Rectangle MouseRect;
         public ContentControl ContentElement;
-        public bool TemplateApplied = false;
+        public bool TemplateApplied;
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             FindChilds();
 
+            var et = FindVisualChildren<TextBlock>(this);
 
-            IEnumerable<TextBlock> et = FindVisualChildren<TextBlock>(this);
-
-            foreach (TextBlock t in et)
+            foreach (var t in et)
             {
                 try
                 {
@@ -274,13 +289,14 @@ namespace ModAPI.Components
                     if (Selected)
                     {
                         if (SelectedTextColor != Colors.Transparent && SelectedTextColor != Color.FromArgb(0, 255, 255, 255))
+                        {
                             t.Foreground = new SolidColorBrush(SelectedTextColor);
+                        }
                     }
                     else
                     {
                         if (TextColor != Colors.Transparent && TextColor != Color.FromArgb(0, 255, 255, 255))
                         {
-
                             t.Foreground = new SolidColorBrush(TextColor);
                         }
                     }
@@ -288,7 +304,6 @@ namespace ModAPI.Components
                 }
                 catch (Exception ex)
                 {
-
                 }
             }
 
@@ -296,15 +311,15 @@ namespace ModAPI.Components
             TemplateApplied = true;
         }
 
-        public void FindChilds() {
-            
-            TopRow = (RowDefinition)GetTemplateChild("TopRow");
-            BottomRow = (RowDefinition)GetTemplateChild("BottomRow");
-            LeftColumn = (ColumnDefinition)GetTemplateChild("LeftColumn");
-            RightColumn = (ColumnDefinition)GetTemplateChild("RightColumn");
+        public void FindChilds()
+        {
+            TopRow = (RowDefinition) GetTemplateChild("TopRow");
+            BottomRow = (RowDefinition) GetTemplateChild("BottomRow");
+            LeftColumn = (ColumnDefinition) GetTemplateChild("LeftColumn");
+            RightColumn = (ColumnDefinition) GetTemplateChild("RightColumn");
 
-            MouseRect = (Rectangle)GetTemplateChild("MouseRect");
-            ContentElement = (ContentControl)GetTemplateChild("ContentElement");
+            MouseRect = (Rectangle) GetTemplateChild("MouseRect");
+            ContentElement = (ContentControl) GetTemplateChild("ContentElement");
 
             NormalTopLeftRect = (Rectangle) GetTemplateChild("NormalTopLeftRect");
             NormalTopRect = (Rectangle) GetTemplateChild("NormalTopRect");
@@ -427,135 +442,120 @@ namespace ModAPI.Components
             SelectedActiveBottomRight = (ImageBrush) GetTemplateChild("SelectedActiveBottomRight");
         }
 
-        public double BaseNormalOpacity = 0f;
+        public double BaseNormalOpacity;
 
         public Double NormalOpacity
         {
-            get { return (Double)base.GetValue(NormalOpacityProperty); }
-            set { base.SetValue(NormalOpacityProperty, value); }
+            get { return (Double) GetValue(NormalOpacityProperty); }
+            set { SetValue(NormalOpacityProperty, value); }
         }
 
         public Double HoverOpacity
         {
-            get { return (Double)base.GetValue(HoverOpacityProperty); }
-            set
-            {
-                base.SetValue(HoverOpacityProperty, value);
-            }
+            get { return (Double) GetValue(HoverOpacityProperty); }
+            set { SetValue(HoverOpacityProperty, value); }
         }
-
 
         public Color TextColor
         {
-            get { return (Color)base.GetValue(TextColorProperty); }
-            set
-            {
-                base.SetValue(TextColorProperty, value);
-            }
+            get { return (Color) GetValue(TextColorProperty); }
+            set { SetValue(TextColorProperty, value); }
         }
 
         public Color SelectedTextColor
         {
-            get { return (Color)base.GetValue(SelectedTextColorProperty); }
-            set
-            {
-                base.SetValue(SelectedTextColorProperty, value);
-            }
+            get { return (Color) GetValue(SelectedTextColorProperty); }
+            set { SetValue(SelectedTextColorProperty, value); }
         }
 
         public bool BlendNormal
         {
-            get { return (bool)base.GetValue(BlendNormalProperty); }
-            set { base.SetValue(BlendNormalProperty, value); }
+            get { return (bool) GetValue(BlendNormalProperty); }
+            set { SetValue(BlendNormalProperty, value); }
         }
 
         public bool Selected
         {
-            get { return (bool)base.GetValue(SelectedProperty); }
-            set { base.SetValue(SelectedProperty, value); }
+            get { return (bool) GetValue(SelectedProperty); }
+            set { SetValue(SelectedProperty, value); }
         }
 
         public Double ActiveOpacity
         {
-            get { return (Double)base.GetValue(ActiveOpacityProperty); }
-            set
-            {
-                base.SetValue(ActiveOpacityProperty, value);
-            }
+            get { return (Double) GetValue(ActiveOpacityProperty); }
+            set { SetValue(ActiveOpacityProperty, value); }
         }
-
 
         public object InnerContent
         {
-            get { return base.GetValue(InnerContentProperty) as object; }
-            set { base.SetValue(InnerContentProperty, value); }
+            get { return GetValue(InnerContentProperty); }
+            set { SetValue(InnerContentProperty, value); }
         }
-
 
         public BitmapSource NormalSource
         {
-            get { return base.GetValue(NormalSourceProperty) as BitmapSource; }
-            set { base.SetValue(NormalSourceProperty, value); }
+            get { return GetValue(NormalSourceProperty) as BitmapSource; }
+            set { SetValue(NormalSourceProperty, value); }
         }
 
         public BitmapSource HoverSource
         {
-            get { return base.GetValue(HoverSourceProperty) as BitmapSource; }
-            set { base.SetValue(HoverSourceProperty, value); }
+            get { return GetValue(HoverSourceProperty) as BitmapSource; }
+            set { SetValue(HoverSourceProperty, value); }
         }
 
         public BitmapSource ActiveSource
         {
-            get { return base.GetValue(ActiveSourceProperty) as BitmapSource; }
-            set { base.SetValue(ActiveSourceProperty, value); }
+            get { return GetValue(ActiveSourceProperty) as BitmapSource; }
+            set { SetValue(ActiveSourceProperty, value); }
         }
 
         public BitmapSource SelectedNormalSource
         {
-            get { return base.GetValue(SelectedNormalSourceProperty) as BitmapSource; }
-            set { base.SetValue(SelectedNormalSourceProperty, value); }
+            get { return GetValue(SelectedNormalSourceProperty) as BitmapSource; }
+            set { SetValue(SelectedNormalSourceProperty, value); }
         }
 
         public BitmapSource SelectedHoverSource
         {
-            get { return base.GetValue(SelectedHoverSourceProperty) as BitmapSource; }
-            set { base.SetValue(SelectedHoverSourceProperty, value); }
+            get { return GetValue(SelectedHoverSourceProperty) as BitmapSource; }
+            set { SetValue(SelectedHoverSourceProperty, value); }
         }
 
         public BitmapSource SelectedActiveSource
         {
-            get { return base.GetValue(SelectedActiveSourceProperty) as BitmapSource; }
-            set { base.SetValue(SelectedActiveSourceProperty, value); }
+            get { return GetValue(SelectedActiveSourceProperty) as BitmapSource; }
+            set { SetValue(SelectedActiveSourceProperty, value); }
         }
 
         public Point ContentOffset
         {
-            get { return (Point)base.GetValue(ContentOffsetProperty); }
-            set { base.SetValue(ContentOffsetProperty, value); }
+            get { return (Point) GetValue(ContentOffsetProperty); }
+            set { SetValue(ContentOffsetProperty, value); }
         }
 
         public Thickness Border
         {
-            get { return (Thickness)base.GetValue(BorderProperty); }
-            set { base.SetValue(BorderProperty, value); }
+            get { return (Thickness) GetValue(BorderProperty); }
+            set { SetValue(BorderProperty, value); }
         }
 
         public Thickness BorderSize
         {
-            get { return (Thickness)base.GetValue(BorderSizeProperty); }
-            set { base.SetValue(BorderSizeProperty, value); }
+            get { return (Thickness) GetValue(BorderSizeProperty); }
+            set { SetValue(BorderSizeProperty, value); }
         }
 
         public Thickness InnerPadding
         {
-            get { return (Thickness)base.GetValue(InnerPaddingProperty); }
-            set { base.SetValue(InnerPaddingProperty, value); }
+            get { return (Thickness) GetValue(InnerPaddingProperty); }
+            set { SetValue(InnerPaddingProperty, value); }
         }
 
         public Thickness Overflow
         {
-            get { return (Thickness)base.GetValue(OverflowProperty); }
-            set { base.SetValue(OverflowProperty, value); }
+            get { return (Thickness) GetValue(OverflowProperty); }
+            set { SetValue(OverflowProperty, value); }
         }
 
         /*static Scale9()
@@ -588,32 +588,54 @@ namespace ModAPI.Components
         protected Rectangle BottomRect;
         protected Rectangle BottomRightRect;*/
 
-        public Scale9()
-        {
-            //AddVisualChild(grid);
-        }
-
         public void Refresh()
         {
-            if (MouseRect == null) return;
-            this.Margin = new Thickness(-Overflow.Left, -Overflow.Top, -Overflow.Right, -Overflow.Bottom);
-            this.MouseRect.Margin = Overflow;
+            if (MouseRect == null)
+            {
+                return;
+            }
+            Margin = new Thickness(-Overflow.Left, -Overflow.Top, -Overflow.Right, -Overflow.Bottom);
+            MouseRect.Margin = Overflow;
 
-            double BorderTop = BorderSize.Top;
-            if (BorderTop < 0) BorderTop = Border.Top;
-            if (BorderTop < 0) BorderTop = 0; 
-            
-            double BorderLeft = BorderSize.Left;
-            if (BorderLeft < 0) BorderLeft = Border.Left;
-            if (BorderLeft < 0) BorderLeft = 0;
-            
-            double BorderRight = BorderSize.Right;
-            if (BorderRight < 0) BorderRight = Border.Right;
-            if (BorderRight < 0) BorderRight = 0;
-            
-            double BorderBottom = BorderSize.Bottom;
-            if (BorderBottom < 0) BorderBottom = Border.Bottom;
-            if (BorderBottom < 0) BorderBottom = 0;
+            var BorderTop = BorderSize.Top;
+            if (BorderTop < 0)
+            {
+                BorderTop = Border.Top;
+            }
+            if (BorderTop < 0)
+            {
+                BorderTop = 0;
+            }
+
+            var BorderLeft = BorderSize.Left;
+            if (BorderLeft < 0)
+            {
+                BorderLeft = Border.Left;
+            }
+            if (BorderLeft < 0)
+            {
+                BorderLeft = 0;
+            }
+
+            var BorderRight = BorderSize.Right;
+            if (BorderRight < 0)
+            {
+                BorderRight = Border.Right;
+            }
+            if (BorderRight < 0)
+            {
+                BorderRight = 0;
+            }
+
+            var BorderBottom = BorderSize.Bottom;
+            if (BorderBottom < 0)
+            {
+                BorderBottom = Border.Bottom;
+            }
+            if (BorderBottom < 0)
+            {
+                BorderBottom = 0;
+            }
 
             TopRow.Height = new GridLength(BorderTop);
             //CenterRow.Height = new GridLength(0, GridUnitType.Auto);
@@ -625,9 +647,9 @@ namespace ModAPI.Components
 
             ContentElement.Margin = new Thickness(ContentOffset.X, ContentOffset.Y, 0, 0);
 
-            System.Windows.Visibility visibility = System.Windows.Visibility.Hidden;
+            var visibility = Visibility.Hidden;
 
-            visibility = NormalSource == null || Selected ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            visibility = NormalSource == null || Selected ? Visibility.Collapsed : Visibility.Visible;
             NormalTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
             NormalTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
             NormalTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
@@ -638,7 +660,7 @@ namespace ModAPI.Components
             NormalBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
             NormalBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
 
-            visibility = HoverSource == null || Selected ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            visibility = HoverSource == null || Selected ? Visibility.Collapsed : Visibility.Visible;
             HoverTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
             HoverTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
             HoverTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
@@ -649,7 +671,7 @@ namespace ModAPI.Components
             HoverBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
             HoverBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
 
-            visibility = ActiveSource == null || Selected ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            visibility = ActiveSource == null || Selected ? Visibility.Collapsed : Visibility.Visible;
             ActiveTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
             ActiveTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
             ActiveTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
@@ -660,7 +682,7 @@ namespace ModAPI.Components
             ActiveBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
             ActiveBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
 
-            visibility = SelectedNormalSource == null || !Selected ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            visibility = SelectedNormalSource == null || !Selected ? Visibility.Collapsed : Visibility.Visible;
             SelectedNormalTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
             SelectedNormalTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
             SelectedNormalTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
@@ -671,7 +693,7 @@ namespace ModAPI.Components
             SelectedNormalBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
             SelectedNormalBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
 
-            visibility = SelectedActiveSource == null || !Selected ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            visibility = SelectedActiveSource == null || !Selected ? Visibility.Collapsed : Visibility.Visible;
             SelectedActiveTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
             SelectedActiveTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
             SelectedActiveTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
@@ -682,7 +704,7 @@ namespace ModAPI.Components
             SelectedActiveBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
             SelectedActiveBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
 
-            visibility = SelectedHoverSource == null || !Selected ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            visibility = SelectedHoverSource == null || !Selected ? Visibility.Collapsed : Visibility.Visible;
             SelectedHoverTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
             SelectedHoverTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
             SelectedHoverTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;

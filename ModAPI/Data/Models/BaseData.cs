@@ -20,9 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ModAPI.Data.Models
@@ -33,20 +30,27 @@ namespace ModAPI.Data.Models
         public List<FieldDefinition> Fields;
         public Dictionary<int, DataField> Data = new Dictionary<int, DataField>();
         public Dictionary<int, double> Offset = new Dictionary<int, double>();
+
         public void SetOffset(int fieldNum, double offset)
         {
             if (Offset.ContainsKey(fieldNum))
+            {
                 Offset[fieldNum] = offset;
+            }
             else
+            {
                 Offset.Add(fieldNum, offset);
+            }
         }
 
         public virtual FieldDefinition GetField(FieldDefinition f)
         {
-            foreach (FieldDefinition field in Fields)
+            foreach (var field in Fields)
             {
                 if (field.ClassName == f.ClassName && field.FieldName == f.FieldName)
+                {
                     return field;
+                }
             }
             return null;
         }
@@ -58,7 +62,7 @@ namespace ModAPI.Data.Models
 
         public virtual void Save()
         {
-            foreach (DataField data in Data.Values)
+            foreach (var data in Data.Values)
             {
                 data.Save();
                 data.Confirm();
@@ -76,22 +80,23 @@ namespace ModAPI.Data.Models
             {
                 if (Offset.ContainsKey(fieldNum))
                 {
-                    double val = Convert.ToDouble(Data[fieldNum].Value) + Offset[fieldNum];
-                    if (Data[fieldNum].MaxValue != null && Data[fieldNum].MinValue != null) 
+                    var val = Convert.ToDouble(Data[fieldNum].Value) + Offset[fieldNum];
+                    if (Data[fieldNum].MaxValue != null && Data[fieldNum].MinValue != null)
                     {
-                        double max = Convert.ToDouble(Data[fieldNum].MaxValue);
-                        double min = Convert.ToDouble(Data[fieldNum].MinValue);
+                        var max = Convert.ToDouble(Data[fieldNum].MaxValue);
+                        var min = Convert.ToDouble(Data[fieldNum].MinValue);
                         while (val > max)
+                        {
                             val -= (max - min);
+                        }
                         while (val < min)
+                        {
                             val += (max - min);
+                        }
                     }
                     return val;
                 }
-                else
-                {
-                    return Data[fieldNum].Value;
-                }
+                return Data[fieldNum].Value;
             }
             return null;
         }
@@ -102,15 +107,19 @@ namespace ModAPI.Data.Models
             {
                 if (Offset.ContainsKey(fieldNum))
                 {
-                    double val = Convert.ToDouble(value) - Offset[fieldNum];
+                    var val = Convert.ToDouble(value) - Offset[fieldNum];
                     if (Data[fieldNum].MaxValue != null && Data[fieldNum].MinValue != null)
                     {
-                        double max = Convert.ToDouble(Data[fieldNum].MaxValue);
-                        double min = Convert.ToDouble(Data[fieldNum].MinValue);
+                        var max = Convert.ToDouble(Data[fieldNum].MaxValue);
+                        var min = Convert.ToDouble(Data[fieldNum].MinValue);
                         while (val > max)
+                        {
                             val -= (max - min);
+                        }
                         while (val < min)
+                        {
                             val += (max - min);
+                        }
                     }
                     Data[fieldNum].Value = val;
                 }
@@ -123,18 +132,25 @@ namespace ModAPI.Data.Models
 
         public virtual void AddObject(object newObject)
         {
-            if (newObject == null) return;
-            string objectName = newObject.GetType().FullName;
+            if (newObject == null)
+            {
+                return;
+            }
+            var objectName = newObject.GetType().FullName;
             if (Classes.ContainsKey(objectName))
             {
-                ClassDefinition definition = Classes[objectName];
-                foreach (FieldDefinition field in definition.Fields.Values)
+                var definition = Classes[objectName];
+                foreach (var field in definition.Fields.Values)
                 {
-                    int index = Fields.IndexOf(field);
+                    var index = Fields.IndexOf(field);
                     if (Data.ContainsKey(index))
+                    {
                         Data[index] = new DataField(this, field, newObject);
+                    }
                     else
+                    {
                         Data.Add(index, new DataField(this, field, newObject));
+                    }
 
                     Data[index].DataObject = newObject;
                 }
@@ -145,42 +161,44 @@ namespace ModAPI.Data.Models
         {
             Classes = new Dictionary<string, ClassDefinition>();
             Fields = new List<FieldDefinition>();
-            foreach (XElement include in document.Root.Elements("Include")) 
+            foreach (var include in document.Root.Elements("Include"))
             {
-                ClassDefinition classDefinition = new ClassDefinition();
+                var classDefinition = new ClassDefinition();
                 classDefinition.SetConfiguration(include);
                 if (classDefinition.Valid)
                 {
                     Classes.Add(classDefinition.Name, classDefinition);
-                    foreach (KeyValuePair<string, FieldDefinition> field in classDefinition.Fields)
+                    foreach (var field in classDefinition.Fields)
                     {
                         Fields.Add(field.Value);
                     }
                 }
             }
 
-            XElement extraRootElement = document.Root.Element("Extra");
-            if (extraRootElement != null) 
+            var extraRootElement = document.Root.Element("Extra");
+            if (extraRootElement != null)
             {
-                foreach (XElement extraElement in extraRootElement.Elements("Field")) 
+                foreach (var extraElement in extraRootElement.Elements("Field"))
                 {
-                    FieldDefinition tmpDefinition = new FieldDefinition();
+                    var tmpDefinition = new FieldDefinition();
                     tmpDefinition.SetConfiguration(extraElement);
-                    if (!Classes.ContainsKey(tmpDefinition.ClassName)) 
+                    if (!Classes.ContainsKey(tmpDefinition.ClassName))
                     {
-                        Debug.Log("ModAPI.Data", "The class \""+tmpDefinition.ClassName+"\" defined in Extra element is not included in this data package.");
-                    } 
-                    else 
+                        Debug.Log("ModAPI.Data", "The class \"" + tmpDefinition.ClassName + "\" defined in Extra element is not included in this data package.");
+                    }
+                    else
                     {
-                        ClassDefinition cl = Classes[tmpDefinition.ClassName];
-                        if (!cl.Fields.ContainsKey(tmpDefinition.FieldName)) 
+                        var cl = Classes[tmpDefinition.ClassName];
+                        if (!cl.Fields.ContainsKey(tmpDefinition.FieldName))
                         {
-                            Debug.Log("ModAPI.Data", "The field \""+tmpDefinition.FieldName+"\" in class \""+tmpDefinition.ClassName+"\" defined in Extra element either doesn't exist or is not included in this data package.");
-                        } 
-                        else 
+                            Debug.Log("ModAPI.Data",
+                                "The field \"" + tmpDefinition.FieldName + "\" in class \"" + tmpDefinition.ClassName +
+                                "\" defined in Extra element either doesn't exist or is not included in this data package.");
+                        }
+                        else
                         {
                             cl.Fields[tmpDefinition.FieldName].SetConfiguration(tmpDefinition.Configuration);
-                            double offset = Convert.ToDouble(cl.Fields[tmpDefinition.FieldName].GetExtra("offset", "0"));
+                            var offset = Convert.ToDouble(cl.Fields[tmpDefinition.FieldName].GetExtra("offset", "0"));
                             if (offset != 0.0)
                             {
                                 SetOffset(Fields.IndexOf(cl.Fields[tmpDefinition.FieldName]), offset);

@@ -19,18 +19,12 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ModAPI.Configurations;
+using ModAPI.Data;
 
 namespace ModAPI.Windows.SubWindows
 {
@@ -46,7 +40,7 @@ namespace ModAPI.Windows.SubWindows
         }
 
         public CreateModProject(string langKey)
-            :base(langKey)
+            : base(langKey)
         {
             InitializeComponent();
             TextChanged();
@@ -54,26 +48,33 @@ namespace ModAPI.Windows.SubWindows
 
         private void TextChanged()
         {
-            string path = "";
+            var path = "";
             try
             {
-                path = System.IO.Path.GetFullPath(Configurations.Configuration.GetPath("Projects") + System.IO.Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + ID.Text);
+                path = Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID +
+                                        Path.DirectorySeparatorChar + ID.Text);
             }
-            catch (Exception e) {}
-            
-            if (ID.Text == "" || !ModAPI.Data.Mod.Header.VerifyModID(ID.Text) || (path != "" && System.IO.Directory.Exists(path)))
+            catch (Exception e)
             {
-                if (path != "" && System.IO.Directory.Exists(path) && ID.Text != "")
-                    ErrorID.Visibility = System.Windows.Visibility.Visible;
+            }
+
+            if (ID.Text == "" || !Mod.Header.VerifyModID(ID.Text) || (path != "" && Directory.Exists(path)))
+            {
+                if (path != "" && Directory.Exists(path) && ID.Text != "")
+                {
+                    ErrorID.Visibility = Visibility.Visible;
+                }
                 else
-                    ErrorID.Visibility = System.Windows.Visibility.Collapsed;
-                    
+                {
+                    ErrorID.Visibility = Visibility.Collapsed;
+                }
+
                 ConfirmButton.IsEnabled = false;
                 ConfirmButton.Opacity = 0.5;
             }
             else
             {
-                ErrorID.Visibility = System.Windows.Visibility.Collapsed;
+                ErrorID.Visibility = Visibility.Collapsed;
                 ConfirmButton.IsEnabled = true;
                 ConfirmButton.Opacity = 1;
             }
@@ -101,7 +102,7 @@ namespace ModAPI.Windows.SubWindows
 
         private void Add(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.ModProjects.CreateProject(this.ID.Text);
+            MainWindow.Instance.ModProjects.CreateProject(ID.Text);
             Close();
         }
     }

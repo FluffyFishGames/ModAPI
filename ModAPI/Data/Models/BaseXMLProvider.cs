@@ -19,34 +19,30 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Reflection;
 using ModAPI.Utils;
 
 namespace ModAPI.Data.Models
 {
-
     public class XMLParser
     {
-        public static XElement GetXML(object thisObj) {
-
-            XElement root = new XElement("Object");
+        public static XElement GetXML(object thisObj)
+        {
+            var root = new XElement("Object");
             root.SetAttributeValue("Type", thisObj.GetType().FullName);
-            FieldInfo[] fields = thisObj.GetType().GetFields();
-            foreach (FieldInfo field in fields)
+            var fields = thisObj.GetType().GetFields();
+            foreach (var field in fields)
             {
-                object obj = field.GetValue(thisObj);
+                var obj = field.GetValue(thisObj);
                 if (obj is IXMLProvider)
                 {
-                    XElement subElement = ((IXMLProvider)obj).GetXML();
-                    XAttribute typeAttribute = subElement.Attribute("Type");
+                    var subElement = ((IXMLProvider) obj).GetXML();
+                    var typeAttribute = subElement.Attribute("Type");
                     if (typeAttribute != null)
+                    {
                         typeAttribute.Remove();
+                    }
                     subElement.Name = field.Name;
                     root.Add(subElement);
                 }
@@ -54,11 +50,11 @@ namespace ModAPI.Data.Models
                 {
                     if (obj.GetType().IsArray)
                     {
-                        XElement subElement = new XElement(field.Name);
-                        object[] objs = (object[])obj;
-                        Type elementType = objs.GetType().GetElementType();
+                        var subElement = new XElement(field.Name);
+                        var objs = (object[]) obj;
+                        var elementType = objs.GetType().GetElementType();
                         subElement.SetAttributeValue("Length", objs.Length);
-                        foreach (object o in objs)
+                        foreach (var o in objs)
                         {
                             subElement.Add(ParseItem(o, elementType));
                         }
@@ -66,11 +62,11 @@ namespace ModAPI.Data.Models
                     }
                     else if (obj is IList)
                     {
-                        IList list = (IList)obj;
-                        XElement subElement = new XElement(field.Name);
-                        Type elementType = field.FieldType.GetGenericArguments()[0];
+                        var list = (IList) obj;
+                        var subElement = new XElement(field.Name);
+                        var elementType = field.FieldType.GetGenericArguments()[0];
                         subElement.SetAttributeValue("Length", list.Count);
-                        foreach (object o in list)
+                        foreach (var o in list)
                         {
                             subElement.Add(ParseItem(o, elementType));
                         }
@@ -78,7 +74,7 @@ namespace ModAPI.Data.Models
                     }
                     else
                     {
-                        XElement subElement = new XElement(field.Name, obj.ToString());
+                        var subElement = new XElement(field.Name, obj.ToString());
                         root.Add(subElement);
                     }
                 }
@@ -93,19 +89,22 @@ namespace ModAPI.Data.Models
             {
                 if (o is IXMLProvider)
                 {
-                    subElement2 = ((IXMLProvider)o).GetXML();
+                    subElement2 = ((IXMLProvider) o).GetXML();
                     subElement2.Name = "Item";
-                    XAttribute typeAttribute = subElement2.Attribute("Type");
+                    var typeAttribute = subElement2.Attribute("Type");
                     if (typeAttribute != null)
+                    {
                         typeAttribute.Remove();
+                    }
                 }
                 else
                 {
                     subElement2 = new XElement("Item", o.ToString());
                 }
                 if (o.GetType() != elementType)
+                {
                     subElement2.SetAttributeValue("Type", o.GetType().FullName);
-
+                }
             }
             else
             {
@@ -119,8 +118,8 @@ namespace ModAPI.Data.Models
             object ret = null;
             if (typeof(IXMLProvider).IsAssignableFrom(elementType))
             {
-                object newObj = Activator.CreateInstance(elementType);
-                ((IXMLProvider)newObj).SetXML(arrayElement);
+                var newObj = Activator.CreateInstance(elementType);
+                ((IXMLProvider) newObj).SetXML(arrayElement);
                 ret = newObj;
             }
             else
@@ -132,19 +131,19 @@ namespace ModAPI.Data.Models
 
         public static void SetXML(object thisObj, XElement element)
         {
-            FieldInfo[] fields = thisObj.GetType().GetFields();
-            foreach (FieldInfo field in fields)
+            var fields = thisObj.GetType().GetFields();
+            foreach (var field in fields)
             {
-                XElement subElement = element.Element(field.Name);
+                var subElement = element.Element(field.Name);
                 if (subElement != null)
                 {
                     if (field.FieldType.IsArray)
                     {
-                        Type elementType = field.FieldType.GetElementType();
-                        int arrayLength = XMLHelper.GetXMLAttributeAsInt(subElement, "Length", 0);
-                        Array newArray = Array.CreateInstance(elementType, arrayLength);
-                        int i = 0;
-                        foreach (XElement arrayElement in subElement.Elements())
+                        var elementType = field.FieldType.GetElementType();
+                        var arrayLength = XMLHelper.GetXMLAttributeAsInt(subElement, "Length", 0);
+                        var newArray = Array.CreateInstance(elementType, arrayLength);
+                        var i = 0;
+                        foreach (var arrayElement in subElement.Elements())
                         {
                             newArray.SetValue(ReadItem(arrayElement, elementType), i);
                             i++;
@@ -153,10 +152,10 @@ namespace ModAPI.Data.Models
                     }
                     else if (typeof(IList).IsAssignableFrom(field.FieldType))
                     {
-                        Type elementType = field.FieldType.GetGenericArguments()[0];
-                        int listLength = XMLHelper.GetXMLAttributeAsInt(subElement, "Length", 0);
-                        IList newList = (IList)Activator.CreateInstance(field.FieldType);
-                        foreach (XElement listElement in subElement.Elements())
+                        var elementType = field.FieldType.GetGenericArguments()[0];
+                        var listLength = XMLHelper.GetXMLAttributeAsInt(subElement, "Length", 0);
+                        var newList = (IList) Activator.CreateInstance(field.FieldType);
+                        foreach (var listElement in subElement.Elements())
                         {
                             newList.Add(ReadItem(listElement, elementType));
                         }
@@ -164,8 +163,8 @@ namespace ModAPI.Data.Models
                     }
                     else if (typeof(IXMLProvider).IsAssignableFrom(field.FieldType))
                     {
-                        object newObj = Activator.CreateInstance(field.FieldType);
-                        ((IXMLProvider)newObj).SetXML(subElement);
+                        var newObj = Activator.CreateInstance(field.FieldType);
+                        ((IXMLProvider) newObj).SetXML(subElement);
                         field.SetValue(thisObj, newObj);
                     }
                     else
@@ -179,8 +178,6 @@ namespace ModAPI.Data.Models
 
     public class BaseXMLProvider : IXMLProvider
     {
-        public BaseXMLProvider() { }
-
         public virtual XElement GetXML()
         {
             return XMLParser.GetXML(this);

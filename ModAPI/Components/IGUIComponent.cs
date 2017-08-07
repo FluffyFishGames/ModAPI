@@ -18,19 +18,14 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ModAPI.Configurations;
 using System.Xml.Linq;
+using ModAPI.Configurations;
 
 namespace ModAPI.Components
 {
     interface IGUIComponent
     {
         void AddTab(GUIConfiguration.Tab Tab);
-        void SetConfiguration(XDocument document); 
+        void SetConfiguration(XDocument document);
     }
 }

@@ -19,19 +19,13 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Win32;
+using ModAPI.Data;
+using ModAPI.Utils;
+using Path = System.IO.Path;
 
 namespace ModAPI.Windows.SubWindows
 {
@@ -40,42 +34,42 @@ namespace ModAPI.Windows.SubWindows
     /// </summary>
     public partial class SpecifyGamePath : BaseSubWindow
     {
-        protected Utils.Schedule.Task Task;
-        protected bool Completed = false;
-        public SpecifyGamePath(Utils.Schedule.Task Task)
-            : base()
+        protected Schedule.Task Task;
+        protected bool Completed;
+
+        public SpecifyGamePath(Schedule.Task Task)
         {
             InitializeComponent();
             this.Task = Task;
-            this.GamePath.Text = ((ModAPI.Data.Game)Task.Parameters[0]).GamePath;
+            GamePath.Text = ((Game) Task.Parameters[0]).GamePath;
             Check();
             SetCloseable(false);
         }
 
-        public SpecifyGamePath(string langKey, Utils.Schedule.Task Task)
+        public SpecifyGamePath(string langKey, Schedule.Task Task)
             : base(langKey)
         {
             InitializeComponent();
             this.Task = Task;
-            this.GamePath.Text = ((ModAPI.Data.Game)Task.Parameters[0]).GamePath;
+            GamePath.Text = ((Game) Task.Parameters[0]).GamePath;
             Check();
             SetCloseable(false);
         }
 
         protected void Check()
         {
-            ((ModAPI.Data.Game)Task.Parameters[0]).GamePath = this.GamePath.Text;
-            if (this.Task.Check())
+            ((Game) Task.Parameters[0]).GamePath = GamePath.Text;
+            if (Task.Check())
             {
-                AcceptIcon.Visibility = System.Windows.Visibility.Visible;
-                DeclineIcon.Visibility = System.Windows.Visibility.Hidden;
+                AcceptIcon.Visibility = Visibility.Visible;
+                DeclineIcon.Visibility = Visibility.Hidden;
                 ConfirmButton.Opacity = 1f;
                 ConfirmButton.IsEnabled = true;
             }
             else
             {
-                AcceptIcon.Visibility = System.Windows.Visibility.Hidden;
-                DeclineIcon.Visibility = System.Windows.Visibility.Visible;
+                AcceptIcon.Visibility = Visibility.Hidden;
+                DeclineIcon.Visibility = Visibility.Visible;
                 ConfirmButton.Opacity = 0.5f;
                 ConfirmButton.IsEnabled = false;
             }
@@ -83,12 +77,12 @@ namespace ModAPI.Windows.SubWindows
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            ((ModAPI.Data.Game)Task.Parameters[0]).GamePath = this.GamePath.Text;
+            ((Game) Task.Parameters[0]).GamePath = GamePath.Text;
             if (Task.Check())
             {
                 Completed = true;
                 Task.Complete();
-                this.Close();
+                Close();
             }
         }
 
@@ -104,14 +98,14 @@ namespace ModAPI.Windows.SubWindows
 
         private void OnClickBrowse(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            var openFileDialog1 = new OpenFileDialog();
 
             openFileDialog1.Filter = App.Game.GameConfiguration.SelectFile + "|" + App.Game.GameConfiguration.SelectFile;
             openFileDialog1.RestoreDirectory = true;
 
             if (openFileDialog1.ShowDialog() == true)
             {
-                this.GamePath.Text = System.IO.Path.GetDirectoryName(openFileDialog1.FileName);
+                GamePath.Text = Path.GetDirectoryName(openFileDialog1.FileName);
             }
         }
 
@@ -119,7 +113,9 @@ namespace ModAPI.Windows.SubWindows
         {
             base.OnClosed(e);
             if (!Completed)
+            {
                 Environment.Exit(0);
+            }
         }
     }
 }

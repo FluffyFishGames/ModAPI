@@ -20,11 +20,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace ModAPI.Data.Models
 {
@@ -34,98 +31,105 @@ namespace ModAPI.Data.Models
         public Type ClassType;
         public Dictionary<string, string> Extra;
         public Dictionary<string, FieldDefinition> Fields;
-        public bool Valid = false;
+        public bool Valid;
 
         public void SetConfiguration(XElement configuration)
         {
             this.Fields = new Dictionary<string, FieldDefinition>();
-            Extra = new Dictionary<string,string>();
-            foreach (XAttribute attribute in configuration.Attributes()) 
+            Extra = new Dictionary<string, string>();
+            foreach (var attribute in configuration.Attributes())
             {
-                string name = attribute.Name.LocalName.ToLower();
+                var name = attribute.Name.LocalName.ToLower();
                 if (name == "class")
+                {
                     Name = attribute.Value;
+                }
                 else
+                {
                     Extra.Add(name, attribute.Value);
+                }
             }
 
-            if (Name == "") 
+            if (Name == "")
             {
-                Debug.Log("Data.ClassDefinition", "No class is defined in \""+configuration+"\".", Debug.Type.WARNING);
-            } 
-            else if (!DynamicTypes.Types.ContainsKey(Name)) 
+                Debug.Log("Data.ClassDefinition", "No class is defined in \"" + configuration + "\".", Debug.Type.WARNING);
+            }
+            else if (!DynamicTypes.Types.ContainsKey(Name))
             {
-                Debug.Log("Data.ClassDefinition", "Dynamic type \""+Name+"\" couldn't be found.", Debug.Type.WARNING);
+                Debug.Log("Data.ClassDefinition", "Dynamic type \"" + Name + "\" couldn't be found.", Debug.Type.WARNING);
             }
             else
             {
                 Valid = true;
 
                 ClassType = DynamicTypes.Types[Name];
-                List<string> Fields = new List<string>();
-                foreach (XElement sub in configuration.Elements()) 
+                var Fields = new List<string>();
+                foreach (var sub in configuration.Elements())
                 {
-                    string tagName = sub.Name.LocalName.ToLower();
-                    if (tagName == "include") 
+                    var tagName = sub.Name.LocalName.ToLower();
+                    if (tagName == "include")
                     {
-                        XAttribute FieldAttribute = sub.Attribute("Field");
+                        var FieldAttribute = sub.Attribute("Field");
                         if (FieldAttribute == null)
                         {
-                            Debug.Log("Data.ClassDefinition", "Found invalid include element. Missing Field attribute: "+sub.ToString(), Debug.Type.WARNING);
+                            Debug.Log("Data.ClassDefinition", "Found invalid include element. Missing Field attribute: " + sub, Debug.Type.WARNING);
                         }
-                        else 
+                        else
                         {
-                            FieldInfo field = ClassType.GetField(FieldAttribute.Value);
-                            if (field == null) 
+                            var field = ClassType.GetField(FieldAttribute.Value);
+                            if (field == null)
                             {
-                                Debug.Log("Data.ClassDefinition", "Found invalid include element. The field \""+FieldAttribute.Value+"\" is mmissin in class \""+this.Name+"\".", Debug.Type.WARNING);
+                                Debug.Log("Data.ClassDefinition", "Found invalid include element. The field \"" + FieldAttribute.Value + "\" is mmissin in class \"" + Name + "\".",
+                                    Debug.Type.WARNING);
                             }
-                            else 
+                            else
                             {
                                 AddField(field);
                             }
                         }
                     }
-                    else if (tagName == "all") 
+                    else if (tagName == "all")
                     {
-                        List<string> Exclude = new List<string>();
-                        foreach (XElement sub2 in sub.Elements()) 
+                        var Exclude = new List<string>();
+                        foreach (var sub2 in sub.Elements())
                         {
-                            string tagName2 = sub2.Name.LocalName.ToLower();
-                            if (tagName2 == "exclude") 
+                            var tagName2 = sub2.Name.LocalName.ToLower();
+                            if (tagName2 == "exclude")
                             {
-                                XAttribute FieldAttribute = sub2.Attribute("Field");
-                                if (FieldAttribute == null) 
+                                var FieldAttribute = sub2.Attribute("Field");
+                                if (FieldAttribute == null)
                                 {
-                                    Debug.Log("Data.ClassDefinition", "Found invalid exclude element. Missing Field attribute: "+sub2.ToString(), Debug.Type.WARNING);
+                                    Debug.Log("Data.ClassDefinition", "Found invalid exclude element. Missing Field attribute: " + sub2, Debug.Type.WARNING);
                                 }
-                                else 
+                                else
                                 {
                                     Exclude.Add(FieldAttribute.Value);
                                 }
-                            } 
-                            else 
+                            }
+                            else
                             {
-                                Debug.Log("Data.ClassDefinition", "Found invalid child element \""+tagName2+"\" for element \""+tagName+"\".", Debug.Type.WARNING);
+                                Debug.Log("Data.ClassDefinition", "Found invalid child element \"" + tagName2 + "\" for element \"" + tagName + "\".", Debug.Type.WARNING);
                             }
                         }
-                        string fieldType = "";
-                        XAttribute typeAttribute = sub.Attribute("Type");
+                        var fieldType = "";
+                        var typeAttribute = sub.Attribute("Type");
                         if (typeAttribute != null)
-                            fieldType = typeAttribute.Value;
-
-                        FieldInfo[] fields = ClassType.GetFields();
-                        foreach (FieldInfo field in fields) 
                         {
-                            if (!Exclude.Contains(field.Name) && (fieldType == "" || field.FieldType.FullName == fieldType)) 
+                            fieldType = typeAttribute.Value;
+                        }
+
+                        var fields = ClassType.GetFields();
+                        foreach (var field in fields)
+                        {
+                            if (!Exclude.Contains(field.Name) && (fieldType == "" || field.FieldType.FullName == fieldType))
                             {
                                 AddField(field);
                             }
                         }
-                    } 
-                    else 
+                    }
+                    else
                     {
-                        Debug.Log("Data.ClassDefinition", "Found unknown child element \""+tagName+"\".", Debug.Type.WARNING);
+                        Debug.Log("Data.ClassDefinition", "Found unknown child element \"" + tagName + "\".", Debug.Type.WARNING);
                     }
                 }
             }
@@ -133,8 +137,8 @@ namespace ModAPI.Data.Models
 
         void AddField(FieldInfo field)
         {
-            FieldDefinition newField = new FieldDefinition();
-            newField.ClassName = this.Name;
+            var newField = new FieldDefinition();
+            newField.ClassName = Name;
             newField.FieldName = field.Name;
             newField.FieldType = field.FieldType;
             Fields.Add(field.Name, newField);

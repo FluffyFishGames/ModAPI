@@ -20,22 +20,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
+using ModAPI.Attributes;
 
 namespace ModAPI
 {
     public class Log
     {
-        protected static Dictionary<string, System.IO.FileStream> FileStreams = new Dictionary<string, System.IO.FileStream>();
+        protected static Dictionary<string, FileStream> FileStreams = new Dictionary<string, FileStream>();
 
-
-        [ModAPI.Attributes.AddModname]
+        [AddModname]
         public static void Write(string a)
         {
         }
 
-        [ModAPI.Attributes.AddModname]
+        [AddModname]
         public static void Write(object a)
         {
         }
@@ -43,26 +43,31 @@ namespace ModAPI
         internal static void Write(object a, string ModName)
         {
             if (a != null)
+            {
                 Write(a.ToString(), ModName);
+            }
             else
+            {
                 Write("null", ModName);
+            }
         }
 
         internal static void Write(string s, string ModName)
         {
-            string currentDir = System.IO.Path.GetFullPath(ModAPI.BaseSystem.ModsFolder + "Logs" + System.IO.Path.DirectorySeparatorChar);
-            if (!System.IO.Directory.Exists(currentDir))
-                System.IO.Directory.CreateDirectory(currentDir);
-            
+            var currentDir = Path.GetFullPath(BaseSystem.ModsFolder + "Logs" + Path.DirectorySeparatorChar);
+            if (!Directory.Exists(currentDir))
+            {
+                Directory.CreateDirectory(currentDir);
+            }
+
             if (!FileStreams.ContainsKey(ModName))
             {
-                string fileName = currentDir + ModName + ".log";
-                FileStreams.Add(ModName, new System.IO.FileStream(fileName, System.IO.FileMode.Create));
+                var fileName = currentDir + ModName + ".log";
+                FileStreams.Add(ModName, new FileStream(fileName, FileMode.Create));
             }
-            byte[] w = Encoding.UTF8.GetBytes("["+DateTime.Now.ToString("yyyy-MM-dd HH:mm")+"] "+s+"\r\n");
+            var w = Encoding.UTF8.GetBytes("[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "] " + s + "\r\n");
             FileStreams[ModName].Write(w, 0, w.Length);
             FileStreams[ModName].Flush();
         }
-
     }
 }

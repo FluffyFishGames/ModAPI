@@ -20,12 +20,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Dynamic;
-using System.Xml.Linq;
 using ModAPI.Data.Models;
 
 namespace ModAPI.Data.ViewModels
@@ -42,8 +38,8 @@ namespace ModAPI.Data.ViewModels
             {
                 try
                 {
-                    string key = binder.Name.Substring("__Dynamic".Length);
-                    
+                    var key = binder.Name.Substring("__Dynamic".Length);
+
                     if (DynamicValues.ContainsKey(key))
                     {
                         result = DynamicValues[key];
@@ -62,10 +58,10 @@ namespace ModAPI.Data.ViewModels
             {
                 try
                 {
-                    int fieldNumber = int.Parse(binder.Name.Substring("__Field".Length));
-                    if (fieldNumber >= 0 && fieldNumber < this.Model.Fields.Count)
+                    var fieldNumber = int.Parse(binder.Name.Substring("__Field".Length));
+                    if (fieldNumber >= 0 && fieldNumber < Model.Fields.Count)
                     {
-                        result = this.Model.GetFieldValue(fieldNumber);
+                        result = Model.GetFieldValue(fieldNumber);
                         return true;
                     }
                     result = null;
@@ -87,11 +83,15 @@ namespace ModAPI.Data.ViewModels
             {
                 try
                 {
-                    string key = binder.Name.Substring("__Dynamic".Length);
+                    var key = binder.Name.Substring("__Dynamic".Length);
                     if (DynamicValues.ContainsKey(key))
+                    {
                         DynamicValues[key] = value;
+                    }
                     else
+                    {
                         DynamicValues.Add(key, value);
+                    }
                     return true;
                 }
                 catch (Exception e)
@@ -103,10 +103,10 @@ namespace ModAPI.Data.ViewModels
             {
                 try
                 {
-                    int fieldNumber = int.Parse(binder.Name.Substring("__Field".Length));
-                    if (fieldNumber >= 0 && fieldNumber < this.Model.Fields.Count)
+                    var fieldNumber = int.Parse(binder.Name.Substring("__Field".Length));
+                    if (fieldNumber >= 0 && fieldNumber < Model.Fields.Count)
                     {
-                        this.Model.SetFieldValue(fieldNumber, value);
+                        Model.SetFieldValue(fieldNumber, value);
                         OnPropertyChanged(fieldNumber);
                         return true;
                     }
@@ -122,13 +122,12 @@ namespace ModAPI.Data.ViewModels
 
         public BaseDataViewModel(BaseData baseData)
         {
-            this.Model = baseData;
+            Model = baseData;
         }
 
         protected void OnPropertyChanged(int fieldNum)
         {
             PropertyChanged(this, new PropertyChangedEventArgs("__Field" + fieldNum));
         }
-
     }
 }

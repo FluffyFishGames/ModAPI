@@ -18,29 +18,9 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using ModAPI;
 using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
 using ModAPI.Data;
-using ModAPI.Components;
 
 public class ModButtonViewModel : INotifyPropertyChanged
 {
@@ -54,7 +34,6 @@ public class ModButtonViewModel : INotifyPropertyChanged
         if (AssignedKey == "")
         {
             Key = button.StandardKey;
-
         }
     }
 
@@ -62,9 +41,11 @@ public class ModButtonViewModel : INotifyPropertyChanged
     {
         get
         {
-            string ret = this.button.Name.GetString(Configuration.CurrentLanguage.Key, "EN");
-            if (ret == "" && this.button.Name.GetLanguages().Count > 0)
-                ret = this.button.Name.GetString(this.button.Name.GetLanguages()[0]);
+            var ret = button.Name.GetString(Configuration.CurrentLanguage.Key, "EN");
+            if (ret == "" && button.Name.GetLanguages().Count > 0)
+            {
+                ret = button.Name.GetString(button.Name.GetLanguages()[0]);
+            }
             return ret;
         }
     }
@@ -73,19 +54,18 @@ public class ModButtonViewModel : INotifyPropertyChanged
     {
         get
         {
-            string ret = this.button.Description.GetString(Configuration.CurrentLanguage.Key, "EN");
-            if (ret == "" && this.button.Description.GetLanguages().Count > 0)
-                ret = this.button.Description.GetString(this.button.Name.GetLanguages()[0]);
+            var ret = button.Description.GetString(Configuration.CurrentLanguage.Key, "EN");
+            if (ret == "" && button.Description.GetLanguages().Count > 0)
+            {
+                ret = button.Description.GetString(button.Name.GetLanguages()[0]);
+            }
             return ret;
         }
     }
 
     public string Key
     {
-        get
-        {
-            return AssignedKey;
-        }
+        get { return AssignedKey; }
         set
         {
             AssignedKey = value;
@@ -95,13 +75,13 @@ public class ModButtonViewModel : INotifyPropertyChanged
         }
     }
 
-
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected internal void OnPropertyChanged(string propertyname)
     {
         if (PropertyChanged != null)
+        {
             PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        }
     }
-
 }

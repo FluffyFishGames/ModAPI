@@ -18,10 +18,8 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ModAPI
 {
@@ -33,41 +31,49 @@ namespace ModAPI
 
         public CustomParameter(ParameterType type)
         {
-            this.ParameterType = type;
+            ParameterType = type;
         }
 
         public CustomParameter(List<string> Possible)
         {
-            for (int i = 0; i < Possible.Count; i++)
+            for (var i = 0; i < Possible.Count; i++)
+            {
                 Possible[i] = Possible[i].ToLower();
+            }
             this.Possible = Possible;
         }
 
         public CustomParameter(string[] Possible)
         {
-            for (int i = 0; i < Possible.Length; i++)
+            for (var i = 0; i < Possible.Length; i++)
+            {
                 Possible[i] = Possible[i].ToLower();
+            }
             this.Possible = Possible.ToList();
         }
 
         public CustomParameter(ParameterType type, bool Required)
         {
-            this.ParameterType = type;
+            ParameterType = type;
             this.Required = Required;
         }
 
         public CustomParameter(List<string> Possible, bool Required)
         {
-            for (int i = 0; i < Possible.Count; i++)
+            for (var i = 0; i < Possible.Count; i++)
+            {
                 Possible[i] = Possible[i].ToLower();
+            }
             this.Possible = Possible;
             this.Required = Required;
         }
 
         public CustomParameter(string[] Possible, bool Required)
         {
-            for (int i = 0; i < Possible.Length; i++)
+            for (var i = 0; i < Possible.Length; i++)
+            {
                 Possible[i] = Possible[i].ToLower();
+            }
             this.Possible = Possible.ToList();
             this.Required = Required;
         }

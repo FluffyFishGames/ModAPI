@@ -19,72 +19,77 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
 using ModAPI.Data.Models;
+using ModAPI.Utils;
 
 namespace ModAPI.Components.Inputs
 {
     public class Input
     {
-
         public static void Add(Grid grid, XElement element, string label, Binding value, int row, int startColumn)
         {
-            string inputType = Utils.XMLHelper.GetXMLAttributeAsString(element, "InputType", "TextField");
+            var inputType = XMLHelper.GetXMLAttributeAsString(element, "InputType", "TextField");
             Add(grid, element, inputType, label, value, row, startColumn);
         }
 
-
         public static void Add(Grid grid, FieldDefinition field, string label, Binding value, int row, int startColumn)
         {
-            string inputType = field.GetExtra("inputtype", "");
-            if (inputType == "") 
+            var inputType = field.GetExtra("inputtype", "");
+            if (inputType == "")
             {
-                if (field.FieldType == typeof(System.Boolean))
+                if (field.FieldType == typeof(Boolean))
+                {
                     inputType = "CheckBox";
-                else 
+                }
+                else
+                {
                     inputType = "TextField";
+                }
             }
             Add(grid, field, inputType, label, value, row, startColumn);
         }
 
         public static void Add(Grid grid, XElement element, string inputType, string label, Binding value, int row, int startColumn)
         {
-            
             if (inputType == "Slider")
+            {
                 Slider.Add(grid, element, label, value, row, startColumn);
+            }
             if (inputType == "TextField")
+            {
                 TextField.Add(grid, element, label, value, row, startColumn);
+            }
             if (inputType == "TimeDisplay")
+            {
                 TextField.Add(grid, element, label, value, row, startColumn);
+            }
             if (inputType == "CheckBox")
+            {
                 CheckBox.Add(grid, element, label, value, row, startColumn);
+            }
         }
-
 
         public static void Add(Grid grid, FieldDefinition field, string inputType, string label, Binding value, int row, int startColumn)
         {
             if (inputType == "Slider")
+            {
                 Slider.Add(grid, field, label, value, row, startColumn);
+            }
             if (inputType == "TextField")
+            {
                 TextField.Add(grid, field, label, value, row, startColumn);
+            }
             if (inputType == "TimeDisplay")
+            {
                 TimeDisplay.Add(grid, field, label, value, row, startColumn);
+            }
             if (inputType == "CheckBox")
+            {
                 CheckBox.Add(grid, field, label, value, row, startColumn);
+            }
         }
     }
 }

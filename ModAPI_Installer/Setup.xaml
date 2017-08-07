@@ -9,7 +9,7 @@
 
         <Grid Grid.Row="0" Background="Transparent" Cursor="Hand" x:Name="Mover" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="30">
             <StackPanel HorizontalAlignment="Right" Margin="0, 2, 10, 0" Orientation="Horizontal">
-                <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Left" Click="CloseWindow"></Button>
+                <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Left" Click="CloseWindow" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -21,15 +21,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Reflection;
-using System.IO;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
 using System.Security.Cryptography;
+using System.Text;
+using Mono.Cecil;
 
 namespace ModAPI.Utils
 {
@@ -38,11 +32,13 @@ namespace ModAPI.Utils
         public static byte[] CreateChecksum(object obj)
         {
             if (obj == null)
+            {
                 return new byte[0];
+            }
 
             /*List<object> objs = new List<object>();
             string data = GetString(obj, ref objs);*/
-            MD5 digest = MD5.Create();
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(obj.ToString()));
             //return Encoding.UTF8.GetBytes(data);
             /*BinaryFormatter bf = new BinaryFormatter();
@@ -55,71 +51,73 @@ namespace ModAPI.Utils
 
         public static byte[] CreateChecksum(TypeDefinition type)
         {
-            string data = type.FullName + "|";
-            foreach (MethodDefinition method in type.Methods)
+            var data = type.FullName + "|";
+            foreach (var method in type.Methods)
             {
                 data += method.FullName + "|";
             }
-            MD5 digest = MD5.Create();
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
 
         public static byte[] CreateChecksum(TypeReference type)
         {
-            string data = type.FullName + "|";
-            MD5 digest = MD5.Create();
+            var data = type.FullName + "|";
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
-        
-        
+
         public static byte[] CreateChecksum(FieldDefinition field)
         {
-            string data = field.FullName + "|";
-            MD5 digest = MD5.Create();
+            var data = field.FullName + "|";
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
 
         public static byte[] CreateChecksum(FieldReference field)
         {
-            string data = field.FullName + "|";
-            MD5 digest = MD5.Create();
+            var data = field.FullName + "|";
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
 
         public static byte[] CreateChecksum(MethodDefinition method)
         {
-            string data = method.FullName + "|";
-            foreach (Instruction i in method.Body.Instructions)
+            var data = method.FullName + "|";
+            foreach (var i in method.Body.Instructions)
             {
-                data += i.ToString() + "|";
+                data += i + "|";
             }
 
-            MD5 digest = MD5.Create();
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
 
         public static byte[] CreateChecksum(MethodReference method)
         {
-            string data = method.FullName + "|";
+            var data = method.FullName + "|";
             data += method.ReturnType.FullName + "|";
 
-            MD5 digest = MD5.Create();
+            var digest = MD5.Create();
             return digest.ComputeHash(Encoding.UTF8.GetBytes(data));
         }
+
         protected static string GetString(object obj, ref List<object> already)
         {
-            string data = "";
+            var data = "";
             try
             {
                 if (obj is IEnumerable)
                 {
-                    IEnumerable i = (IEnumerable)obj;
-                    foreach (object a in i)
+                    var i = (IEnumerable) obj;
+                    foreach (var a in i)
                     {
                         if (already.Contains(a))
+                        {
                             continue;
+                        }
                         already.Add(a);
-                        data += GetString(a,ref already) + "|";
+                        data += GetString(a, ref already) + "|";
                     }
                 }
                 else if (obj is Enum)
@@ -128,32 +126,35 @@ namespace ModAPI.Utils
                 }
                 else
                 {
-                    Type type = obj.GetType();
-                    foreach (FieldInfo f in type.GetFields())
+                    var type = obj.GetType();
+                    foreach (var f in type.GetFields())
                     {
-                        object k = f.GetValue(obj);
+                        var k = f.GetValue(obj);
                         if (already.Contains(k))
+                        {
                             continue;
+                        }
                         already.Add(k);
-                        data += GetString(k,ref already) + "|";
+                        data += GetString(k, ref already) + "|";
                     }
-                    foreach (PropertyInfo p in type.GetProperties())
+                    foreach (var p in type.GetProperties())
                     {
-                        object k = p.GetValue(obj);
+                        var k = p.GetValue(obj);
                         if (already.Contains(k))
+                        {
                             continue;
+                        }
                         already.Add(k);
-                        data += GetString(k,ref already) + "|";
+                        data += GetString(k, ref already) + "|";
                     }
-                    data += obj.ToString() + "|";
+                    data += obj + "|";
                 }
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 data += "StackOverflow|";
             }
             return data;
         }
-
     }
 }

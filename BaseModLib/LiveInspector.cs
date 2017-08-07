@@ -18,18 +18,18 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Microsoft.Win32;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using Console = ModAPI.Console;
 
 public class LiveInspector : MonoBehaviour
 {
     public GUISkin Skin;
     public float Top = 0f;
-    protected static bool commandsAdded = false;
+    protected static bool commandsAdded;
     protected static LiveInspector Instance;
 
     // Use this for initialization
@@ -37,13 +37,13 @@ public class LiveInspector : MonoBehaviour
     {
         if (!commandsAdded)
         {
-            ModAPI.Console.RegisterCommand(new ModAPI.Console.Command()
+            Console.RegisterCommand(new Console.Command
             {
                 CommandName = "showInspector",
                 HelpText = "Shows the scenegraph",
                 OnSubmit = Show
             });
-            ModAPI.Console.RegisterCommand(new ModAPI.Console.Command()
+            Console.RegisterCommand(new Console.Command
             {
                 CommandName = "hideInspector",
                 HelpText = "Hides the scenegraph",
@@ -64,10 +64,10 @@ public class LiveInspector : MonoBehaviour
         show = false;
     }
 
-    public static bool show = false;
+    public static bool show;
     protected Vector2 ScrollPosition;
     protected Vector2 ScrollPosition2;
-    protected int FieldNum = 0;
+    protected int FieldNum;
     protected static GUIStyle whiteLabelStyle;
     protected static GUIStyle labelStyle;
     protected static GUIStyle boldLabelStyle;
@@ -78,7 +78,7 @@ public class LiveInspector : MonoBehaviour
 
     protected List<Transform> Expanded = new List<Transform>();
     protected Transform[] all;
-    protected float nextCheck = 0f;
+    protected float nextCheck;
     protected Dictionary<string, Transform> rootElements;
 
     void Update()
@@ -87,7 +87,7 @@ public class LiveInspector : MonoBehaviour
         {
             if (Event.current.control && Input.GetMouseButtonDown(0))
             {
-                Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var r = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hitInfo;
                 if (Physics.Raycast(r, out hitInfo))
                 {
@@ -96,6 +96,7 @@ public class LiveInspector : MonoBehaviour
             }
         }
     }
+
     void OnGUI()
     {
         if (show)
@@ -112,42 +113,41 @@ public class LiveInspector : MonoBehaviour
                 arrowDownStyle = GUI.skin.GetStyle("ArrowDown");
                 darkArrowRightStyle = GUI.skin.GetStyle("DarkArrowRight");
                 darkArrowDownStyle = GUI.skin.GetStyle("DarkArrowDown");
-
             }
-            float Height = Screen.height - Top;
+            var Height = Screen.height - Top;
             GUI.depth = -1000;
 
-            bool createRoot = false;
+            var createRoot = false;
             if (nextCheck > 0f)
             {
                 nextCheck -= Time.deltaTime;
                 if (nextCheck <= 0f)
                 {
-                    all = GameObject.FindObjectsOfType<Transform>();
+                    all = FindObjectsOfType<Transform>();
                     createRoot = true;
                     nextCheck = 1f;
                 }
             }
             if (all == null)
             {
-                all = GameObject.FindObjectsOfType<Transform>();
+                all = FindObjectsOfType<Transform>();
                 createRoot = true;
                 nextCheck = 1f;
             }
 
-            List<string> names = new List<string>();
+            var names = new List<string>();
             if (createRoot)
             {
-                int k = 0;
+                var k = 0;
                 rootElements = new Dictionary<string, Transform>();
-                foreach (Transform t in all)
+                foreach (var t in all)
                 {
                     if (t != null)
                     {
                         if ((SearchString == "" && t.parent == null) || (SearchString != "" && t.name.Contains(SearchString)))
                         {
                             rootElements.Add(t.name + k, t);
-                            k+=1;
+                            k += 1;
                         }
                     }
                 }
@@ -168,8 +168,8 @@ public class LiveInspector : MonoBehaviour
             GUI.Box(new Rect(-10, Top - 10, 250 + 10, Height + 20), "", GUI.skin.window);
             ScrollPosition = GUI.BeginScrollView(new Rect(0, 0, 250, Height - 30), ScrollPosition, new Rect(0, 0, 10, listHeight));
 
-            List<Transform> tt = new List<Transform>();
-            foreach (string n in names)
+            var tt = new List<Transform>();
+            foreach (var n in names)
             {
                 tt.Add(rootElements[n]);
             }
@@ -184,32 +184,36 @@ public class LiveInspector : MonoBehaviour
 
     float DrawComponents(Transform t)
     {
-        float height = 10f;
-        GUIStyle labelStyle = LiveInspector.labelStyle;
-        GUIStyle arrowRight = LiveInspector.darkArrowRightStyle;
-        GUIStyle arrowDown = LiveInspector.darkArrowDownStyle;
-        Component[] components = t.GetComponents<Component>();
-        float heightPer = 20f;
+        var height = 10f;
+        var labelStyle = LiveInspector.labelStyle;
+        var arrowRight = darkArrowRightStyle;
+        var arrowDown = darkArrowDownStyle;
+        var components = t.GetComponents<Component>();
+        var heightPer = 20f;
         GUI.TextField(new Rect(20f, height, 230f, 20f), "Name: " + t.gameObject.name);
         height += 20;
         GUI.Label(new Rect(20f, height, 230f, 20f), "Tag: " + t.gameObject.tag);
         height += 20;
         GUI.Label(new Rect(20f, height, 230f, 20f), "Layer: " + t.gameObject.layer);
         height += 20;
-        for (int i = 0; i < components.Length; i++)
+        for (var i = 0; i < components.Length; i++)
         {
-            float y = height;
-            float x = 20f;
-            Component comp = components[i];
+            var y = height;
+            var x = 20f;
+            var comp = components[i];
             if (ExpandedComponents.Contains(comp))
             {
                 if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowDown))
+                {
                     ExpandedComponents.Remove(comp);
+                }
             }
             else
             {
                 if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowRight))
+                {
                     ExpandedComponents.Add(comp);
+                }
             }
             GUI.Label(new Rect(20, y, 230f, heightPer), comp.GetType().FullName, labelStyle);
             height += heightPer;
@@ -221,65 +225,68 @@ public class LiveInspector : MonoBehaviour
         return height;
     }
 
-    float DrawComponent(Component comp, float startY, System.Type t = null)
+    float DrawComponent(Component comp, float startY, Type t = null)
     {
-        float height = 0f;
-        GUIStyle arrowRight = LiveInspector.darkArrowRightStyle;
-        GUIStyle arrowDown = LiveInspector.darkArrowDownStyle;
+        var height = 0f;
+        var arrowRight = darkArrowRightStyle;
+        var arrowDown = darkArrowDownStyle;
 
-        if (t == null) t = comp.GetType();
-        PropertyInfo[] properties = t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-        for (int i = 0; i < properties.Length; i++)
+        if (t == null)
+        {
+            t = comp.GetType();
+        }
+        var properties = t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+        for (var i = 0; i < properties.Length; i++)
         {
             try
             {
-                PropertyInfo f = properties[i];
+                var f = properties[i];
                 if (f.CanWrite)
                 {
                     height += DrawField(f.Name, f.GetValue(comp, new object[] { }), startY + height);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
-
             }
         }
 
-        FieldInfo[] fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-        for (int i = 0; i < fields.Length; i++)
+        var fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+        for (var i = 0; i < fields.Length; i++)
         {
             try
             {
-                FieldInfo f = fields[i];
+                var f = fields[i];
                 height += DrawField(f.Name, f.GetValue(comp), startY + height);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
-
             }
         }
 
         if (t.BaseType != null && t.BaseType.FullName != "UnityEngine.MonoBehaviour")
+        {
             height += DrawComponent(comp, startY + height, t.BaseType);
+        }
         return height;
     }
 
     float DrawField(string Name, object value, float startY)
     {
-        float height = 40f;
+        var height = 40f;
         GUI.Label(new Rect(20f, startY, 150f, 20f), Name + ":", boldLabelStyle);
         if (value != null)
         {
             if (value.GetType().FullName == "UnityEngine.GameObject")
             {
-                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle)) 
+                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle))
                 {
                     selectedTransform = ((GameObject) value).transform;
                 }
-            } 
+            }
             else if (value.GetType().FullName == "UnityEngine.Transform")
             {
-                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle)) 
+                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle))
                 {
                     selectedTransform = ((Transform) value);
                 }
@@ -289,25 +296,28 @@ public class LiveInspector : MonoBehaviour
                 GUI.Label(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle);
             }
         }
-        else GUI.Label(new Rect(20f, startY + 20f, 150f, 20f), "null", labelStyle);
+        else
+        {
+            GUI.Label(new Rect(20f, startY + 20f, 150f, 20f), "null", labelStyle);
+        }
         return height;
     }
 
-    protected float listHeight = 0f;
-    protected float listHeight2 = 0f;
+    protected float listHeight;
+    protected float listHeight2;
 
     float DrawList(Transform[] all, float startY, int depth = 0)
     {
-        GUIStyle labelStyle = LiveInspector.labelStyle;
-        GUIStyle arrowRight = LiveInspector.arrowRightStyle;
-        GUIStyle arrowDown = LiveInspector.arrowDownStyle;
-        float height = 0f;
-        float heightPer = 16f;
-        foreach (Transform t in all)
+        var labelStyle = LiveInspector.labelStyle;
+        var arrowRight = arrowRightStyle;
+        var arrowDown = arrowDownStyle;
+        var height = 0f;
+        var heightPer = 16f;
+        foreach (var t in all)
         {
-            float x = 20f + depth * 20f;
-            float y = startY + height;
-            float realY = y - ScrollPosition.y;
+            var x = 20f + depth * 20f;
+            var y = startY + height;
+            var realY = y - ScrollPosition.y;
 
             if (t == null)
             {
@@ -328,12 +338,16 @@ public class LiveInspector : MonoBehaviour
                         if (Expanded.Contains(t))
                         {
                             if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowDown))
+                            {
                                 Expanded.Remove(t);
+                            }
                         }
                         else
                         {
                             if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowRight))
+                            {
                                 Expanded.Add(t);
+                            }
                         }
                     }
 
@@ -346,9 +360,11 @@ public class LiveInspector : MonoBehaviour
                 height += heightPer;
                 if (Expanded.Contains(t))
                 {
-                    Transform[] sub = new Transform[t.childCount];
-                    for (int i = 0; i < sub.Length; i++)
+                    var sub = new Transform[t.childCount];
+                    for (var i = 0; i < sub.Length; i++)
+                    {
                         sub[i] = t.GetChild(i);
+                    }
                     height += DrawList(sub, startY + height, depth + 1);
                 }
             }
@@ -357,6 +373,4 @@ public class LiveInspector : MonoBehaviour
     }
 
     protected Transform selectedTransform;
-
- 
 }

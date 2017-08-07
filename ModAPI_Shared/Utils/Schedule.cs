@@ -20,21 +20,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModAPI.Utils
 {
     public class Schedule
     {
         protected static Dictionary<string, List<Task>> Tasks = new Dictionary<string, List<Task>>();
-        protected static int LastTaskID = 0;
+        protected static int LastTaskID;
+
         public static Task AddTask(string Target, string TaskName, Action Complete, object[] Parameters, Func<bool> Check = null)
         {
             Target = Target.ToLower();
             LastTaskID += 1;
-            Task newTask = new Task(LastTaskID, Target, TaskName, Parameters, Complete, Check);
+            var newTask = new Task(LastTaskID, Target, TaskName, Parameters, Complete, Check);
             AddTask(newTask);
             return newTask;
         }
@@ -43,7 +41,7 @@ namespace ModAPI.Utils
         {
             Target = Target.ToLower();
             LastTaskID += 1;
-            Task newTask = new Task(LastTaskID, Target, TaskName, new object[0], Complete, Check);
+            var newTask = new Task(LastTaskID, Target, TaskName, new object[0], Complete, Check);
             AddTask(newTask);
             return newTask;
         }
@@ -51,7 +49,7 @@ namespace ModAPI.Utils
         public static Task AddTask(string TaskName, Action Complete, object[] Parameters, Func<bool> Check = null)
         {
             LastTaskID += 1;
-            Task newTask = new Task(LastTaskID, "global", TaskName, Parameters, Complete, Check);
+            var newTask = new Task(LastTaskID, "global", TaskName, Parameters, Complete, Check);
             AddTask(newTask);
             return newTask;
         }
@@ -59,7 +57,7 @@ namespace ModAPI.Utils
         public static Task AddTask(string TaskName, Action Complete, Func<bool> Check = null)
         {
             LastTaskID += 1;
-            Task newTask = new Task(LastTaskID, "global", TaskName, new object[0], Complete, Check);
+            var newTask = new Task(LastTaskID, "global", TaskName, new object[0], Complete, Check);
             AddTask(newTask);
             return newTask;
         }
@@ -67,18 +65,24 @@ namespace ModAPI.Utils
         public static List<Task> GetTasks(string Target, bool includeGlobal = true)
         {
             Target = Target.ToLower();
-            List<Task> ret = new List<Task>();
+            var ret = new List<Task>();
             if (Tasks.ContainsKey("global"))
+            {
                 ret.AddRange(Tasks["global"]);
+            }
             if (Tasks.ContainsKey(Target))
+            {
                 ret.AddRange(Tasks[Target]);
+            }
             return ret;
         }
 
         protected static void AddTask(Task task)
         {
             if (!Tasks.ContainsKey(task.Target))
+            {
                 Tasks.Add(task.Target, new List<Task>());
+            }
             Tasks[task.Target].Add(task);
         }
 
@@ -87,7 +91,7 @@ namespace ModAPI.Utils
             Tasks[task.Target].Remove(task);
         }
 
-        public class Task 
+        public class Task
         {
             protected Func<bool> _Check;
             protected Action _Complete;
@@ -107,18 +111,22 @@ namespace ModAPI.Utils
                 _Complete = Complete;
             }
 
-            public bool Check() 
+            public bool Check()
             {
                 if (_Check != null)
+                {
                     return _Check();
+                }
                 return true;
             }
 
-            public void Complete() 
+            public void Complete()
             {
                 Schedule.Complete(this);
                 if (_Complete != null)
+                {
                     _Complete();
+                }
             }
         }
     }

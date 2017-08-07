@@ -19,17 +19,15 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Reflection;
 
 namespace ModAPI
 {
     class AssemblyResolver
     {
-        protected static bool Initialized = false;
+        protected static bool Initialized;
+
         public static void Initialize()
         {
             if (!Initialized)
@@ -40,17 +38,19 @@ namespace ModAPI
                 {
                     try
                     {
-                        string filename = new AssemblyName(e.Name).Name;
-                        string path = System.IO.Path.GetFullPath("." + System.IO.Path.DirectorySeparatorChar + "libs" + System.IO.Path.DirectorySeparatorChar + filename + ".dll");
+                        var filename = new AssemblyName(e.Name).Name;
+                        var path = Path.GetFullPath("." + Path.DirectorySeparatorChar + "libs" + Path.DirectorySeparatorChar + filename + ".dll");
                         path.Replace("file:///", "");
-                        if (!System.IO.File.Exists(path))
+                        if (!File.Exists(path))
                         {
-                            path = System.IO.Path.GetFullPath("." + System.IO.Path.DirectorySeparatorChar + "libs" + System.IO.Path.DirectorySeparatorChar + filename);
+                            path = Path.GetFullPath("." + Path.DirectorySeparatorChar + "libs" + Path.DirectorySeparatorChar + filename);
                             path.Replace("file:///", "");
                         }
-                        if (System.IO.File.Exists(path))
+                        if (File.Exists(path))
+                        {
                             return Assembly.LoadFrom(path);
-                        else return null;
+                        }
+                        return null;
                     }
                     catch (Exception ex)
                     {

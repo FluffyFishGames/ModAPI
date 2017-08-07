@@ -19,16 +19,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Markup;
 using System.IO;
-using System.Reflection;
-using System.Diagnostics;
+using System.Windows;
+using ModAPI.Data;
 
 namespace ModAPI
 {
@@ -41,15 +34,15 @@ namespace ModAPI
 
         public ResourceDictionary languageDictionary;
         public static App Instance;
-        public static ModAPI.Data.Game Game;
+        public static Game Game;
 
         public static string rootPath;
         public static string updatePath;
 
         static void CopyFiles(string directory, string b = "")
         {
-            string[] files = Directory.GetFiles(directory);
-            foreach (string file in files)
+            var files = Directory.GetFiles(directory);
+            foreach (var file in files)
             {
                 try
                 {
@@ -61,32 +54,30 @@ namespace ModAPI
                     //System.Console.WriteLine(e);
                 }
             }
-            string[] directories = Directory.GetDirectories(directory);
-            foreach (string dir in directories)
+            var directories = Directory.GetDirectories(directory);
+            foreach (var dir in directories)
             {
                 CopyFiles(directory + Path.DirectorySeparatorChar + Path.GetFileName(dir), b + Path.DirectorySeparatorChar + Path.GetFileName(dir) + Path.DirectorySeparatorChar);
                 Directory.Delete(dir);
             }
         }
-        
+
         public App()
         {
-            AssemblyResolver.Initialize(); 
+            AssemblyResolver.Initialize();
             rootPath = Path.GetFullPath(".");
             updatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
 
             if (Directory.Exists(updatePath))
             {
                 CopyFiles(updatePath);
-                System.IO.Directory.Delete(updatePath, true);
+                Directory.Delete(updatePath, true);
             }
 
             Debug.Environment = "ModAPI";
-            
+
             Instance = this;
             InitializeComponent();
         }
-
-
     }
 }

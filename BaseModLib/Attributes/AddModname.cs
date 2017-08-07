@@ -19,17 +19,14 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ModAPI.Attributes
 {
     /// <summary>
     /// Should not be used by mods. No effect for mods.
     /// </summary>
-    [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = false)]
-    public class AddModname : System.Attribute
-    { 
+    [AttributeUsage(AttributeTargets.Method)]
+    public class AddModname : Attribute
+    {
     }
 }

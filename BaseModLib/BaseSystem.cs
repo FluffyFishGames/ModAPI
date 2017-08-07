@@ -20,14 +20,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Text;
-using UnityEngine;
-using System.Reflection;
-using Ionic.Zip;
 using System.IO;
-
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
+using Ionic.Zip;
+using UnityEngine;
 
 namespace ModAPI
 {
@@ -39,26 +37,27 @@ namespace ModAPI
         protected static GameObject SystemObject;
         protected static int LastLevelNum = -1;
         internal static string ModsFolder;
-        protected static bool Initialized = false;
-        protected static Dictionary<string, Mod> Mods = new Dictionary<string,Mod>();
+        protected static bool Initialized;
+        protected static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
 
         protected static List<Execution> ExecuteEveryFrame = new List<Execution>();
         protected static List<Execution> ExecuteEveryFrameInGame = new List<Execution>();
         protected static List<Execution> ExecuteOnApplicationStart = new List<Execution>();
         protected static List<Execution> ExecuteOnGameStart = new List<Execution>();
 
-        protected class Execution {
+        protected class Execution
+        {
             public MethodInfo Method;
             public string ModID;
         }
 
         private static Type FindType(string fullName)
         {
-            foreach (Mod m in Mods.Values)
+            foreach (var m in Mods.Values)
             {
-                Type t = m.Assembly.GetType(fullName);
+                var t = m.Assembly.GetType(fullName);
                 if (t != null)
-                { 
+                {
                     return t;
                 }
             }
@@ -70,15 +69,15 @@ namespace ModAPI
 
         private static MethodInfo FindMethod(string path)
         {
-            string[] parts = path.Split(new string[] { "::" }, StringSplitOptions.None);
-            string[] parts2 = parts[0].Split(new string[] { " " }, StringSplitOptions.None);
+            var parts = path.Split(new[] { "::" }, StringSplitOptions.None);
+            var parts2 = parts[0].Split(new[] { " " }, StringSplitOptions.None);
 
-            Type t = FindType(parts2[1]);
+            var t = FindType(parts2[1]);
             if (t != null)
             {
-                MethodInfo[] methods = t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                string methodName = parts[1].Replace("()","");
-                foreach (MethodInfo m in methods)
+                var methods = t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                var methodName = parts[1].Replace("()", "");
+                foreach (var m in methods)
                 {
                     if (m.Name == methodName)
                     {
@@ -94,122 +93,136 @@ namespace ModAPI
             if (!Initialized)
             {
                 Initialized = true;
-                ModsFolder = System.IO.Path.GetFullPath(Application.dataPath + "/../Mods") + System.IO.Path.DirectorySeparatorChar;
+                ModsFolder = Path.GetFullPath(Application.dataPath + "/../Mods") + Path.DirectorySeparatorChar;
                 try
                 {
-                    XDocument configuration = XDocument.Load(ModsFolder + "RuntimeConfiguration.xml");
-                    foreach (XElement modConfiguration in configuration.Root.Elements("Mod"))
+                    var configuration = XDocument.Load(ModsFolder + "RuntimeConfiguration.xml");
+                    foreach (var modConfiguration in configuration.Root.Elements("Mod"))
                     {
                         try
                         {
-                            Mod newMod = new Mod(modConfiguration);
+                            var newMod = new Mod(modConfiguration);
                             if (newMod.ID != "")
+                            {
                                 Mods.Add(newMod.ID, newMod);
+                            }
                             newMod.Assembly = Assembly.Load(new AssemblyName(newMod.ID));
                             ModAPI.Mods.Add(newMod);
-                        } 
+                        }
                         catch (Exception e)
                         {
-                            XAttribute idAttribute = modConfiguration.Attribute("ID");
-                            string ID = "Core";
-                            if (idAttribute != null) ID = idAttribute.Value;
-                            Log.Write("Something went wrong while initializing a mod: " + e.ToString(), ID);
+                            var idAttribute = modConfiguration.Attribute("ID");
+                            var ID = "Core";
+                            if (idAttribute != null)
+                            {
+                                ID = idAttribute.Value;
+                            }
+                            Log.Write("Something went wrong while initializing a mod: " + e, ID);
                         }
                     }
 
-                    foreach (XElement ExecuteEveryFrame in configuration.Root.Elements("ExecuteEveryFrame"))
+                    foreach (var ExecuteEveryFrame in configuration.Root.Elements("ExecuteEveryFrame"))
                     {
-                        MethodInfo m = FindMethod(ExecuteEveryFrame.Value.ToString());
+                        var m = FindMethod(ExecuteEveryFrame.Value);
                         if (m != null)
                         {
-                            string OnlyInGame = ExecuteEveryFrame.Attribute("OnlyInGame").Value;
+                            var OnlyInGame = ExecuteEveryFrame.Attribute("OnlyInGame").Value;
                             if (OnlyInGame == "true")
-                                BaseSystem.ExecuteEveryFrameInGame.Add(new Execution() { Method = m, ModID = ExecuteEveryFrame.Attribute("ModID").Value });
+                            {
+                                ExecuteEveryFrameInGame.Add(new Execution { Method = m, ModID = ExecuteEveryFrame.Attribute("ModID").Value });
+                            }
                             else
-                                BaseSystem.ExecuteEveryFrame.Add(new Execution() { Method = m, ModID = ExecuteEveryFrame.Attribute("ModID").Value });
+                            {
+                                BaseSystem.ExecuteEveryFrame.Add(new Execution { Method = m, ModID = ExecuteEveryFrame.Attribute("ModID").Value });
+                            }
                         }
                         else
                         {
-                            Log.Write("Could not find method for execute every frame: " + ExecuteEveryFrame.Value.ToString(), "Core");
+                            Log.Write("Could not find method for execute every frame: " + ExecuteEveryFrame.Value, "Core");
                         }
                     }
 
-                    foreach (XElement ExecuteOnApplicationStart in configuration.Root.Elements("ExecuteOnApplicationStart"))
+                    foreach (var ExecuteOnApplicationStart in configuration.Root.Elements("ExecuteOnApplicationStart"))
                     {
-                        MethodInfo m = FindMethod(ExecuteOnApplicationStart.Value.ToString());
+                        var m = FindMethod(ExecuteOnApplicationStart.Value);
                         if (m != null)
                         {
-                            BaseSystem.ExecuteOnApplicationStart.Add(new Execution() { Method = m, ModID = ExecuteOnApplicationStart.Attribute("ModID").Value });
+                            BaseSystem.ExecuteOnApplicationStart.Add(new Execution { Method = m, ModID = ExecuteOnApplicationStart.Attribute("ModID").Value });
                         }
                         else
                         {
-                            Log.Write("Could not find method for execute on application start: " + ExecuteOnApplicationStart.Value.ToString(), "Core");
+                            Log.Write("Could not find method for execute on application start: " + ExecuteOnApplicationStart.Value, "Core");
                         }
                     }
 
-                    foreach (XElement ExecuteOnGameStart in configuration.Root.Elements("ExecuteOnGameStart"))
+                    foreach (var ExecuteOnGameStart in configuration.Root.Elements("ExecuteOnGameStart"))
                     {
-                        MethodInfo m = FindMethod(ExecuteOnGameStart.Value.ToString());
+                        var m = FindMethod(ExecuteOnGameStart.Value);
                         if (m != null)
                         {
-                            BaseSystem.ExecuteOnGameStart.Add(new Execution() { Method = m, ModID = ExecuteOnGameStart.Attribute("ModID").Value });
+                            BaseSystem.ExecuteOnGameStart.Add(new Execution { Method = m, ModID = ExecuteOnGameStart.Attribute("ModID").Value });
                         }
                         else
                         {
-                            Log.Write("Could not find method for execute on game start: " + ExecuteOnGameStart.Value.ToString(), "Core");
+                            Log.Write("Could not find method for execute on game start: " + ExecuteOnGameStart.Value, "Core");
                         }
                     }
 
-                    WWW www = new WWW("file://" + ModsFolder + "GUI.assetbundle");
+                    var www = new WWW("file://" + ModsFolder + "GUI.assetbundle");
                     while (www.progress < 1)
                     {
                     }
-                    Log.Write("Asset bundle ready: "+www.error, "Core");
+                    Log.Write("Asset bundle ready: " + www.error, "Core");
                     Log.Write("Asset bundle: " + www.assetBundle, "Core");
                     if ((www.error == "" || www.error == null) && www.assetBundle != null)
                     {
                         Log.Write("Asset bundle loaded", "Core");
-                        UnityEngine.Object[] objs = www.assetBundle.LoadAllAssets();
-                        foreach (UnityEngine.Object o in objs)
+                        var objs = www.assetBundle.LoadAllAssets();
+                        foreach (var o in objs)
                         {
-                            Log.Write("Asset bundle: "+o, "Core");
+                            Log.Write("Asset bundle: " + o, "Core");
                             if (o is GUISkin)
                             {
-                                ModAPI.GUI.Skin = (GUISkin) o;
+                                GUI.Skin = (GUISkin) o;
                             }
                         }
                     }
-                } 
+                }
                 catch (Exception e)
                 {
-                    Log.Write("Something went wrong while initializing: " + e.ToString(), "Core");
+                    Log.Write("Something went wrong while initializing: " + e, "Core");
                 }
             }
             if (SystemObject == null)
             {
-                ModAPI.Log.Write(Application.loadedLevel + "", "Core");
-                SystemObject = new GameObject("__ModAPISystem__"); ;
+                Log.Write(Application.loadedLevel + "", "Core");
+                SystemObject = new GameObject("__ModAPISystem__");
+                ;
                 Input.Initialize(SystemObject);
                 Console.Initialize(SystemObject);
                 if (SystemObject.GetComponent<BaseSystem>() == null)
+                {
                     SystemObject.AddComponent<BaseSystem>();
+                }
                 if (SystemObject.GetComponent<LiveInspector>() == null)
+                {
                     SystemObject.AddComponent<LiveInspector>();
+                }
 
                 if (Application.loadedLevel > 0)
                 {
-                    Execute(BaseSystem.ExecuteOnGameStart);
+                    Execute(ExecuteOnGameStart);
                 }
                 else
                 {
-                    Execute(BaseSystem.ExecuteOnApplicationStart);
+                    Execute(ExecuteOnApplicationStart);
                 }
             }
         }
 
         private static void Execute(List<Execution> chain)
         {
-            foreach (Execution m in chain)
+            foreach (var m in chain)
             {
                 try
                 {
@@ -217,12 +230,12 @@ namespace ModAPI
                 }
                 catch (Exception e)
                 {
-                    Log.Write("Something went wrong while executing " + m.Method.DeclaringType.FullName + "::" + m.Method.Name + ":" + e.ToString(), m.ModID);
+                    Log.Write("Something went wrong while executing " + m.Method.DeclaringType.FullName + "::" + m.Method.Name + ":" + e, m.ModID);
                 }
             }
         }
 
-        protected float Progress = 0f;
+        protected float Progress;
 
         void Update()
         {
@@ -230,7 +243,7 @@ namespace ModAPI
             {
                 if (loading)
                 {
-                    int mod = currentMod;
+                    var mod = currentMod;
                     if (currentZipFile != null)
                     {
                         if (currentZipFile.Entries.Count <= currentEntry)
@@ -240,16 +253,16 @@ namespace ModAPI
                         }
                         else
                         {
-                            ZipEntry entry = currentZipFile.Entries.ElementAt(currentEntry);
+                            var entry = currentZipFile.Entries.ElementAt(currentEntry);
                             if (!entry.IsDirectory)
                             {
                                 if (entry.FileName.ToLower().EndsWith(".png") || entry.FileName.ToLower().EndsWith(".jpg") || entry.FileName.ToLower().EndsWith(".jpeg"))
                                 {
-                                    MemoryStream m = new MemoryStream();
+                                    var m = new MemoryStream();
                                     entry.Extract(m);
                                     m.Position = 0;
-                                    byte[] fileBytes = m.ToArray();
-                                    Texture2D newTexture = new Texture2D(1, 1);
+                                    var fileBytes = m.ToArray();
+                                    var newTexture = new Texture2D(1, 1);
                                     newTexture.LoadImage(fileBytes);
                                     Resources.Add(ToLoad[currentMod], entry.FileName.ToLower(), newTexture);
                                 }
@@ -260,28 +273,30 @@ namespace ModAPI
                     if (currentZipFile == null || mod != currentMod)
                     {
                         if (ToLoad.Count <= currentMod)
+                        {
                             loading = false;
+                        }
                         else
                         {
-                            string modResourceFile = ModsFolder + ToLoad[currentMod].ID + ".resources";
+                            var modResourceFile = ModsFolder + ToLoad[currentMod].ID + ".resources";
                             currentZipFile = new ZipFile(modResourceFile);
                         }
                     }
-                    float per = mod / (float)ToLoad.Count;
-                    Progress = (per * mod + per * ((float)currentEntry / (float)currentZipFile.Entries.Count)) * 100f;
+                    var per = mod / (float) ToLoad.Count;
+                    Progress = (per * mod + per * (currentEntry / (float) currentZipFile.Entries.Count)) * 100f;
                 }
                 else
                 {
-                    Execute(BaseSystem.ExecuteEveryFrame);
+                    Execute(ExecuteEveryFrame);
                     if (Application.loadedLevel > 0)
                     {
-                        Execute(BaseSystem.ExecuteEveryFrameInGame);
+                        Execute(ExecuteEveryFrameInGame);
                     }
                 }
             }
             catch (Exception e)
             {
-                ModAPI.Log.Write(e.ToString(), "Core");
+                Log.Write(e.ToString(), "Core");
             }
         }
 
@@ -289,18 +304,18 @@ namespace ModAPI
         protected Texture2D whiteTexture;
         protected Texture2D blackTexture;
         protected Texture2D grayTexture;
-        protected bool loading = false;
+        protected bool loading;
         protected GUIStyle whiteLabel;
         protected GUIStyle blackLabel;
         protected List<Mod> ToLoad;
-        protected int currentMod = 0;
+        protected int currentMod;
         protected ZipFile currentZipFile;
-        protected int currentEntry = 0;
+        protected int currentEntry;
 
         void Start()
         {
             backgroundTexture = new Texture2D(1, 1, TextureFormat.ARGB32, false);
-            backgroundTexture.SetPixel(0, 0, new Color(0.33f,0.33f,0.33f,0.95f));
+            backgroundTexture.SetPixel(0, 0, new Color(0.33f, 0.33f, 0.33f, 0.95f));
             backgroundTexture.Apply();
 
             whiteTexture = new Texture2D(1, 1, TextureFormat.RGB24, false);
@@ -324,7 +339,7 @@ namespace ModAPI
             blackLabel.normal.textColor = new Color(0f, 0f, 0f);
 
             ToLoad = new List<Mod>();
-            foreach (Mod mod in ModAPI.Mods.LoadedMods.Values)
+            foreach (var mod in ModAPI.Mods.LoadedMods.Values)
             {
                 if (mod.HasResources)
                 {
@@ -340,37 +355,36 @@ namespace ModAPI
             {
                 if (Camera.current != null)
                 {
-                    Camera cam = Camera.current;
-                    UnityEngine.GUI.DrawTexture(new Rect(0, 0, cam.pixelWidth, cam.pixelHeight), this.backgroundTexture);
+                    var cam = Camera.current;
+                    UnityEngine.GUI.DrawTexture(new Rect(0, 0, cam.pixelWidth, cam.pixelHeight), backgroundTexture);
 
-                    float loadingBarWidth = cam.pixelWidth * 0.3f;
-                    float loadingBarHeight = 50f;
-                    float x = cam.pixelWidth / 2f - loadingBarWidth / 2f;
-                    float y = cam.pixelHeight / 2f - loadingBarHeight / 2f;
+                    var loadingBarWidth = cam.pixelWidth * 0.3f;
+                    var loadingBarHeight = 50f;
+                    var x = cam.pixelWidth / 2f - loadingBarWidth / 2f;
+                    var y = cam.pixelHeight / 2f - loadingBarHeight / 2f;
 
-                    GUIContent percentDisplay = new GUIContent(Mathf.Ceil(Progress * 10f) / 10f + "%");
-                    Vector2 labelSize = whiteLabel.CalcSize(percentDisplay);
+                    var percentDisplay = new GUIContent(Mathf.Ceil(Progress * 10f) / 10f + "%");
+                    var labelSize = whiteLabel.CalcSize(percentDisplay);
 
                     UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - labelSize.x / 2f + 1f, y - labelSize.y - 5f + 1f, labelSize.x + 20f, labelSize.y), percentDisplay, blackLabel);
                     UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - labelSize.x / 2f, y - labelSize.y - 5f, labelSize.x + 20f, labelSize.y), percentDisplay, whiteLabel);
 
-                    GUIContent taskDisplay = new GUIContent("Loading resources...");
-                    Vector2 label2Size = whiteLabel.CalcSize(taskDisplay);
+                    var taskDisplay = new GUIContent("Loading resources...");
+                    var label2Size = whiteLabel.CalcSize(taskDisplay);
 
                     UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - label2Size.x / 2f + 1f, y + loadingBarHeight + 5f + 1f, label2Size.x + 20f, label2Size.y), taskDisplay, blackLabel);
                     UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - label2Size.x / 2f, y + loadingBarHeight + 5f, label2Size.x + 20f, label2Size.y), taskDisplay, whiteLabel);
-                    
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y, loadingBarWidth * (Progress / 100f), loadingBarHeight), this.grayTexture);
-                    
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y, loadingBarWidth, 1), this.whiteTexture);
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y + loadingBarHeight, loadingBarWidth, 1), this.whiteTexture);
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y, 1, loadingBarHeight), this.whiteTexture);
-                    UnityEngine.GUI.DrawTexture(new Rect(x + loadingBarWidth, y, 1, loadingBarHeight), this.whiteTexture);
+
+                    UnityEngine.GUI.DrawTexture(new Rect(x, y, loadingBarWidth * (Progress / 100f), loadingBarHeight), grayTexture);
+
+                    UnityEngine.GUI.DrawTexture(new Rect(x, y, loadingBarWidth, 1), whiteTexture);
+                    UnityEngine.GUI.DrawTexture(new Rect(x, y + loadingBarHeight, loadingBarWidth, 1), whiteTexture);
+                    UnityEngine.GUI.DrawTexture(new Rect(x, y, 1, loadingBarHeight), whiteTexture);
+                    UnityEngine.GUI.DrawTexture(new Rect(x + loadingBarWidth, y, 1, loadingBarHeight), whiteTexture);
 
                     /*UnityEngine.GUI.DrawTexture(new Rect(x + 1, y + loadingBarHeight + 1, loadingBarWidth, 1), this.blackTexture);
                     UnityEngine.GUI.DrawTexture(new Rect(x + loadingBarWidth + 1, y + 1, 1, loadingBarHeight), this.blackTexture);
                     */
-                    
                 }
             }
         }

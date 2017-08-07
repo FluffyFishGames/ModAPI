@@ -34,8 +34,8 @@
         Title="MainWindow" Loaded="WindowLoaded" LayoutUpdated="Window_LayoutUpdated" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Activated="Window_Activated" Closed="Window_Closed">
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Components:TabControlEx x:Name="Tabs" Grid.Row="0" SnapsToDevicePixels="True" Style="{StaticResource TopTabs}" SelectionChanged="Tabs_SelectionChanged">
             <Components:TabControlEx.ExtraPanel>
@@ -47,14 +47,14 @@
                                     <RotateTransform x:Name="LoginLoaderRotation" Angle="0" CenterX="15" CenterY="15" />
                                 </Image.RenderTransform>
                             </Image>
-                            <TextBlock Text="{DynamicResource Lang.Loading}" VerticalAlignment="Center" Style="{StaticResource HeaderLabel}" Foreground="White" Margin="10,0,0,5"></TextBlock>
+                            <TextBlock Text="{DynamicResource Lang.Loading}" VerticalAlignment="Center" Style="{StaticResource HeaderLabel}" Foreground="White" Margin="10,0,0,5" />
                         </StackPanel>
                     </Grid>
                     <StackPanel Orientation="Vertical" x:Name="LoggedIn">
                         <ContentControl Style="{StaticResource PanelTop}" Grid.Row="0" Grid.Column="0" Height="40">
                             <StackPanel Orientation="Horizontal" Margin="10,5,10,5">
                                 <Grid Width="30" Height="30" Margin="0,0,5,0">
-                                    <Image x:Name="UserAvatar" Width="30" Height="30" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+                                    <Image x:Name="UserAvatar" Width="30" Height="30" RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Image Source="/resources/textures/Icons/Loader.png" Width="25" Margin="0,0,0,0" Height="25" x:Name="UserAvatarLoader" RenderOptions.BitmapScalingMode="HighQuality">
                                         <Image.RenderTransform>
                                             <RotateTransform x:Name="UserAvatarLoaderRotation" Angle="0" CenterX="12.5" CenterY="12.5" />
@@ -102,17 +102,15 @@
                             <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
                                 <Grid Margin="10,7,10,10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Grid Grid.Column="0" Grid.RowSpan="2" x:Name="ModsPanel">
-                                    <ListBox ItemsSource="{Binding Mods}" SelectedIndex="{Binding SelectedMod,Mode=TwoWay}" SelectionMode="Extended" Style="{StaticResource List}" HorizontalAlignment="Left" Margin="0,0,0,0" MinWidth="200" VerticalAlignment="Stretch">
-
-                                    </ListBox>
-                                </Grid>
+                                    <ListBox ItemsSource="{Binding Mods}" SelectedIndex="{Binding SelectedMod,Mode=TwoWay}" SelectionMode="Extended" Style="{StaticResource List}" HorizontalAlignment="Left" Margin="0,0,0,0" MinWidth="200" VerticalAlignment="Stretch" />
+                                        </Grid>
                                 <Grid Grid.Column="1" x:Name="NoModSelected" Margin="10,0,0,10">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="348,445,-348,-445">
                                         <StackPanel Orientation="Vertical">
@@ -160,9 +158,7 @@
                                                                     <RowDefinition Height="*" />
                                                                 </Grid.RowDefinitions>
                                                                 <TextBlock Style="{StaticResource HeaderLabel}" Grid.Row="0" Text="{DynamicResource Lang.Mods.Labels.AvailableVersions}" Margin="0,0,0,5" />
-                                                                <ListView ItemsSource="{Binding Versions}" SelectedItem="{Binding SelectedVersion}" Grid.Row="1" Style="{StaticResource List}" MinWidth="200">
-
-                                                                </ListView>
+                                                                <ListView ItemsSource="{Binding Versions}" SelectedItem="{Binding SelectedVersion}" Grid.Row="1" Style="{StaticResource List}" MinWidth="200" />
                                                             </Grid>
                                                         </Grid>
                                                     </ContentControl>
@@ -180,8 +176,7 @@
                                                                 <ItemsControl ItemsSource="{Binding Buttons}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
-                                                                            <StackPanel IsItemsHost="True" Margin="0,0,0,0" Orientation="Vertical">
-                                                                            </StackPanel>
+                                                                            <StackPanel IsItemsHost="True" Margin="0,0,0,0" Orientation="Vertical" />
                                                                         </ItemsPanelTemplate>
                                                                     </ItemsControl.ItemsPanel>
                                                                 </ItemsControl>
@@ -220,12 +215,11 @@
                         <Components:PopupPanel Title="{DynamicResource Lang.Development.Projects}" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"></RowDefinition>
-                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
-                                    <ListBox Margin="10,5,10,10" x:Name="ProjectList" SelectedIndex="{Binding SelectedProject,Mode=TwoWay}" Grid.Row="0" Style="{StaticResource List}" ItemsSource="{Binding Projects}" HorizontalAlignment="Stretch" MinWidth="200" VerticalAlignment="Stretch">
-                                    </ListBox>
+                                    <ListBox Margin="10,5,10,10" x:Name="ProjectList" SelectedIndex="{Binding SelectedProject,Mode=TwoWay}" Grid.Row="0" Style="{StaticResource List}" ItemsSource="{Binding Projects}" HorizontalAlignment="Stretch" MinWidth="200" VerticalAlignment="Stretch" />
                                 </ContentControl>
 
                                 <ContentControl Height="42" Style="{StaticResource PanelButtons}" Grid.Row="1">
@@ -251,8 +245,7 @@
                                     <ContentControl Padding="10" Style="{StaticResource PanelCenter}" Grid.Row="0">
                                         <TextBlock Margin="10,5,10,10" Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Development.NoProjectSelected}" />
                                     </ContentControl>
-                                    <ContentControl Height="42" Style="{StaticResource PanelButtons}" Grid.Row="1">
-                                    </ContentControl>
+                                    <ContentControl Height="42" Style="{StaticResource PanelButtons}" Grid.Row="1" />
                                 </Grid>
                                 <Grid x:Name="SelectedProject" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
@@ -336,8 +329,7 @@
                                                             <ItemsControl ItemsSource="{Binding Buttons}" Grid.Row="0" Grid.ColumnSpan="2">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
-                                                                        <StackPanel IsItemsHost="True" Margin="0,0,0,0" Orientation="Vertical">
-                                                                        </StackPanel>
+                                                                        <StackPanel IsItemsHost="True" Margin="0,0,0,0" Orientation="Vertical" />
                                                                     </ItemsPanelTemplate>
                                                                 </ItemsControl.ItemsPanel>
                                                             </ItemsControl>
@@ -370,8 +362,7 @@
                                                                 <ItemsControl ItemsSource="{Binding LanguageButtons}" Grid.Row="1" Grid.ColumnSpan="2">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
-                                                                            <WrapPanel IsItemsHost="True" Margin="0,0,0,10">
-                                                                            </WrapPanel>
+                                                                            <WrapPanel IsItemsHost="True" Margin="0,0,0,10" />
                                                                         </ItemsPanelTemplate>
                                                                     </ItemsControl.ItemsPanel>
 
@@ -385,8 +376,7 @@
                                                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{DynamicResource Lang.Development.Errors.NoLanguageSelected}" Style="{StaticResource NormalLabel}" />
                                                             </Grid>
                                                             <TextBlock Margin="0,0,0,5" Style="{StaticResource HeaderLabel}" Grid.Row="2" Grid.ColumnSpan="2" Text="{DynamicResource Lang.Development.Languages.AddLanguage}" />
-                                                            <ComboBox x:Name="DevelopmentLanguageSelector" Grid.Row="3" Grid.Column="0" Margin="0, 0, 10, 0" Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                                            </ComboBox>
+                                                            <ComboBox x:Name="DevelopmentLanguageSelector" Grid.Row="3" Grid.Column="0" Margin="0, 0, 10, 0" Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" />
                                                             <Button Grid.Row="3" HorizontalAlignment="Left" Grid.Column="1" Style="{StaticResource NormalButton}" Click="AddProjectLanguage">
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <Image Source="/resources/textures/Icons/Icon_Add.png" Margin="0,0,5,0" />
@@ -466,30 +456,29 @@
                             <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
                                 <Grid x:Name="Settings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition MinWidth="150" Width="Auto"></ColumnDefinition>
-                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition MinWidth="150" Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Text="{DynamicResource Lang.Options.Labels.Language}"></TextBlock>
+                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Text="{DynamicResource Lang.Options.Labels.Language}" />
                                     <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <ComboBox SelectedIndex="{Binding Language,Mode=TwoWay}" Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" x:Name="LanguageSelector" Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top">
-                                        </ComboBox>
+                                        <ComboBox SelectedIndex="{Binding Language,Mode=TwoWay}" Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" x:Name="LanguageSelector" Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" />
                                     </Grid>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Text="{DynamicResource Lang.Options.Labels.UpdateVersionsTable}"></TextBlock>
+                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Text="{DynamicResource Lang.Options.Labels.UpdateVersionsTable}" />
                                     <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                         <CheckBox IsChecked="{Binding UpdateVersionsTable,Mode=TwoWay}" />
                                     </Grid>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Text="{DynamicResource Lang.Options.Labels.AutoUpdate}"></TextBlock>
+                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Text="{DynamicResource Lang.Options.Labels.AutoUpdate}" />
                                     <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                         <CheckBox IsChecked="{Binding AutoUpdate,Mode=TwoWay}" />
                                     </Grid>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Text="{DynamicResource Lang.Options.Labels.UseSteam}"></TextBlock>
+                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Text="{DynamicResource Lang.Options.Labels.UseSteam}" />
                                     <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                         <CheckBox IsChecked="{Binding UseSteam,Mode=TwoWay}" />
                                     </Grid>
@@ -504,10 +493,10 @@
 
         <Grid Grid.Row="0" Background="Transparent" Cursor="Hand" x:Name="Mover" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="30">
             <StackPanel HorizontalAlignment="Right" Margin="0, 2, 10, 0" Orientation="Horizontal">
-                <Button Style="{StaticResource MinimizeButton}" HorizontalAlignment="Right" Click="Minimize"></Button>
-                <Button x:Name="NormalizeButton" Style="{StaticResource NormalizeButton}" HorizontalAlignment="Right" Click="Normalize"></Button>
-                <Button x:Name="MaximizeButton" Style="{StaticResource MaximizeButton}" HorizontalAlignment="Right" Click="Maximize"></Button>
-                <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Left" Click="CloseWindow"></Button>
+                <Button Style="{StaticResource MinimizeButton}" HorizontalAlignment="Right" Click="Minimize" />
+                <Button x:Name="NormalizeButton" Style="{StaticResource NormalizeButton}" HorizontalAlignment="Right" Click="Normalize" />
+                <Button x:Name="MaximizeButton" Style="{StaticResource MaximizeButton}" HorizontalAlignment="Right" Click="Maximize" />
+                <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Left" Click="CloseWindow" />
             </StackPanel>
         </Grid>
 

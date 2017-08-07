@@ -19,11 +19,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using ModAPI.Configurations;
 
 namespace ModAPI
@@ -36,13 +33,21 @@ namespace ModAPI
         protected static string lastEnvironment = "";
         protected static FileStream logStream;
         protected static StreamWriter logWriter;
-        public enum Type { NOTICE, WARNING, ERROR };
+
+        public enum Type
+        {
+            NOTICE,
+            WARNING,
+            ERROR
+        }
 
         public static void Log(string type, string message, Type logType = Type.NOTICE)
         {
-            string logFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment+".log";
-            if (logFileName.StartsWith(""+Path.DirectorySeparatorChar))
+            var logFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment + ".log";
+            if (logFileName.StartsWith("" + Path.DirectorySeparatorChar))
+            {
                 logFileName = logFileName.Substring(1);
+            }
             if (Environment != lastEnvironment || logStream == null || !logStream.CanWrite)
             {
                 if (logStream != null)
@@ -51,33 +56,43 @@ namespace ModAPI
                     {
                         logStream.Close();
                     }
-                    catch (Exception ex) {}
+                    catch (Exception ex)
+                    {
+                    }
                 }
-                if (System.IO.File.Exists(logFileName))
+                if (File.Exists(logFileName))
                 {
-                    string directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
+                    var directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
                     if (Path.GetFileName(logFileName) != logFileName)
+                    {
                         directory = Path.GetDirectoryName(logFileName) + Path.DirectorySeparatorChar;
-                    List<string> oldLogs = (Directory.GetFiles(directory, Environment + ".*.log")).ToList();
+                    }
+                    var oldLogs = (Directory.GetFiles(directory, Environment + ".*.log")).ToList();
                     oldLogs.Sort();
                     oldLogs.Reverse();
-                    foreach (string oldLog in oldLogs)
+                    foreach (var oldLog in oldLogs)
                     {
                         try
                         {
-                            string fileName = Path.GetFileNameWithoutExtension(oldLog);
-                            int num = int.Parse(fileName.Substring(Environment.Length + 1));
+                            var fileName = Path.GetFileNameWithoutExtension(oldLog);
+                            var num = int.Parse(fileName.Substring(Environment.Length + 1));
                             if (num < 5)
+                            {
                                 File.Move(oldLog, Path.GetDirectoryName(oldLog) + Path.DirectorySeparatorChar + Environment + "." + (num + 1) + ".log");
+                            }
                             else
+                            {
                                 File.Delete(oldLog);
+                            }
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex)
+                        {
+                        }
                     }
 
                     File.Move(logFileName, directory + Environment + ".0.log");
                 }
-                
+
                 logStream = new FileStream(logFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
                 logWriter = new StreamWriter(logStream);
                 lastEnvironment = Environment;
@@ -85,14 +100,20 @@ namespace ModAPI
 
             if (logWriter != null)
             {
-                string prefix = "";
+                var prefix = "";
                 if (logType == Type.WARNING)
+                {
                     prefix = "WARNING: ";
+                }
                 if (logType == Type.ERROR)
+                {
                     prefix = "ERROR: ";
-                string msg = "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] (" + type + "): " + prefix + message;
+                }
+                var msg = "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] (" + type + "): " + prefix + message;
                 if (Verbose)
-                    System.Console.WriteLine(msg);
+                {
+                    Console.WriteLine(msg);
+                }
                 logWriter.WriteLine(msg);
                 logWriter.Flush();
                 logStream.Flush();

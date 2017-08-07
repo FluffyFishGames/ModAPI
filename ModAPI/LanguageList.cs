@@ -20,31 +20,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 /*namespace ModAPI
 {*/
-    public class LanguageList
-    {
-        public List<ComboBoxItem> Items = new List<ComboBoxItem>();
+public class LanguageList
+{
+    public List<ComboBoxItem> Items = new List<ComboBoxItem>();
 
-        public void Add(OldConfiguration.Language language)
-        {
-            ComboBoxItem c = new ComboBoxItem();
-            
-            c.Content = language.Resource["LangCode"] as String;
-            Items.Add(c);
-        }
+    public void Add(OldConfiguration.Language language)
+    {
+        var c = new ComboBoxItem();
+
+        c.Content = language.Resource["LangCode"] as String;
+        Items.Add(c);
     }
+}
 //}

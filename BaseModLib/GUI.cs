@@ -18,10 +18,6 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace ModAPI

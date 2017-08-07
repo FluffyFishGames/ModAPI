@@ -19,21 +19,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
-using System.Collections.Specialized;
 using ModAPI.Components.Panels;
 
 namespace ModAPI.Components
@@ -41,30 +30,25 @@ namespace ModAPI.Components
     [TemplatePart(Name = "PART_ItemsHolder", Type = typeof(Panel))]
     public class TabControlEx : TabControl
     {
-
         public static readonly DependencyProperty ExtraPanelProperty = DependencyProperty.Register("ExtraPanel", typeof(FrameworkElement), typeof(TabControlEx), new PropertyMetadata());
-        
+
         protected FrameworkElement _ExtraPanel;
         public FrameworkElement ExtraPanel
         {
-            get
-            {
-                return _ExtraPanel;
-            }
-            set
-            {
-                _ExtraPanel = value;
-            }
+            get { return _ExtraPanel; }
+            set { _ExtraPanel = value; }
         }
-        private Panel ItemsHolderPanel = null;
+        private Panel ItemsHolderPanel;
 
         public void Preload(ProgressHandler handler)
         {
             if (Items.Count > 1)
             {
-                TabItem first = Items[1] as TabItem;
+                var first = Items[1] as TabItem;
                 if (first != null)
+                {
                     PreloadTab(handler, first);
+                }
             }
         }
 
@@ -75,14 +59,13 @@ namespace ModAPI.Components
         {
             _LoadNext = () =>
             {
-                int currIndex = this.Items.IndexOf(item);
-                handler.Progress = ((float)currIndex / ((float)this.Items.Count - 1f)) * 100f;
-                
-                if (item != this.Items[this.Items.Count - 1])
+                var currIndex = Items.IndexOf(item);
+                handler.Progress = (currIndex / (Items.Count - 1f)) * 100f;
+
+                if (item != Items[Items.Count - 1])
                 {
-                
-                    int nextIndex = currIndex + 1;
-                    TabItem nextItem = this.Items[nextIndex] as TabItem;
+                    var nextIndex = currIndex + 1;
+                    var nextItem = Items[nextIndex] as TabItem;
 
                     if (nextItem != null)
                     {
@@ -98,17 +81,11 @@ namespace ModAPI.Components
             {
                 if (item.Content is IPanel)
                 {
-                    int currIndex = this.Items.IndexOf(item);
-                    ProgressHandler subHandler = new ProgressHandler();
-                    subHandler.OnComplete += delegate
-                    {
-                        _LoadNext();
-                    };
-                    subHandler.OnChange += delegate
-                    {
-                        handler.Progress = ((((float)currIndex - 1) / ((float)this.Items.Count - 1f)) + (subHandler.Progress / 100f * 1f / ((float)this.Items.Count - 1f))) * 100f;
-                    };
-                    ((IPanel)item.Content).Preload(subHandler);
+                    var currIndex = Items.IndexOf(item);
+                    var subHandler = new ProgressHandler();
+                    subHandler.OnComplete += delegate { _LoadNext(); };
+                    subHandler.OnChange += delegate { handler.Progress = ((((float) currIndex - 1) / (Items.Count - 1f)) + (subHandler.Progress / 100f * 1f / (Items.Count - 1f))) * 100f; };
+                    ((IPanel) item.Content).Preload(subHandler);
                 }
                 else
                 {
@@ -117,17 +94,18 @@ namespace ModAPI.Components
             };
             item.Loaded += item_GotFocus;
 
-            this.SelectedItem = item;
-            this.UpdateLayout();
+            SelectedItem = item;
+            UpdateLayout();
             if (item.IsLoaded)
+            {
                 _Loaded();
-            
+            }
         }
 
         void item_GotFocus(object sender, RoutedEventArgs e)
         {
             _Loaded();
-            ((TabItem)sender).Loaded -= item_GotFocus;
+            ((TabItem) sender).Loaded -= item_GotFocus;
         }
 
         public void Loaded()
@@ -136,7 +114,6 @@ namespace ModAPI.Components
         }
 
         public TabControlEx()
-            : base()
         {
             // This is necessary so that we get the initial databound selected item
             ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
@@ -149,9 +126,9 @@ namespace ModAPI.Components
         /// <param name="e"></param>
         private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (this.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+            if (ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
             {
-                this.ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
+                ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
                 UpdateSelectedItem();
             }
         }
@@ -176,7 +153,9 @@ namespace ModAPI.Components
             base.OnItemsChanged(e);
 
             if (ItemsHolderPanel == null)
+            {
                 return;
+            }
 
             switch (e.Action)
             {
@@ -190,9 +169,11 @@ namespace ModAPI.Components
                     {
                         foreach (var item in e.OldItems)
                         {
-                            ContentPresenter cp = FindChildContentPresenter(item);
+                            var cp = FindChildContentPresenter(item);
                             if (cp != null)
+                            {
                                 ItemsHolderPanel.Children.Remove(cp);
+                            }
                         }
                     }
 
@@ -216,37 +197,46 @@ namespace ModAPI.Components
         private void UpdateSelectedItem()
         {
             if (ItemsHolderPanel == null)
+            {
                 return;
+            }
 
             // Generate a ContentPresenter if necessary
-            TabItem item = GetSelectedTabItem();
+            var item = GetSelectedTabItem();
             if (item != null)
+            {
                 CreateChildContentPresenter(item);
+            }
 
             // show the right child
             foreach (ContentPresenter child in ItemsHolderPanel.Children)
+            {
                 child.Visibility = ((child.Tag as TabItem).IsSelected) ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         private ContentPresenter CreateChildContentPresenter(object item)
         {
-            
             if (item == null)
+            {
                 return null;
+            }
 
-            ContentPresenter cp = FindChildContentPresenter(item);
-            
+            var cp = FindChildContentPresenter(item);
+
             if (cp != null)
+            {
                 return cp;
+            }
 
             // the actual child to be added.  cp.Tag is a reference to the TabItem
             cp = new ContentPresenter();
             cp.Content = (item is TabItem) ? (item as TabItem).Content : item;
-            cp.ContentTemplate = this.SelectedContentTemplate;
-            cp.ContentTemplateSelector = this.SelectedContentTemplateSelector;
-            cp.ContentStringFormat = this.SelectedContentStringFormat;
+            cp.ContentTemplate = SelectedContentTemplate;
+            cp.ContentTemplateSelector = SelectedContentTemplateSelector;
+            cp.ContentStringFormat = SelectedContentStringFormat;
             cp.Visibility = Visibility.Collapsed;
-            cp.Tag = (item is TabItem) ? item : (this.ItemContainerGenerator.ContainerFromItem(item));
+            cp.Tag = (item is TabItem) ? item : (ItemContainerGenerator.ContainerFromItem(item));
             ItemsHolderPanel.Children.Add(cp);
             return cp;
         }
@@ -254,18 +244,26 @@ namespace ModAPI.Components
         private ContentPresenter FindChildContentPresenter(object data)
         {
             if (data is TabItem)
+            {
                 data = (data as TabItem).Content;
+            }
 
             if (data == null)
+            {
                 return null;
+            }
 
             if (ItemsHolderPanel == null)
+            {
                 return null;
+            }
 
             foreach (ContentPresenter cp in ItemsHolderPanel.Children)
             {
                 if (cp.Content == data)
+                {
                     return cp;
+                }
             }
 
             return null;
@@ -273,13 +271,17 @@ namespace ModAPI.Components
 
         protected TabItem GetSelectedTabItem()
         {
-            object selectedItem = base.SelectedItem;
+            var selectedItem = SelectedItem;
             if (selectedItem == null)
+            {
                 return null;
+            }
 
-            TabItem item = selectedItem as TabItem;
+            var item = selectedItem as TabItem;
             if (item == null)
-                item = base.ItemContainerGenerator.ContainerFromIndex(base.SelectedIndex) as TabItem;
+            {
+                item = ItemContainerGenerator.ContainerFromIndex(SelectedIndex) as TabItem;
+            }
 
             return item;
         }

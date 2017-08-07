@@ -33,7 +33,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ModAPI.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip">
@@ -82,9 +83,6 @@
     <Compile Include="Utils\TypeResolver.cs" />
     <Compile Include="Utils\XMLHelper.cs" />
     <Compile Include="Version.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ModAPI.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -19,19 +19,17 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ModAPI.Attributes
 {
     /// <summary>
     /// Defines the priority in the launch chain of an overriden method. Higher priority means earlier execution.
     /// </summary>
-    [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = false)]
-    public class Priority : System.Attribute
+    [AttributeUsage(AttributeTargets.Method)]
+    public class Priority : Attribute
     {
-        protected int priority = 0;
+        protected int priority;
+
         public Priority(int priority)
         {
             this.priority = priority;

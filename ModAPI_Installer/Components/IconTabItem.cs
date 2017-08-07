@@ -19,24 +19,16 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ModAPI.Components
 {
     /// <summary>
     /// Interaktionslogik für IconTabItem.xaml
     /// </summary>
-    public partial class IconTabItem : TabItem
+    public class IconTabItem : TabItem
     {
         public static readonly DependencyProperty CurrentIconSourceProperty = DependencyProperty.Register("CurrentIconSource", typeof(BitmapSource), typeof(IconTabItem), new PropertyMetadata());
         public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register("IconSource", typeof(BitmapSource), typeof(IconTabItem), new PropertyMetadata());
@@ -45,32 +37,32 @@ namespace ModAPI.Components
         public static readonly DependencyProperty ShowWarningProperty = DependencyProperty.Register("ShowWarning", typeof(Visibility), typeof(IconTabItem), new PropertyMetadata(Visibility.Collapsed));
         public BitmapSource CurrentIconSource
         {
-            get { return base.GetValue(CurrentIconSourceProperty) as BitmapSource; }
-            set { base.SetValue(CurrentIconSourceProperty, value); }
+            get { return GetValue(CurrentIconSourceProperty) as BitmapSource; }
+            set { SetValue(CurrentIconSourceProperty, value); }
         }
 
         public BitmapSource IconSource
         {
-            get { return base.GetValue(IconSourceProperty) as BitmapSource; }
-            set { base.SetValue(IconSourceProperty, value); }
+            get { return GetValue(IconSourceProperty) as BitmapSource; }
+            set { SetValue(IconSourceProperty, value); }
         }
 
         public BitmapSource SelectedIconSource
         {
-            get { return base.GetValue(SelectedIconSourceProperty) as BitmapSource; }
-            set { base.SetValue(SelectedIconSourceProperty, value); }
+            get { return GetValue(SelectedIconSourceProperty) as BitmapSource; }
+            set { SetValue(SelectedIconSourceProperty, value); }
         }
 
         public string Label
         {
-            get { return (string)base.GetValue(LabelProperty); }
-            set { base.SetValue(LabelProperty, value); }
+            get { return (string) GetValue(LabelProperty); }
+            set { SetValue(LabelProperty, value); }
         }
 
         public Visibility ShowWarning
         {
-            get { return (Visibility)base.GetValue(ShowWarningProperty); }
-            set { base.SetValue(ShowWarningProperty, value); }
+            get { return (Visibility) GetValue(ShowWarningProperty); }
+            set { SetValue(ShowWarningProperty, value); }
         }
     }
 }

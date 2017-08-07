@@ -20,27 +20,10 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using ModAPI;
-using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
 using ModAPI.Data;
-using ModAPI.Components;
+using ModAPI.Data.Models;
 
 public class ModProjectButtonViewModel : INotifyPropertyChanged
 {
@@ -49,10 +32,10 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public ModProjectButtonViewModel(ModProjectViewModel projectViewModel, ModProject.Button button)
     {
-        this.ProjectViewModel = projectViewModel;
-        this.Button = button;
-        this.Button.Name.OnChange += NameChanged;
-        this.Button.Description.OnChange += DescriptionChanged;
+        ProjectViewModel = projectViewModel;
+        Button = button;
+        Button.Name.OnChange += NameChanged;
+        Button.Description.OnChange += DescriptionChanged;
 
         CheckForErrors();
     }
@@ -75,47 +58,44 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public Visibility NameError
     {
-        get
-        {
-            return _NameError;
-        }
+        get { return _NameError; }
     }
 
     public Visibility Error
     {
-        get
-        {
-            return _Error;
-        }
+        get { return _Error; }
     }
 
     public Visibility IDError
     {
-        get
-        {
-            return _IDError;
-        }
+        get { return _IDError; }
     }
 
     public void CheckForErrors()
     {
         _NameError = Visibility.Collapsed;
 
-        foreach (string LangCode in ProjectViewModel.Project.Languages)
+        foreach (var LangCode in ProjectViewModel.Project.Languages)
         {
             if (Button.Name.GetString(LangCode).Trim() == "")
+            {
                 _NameError = Visibility.Visible;
+            }
         }
 
         _IDError = Visibility.Collapsed;
 
-        foreach (ModProject.Button button in ProjectViewModel.Project.Buttons)
-        {   
+        foreach (var button in ProjectViewModel.Project.Buttons)
+        {
             if (button != Button && button.ID == Button.ID)
+            {
                 _IDError = Visibility.Visible;
+            }
         }
         if (Button.ID == "")
+        {
             _IDError = Visibility.Visible;
+        }
 
         _Error = _IDError == Visibility.Visible || _NameError == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
 
@@ -127,10 +107,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public string ID
     {
-        get
-        {
-            return Button.ID;
-        }
+        get { return Button.ID; }
         set
         {
             Button.ID = value;
@@ -142,10 +119,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public string StandardKey
     {
-        get
-        {
-            return Button.StandardKey;
-        }
+        get { return Button.StandardKey; }
         set
         {
             Button.StandardKey = value;
@@ -155,21 +129,14 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         }
     }
 
-
     public MultilingualValue Name
     {
-        get
-        {
-            return Button.Name;
-        }
+        get { return Button.Name; }
     }
 
     public MultilingualValue Description
     {
-        get
-        {
-            return Button.Description;
-        }
+        get { return Button.Description; }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -177,14 +144,13 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
     protected internal void OnPropertyChanged(string propertyname)
     {
         if (PropertyChanged != null)
+        {
             PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        }
     }
 
     public ObservableCollection<string> Languages
     {
-        get
-        {
-            return ProjectViewModel.Languages;
-        }
+        get { return ProjectViewModel.Languages; }
     }
 }

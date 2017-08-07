@@ -18,43 +18,32 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ModAPI.Windows.SubWindows
 {
     public class BaseSubWindow : Window
     {
-
-        public BaseSubWindow(string langKey) : base()
+        public BaseSubWindow(string langKey)
         {
             Utils.Language.SetKey(this, langKey);
         }
 
-        public BaseSubWindow() : base()
+        public BaseSubWindow()
         {
         }
 
         protected bool closeable = true;
+
         public void SetCloseable(bool closeable)
         {
             this.closeable = closeable;
-            Button b = ((Button)GetTemplateChild("PART_Close"));
+            var b = ((Button) GetTemplateChild("PART_Close"));
             if (b != null)
             {
-                b.Visibility = closeable ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                b.Visibility = closeable ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -62,12 +51,13 @@ namespace ModAPI.Windows.SubWindows
         {
             MainWindow.OpenWindow(this);
         }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            ((Rectangle)GetTemplateChild("PART_Mover")).MouseDown += (sender, e) => { DragMove(); };
-            ((Button)GetTemplateChild("PART_Close")).Click += (sender, e) => { Close(); };
-            ((Button)GetTemplateChild("PART_Close")).Visibility = closeable ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            ((Rectangle) GetTemplateChild("PART_Mover")).MouseDown += (sender, e) => { DragMove(); };
+            ((Button) GetTemplateChild("PART_Close")).Click += (sender, e) => { Close(); };
+            ((Button) GetTemplateChild("PART_Close")).Visibility = closeable ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

@@ -19,22 +19,12 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
 using ModAPI.Data.Models;
+using ModAPI.Utils;
 
 namespace ModAPI.Components.Inputs
 {
@@ -42,30 +32,30 @@ namespace ModAPI.Components.Inputs
     {
         public static void Add(Grid grid, FieldDefinition field, string label, Binding value, int row, int startColumn)
         {
-            double minimum = Convert.ToDouble(field.GetExtra("min", "0"));
-            double maximum = Convert.ToDouble(field.GetExtra("max", "0"));
-            string labelStyle = field.GetExtra("labelstyle", "NormalLabel");
-            string inputStyle = field.GetExtra("inputstyle", "");
+            var minimum = Convert.ToDouble(field.GetExtra("min", "0"));
+            var maximum = Convert.ToDouble(field.GetExtra("max", "0"));
+            var labelStyle = field.GetExtra("labelstyle", "NormalLabel");
+            var inputStyle = field.GetExtra("inputstyle", "");
 
             Add(grid, label, value, row, minimum, maximum, labelStyle, inputStyle, startColumn);
         }
 
         public static void Add(Grid grid, XElement element, string label, Binding value, int row, int startColumn)
         {
-            double minimum = Utils.XMLHelper.GetXMLAttributeAsDouble(element, "Min", 0.0);
-            double maximum = Utils.XMLHelper.GetXMLAttributeAsDouble(element, "Max", 0.0);
-            string labelStyle = Utils.XMLHelper.GetXMLAttributeAsString(element, "LabelStyle", "NormalLabel");
-            string inputStyle = Utils.XMLHelper.GetXMLAttributeAsString(element, "InputStyle", "");
+            var minimum = XMLHelper.GetXMLAttributeAsDouble(element, "Min", 0.0);
+            var maximum = XMLHelper.GetXMLAttributeAsDouble(element, "Max", 0.0);
+            var labelStyle = XMLHelper.GetXMLAttributeAsString(element, "LabelStyle", "NormalLabel");
+            var inputStyle = XMLHelper.GetXMLAttributeAsString(element, "InputStyle", "");
 
             Add(grid, label, value, row, minimum, maximum, labelStyle, inputStyle, startColumn);
         }
 
         public static void Add(Grid grid, string label, Binding value, int row, double minimum, double maximum, string labelStyle, string inputStyle, int startColumn)
         {
-            int column = startColumn;
+            var column = startColumn;
             if (label != "")
             {
-                TextBlock labelElement = new TextBlock();
+                var labelElement = new TextBlock();
                 labelElement.Style = App.Instance.Resources[labelStyle] as Style;
                 labelElement.SetResourceReference(TextBlock.TextProperty, label);
                 labelElement.VerticalAlignment = VerticalAlignment.Center;
@@ -77,7 +67,7 @@ namespace ModAPI.Components.Inputs
                 column += 1;
             }
 
-            System.Windows.Controls.Slider inputElement = new System.Windows.Controls.Slider();
+            var inputElement = new System.Windows.Controls.Slider();
             inputElement.Orientation = Orientation.Horizontal;
             inputElement.Minimum = minimum;
             inputElement.Maximum = maximum;
@@ -85,9 +75,11 @@ namespace ModAPI.Components.Inputs
             inputElement.Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5);
             if (inputStyle != "")
             {
-                Style s = App.Instance.Resources[inputStyle] as Style;
+                var s = App.Instance.Resources[inputStyle] as Style;
                 if (s.TargetType == typeof(System.Windows.Controls.Slider))
+                {
                     inputElement.Style = s;
+                }
             }
             inputElement.SetBinding(System.Windows.Controls.Slider.ValueProperty, value);
 

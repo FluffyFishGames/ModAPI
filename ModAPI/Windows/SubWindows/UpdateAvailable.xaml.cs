@@ -19,22 +19,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Threading;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Windows;
 using Ionic.Zip;
 
 namespace ModAPI.Windows.SubWindows
@@ -47,7 +36,6 @@ namespace ModAPI.Windows.SubWindows
         protected string newVersion = "";
 
         public UpdateAvailable()
-            : base()
         {
             InitializeComponent();
         }
@@ -61,37 +49,37 @@ namespace ModAPI.Windows.SubWindows
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs ev)
         {
-            ProgressHandler handler = new ProgressHandler();
-            Thread t = new Thread(delegate() 
-                {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.modapi.de/app/archives/" + this.newVersion + ".zip");
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream s = response.GetResponseStream();
-                byte[] buffer = new byte[4096];
-                MemoryStream memory = new MemoryStream();
-                int count = 0;
+            var handler = new ProgressHandler();
+            var t = new Thread(delegate()
+            {
+                var request = (HttpWebRequest) WebRequest.Create("http://www.modapi.de/app/archives/" + newVersion + ".zip");
+                var response = (HttpWebResponse) request.GetResponse();
+                var s = response.GetResponseStream();
+                var buffer = new byte[4096];
+                var memory = new MemoryStream();
+                var count = 0;
                 long current = 0;
-                float progress = 0f;
+                var progress = 0f;
                 handler.Task = "Download";
                 while ((count = s.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     memory.Write(buffer, 0, count);
                     current += count;
-                    progress = (float)((((double)current / (double)response.ContentLength)) * 70.0);
+                    progress = (float) (((current / (double) response.ContentLength)) * 70.0);
                     handler.Progress = progress;
                 }
 
                 memory.Position = 0;
-                ZipFile zip = ZipFile.Read(memory);
-                string directory = "./_update";
-                int n = 0;
+                var zip = ZipFile.Read(memory);
+                var directory = "./_update";
+                var n = 0;
                 handler.Task = "Extracting";
-                foreach (ZipEntry e in zip)
+                foreach (var e in zip)
                 {
                     try
                     {
@@ -99,20 +87,19 @@ namespace ModAPI.Windows.SubWindows
                     }
                     catch (Exception ex3)
                     {
-
                     }
                     n += 1;
-                    handler.Progress = 70f + ((float)n / (float)zip.Count) * 30f;
+                    handler.Progress = 70f + (n / (float) zip.Count) * 30f;
                 }
 
-                Process p = new Process();
+                var p = new Process();
                 p.StartInfo.FileName = "Updater.exe";
                 p.StartInfo.Verb = "runas";
                 p.Start();
                 Environment.Exit(0);
             });
 
-            ModAPI.Windows.SubWindows.OperationPending window = new ModAPI.Windows.SubWindows.OperationPending("Lang.Windows.OperationPending", "Update", handler);
+            var window = new OperationPending("Lang.Windows.OperationPending", "Update", handler);
             if (!window.Completed)
             {
                 window.ShowSubWindow();
@@ -120,7 +107,6 @@ namespace ModAPI.Windows.SubWindows
                 Close();
             }
             t.Start();
-
         }
     }
 }

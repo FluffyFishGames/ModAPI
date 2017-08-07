@@ -20,19 +20,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using System.Threading.Tasks;
 using System.IO;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace ModAPI.Configurations
 {
     public class GUIConfiguration
     {
+        public enum ResultCode
+        {
+            OK,
+            ERROR
+        }
 
-        public enum ResultCode { OK, ERROR };
-        public enum ErrorCode { FILE_NOT_FOUND, MALFORMED_CONFIGURATION };
+        public enum ErrorCode
+        {
+            FILE_NOT_FOUND,
+            MALFORMED_CONFIGURATION
+        }
 
         public static ErrorCode Error;
         public static string ErrorString = "";
@@ -43,13 +49,15 @@ namespace ModAPI.Configurations
         protected static void ChangeProgress(float progress)
         {
             if (currentProgressHandler != null)
+            {
                 currentProgressHandler.Progress = progress;
+            }
         }
 
         public static ResultCode Load(ProgressHandler handler)
         {
             currentProgressHandler = handler;
-            string gameConfigPath = Configuration.GetPath("GameConfigurations");
+            var gameConfigPath = Configuration.GetPath("GameConfigurations");
             if (gameConfigPath == "")
             {
                 Error = ErrorCode.MALFORMED_CONFIGURATION;
@@ -57,8 +65,8 @@ namespace ModAPI.Configurations
                 Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
                 return ResultCode.ERROR;
             }
-            
-            string gameConfigFile = Path.GetFullPath(gameConfigPath + Path.DirectorySeparatorChar + Configuration.CurrentGame + Path.DirectorySeparatorChar + "GUI.xml");
+
+            var gameConfigFile = Path.GetFullPath(gameConfigPath + Path.DirectorySeparatorChar + Configuration.CurrentGame + Path.DirectorySeparatorChar + "GUI.xml");
             if (!File.Exists(gameConfigFile))
             {
                 Error = ErrorCode.FILE_NOT_FOUND;
@@ -70,7 +78,7 @@ namespace ModAPI.Configurations
             Debug.Log("GUIConfiguration", "Parsing the GUI configuration file \"" + gameConfigFile + "\".");
             try
             {
-                XDocument configuration = XDocument.Load(gameConfigFile);
+                var configuration = XDocument.Load(gameConfigFile);
                 Tabs = new List<Tab>();
                 if (!ParseTabs(configuration.Root))
                 {
@@ -80,17 +88,17 @@ namespace ModAPI.Configurations
                     return ResultCode.ERROR;
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Error = ErrorCode.MALFORMED_CONFIGURATION;
-                ErrorString = "The file \"" + gameConfigFile + "\" couldn't be parsed. Exception: " + ex.ToString();
+                ErrorString = "The file \"" + gameConfigFile + "\" couldn't be parsed. Exception: " + ex;
                 Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
                 return ResultCode.ERROR;
             }
             catch (Exception ex)
             {
                 Error = ErrorCode.MALFORMED_CONFIGURATION;
-                ErrorString = "The file \"" + gameConfigFile + "\" couldn't be parsed. Unexpected exception: " + ex.ToString();
+                ErrorString = "The file \"" + gameConfigFile + "\" couldn't be parsed. Unexpected exception: " + ex;
                 Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
                 return ResultCode.ERROR;
             }
@@ -101,19 +109,27 @@ namespace ModAPI.Configurations
 
         static bool ParseTabs(XElement parent, Tab parentTab = null)
         {
-            bool success = true;
-            foreach (XElement el in parent.Elements("Tab"))
+            var success = true;
+            foreach (var el in parent.Elements("Tab"))
             {
-                Tab newTab = new Tab(el);
+                var newTab = new Tab(el);
                 if (newTab.Error)
+                {
                     return false;
+                }
                 if (parentTab == null)
+                {
                     Tabs.Add(newTab);
+                }
                 else
+                {
                     parentTab.Tabs.Add(newTab);
+                }
 
                 if (!ParseTabs(el, newTab))
+                {
                     success = false;
+                }
             }
             return success;
         }
@@ -126,35 +142,44 @@ namespace ModAPI.Configurations
             public string LangPath;
             public string TypeName;
             public XDocument Configuration;
-            public bool Error = false;
+            public bool Error;
             public Type ComponentType;
 
             public Tab(XElement element)
             {
                 if (element.Attribute("Icon") != null)
-                    IconName = element.Attribute("Icon").Value;
-                if (element.Attribute("IconSelected") != null)
-                    IconSelectedName = element.Attribute("IconSelected").Value;
-                if (element.Attribute("Lang") != null)
-                    LangPath = element.Attribute("Lang").Value;
-                if (element.Attribute("Type") != null)
-                    TypeName = "ModAPI.Components.Panels."+element.Attribute("Type").Value;
-                if (element.Attribute("Config") != null) 
                 {
-                    string configFile = Path.GetFullPath(ModAPI.Configurations.Configuration.GetPath("GameConfigurations") + Path.DirectorySeparatorChar + ModAPI.Configurations.Configuration.CurrentGame + Path.DirectorySeparatorChar + element.Attribute("Config").Value);
-                    try 
+                    IconName = element.Attribute("Icon").Value;
+                }
+                if (element.Attribute("IconSelected") != null)
+                {
+                    IconSelectedName = element.Attribute("IconSelected").Value;
+                }
+                if (element.Attribute("Lang") != null)
+                {
+                    LangPath = element.Attribute("Lang").Value;
+                }
+                if (element.Attribute("Type") != null)
+                {
+                    TypeName = "ModAPI.Components.Panels." + element.Attribute("Type").Value;
+                }
+                if (element.Attribute("Config") != null)
+                {
+                    var configFile = Path.GetFullPath(Configurations.Configuration.GetPath("GameConfigurations") + Path.DirectorySeparatorChar +
+                                                      Configurations.Configuration.CurrentGame + Path.DirectorySeparatorChar + element.Attribute("Config").Value);
+                    try
                     {
                         Configuration = XDocument.Load(configFile);
-                    } 
-                    catch (System.Xml.XmlException e) 
+                    }
+                    catch (XmlException e)
                     {
-                        Debug.Log("GUIConfiguration", "The file \""+configFile+"\" couldn't be parsed. Exception: "+e.ToString(), Debug.Type.ERROR);
+                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Exception: " + e, Debug.Type.ERROR);
                         Error = true;
                         return;
-                    } 
-                    catch (Exception e) 
+                    }
+                    catch (Exception e)
                     {
-                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Unexpected exception: " + e.ToString(), Debug.Type.ERROR);
+                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Unexpected exception: " + e, Debug.Type.ERROR);
                         Error = true;
                         return;
                     }
@@ -167,15 +192,12 @@ namespace ModAPI.Configurations
                     Error = true;
                     return;
                 }
-                else
+                ComponentType = Type.GetType(TypeName);
+                if (ComponentType == null)
                 {
-                    ComponentType = Type.GetType(TypeName);
-                    if (ComponentType == null)
-                    {
-                        Debug.Log("GUIConfiguration", "Component type \"" + TypeName + "\" couldn't be found.", Debug.Type.ERROR);
-                        Error = true;
-                        return;
-                    }
+                    Debug.Log("GUIConfiguration", "Component type \"" + TypeName + "\" couldn't be found.", Debug.Type.ERROR);
+                    Error = true;
+                    return;
                 }
                 Debug.Log("GUIConfiguration", "Successfully added tab with panel type \"" + TypeName + "\".");
             }

@@ -14,8 +14,6 @@
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\The Forest</searchPath>
   <copyAssembly>%fileBase%_data/Managed/AmplifyColor.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/AmplifyMotion.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/bolt.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/bolt.user.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Boo.Lang.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Posix.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Security.dll</copyAssembly>
@@ -26,7 +24,6 @@
   <copyAssembly>%fileBase%_data/Managed/Pathfinding.Poly2Tri.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/PlayMaker.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Rewired_Core.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/SteamworksManaged.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Configuration.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Core.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.dll</copyAssembly>

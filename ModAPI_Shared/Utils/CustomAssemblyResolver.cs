@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using Mono.Cecil;
 
 namespace ModAPI.Utils
@@ -23,17 +21,19 @@ namespace ModAPI.Utils
 
         public AssemblyDefinition Resolve(string fullName)
         {
-            System.Console.WriteLine("ASSEMBLY A:" + fullName);
-            int index = fullName.IndexOf(",");
-            string assemblyName = fullName.Substring(0, index);
-            foreach (string p in Paths)
+            Console.WriteLine("ASSEMBLY A:" + fullName);
+            var index = fullName.IndexOf(",");
+            var assemblyName = fullName.Substring(0, index);
+            foreach (var p in Paths)
             {
-                string fileName = p + System.IO.Path.DirectorySeparatorChar + assemblyName + ".dll";
-                if (System.IO.File.Exists(fileName))
+                var fileName = p + System.IO.Path.DirectorySeparatorChar + assemblyName + ".dll";
+                if (File.Exists(fileName))
                 {
-                    AssemblyDefinition a = AssemblyDefinition.ReadAssembly(fileName);
+                    var a = AssemblyDefinition.ReadAssembly(fileName);
                     if (a.FullName == fullName)
+                    {
                         return a;
+                    }
                 }
             }
             return null;

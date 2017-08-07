@@ -20,29 +20,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using ModAPI.Components;
-using System.ComponentModel;
-using System.Reflection;
-using System.Windows.Controls.Primitives;
-using ModAPI.Configurations;
-using ModAPI.Components.Panels;
-using System.Threading;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using Microsoft.Win32;
+using ModAPI.Components;
+using ModAPI.Components.Panels;
+using ModAPI.Configurations;
+using ModAPI.Data;
+using ModAPI.Data.Models;
+using ModAPI.Utils;
+using ModAPI.Windows.SubWindows;
+using Path = System.IO.Path;
 
 namespace ModAPI
 {
@@ -60,11 +56,12 @@ namespace ModAPI
 
         public const float GUIDeltaTime = 1f / 60f; // 60 fps
 
-        protected bool FirstSetup = false;
+        protected bool FirstSetup;
 
         protected static List<Window> windowQueue = new List<Window>();
-        protected static Window currentWindow = null;
-        protected static bool positionWindow = false;
+        protected static Window currentWindow;
+        protected static bool positionWindow;
+
         public static void OpenWindow(Window window)
         {
             window.Closed += SubWindowClosed;
@@ -84,26 +81,29 @@ namespace ModAPI
                     currentWindow = windowQueue[0];
                     currentWindow.Opacity = 0.0;
                     if (currentWindow.IsEnabled)
+                    {
                         currentWindow.Show();
+                    }
                     currentWindow.UpdateLayout();
                     windowQueue.RemoveAt(0);
-                    MainWindow.Instance.Focusable = false;
+                    Instance.Focusable = false;
                 }
                 else
                 {
-                    MainWindow.Instance.Focusable = true;
+                    Instance.Focusable = true;
                 }
             }
         }
+
         static void PositionSubWindow(object sender, EventArgs e)
         {
             if (positionWindow)
             {
-                Window window = (Window)sender;
+                var window = (Window) sender;
                 if (window.IsVisible)
                 {
-                    window.Left = MainWindow.Instance.Left + MainWindow.Instance.ActualWidth / 2.0 - window.ActualWidth / 2.0;
-                    window.Top = MainWindow.Instance.Top + MainWindow.Instance.ActualHeight / 2.0 - window.ActualHeight / 2.0;
+                    window.Left = Instance.Left + Instance.ActualWidth / 2.0 - window.ActualWidth / 2.0;
+                    window.Top = Instance.Top + Instance.ActualHeight / 2.0 - window.ActualHeight / 2.0;
                     window.Opacity = 1.0;
                     positionWindow = false;
                 }
@@ -112,7 +112,7 @@ namespace ModAPI
 
         static void SubWindowClosed(object sender, EventArgs e)
         {
-            windowQueue.Remove((Window)sender);
+            windowQueue.Remove((Window) sender);
             if (currentWindow == sender)
             {
                 currentWindow = null;
@@ -127,12 +127,12 @@ namespace ModAPI
             FirstSetup = false;
 
             if (!CheckSteamPath())
+            {
                 return;
+            }
 
-            App.Game = new Data.Game(Configuration.Games[Configuration.CurrentGame]);
-            App.Game.OnModlibUpdate += (s, e) => Dispatcher.Invoke((Action) delegate() {
-                UpdateModlibVersion();
-            });
+            App.Game = new Game(Configuration.Games[Configuration.CurrentGame]);
+            App.Game.OnModlibUpdate += (s, e) => Dispatcher.Invoke(delegate { UpdateModlibVersion(); });
             UpdateModlibVersion();
 
             ModProjects = new ModProjectsViewModel();
@@ -144,15 +144,15 @@ namespace ModAPI
 
             if (Configuration.GetString("AutoUpdate").ToLower() == "true")
             {
-                HttpWebRequest WebReq = (HttpWebRequest)WebRequest.Create("http://www.modapi.de/app/lastVersion.txt");
+                var WebReq = (HttpWebRequest) WebRequest.Create("http://www.modapi.de/app/lastVersion.txt");
                 WebReq.Method = "GET";
-                HttpWebResponse WebResp = (HttpWebResponse)WebReq.GetResponse();
-                Stream Answer = WebResp.GetResponseStream();
-                StreamReader _Answer = new StreamReader(Answer);
-                string answer = _Answer.ReadToEnd();
-                if (answer != ModAPI.Version.Number + "")
+                var WebResp = (HttpWebResponse) WebReq.GetResponse();
+                var Answer = WebResp.GetResponseStream();
+                var _Answer = new StreamReader(Answer);
+                var answer = _Answer.ReadToEnd();
+                if (answer != Version.Number + "")
                 {
-                    ModAPI.Windows.SubWindows.UpdateAvailable win = new ModAPI.Windows.SubWindows.UpdateAvailable("Lang.Windows.UpdateAvailable", answer);
+                    var win = new UpdateAvailable("Lang.Windows.UpdateAvailable", answer);
                     win.ShowSubWindow();
                 }
             }
@@ -164,7 +164,7 @@ namespace ModAPI
             {
                 if (!CheckSteam())
                 {
-                    Utils.Schedule.AddTask("GUI", "SpecifySteamPath", FirstSetupDone, CheckSteam);
+                    Schedule.AddTask("GUI", "SpecifySteamPath", FirstSetupDone, CheckSteam);
                     return false;
                 }
             }
@@ -192,52 +192,53 @@ namespace ModAPI
 
         protected bool CheckSteam()
         {
-            string SteamPath = Configuration.GetPath("Steam");
-            if (!System.IO.File.Exists(SteamPath + System.IO.Path.DirectorySeparatorChar + "Steam.exe"))
+            var SteamPath = Configuration.GetPath("Steam");
+            if (!File.Exists(SteamPath + Path.DirectorySeparatorChar + "Steam.exe"))
             {
                 SteamPath = SearchSteam();
                 Configuration.SetPath("Steam", SteamPath, true);
             }
-            return System.IO.File.Exists(SteamPath + System.IO.Path.DirectorySeparatorChar + "Steam.exe");
+            return File.Exists(SteamPath + Path.DirectorySeparatorChar + "Steam.exe");
         }
 
         protected string SearchSteam()
         {
-            string SteamPath = (string) Microsoft.Win32.Registry.GetValue("HKEY_CURRENT_USER\\Software\\Valve\\Steam\\","SteamPath", "");
-            if (!System.IO.File.Exists(SteamPath + System.IO.Path.DirectorySeparatorChar + "Steam.exe"))
+            var SteamPath = (string) Registry.GetValue("HKEY_CURRENT_USER\\Software\\Valve\\Steam\\", "SteamPath", "");
+            if (!File.Exists(SteamPath + Path.DirectorySeparatorChar + "Steam.exe"))
             {
-                SteamPath = (string)Microsoft.Win32.Registry.GetValue("HKEY_CURRENT_USER\\Software\\Valve\\Steam\\","SteamExe", "");
-                if (System.IO.File.Exists(SteamPath))
+                SteamPath = (string) Registry.GetValue("HKEY_CURRENT_USER\\Software\\Valve\\Steam\\", "SteamExe", "");
+                if (File.Exists(SteamPath))
                 {
-                    SteamPath = System.IO.Path.GetDirectoryName(SteamPath);
+                    SteamPath = Path.GetDirectoryName(SteamPath);
                 }
             }
             return SteamPath;
         }
 
         public ModProjectsViewModel ModProjects;
-        protected List<string> Languages = new List<string>() { "EN", "DE", "AR", "BN", "ZH", "FR", "HI", "IT", "JA", "KO", "PT", "RU", "ES", "TR", "VI" };
+        protected List<string> Languages = new List<string> { "EN", "DE", "AR", "BN", "ZH", "FR", "HI", "IT", "JA", "KO", "PT", "RU", "ES", "TR", "VI" };
         protected Dictionary<string, ComboBoxItem> LanguageItems = new Dictionary<string, ComboBoxItem>();
         protected SettingsViewModel SettingsVM;
 
         protected void ShowLoginLoader()
         {
-            Dispatcher.Invoke(delegate()
+            Dispatcher.Invoke(delegate
             {
-                LoginButton.Visibility = System.Windows.Visibility.Collapsed;
-                LoginLoader.Visibility = System.Windows.Visibility.Visible;
-                LoggedIn.Visibility = System.Windows.Visibility.Collapsed;
+                LoginButton.Visibility = Visibility.Collapsed;
+                LoginLoader.Visibility = Visibility.Visible;
+                LoggedIn.Visibility = Visibility.Collapsed;
             });
         }
 
-        protected void ShowLoginUser(ModAPI.Utils.WebService.User user)
+        protected void ShowLoginUser(WebService.User user)
         {
-            Dispatcher.Invoke(delegate() {
-                LoginButton.Visibility = System.Windows.Visibility.Collapsed;
-                LoginLoader.Visibility = System.Windows.Visibility.Collapsed;
-                LoggedIn.Visibility = System.Windows.Visibility.Visible;
-                UserAvatarLoader.Visibility = System.Windows.Visibility.Visible;
-                System.Console.WriteLine(user.Usergroup);
+            Dispatcher.Invoke(delegate
+            {
+                LoginButton.Visibility = Visibility.Collapsed;
+                LoginLoader.Visibility = Visibility.Collapsed;
+                LoggedIn.Visibility = Visibility.Visible;
+                UserAvatarLoader.Visibility = Visibility.Visible;
+                Console.WriteLine(user.Usergroup);
                 Usergroup.SetResourceReference(TextBlock.TextProperty, "Lang.UserGroup." + user.Usergroup);
                 Username.Text = user.Username;
                 user.OnAvatarChange = AvatarChange;
@@ -247,18 +248,18 @@ namespace ModAPI
 
         protected void AvatarChange()
         {
-            this.Dispatcher.Invoke(delegate()
+            Dispatcher.Invoke(delegate
             {
-                UserAvatarLoader.Visibility = System.Windows.Visibility.Collapsed;
-                BitmapImage Avatar = new BitmapImage();
+                UserAvatarLoader.Visibility = Visibility.Collapsed;
+                var Avatar = new BitmapImage();
                 Avatar.BeginInit();
-                if (ModAPI.Utils.WebService.CurrentUser.Avatar == null)
+                if (WebService.CurrentUser.Avatar == null)
                 {
                     Avatar.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/noAvatar.png");
                 }
                 else
                 {
-                    Avatar.StreamSource = ModAPI.Utils.WebService.CurrentUser.Avatar;
+                    Avatar.StreamSource = WebService.CurrentUser.Avatar;
                 }
                 Avatar.CacheOption = BitmapCacheOption.OnLoad;
                 Avatar.EndInit();
@@ -266,24 +267,24 @@ namespace ModAPI
                 UserAvatar.InvalidateProperty(Image.SourceProperty);
             });
         }
-        
+
         protected void ShowLoginError(int id, string text)
         {
-            Dispatcher.Invoke(delegate()
+            Dispatcher.Invoke(delegate
             {
                 ShowLogin();
-                ModAPI.Windows.SubWindows.LoginWindow win = new ModAPI.Windows.SubWindows.LoginWindow("Lang.Windows.Login", true);
+                var win = new LoginWindow("Lang.Windows.Login", true);
                 win.ShowSubWindow();
             });
         }
 
         protected void ShowLogin()
         {
-            Dispatcher.Invoke(delegate()
+            Dispatcher.Invoke(delegate
             {
-                LoginButton.Visibility = System.Windows.Visibility.Visible;
-                LoginLoader.Visibility = System.Windows.Visibility.Collapsed;
-                LoggedIn.Visibility = System.Windows.Visibility.Collapsed;
+                LoginButton.Visibility = Visibility.Visible;
+                LoginLoader.Visibility = Visibility.Collapsed;
+                LoggedIn.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -291,35 +292,37 @@ namespace ModAPI
         {
             //System.Console.WriteLine("AAA");
             if (Configuration.Languages["en"] != null)
+            {
                 App.Instance.Resources.MergedDictionaries.Add(Configuration.Languages["en"].Resource);
+            }
             InitializeComponent();
             Instance = this;
 
-            ModAPI.Utils.WebService.OnDoLogin = ShowLoginLoader;
-            ModAPI.Utils.WebService.OnLogin = ShowLoginUser;
-            ModAPI.Utils.WebService.OnLoginError = ShowLoginError;
-            ModAPI.Utils.WebService.OnLogout = ShowLogin;
-            ModAPI.Utils.WebService.Initialize();
+            WebService.OnDoLogin = ShowLoginLoader;
+            WebService.OnLogin = ShowLoginUser;
+            WebService.OnLoginError = ShowLoginError;
+            WebService.OnLogout = ShowLogin;
+            WebService.Initialize();
 
-            foreach (string LangCode in Languages)
+            foreach (var LangCode in Languages)
             {
-                ComboBoxItem newItem = new ComboBoxItem();
+                var newItem = new ComboBoxItem();
                 newItem.Style = Application.Current.FindResource("ComboBoxItem") as Style;
                 newItem.DataContext = LangCode;
                 LanguageItems.Add(LangCode, newItem);
-                StackPanel panel = new StackPanel();
+                var panel = new StackPanel();
                 panel.Orientation = Orientation.Horizontal;
-                Image image = new Image();
+                var image = new Image();
                 image.Height = 20;
-                BitmapImage source = new BitmapImage();
+                var source = new BitmapImage();
                 source.BeginInit();
-                source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_"+LangCode+".png");
+                source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + LangCode + ".png");
                 source.EndInit();
                 image.Source = source;
-                image.Margin = new Thickness(0,0,5,0);
+                image.Margin = new Thickness(0, 0, 5, 0);
                 panel.Children.Add(image);
 
-                TextBlock label = new TextBlock();
+                var label = new TextBlock();
 
                 label.FontSize = 16;
                 label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + LangCode);
@@ -332,7 +335,7 @@ namespace ModAPI
             FirstSetup = Configuration.GetString("SetupDone").ToLower() != "true";
             if (FirstSetup)
             {
-                ModAPI.Windows.SubWindows.FirstSetup win = new ModAPI.Windows.SubWindows.FirstSetup("Lang.Windows.FirstSetup");
+                var win = new FirstSetup("Lang.Windows.FirstSetup");
                 win.ShowSubWindow();
                 win.Show();
             }
@@ -343,7 +346,7 @@ namespace ModAPI
 
             Configuration.OnLanguageChanged += LanguageChanged;
 
-            foreach (Configuration.Language language in Configuration.Languages.Values)
+            foreach (var language in Configuration.Languages.Values)
             {
                 AddLanguage(language);
             }
@@ -352,15 +355,15 @@ namespace ModAPI
             Settings.DataContext = SettingsVM;
             //LanguageSelector.SelectedIndex = Configuration.Languages.Values.ToList().IndexOf(Configuration.CurrentLanguage);
 
-            foreach (GUIConfiguration.Tab tab in GUIConfiguration.Tabs)
+            foreach (var tab in GUIConfiguration.Tabs)
             {
-                IconTabItem newTab = new IconTabItem();
-                Style style = App.Instance.Resources["TopTab"] as Style;
+                var newTab = new IconTabItem();
+                var style = App.Instance.Resources["TopTab"] as Style;
                 newTab.Style = style;
 
                 try
                 {
-                    BitmapImage image = new BitmapImage();
+                    var image = new BitmapImage();
                     image.BeginInit();
                     image.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/" + tab.IconName);
                     image.EndInit();
@@ -368,11 +371,11 @@ namespace ModAPI
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("MainWindow", "Couldn't find the icon \""+tab.IconName+"\".", Debug.Type.WARNING);
+                    Debug.Log("MainWindow", "Couldn't find the icon \"" + tab.IconName + "\".", Debug.Type.WARNING);
                 }
                 try
                 {
-                    BitmapImage imageSelected = new BitmapImage();
+                    var imageSelected = new BitmapImage();
                     imageSelected.BeginInit();
                     imageSelected.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/" + tab.IconSelectedName);
                     imageSelected.EndInit();
@@ -384,7 +387,7 @@ namespace ModAPI
                 }
 
                 newTab.SetResourceReference(IconTabItem.LabelProperty, tab.LangPath + ".Tab");
-                IPanel newPanel = (IPanel)Activator.CreateInstance(tab.ComponentType);
+                var newPanel = (IPanel) Activator.CreateInstance(tab.ComponentType);
                 newTab.Content = newPanel;
                 Debug.Log("MainWindow", "Added tab of type \"" + tab.TypeName + "\".");
                 newPanel.SetTab(tab);
@@ -393,7 +396,7 @@ namespace ModAPI
             }
 
             Timer = new DispatcherTimer();
-            Timer.Tick += new EventHandler(GUITick);
+            Timer.Tick += GUITick;
             Timer.Interval = new TimeSpan((long) (GUIDeltaTime * 10000000));
             Timer.Start();
             LanguageChanged();
@@ -401,49 +404,50 @@ namespace ModAPI
         }
 
         protected DispatcherTimer Timer;
-        void GUITick(object sender, EventArgs e) 
+
+        void GUITick(object sender, EventArgs e)
         {
             LoginLoaderRotation.Angle += 5;
             UserAvatarLoaderRotation.Angle += 5;
             if (!FirstSetup)
             {
-                List<Utils.Schedule.Task> Tasks = Utils.Schedule.GetTasks("GUI");
-                foreach (Utils.Schedule.Task task in Tasks)
+                var Tasks = Schedule.GetTasks("GUI");
+                foreach (var task in Tasks)
                 {
                     if (!task.BeingHandled)
                     {
                         switch (task.Name)
                         {
                             case "SpecifyGamePath":
-                                ModAPI.Windows.SubWindows.SpecifyGamePath win = new ModAPI.Windows.SubWindows.SpecifyGamePath("Lang.Windows.SpecifyGamePath", task);
+                                var win = new SpecifyGamePath("Lang.Windows.SpecifyGamePath", task);
                                 win.ShowSubWindow();
                                 //win.Show();
                                 task.BeingHandled = true;
                                 break;
                             case "SpecifySteamPath":
-                                ModAPI.Windows.SubWindows.SpecifySteamPath win2 = new ModAPI.Windows.SubWindows.SpecifySteamPath("Lang.Windows.SpecifySteamPath", task);
+                                var win2 = new SpecifySteamPath("Lang.Windows.SpecifySteamPath", task);
                                 win2.ShowSubWindow();
                                 //win2.Show();
                                 task.BeingHandled = true;
                                 break;
                             case "RestoreGameFiles":
-                                ModAPI.Windows.SubWindows.RestoreGameFiles win3 = new ModAPI.Windows.SubWindows.RestoreGameFiles("Lang.Windows.RestoreGameFiles", task);
+                                var win3 = new RestoreGameFiles("Lang.Windows.RestoreGameFiles", task);
                                 win3.ShowSubWindow();
                                 //win3.Show();
                                 task.BeingHandled = true;
                                 break;
                             case "OperationPending":
-                                ModAPI.Windows.SubWindows.OperationPending win4 = new ModAPI.Windows.SubWindows.OperationPending("Lang.Windows.OperationPending", task);
+                                var win4 = new OperationPending("Lang.Windows.OperationPending", task);
                                 if (!win4.Completed)
                                 {
                                     win4.ShowSubWindow();
-                                  //  win4.Show();
+                                    //  win4.Show();
                                 }
                                 task.BeingHandled = true;
                                 break;
                             case "SelectNewestModVersions":
-                                if (Mods != null) 
-                                { 
+                                if (Mods != null)
+                                {
                                     Mods.SelectNewestModVersions = true;
                                     task.BeingHandled = true;
                                 }
@@ -452,7 +456,7 @@ namespace ModAPI
                     }
                 }
             }
-            if (BlendIn) 
+            if (BlendIn)
             {
                 if (Opacity < 1f)
                 {
@@ -466,8 +470,10 @@ namespace ModAPI
 
             if (currentWindow != null)
             {
-                if (FadeBackground.Visibility == System.Windows.Visibility.Collapsed)
-                    FadeBackground.Visibility = System.Windows.Visibility.Visible;
+                if (FadeBackground.Visibility == Visibility.Collapsed)
+                {
+                    FadeBackground.Visibility = Visibility.Visible;
+                }
                 if (FadeBackground.Opacity < 0.8f)
                 {
                     FadeBackground.Opacity += GUIDeltaTime * 5f;
@@ -485,7 +491,7 @@ namespace ModAPI
                     if (FadeBackground.Opacity <= 0f)
                     {
                         FadeBackground.Opacity = 0f;
-                        FadeBackground.Visibility = System.Windows.Visibility.Collapsed;
+                        FadeBackground.Visibility = Visibility.Collapsed;
                     }
                 }
             }
@@ -494,7 +500,9 @@ namespace ModAPI
         void LanguageChanged()
         {
             if (CurrentLanguage != null)
+            {
                 App.Instance.Resources.MergedDictionaries.Remove(CurrentLanguage);
+            }
 
             CurrentLanguage = Configuration.CurrentLanguage.Resource;
             App.Instance.Resources.MergedDictionaries.Add(CurrentLanguage);
@@ -503,16 +511,16 @@ namespace ModAPI
 
         void AddLanguage(Configuration.Language language)
         {
-            ComboBoxItem c = new ComboBoxItem();
+            var c = new ComboBoxItem();
             c.Style = Application.Current.FindResource("ComboBoxItem") as Style;
-            StackPanel panel = new StackPanel();
+            var panel = new StackPanel();
             panel.Orientation = Orientation.Horizontal;
             c.Content = panel;
 
             if (language.ImageStream != null)
             {
-                Image i = new Image();
-                BitmapImage img = new BitmapImage();
+                var i = new Image();
+                var img = new BitmapImage();
                 img.BeginInit();
                 img.StreamSource = language.ImageStream;
                 img.EndInit();
@@ -522,7 +530,7 @@ namespace ModAPI
                 panel.Children.Add(i);
             }
 
-            TextBlock text = new TextBlock();
+            var text = new TextBlock();
 
             text.VerticalAlignment = VerticalAlignment.Center;
             text.Text = language.Resource["LangName"] as String;
@@ -538,22 +546,20 @@ namespace ModAPI
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            ((FrameworkElement)this.FindName("Mover")).MouseLeftButtonDown += new MouseButtonEventHandler(MoveWindow);
+            ((FrameworkElement) FindName("Mover")).MouseLeftButtonDown += MoveWindow;
 
-            if (WindowState == System.Windows.WindowState.Maximized)
+            if (WindowState == WindowState.Maximized)
             {
-                ((Button)FindName("MaximizeButton")).Visibility = System.Windows.Visibility.Hidden;
-                ((Button)FindName("MaximizeButton")).Width = 0;
+                ((Button) FindName("MaximizeButton")).Visibility = Visibility.Hidden;
+                ((Button) FindName("MaximizeButton")).Width = 0;
             }
             else
             {
-                ((Button)FindName("NormalizeButton")).Visibility = System.Windows.Visibility.Hidden;
-                ((Button)FindName("NormalizeButton")).Width = 0;
+                ((Button) FindName("NormalizeButton")).Visibility = Visibility.Hidden;
+                ((Button) FindName("NormalizeButton")).Width = 0;
             }
 
-            VersionLabel.Text = ModAPI.Version.Descriptor+" ["+ModAPI.Version.Number+"]";
-
-
+            VersionLabel.Text = Version.Descriptor + " [" + Version.Number + "]";
         }
 
         public Dictionary<string, Grid> InventoryElements = new Dictionary<string, Grid>();
@@ -565,25 +571,25 @@ namespace ModAPI
 
         private void Minimize(object sender, RoutedEventArgs e)
         {
-            WindowState = System.Windows.WindowState.Minimized;
+            WindowState = WindowState.Minimized;
         }
 
         private void Normalize(object sender, RoutedEventArgs e)
         {
-            WindowState = System.Windows.WindowState.Normal;
-            ((Button)FindName("MaximizeButton")).Visibility = System.Windows.Visibility.Visible;
-            ((Button)FindName("MaximizeButton")).Width = 24;
-            ((Button)FindName("NormalizeButton")).Visibility = System.Windows.Visibility.Hidden;
-            ((Button)FindName("NormalizeButton")).Width = 0;
+            WindowState = WindowState.Normal;
+            ((Button) FindName("MaximizeButton")).Visibility = Visibility.Visible;
+            ((Button) FindName("MaximizeButton")).Width = 24;
+            ((Button) FindName("NormalizeButton")).Visibility = Visibility.Hidden;
+            ((Button) FindName("NormalizeButton")).Width = 0;
         }
 
         private void Maximize(object sender, RoutedEventArgs e)
         {
-            WindowState = System.Windows.WindowState.Maximized;
-            ((Button)FindName("MaximizeButton")).Visibility = System.Windows.Visibility.Hidden;
-            ((Button)FindName("MaximizeButton")).Width = 0;
-            ((Button)FindName("NormalizeButton")).Visibility = System.Windows.Visibility.Visible;
-            ((Button)FindName("NormalizeButton")).Width = 24;
+            WindowState = WindowState.Maximized;
+            ((Button) FindName("MaximizeButton")).Visibility = Visibility.Hidden;
+            ((Button) FindName("MaximizeButton")).Width = 0;
+            ((Button) FindName("NormalizeButton")).Visibility = Visibility.Visible;
+            ((Button) FindName("NormalizeButton")).Width = 24;
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
@@ -599,7 +605,7 @@ namespace ModAPI
 
         private void Building_Click(object sender, RoutedEventArgs e)
         {
-            ToggleButton button = (ToggleButton)sender;
+            var button = (ToggleButton) sender;
             /*BuildingSelect.SelectedIndex = BuildingToIndex[(int) button.DataContext];
 
             BuildingSelect.IsDropDownOpen = false;*/
@@ -607,7 +613,7 @@ namespace ModAPI
 
         private void BuildingSelect_DropDownOpened(object sender, EventArgs e)
         {
-            foreach (KeyValuePair<int, ToggleButton> button in BuildingButtons)
+            foreach (var button in BuildingButtons)
             {
                 button.Value.IsChecked = false;
             }
@@ -615,7 +621,6 @@ namespace ModAPI
 
         private void Window_LayoutUpdated(object sender, EventArgs e)
         {
-
             /*
             BuildingImage.Visibility = BuildingImage.ActualWidth < 150 ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
             double available = BuildingTabGrid.ActualWidth - BuildingList.ActualWidth - 20.0;
@@ -641,7 +646,9 @@ namespace ModAPI
         private void BuildingSelect_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Tab)
+            {
                 e.Handled = true;
+            }
         }
 
         private void BuildingList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -663,39 +670,36 @@ namespace ModAPI
             }*/
         }
 
-        bool AltDown = false;
-        bool CtrlDown = false;
+        bool AltDown;
+        bool CtrlDown;
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.LeftAlt)
+            {
                 AltDown = false;
+            }
             if (e.Key == Key.LeftCtrl)
+            {
                 CtrlDown = false;
+            }
         }
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
-
 
         private void IconTabItem_Loaded(object sender, RoutedEventArgs e)
         {
-            
         }
 
         public void Preload(ProgressHandler handler)
         {
-            handler.OnComplete += delegate
-            {
-                Debug.Log("MainWindow", "GUI is ready.");
-            };
+            handler.OnComplete += delegate { Debug.Log("MainWindow", "GUI is ready."); };
             Debug.Log("MainWindow", "Preparing GUI.");
             Opacity = 0.0f;
             Tabs.Preload(handler);
@@ -712,12 +716,11 @@ namespace ModAPI
         private void Window_Closed(object sender, EventArgs e)
         {
             try
-            { 
+            {
                 App.Instance.Shutdown();
             }
             catch (Exception ex)
             {
-
             }
         }
 
@@ -728,7 +731,7 @@ namespace ModAPI
 
         private void CreateProject(object sender, RoutedEventArgs e)
         {
-            ModAPI.Windows.SubWindows.CreateModProject win = new ModAPI.Windows.SubWindows.CreateModProject("Lang.Windows.CreateModProject");
+            var win = new CreateModProject("Lang.Windows.CreateModProject");
             win.ShowSubWindow();
             win.Show();
         }
@@ -741,14 +744,14 @@ namespace ModAPI
             CurrentModViewModel = model;
             if (model != null)
             {
-                SelectedMod.Visibility = System.Windows.Visibility.Visible;
-                NoModSelected.Visibility = System.Windows.Visibility.Collapsed;
+                SelectedMod.Visibility = Visibility.Visible;
+                NoModSelected.Visibility = Visibility.Collapsed;
                 SelectedMod.DataContext = model;
             }
             else
             {
-                SelectedMod.Visibility = System.Windows.Visibility.Collapsed;
-                NoModSelected.Visibility = System.Windows.Visibility.Visible;
+                SelectedMod.Visibility = Visibility.Collapsed;
+                NoModSelected.Visibility = Visibility.Visible;
                 SelectedMod.DataContext = null;
             }
         }
@@ -757,23 +760,23 @@ namespace ModAPI
         {
             CurrentModProjectViewModel = model;
             DevelopmentLanguageSelector.SelectedIndex = -1;
-            foreach (KeyValuePair<string, ComboBoxItem> kv in LanguageItems)
+            foreach (var kv in LanguageItems)
             {
-                bool a = model.Project.Languages.Contains(kv.Key);
-                kv.Value.Visibility = a ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                var a = model.Project.Languages.Contains(kv.Key);
+                kv.Value.Visibility = a ? Visibility.Collapsed : Visibility.Visible;
                 kv.Value.IsEnabled = !a;
             }
-            
+
             if (model != null)
             {
-                SelectedProject.Visibility = System.Windows.Visibility.Visible;
-                NoProjectSelected.Visibility = System.Windows.Visibility.Collapsed;
+                SelectedProject.Visibility = Visibility.Visible;
+                NoProjectSelected.Visibility = Visibility.Collapsed;
                 SelectedProject.DataContext = model;
             }
             else
             {
-                SelectedProject.Visibility = System.Windows.Visibility.Collapsed;
-                NoProjectSelected.Visibility = System.Windows.Visibility.Visible;
+                SelectedProject.Visibility = Visibility.Collapsed;
+                NoProjectSelected.Visibility = Visibility.Visible;
                 SelectedProject.DataContext = null;
             }
         }
@@ -782,12 +785,12 @@ namespace ModAPI
         {
             if (CurrentModProjectViewModel != null)
             {
-                CurrentModProjectViewModel.AddProjectLanguage((string) (((ComboBoxItem)DevelopmentLanguageSelector.SelectedItem).DataContext));
+                CurrentModProjectViewModel.AddProjectLanguage((string) (((ComboBoxItem) DevelopmentLanguageSelector.SelectedItem).DataContext));
                 DevelopmentLanguageSelector.SelectedIndex = -1;
-                foreach (KeyValuePair<string, ComboBoxItem> kv in LanguageItems)
+                foreach (var kv in LanguageItems)
                 {
-                    bool a = CurrentModProjectViewModel.Project.Languages.Contains(kv.Key);
-                    kv.Value.Visibility = a ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    var a = CurrentModProjectViewModel.Project.Languages.Contains(kv.Key);
+                    kv.Value.Visibility = a ? Visibility.Collapsed : Visibility.Visible;
                     kv.Value.IsEnabled = !a;
                 }
             }
@@ -805,14 +808,15 @@ namespace ModAPI
         {
             if (CurrentModProjectViewModel != null)
             {
-                ModAPI.Windows.SubWindows.RemoveModProject win = new ModAPI.Windows.SubWindows.RemoveModProject("Lang.Windows.RemoveModProject", CurrentModProjectViewModel.Project.ID, CurrentModProjectViewModel.Project);
+                var win =
+                    new RemoveModProject("Lang.Windows.RemoveModProject", CurrentModProjectViewModel.Project.ID, CurrentModProjectViewModel.Project);
                 win.Confirm = delegate(object obj)
                 {
                     ProjectList.SelectedIndex = -1;
                     NoProjectSelected.Visibility = Visibility.Visible;
                     SelectedProject.DataContext = null;
                     SelectedProject.Visibility = Visibility.Collapsed;
-                    ModProjects.Remove((ModAPI.Data.Models.ModProject)obj);
+                    ModProjects.Remove((ModProject) obj);
                 };
                 win.ShowSubWindow();
                 win.Show();
@@ -823,11 +827,9 @@ namespace ModAPI
         {
             if (CurrentModProjectViewModel != null)
             {
-                ProgressHandler progressHandler = new ProgressHandler();
-                Thread thread = new Thread(delegate() {
-                    CurrentModProjectViewModel.Project.Create(progressHandler);
-                });
-                ModAPI.Windows.SubWindows.OperationPending window = new ModAPI.Windows.SubWindows.OperationPending("Lang.Windows.OperationPending", "CreateMod", progressHandler);
+                var progressHandler = new ProgressHandler();
+                var thread = new Thread(delegate() { CurrentModProjectViewModel.Project.Create(progressHandler); });
+                var window = new OperationPending("Lang.Windows.OperationPending", "CreateMod", progressHandler);
                 if (!window.Completed)
                 {
                     window.ShowSubWindow();
@@ -839,72 +841,65 @@ namespace ModAPI
 
         private void StartGame(object sender, RoutedEventArgs e)
         {
-            List<Data.Mod> mods = new List<Data.Mod>();
-            foreach (ListViewItem i in Mods.Mods)
+            var mods = new List<Mod>();
+            foreach (var i in Mods.Mods)
             {
-                ModViewModel vm = (ModViewModel)i.DataContext;
+                var vm = (ModViewModel) i.DataContext;
                 if (vm != null && vm.Selected)
                 {
-                    ModVersionViewModel vm2 = (ModVersionViewModel)vm.SelectedVersion.DataContext;
+                    var vm2 = (ModVersionViewModel) vm.SelectedVersion.DataContext;
                     if (vm2 != null)
                     {
                         mods.Add(vm2.mod);
                     }
                 }
             }
-            ProgressHandler progressHandler = new ProgressHandler();
-            progressHandler.OnComplete += (object o, EventArgs ex) => {
+            var progressHandler = new ProgressHandler();
+            progressHandler.OnComplete += (o, ex) =>
+            {
                 if (Configuration.GetString("UseSteam") == "true" && App.Game.GameConfiguration.SteamAppID != "")
                 {
-                
-                    Process p = new Process();
-                    p.StartInfo.FileName = Configuration.GetPath("Steam") + System.IO.Path.DirectorySeparatorChar + "Steam.exe";
-                    p.StartInfo.Arguments = "-applaunch "+App.Game.GameConfiguration.SteamAppID;
+                    var p = new Process();
+                    p.StartInfo.FileName = Configuration.GetPath("Steam") + Path.DirectorySeparatorChar + "Steam.exe";
+                    p.StartInfo.Arguments = "-applaunch " + App.Game.GameConfiguration.SteamAppID;
                     p.Start();
-                } 
-                else 
+                }
+                else
                 {
-                    Process p = new Process();
-                    p.StartInfo.FileName = App.Game.GamePath + System.IO.Path.DirectorySeparatorChar + App.Game.GameConfiguration.SelectFile;
+                    var p = new Process();
+                    p.StartInfo.FileName = App.Game.GamePath + Path.DirectorySeparatorChar + App.Game.GameConfiguration.SelectFile;
                     p.Start();
                 }
             };
 
-            Thread thread = new Thread(delegate()
-            {
-                App.Game.ApplyMods(mods, progressHandler);
-                
-            });
-            ModAPI.Windows.SubWindows.OperationPending window = new ModAPI.Windows.SubWindows.OperationPending("Lang.Windows.OperationPending", "ApplyMods", progressHandler, null, true);
+            var thread = new Thread(delegate() { App.Game.ApplyMods(mods, progressHandler); });
+            var window = new OperationPending("Lang.Windows.OperationPending", "ApplyMods", progressHandler, null, true);
             if (!window.Completed)
             {
                 window.ShowSubWindow();
                 window.Show();
             }
             thread.Start();
-            
         }
 
         private void ClickFacebook(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.facebook.com/SouldrinkerLP");
+            Process.Start("http://www.facebook.com/SouldrinkerLP");
         }
 
         private void ClickTwitter(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.twitter.com/SouldrinkerLP");
+            Process.Start("http://www.twitter.com/SouldrinkerLP");
         }
 
         private void ClickYouTube(object sender, RoutedEventArgs e)
         {
-
-            System.Diagnostics.Process.Start("http://www.youtube.com/SouldrinkerLP");
+            Process.Start("http://www.youtube.com/SouldrinkerLP");
         }
 
         private void ClickTwitch(object sender, RoutedEventArgs e)
         {
-
-            System.Diagnostics.Process.Start("http://live.souldrinker.de");
+            Process.Start("http://live.souldrinker.de");
         }
 
         protected override void OnClosed(EventArgs e)
@@ -915,14 +910,13 @@ namespace ModAPI
 
         private void Login(object sender, RoutedEventArgs e)
         {
-            ModAPI.Windows.SubWindows.LoginWindow win = new ModAPI.Windows.SubWindows.LoginWindow("Lang.Windows.Login");
+            var win = new LoginWindow("Lang.Windows.Login");
             win.ShowSubWindow();
         }
 
         private void DoLogout(object sender, RoutedEventArgs e)
         {
-            Utils.WebService.Logout();
+            WebService.Logout();
         }
-        
     }
 }
