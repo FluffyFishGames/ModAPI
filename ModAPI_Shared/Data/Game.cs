@@ -116,6 +116,7 @@ namespace ModAPI.Data
 
             if ((CheckSumGame != CheckSumBackup && CheckSumGame != CheckSumModded) || (!GameVersion.IsValid && CheckSumModded != "" && CheckSumModded != CheckSumGame))
             {
+                /*// Auto update the game without the need of Versions.xml
                 if (versions.VersionsList.Count == 0 || versions.VersionsList.All(o => o.CheckSum != CheckSumGame))
                 {
                     Debug.Log("Game: " + GameConfiguration.ID, "Auto updating game with checksum: " + CheckSumGame);
@@ -128,7 +129,7 @@ namespace ModAPI.Data
                     BackupVersion = versions.GetVersion(CheckSumBackup);
                     RegenerateModLibrary = true;
                 }
-                else
+                else*/
                 {
                     Console.WriteLine("EH?");
                     Debug.Log("Game: " + GameConfiguration.ID, "Neither the game and modded checksum nor the game and backup checksum did match. Game checksum: " + CheckSumGame);
