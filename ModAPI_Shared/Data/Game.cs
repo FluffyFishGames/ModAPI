@@ -1370,7 +1370,7 @@ namespace ModAPI.Data
                 };
                 VersionsList = new HashSet<Version>();
 
-                //if (Configuration.GetString("UpdateVersions").ToLower() == "true")
+                if (Configuration.GetString("UpdateVersions").ToLower() == "true")
                 {
                     UpdateVersions();
                 }
