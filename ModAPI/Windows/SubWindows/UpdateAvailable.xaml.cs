@@ -57,7 +57,7 @@ namespace ModAPI.Windows.SubWindows
             var handler = new ProgressHandler();
             var t = new Thread(delegate()
             {
-                var request = (HttpWebRequest) WebRequest.Create("http://www.modapi.de/app/archives/" + newVersion + ".zip");
+                var request = (HttpWebRequest) WebRequest.Create("http://www.modapi.cc/app/archives/" + newVersion + ".zip");
                 var response = (HttpWebResponse) request.GetResponse();
                 var s = response.GetResponseStream();
                 var buffer = new byte[4096];

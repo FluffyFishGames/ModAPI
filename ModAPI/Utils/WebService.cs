@@ -340,7 +340,7 @@ namespace ModAPI.Utils
 
         public class Request
         {
-            protected const string BACKEND_URL = "https://www.modapi.de/external.php/";
+            protected const string BACKEND_URL = "https://www.modapi.cc/external.php/";
             public string Path;
             public string Method;
             public Type ResponseType;
@@ -404,9 +404,9 @@ namespace ModAPI.Utils
                         }
                         var request = (HttpWebRequest) HttpWebRequest.Create(url);
                         request.CookieContainer = new CookieContainer(3);
-                        request.CookieContainer.Add(new Cookie("wcf_cookieHash", CurrentSessionID, "/", ".www.modapi.de"));
-                        request.CookieContainer.Add(new Cookie("wcf_userID", UserID + "", "/", ".www.modapi.de"));
-                        request.CookieContainer.Add(new Cookie("wcf_password", Hash, "/", ".www.modapi.de"));
+                        request.CookieContainer.Add(new Cookie("wcf_cookieHash", CurrentSessionID, "/", ".www.modapi.cc"));
+                        request.CookieContainer.Add(new Cookie("wcf_userID", UserID + "", "/", ".www.modapi.cc"));
+                        request.CookieContainer.Add(new Cookie("wcf_password", Hash, "/", ".www.modapi.cc"));
                         request.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
                         request.UserAgent = "ModAPI";
                         if (Method == "POST")

@@ -144,7 +144,7 @@ namespace ModAPI
 
             if (Configuration.GetString("AutoUpdate").ToLower() == "true")
             {
-                var WebReq = (HttpWebRequest) WebRequest.Create("http://www.modapi.de/app/lastVersion.txt");
+                var WebReq = (HttpWebRequest) WebRequest.Create("http://www.modapi.cc/app/lastVersion.txt");
                 WebReq.Method = "GET";
                 var WebResp = (HttpWebResponse) WebReq.GetResponse();
                 var Answer = WebResp.GetResponseStream();

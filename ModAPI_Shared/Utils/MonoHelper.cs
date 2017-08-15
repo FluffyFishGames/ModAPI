@@ -187,8 +187,8 @@ namespace ModAPI.Utils
         {
             /*
 	         * Fix from magomerdino
-	         * http://www.modapi.de/index.php/User/314-magomerdino/
-	         * http://www.modapi.de/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
+	         * http://www.modapi.cc/index.php/User/314-magomerdino/
+	         * http://www.modapi.cc/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
 	         * Posted on 08/23/2015
 	         */
             foreach (var param in method.Parameters)

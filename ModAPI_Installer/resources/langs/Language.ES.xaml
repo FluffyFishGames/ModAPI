@@ -1,6 +1,6 @@
 ﻿<!--
     Spanish translation by niqoar
-    http://www.modapi.de/index.php/User/12-niqoar/
+    http://www.modapi.cc/index.php/User/12-niqoar/
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -20,7 +20,7 @@
     <s:String x:Key="Lang.UserGroup.User">Usuario</s:String>
 
     <s:String x:Key="Lang.Windows.Login.Title">Iniciar sesión</s:String>
-    <s:String x:Key="Lang.Windows.Login.Text">Ingresa tu usuario y contraseña de www.modapi.de para iniciar sesión.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">Ingresa tu usuario y contraseña de www.modapi.cc para iniciar sesión.</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Login">Ingresar</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">Cancelar</s:String>
     <s:String x:Key="Lang.Windows.Login.Labels.Username">Usuario:</s:String>
@@ -187,7 +187,7 @@
     <s:String x:Key="Lang.Mods.Welcome.Text0">Para aplicar mods a tu juego primero debes seleccionarlos. Para eso tienes que hacer click en el botón redondo que se encuentra a la izquierda del nombre del mod. Para cambiar la tecla asociada selecciona un mod de la lista y haz click en la pestaña "Ajustes".</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">Para iniciar el juego con mods instalados solo tienes que hacer click en el botón "Iniciar juego" en la esquina inferior derecha.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">¿Errores?</s:String>
-    <s:String x:Key="Lang.Mods.Welcome.Text2">Si encuentras algún error, busca ayuda en el foro de www.modapi.de</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2">Si encuentras algún error, busca ayuda en el foro de www.modapi.cc</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text3">Por favor no olvides adjuntar el archivo &quot;ModAPI.log&quot; que se encuentra en la carpeta logs. Este archivo incluye información importante para solucionar el problema.</s:String>
 
     <s:String x:Key="Lang.Savegames.Tab">Spielstände</s:String>
