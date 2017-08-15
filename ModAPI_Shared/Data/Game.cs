@@ -36,6 +36,12 @@ namespace ModAPI.Data
 {
     public class Game
     {
+        public static readonly string[] VersionUpdateDomains =
+        {
+            "http://modapi.cc/app/configs/games/{0}/Versions.xml",
+            "http://modapi.survivetheforest.net/app/configs/games/{0}/Versions.xml"
+        };
+
         public event EventHandler<EventArgs> OnModlibUpdate;
 
         public Configuration.GameConfiguration GameConfiguration;
@@ -98,7 +104,7 @@ namespace ModAPI.Data
             GameVersion = versions.GetVersion(CheckSumGame);
             BackupVersion = versions.GetVersion(CheckSumBackup);
 
-            if (((GameVersion != null && BackupVersion == null) || (GameVersion != null && BackupVersion != null && GameVersion.ID != BackupVersion.ID)))
+            if (((GameVersion.IsValid && !BackupVersion.IsValid) || (GameVersion.IsValid && BackupVersion.IsValid && GameVersion.ID != BackupVersion.ID)))
             {
                 BackupGameFiles();
                 Thread.Sleep(1000);
@@ -107,8 +113,8 @@ namespace ModAPI.Data
                 BackupVersion = versions.GetVersion(CheckSumBackup);
                 RegenerateModLibrary = true;
             }
-            
-            if ((CheckSumGame != CheckSumBackup && CheckSumGame != CheckSumModded) || (GameVersion == null && CheckSumModded != "" && CheckSumModded != CheckSumGame))
+
+            if ((CheckSumGame != CheckSumBackup && CheckSumGame != CheckSumModded) || (!GameVersion.IsValid && CheckSumModded != "" && CheckSumModded != CheckSumGame))
             {
                 if (versions.VersionsList.Count == 0 || versions.VersionsList.All(o => o.CheckSum != CheckSumGame))
                 {
@@ -1326,8 +1332,8 @@ namespace ModAPI.Data
             public Game Game;
             public bool Valid;
             protected string FileName;
-            public List<string> CheckFiles;
-            public List<Version> VersionsList;
+            public HashSet<string> CheckFiles;
+            public HashSet<Version> VersionsList;
 
             public Versions(Game Game)
             {
@@ -1341,33 +1347,33 @@ namespace ModAPI.Data
             {
                 if (CheckSum == "")
                 {
-                    return null;
+                    return Version.Zero;
                 }
                 foreach (var v in VersionsList)
                 {
-                    if (v.CheckSum.ToLower() == CheckSum.ToLower())
+                    if (string.Equals(v.CheckSum, CheckSum, StringComparison.CurrentCultureIgnoreCase))
                     {
                         return v;
                     }
                 }
-                return null;
+                return Version.Zero;
             }
 
             public void Refresh()
             {
-                if (Configuration.GetString("UpdateVersions").ToLower() == "true")
-                {
-                    UpdateVersions();
-                }
-
-                CheckFiles = new []
+                CheckFiles = new HashSet<string>
                 {
                     "%fileBase%_data/Managed/Assembly-CSharp-firstpass.dll",
                     "%fileBase%_data/Managed/Assembly-CSharp.dll",
                     "%fileBase%_data/Managed/Assembly-UnityScript-firstpass.dll",
                     "%fileBase%_data/Managed/Assembly-UnityScript.dll"
-                }.ToList();
-                VersionsList = new List<Version>();
+                };
+                VersionsList = new HashSet<Version>();
+
+                //if (Configuration.GetString("UpdateVersions").ToLower() == "true")
+                {
+                    UpdateVersions();
+                }
 
                 try
                 {
@@ -1395,35 +1401,117 @@ namespace ModAPI.Data
 
             public void UpdateVersions()
             {
-                try
+                var responses = new List<string>();
+
+                using (var client = new WebClient())
                 {
-                    var WebReq = (HttpWebRequest) WebRequest.Create("http://www.modapi.de/app/configs/games/" + Game.GameConfiguration.ID + "/Versions.xml");
-                    WebReq.Method = "GET";
-                    var WebResp = (HttpWebResponse) WebReq.GetResponse();
-                    var Answer = WebResp.GetResponseStream();
-                    var _Answer = new StreamReader(Answer);
-                    File.WriteAllText(FileName, _Answer.ReadToEnd());
+                    foreach (var url in VersionUpdateDomains)
+                    {
+                        try
+                        {
+                            responses.Add(client.DownloadString(string.Format(url, Game.GameConfiguration.ID)));
+                        }
+                        catch (WebException e)
+                        {
+                            // Something is wrong with the server or connection
+                            Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed to download one of the version files: " + e, Debug.Type.ERROR);
+                        }
+                        catch (Exception e)
+                        {
+                            // Something else happened
+                            Debug.Log("Game: " + Game.GameConfiguration.ID, "Something failed while trying to download one of the version files: " + e, Debug.Type.ERROR);
+                        }
+                    }
                 }
-                catch (Exception e)
+
+                if (responses.Count > 0)
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed to update versions table. Server seems offline.", Debug.Type.WARNING);
+                    foreach (var response in responses)
+                    {
+                        try
+                        {
+                            var document = XDocument.Parse(response);
+
+                            foreach (var element in document.Root.Element("files").Elements("file"))
+                            {
+                                CheckFiles.Add(element.Value);
+                            }
+                            foreach (var element in document.Root.Elements("version"))
+                            {
+                                VersionsList.Add(new Version(element));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed parsing versions file from server: " + e, Debug.Type.ERROR);
+                        }
+                    }
+
+                    try
+                    {
+                        // Save updated versions
+                        var finalDocument = new XDocument(new XElement("versions"));
+                        finalDocument.Root.Add(new XElement("files", CheckFiles.Select(o => new XElement("file", o))));
+                        foreach (var version in VersionsList.OrderBy(o => o.ID))
+                        {
+                            var element = new XElement("version", new XAttribute("id", version.ID));
+                            element.Add(new XElement("checksum", version.CheckSum));
+                            finalDocument.Root.Add(element);
+                        }
+                        finalDocument.Save(FileName);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed saving version file: " + e, Debug.Type.ERROR);
+                    }
+                }
+                else
+                {
+                    Debug.Log("Game: " + Game.GameConfiguration.ID, "No version files available on any of the servers: " + string.Join(", ", VersionUpdateDomains), Debug.Type.ERROR);
                 }
             }
 
-            public class Version
+            public struct Version : IEquatable<Version>
             {
-                public string ID = "Auto-Updated";
+                public static readonly Version Zero = default(Version);
+
+                public string ID;
                 public string CheckSum;
+
+                public bool IsValid => !string.IsNullOrWhiteSpace(ID) && !string.IsNullOrWhiteSpace(CheckSum);
 
                 public Version(string checkSum)
                 {
+                    ID = "Auto-Updated";
                     CheckSum = checkSum;
                 }
 
                 public Version(XElement element)
                 {
-                    ID = XMLHelper.GetXMLAttributeAsString(element, "id", "");
-                    CheckSum = XMLHelper.GetXMLElementAsString(element, "checksum", "");
+                    ID = XMLHelper.GetXMLAttributeAsString(element, "id");
+                    CheckSum = XMLHelper.GetXMLElementAsString(element, "checksum");
+                }
+
+                public bool Equals(Version other)
+                {
+                    return string.Equals(ID, other.ID) && string.Equals(CheckSum, other.CheckSum);
+                }
+
+                public override bool Equals(object obj)
+                {
+                    if (ReferenceEquals(null, obj))
+                    {
+                        return false;
+                    }
+                    return obj is Version && Equals((Version) obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    unchecked
+                    {
+                        return ((ID != null ? ID.GetHashCode() : 0) * 397) ^ (CheckSum != null ? CheckSum.GetHashCode() : 0);
+                    }
                 }
             }
         }
