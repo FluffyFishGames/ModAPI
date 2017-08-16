@@ -142,6 +142,7 @@ namespace ModAPI
 
             Configuration.Save();
 
+            /*
             if (Configuration.GetString("AutoUpdate").ToLower() == "true")
             {
                 var webReq = (HttpWebRequest) WebRequest.Create("http://www.modapi.cc/app/lastVersion.txt");
@@ -156,6 +157,7 @@ namespace ModAPI
                     win.ShowSubWindow();
                 }
             }
+            */
         }
 
         public bool CheckSteamPath()
