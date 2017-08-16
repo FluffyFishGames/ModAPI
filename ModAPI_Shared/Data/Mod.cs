@@ -226,12 +226,12 @@ namespace ModAPI.Data
 
                 var text = Encoding.UTF8.GetString(decompressedBytes);
                 var parts = text.Split(new[] { "\n" }, StringSplitOptions.None);
-                var HeaderData = "";
+                var header = "";
 
                 var headerSize = 0;
                 for (var i = 0; i < parts.Length; i++)
                 {
-                    HeaderData += parts[i] + "\n";
+                    header += parts[i] + "\n";
                     headerSize += parts[i].Length + 1;
                     if (parts[i].EndsWith("</Mod>\r"))
                     {
@@ -239,12 +239,12 @@ namespace ModAPI.Data
                     }
                     if (i == parts.Length - 1)
                     {
-                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". File-HeaderData is corrupted.", Debug.Type.Warning);
+                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". File-header is corrupted.", Debug.Type.Warning);
                         return false;
                     }
                 }
 
-                this.HeaderData = new Header(this, HeaderData);
+                this.HeaderData = new Header(this, header);
                 var assemblyText = text.Substring(headerSize);
                 var resourcesIndex = assemblyText.IndexOf("\r\n\r\n");
                 if (resourcesIndex > 0)
@@ -252,10 +252,10 @@ namespace ModAPI.Data
                     // Resources found
                     HasResources = true;
                     assemblyText = assemblyText.Substring(0, resourcesIndex);
-                    ResourcesIndex = Encoding.UTF8.GetBytes(assemblyText + "\r\n\r\n").Length + Encoding.UTF8.GetBytes(HeaderData).Length;
+                    ResourcesIndex = Encoding.UTF8.GetBytes(assemblyText + "\r\n\r\n").Length + Encoding.UTF8.GetBytes(header).Length;
                 }
 
-                Debug.Log("Game: " + Game.GameConfiguration.Id, "Successfully loaded mod HeaderData \"" + Id + "\" in version \"" + this.HeaderData.GetVersion() + "\" at \"" + FileName + "\"");
+                Debug.Log("Game: " + Game.GameConfiguration.Id, "Successfully loaded mod header \"" + Id + "\" in version \"" + this.HeaderData.GetVersion() + "\" at \"" + FileName + "\"");
 
                 try
                 {
@@ -357,7 +357,7 @@ namespace ModAPI.Data
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find type \"" + i.TypeName + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as add class.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find type \"" + i.TypeName + "\" in mod \"" + Id + "\" but it is declared in its header as add class.");
                 }
             }
             foreach (var i in HeaderData.GetAddMethods())
@@ -369,7 +369,7 @@ namespace ModAPI.Data
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find method \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as add method.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find method \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its header as add method.");
                 }
             }
             foreach (var i in HeaderData.GetInjectIntos())
@@ -381,7 +381,7 @@ namespace ModAPI.Data
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find method \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as inject into.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find method \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its header as inject into.");
                 }
             }
             foreach (var i in HeaderData.GetAddFields())
@@ -393,7 +393,7 @@ namespace ModAPI.Data
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find field \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as add field.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find field \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its header as add field.");
                 }
             }
         }
@@ -935,12 +935,13 @@ namespace ModAPI.Data
                 try
                 {
                     var configuration = XDocument.Parse(header);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, configuration.ToString());
                     SetXml(configuration);
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Successfully parsed mod HeaderData of mod \"" + Id + "\".");
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Successfully parsed mod header of mod \"" + Id + "\".");
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Error while parsing HeaderData of mod \"" + Id + "\". Filename: \"" + Mod.FileName + "\"", Debug.Type.Warning);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Error while parsing header of mod \"" + Id + "\". Filename: \"" + Mod.FileName + "\"", Debug.Type.Warning);
                     Valid = false;
                 }
             }
