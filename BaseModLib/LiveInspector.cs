@@ -29,13 +29,13 @@ public class LiveInspector : MonoBehaviour
 {
     public GUISkin Skin;
     public float Top = 0f;
-    protected static bool commandsAdded;
+    protected static bool CommandsAdded;
     protected static LiveInspector Instance;
 
     // Use this for initialization
     void Start()
     {
-        if (!commandsAdded)
+        if (!CommandsAdded)
         {
             Console.RegisterCommand(new Console.Command
             {
@@ -49,7 +49,7 @@ public class LiveInspector : MonoBehaviour
                 HelpText = "Hides the scenegraph",
                 OnSubmit = Hide
             });
-            commandsAdded = true;
+            CommandsAdded = true;
         }
         Instance = this;
     }
@@ -68,18 +68,18 @@ public class LiveInspector : MonoBehaviour
     protected Vector2 ScrollPosition;
     protected Vector2 ScrollPosition2;
     protected int FieldNum;
-    protected static GUIStyle whiteLabelStyle;
-    protected static GUIStyle labelStyle;
-    protected static GUIStyle boldLabelStyle;
-    protected static GUIStyle arrowRightStyle;
-    protected static GUIStyle arrowDownStyle;
-    protected static GUIStyle darkArrowRightStyle;
-    protected static GUIStyle darkArrowDownStyle;
+    protected static GUIStyle WhiteLabelStyle;
+    protected static GUIStyle LabelStyle;
+    protected static GUIStyle BoldLabelStyle;
+    protected static GUIStyle ArrowRightStyle;
+    protected static GUIStyle ArrowDownStyle;
+    protected static GUIStyle DarkArrowRightStyle;
+    protected static GUIStyle DarkArrowDownStyle;
 
     protected List<Transform> Expanded = new List<Transform>();
-    protected Transform[] all;
-    protected float nextCheck;
-    protected Dictionary<string, Transform> rootElements;
+    protected Transform[] All;
+    protected float NextCheck;
+    protected Dictionary<string, Transform> RootElements;
 
     void Update()
     {
@@ -91,91 +91,91 @@ public class LiveInspector : MonoBehaviour
                 RaycastHit hitInfo;
                 if (Physics.Raycast(r, out hitInfo))
                 {
-                    selectedTransform = hitInfo.collider.transform;
+                    SelectedTransform = hitInfo.collider.transform;
                 }
             }
         }
     }
 
-    void OnGUI()
+    void OnGui()
     {
         if (show)
         {
-            GUI.skin = ModAPI.GUI.Skin;
-            if (whiteLabelStyle == null)
+            GUI.skin = ModAPI.Gui.Skin;
+            if (WhiteLabelStyle == null)
             {
-                whiteLabelStyle = GUI.skin.GetStyle("WhiteLabel");
-                labelStyle = GUI.skin.label;
-                boldLabelStyle = new GUIStyle(labelStyle);
-                boldLabelStyle.fontStyle = FontStyle.Bold;
-                boldLabelStyle.normal.textColor = new Color(0f, 0f, 0f, 1f);
-                arrowRightStyle = GUI.skin.GetStyle("ArrowRight");
-                arrowDownStyle = GUI.skin.GetStyle("ArrowDown");
-                darkArrowRightStyle = GUI.skin.GetStyle("DarkArrowRight");
-                darkArrowDownStyle = GUI.skin.GetStyle("DarkArrowDown");
+                WhiteLabelStyle = GUI.skin.GetStyle("WhiteLabel");
+                LabelStyle = GUI.skin.label;
+                BoldLabelStyle = new GUIStyle(LabelStyle);
+                BoldLabelStyle.fontStyle = FontStyle.Bold;
+                BoldLabelStyle.normal.textColor = new Color(0f, 0f, 0f, 1f);
+                ArrowRightStyle = GUI.skin.GetStyle("ArrowRight");
+                ArrowDownStyle = GUI.skin.GetStyle("ArrowDown");
+                DarkArrowRightStyle = GUI.skin.GetStyle("DarkArrowRight");
+                DarkArrowDownStyle = GUI.skin.GetStyle("DarkArrowDown");
             }
-            var Height = Screen.height - Top;
+            var height = Screen.height - Top;
             GUI.depth = -1000;
 
             var createRoot = false;
-            if (nextCheck > 0f)
+            if (NextCheck > 0f)
             {
-                nextCheck -= Time.deltaTime;
-                if (nextCheck <= 0f)
+                NextCheck -= Time.deltaTime;
+                if (NextCheck <= 0f)
                 {
-                    all = FindObjectsOfType<Transform>();
+                    All = FindObjectsOfType<Transform>();
                     createRoot = true;
-                    nextCheck = 1f;
+                    NextCheck = 1f;
                 }
             }
-            if (all == null)
+            if (All == null)
             {
-                all = FindObjectsOfType<Transform>();
+                All = FindObjectsOfType<Transform>();
                 createRoot = true;
-                nextCheck = 1f;
+                NextCheck = 1f;
             }
 
             var names = new List<string>();
             if (createRoot)
             {
                 var k = 0;
-                rootElements = new Dictionary<string, Transform>();
-                foreach (var t in all)
+                RootElements = new Dictionary<string, Transform>();
+                foreach (var t in All)
                 {
                     if (t != null)
                     {
                         if ((SearchString == "" && t.parent == null) || (SearchString != "" && t.name.Contains(SearchString)))
                         {
-                            rootElements.Add(t.name + k, t);
+                            RootElements.Add(t.name + k, t);
                             k += 1;
                         }
                     }
                 }
             }
 
-            names = rootElements.Keys.ToList();
+            names = RootElements.Keys.ToList();
             names.Sort();
 
             FieldNum = 0;
-            if (selectedTransform != null)
+            if (SelectedTransform != null)
             {
-                GUI.Box(new Rect(240, Top - 10, 300 + 10, Height + 20), "", GUI.skin.window);
-                ScrollPosition2 = GUI.BeginScrollView(new Rect(250, 0, 300, Height), ScrollPosition2, new Rect(0, 0, 10, listHeight2));
-                listHeight2 = DrawComponents(selectedTransform);
+                GUI.Box(new Rect(240, Top - 10, 300 + 10, height + 20), "", GUI.skin.window);
+                ScrollPosition2 = GUI.BeginScrollView(new Rect(250, 0, 300, height), ScrollPosition2, new Rect(0, 0, 10, ListHeight2));
+                ListHeight2 = DrawComponents(SelectedTransform);
                 GUI.EndScrollView();
             }
 
-            GUI.Box(new Rect(-10, Top - 10, 250 + 10, Height + 20), "", GUI.skin.window);
-            ScrollPosition = GUI.BeginScrollView(new Rect(0, 0, 250, Height - 30), ScrollPosition, new Rect(0, 0, 10, listHeight));
+            GUI.Box(new Rect(-10, Top - 10, 250 + 10, height + 20), "", GUI.skin.window);
+            ScrollPosition = GUI.BeginScrollView(new Rect(0, 0, 250, height - 30), ScrollPosition, new Rect(0, 0, 10, ListHeight));
 
             var tt = new List<Transform>();
             foreach (var n in names)
             {
-                tt.Add(rootElements[n]);
+                tt.Add(RootElements[n]);
             }
-            listHeight = DrawList(tt.ToArray(), 0);
+            ListHeight = DrawList(tt.ToArray(), 0);
             GUI.EndScrollView();
-            SearchString = GUI.TextField(new Rect(0, Height - 30, 250, 30), SearchString);
+            SearchString = GUI.TextField(new Rect(0, height - 30, 250, 30), SearchString);
         }
     }
 
@@ -185,9 +185,9 @@ public class LiveInspector : MonoBehaviour
     float DrawComponents(Transform t)
     {
         var height = 10f;
-        var labelStyle = LiveInspector.labelStyle;
-        var arrowRight = darkArrowRightStyle;
-        var arrowDown = darkArrowDownStyle;
+        var labelStyle = LiveInspector.LabelStyle;
+        var arrowRight = DarkArrowRightStyle;
+        var arrowDown = DarkArrowDownStyle;
         var components = t.GetComponents<Component>();
         var heightPer = 20f;
         GUI.TextField(new Rect(20f, height, 230f, 20f), "Name: " + t.gameObject.name);
@@ -228,8 +228,8 @@ public class LiveInspector : MonoBehaviour
     float DrawComponent(Component comp, float startY, Type t = null)
     {
         var height = 0f;
-        var arrowRight = darkArrowRightStyle;
-        var arrowDown = darkArrowDownStyle;
+        var arrowRight = DarkArrowRightStyle;
+        var arrowDown = DarkArrowDownStyle;
 
         if (t == null)
         {
@@ -274,43 +274,43 @@ public class LiveInspector : MonoBehaviour
     float DrawField(string Name, object value, float startY)
     {
         var height = 40f;
-        GUI.Label(new Rect(20f, startY, 150f, 20f), Name + ":", boldLabelStyle);
+        GUI.Label(new Rect(20f, startY, 150f, 20f), Name + ":", BoldLabelStyle);
         if (value != null)
         {
             if (value.GetType().FullName == "UnityEngine.GameObject")
             {
-                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle))
+                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
                 {
-                    selectedTransform = ((GameObject) value).transform;
+                    SelectedTransform = ((GameObject) value).transform;
                 }
             }
             else if (value.GetType().FullName == "UnityEngine.Transform")
             {
-                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle))
+                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
                 {
-                    selectedTransform = ((Transform) value);
+                    SelectedTransform = ((Transform) value);
                 }
             }
             else
             {
-                GUI.Label(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), labelStyle);
+                GUI.Label(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle);
             }
         }
         else
         {
-            GUI.Label(new Rect(20f, startY + 20f, 150f, 20f), "null", labelStyle);
+            GUI.Label(new Rect(20f, startY + 20f, 150f, 20f), "null", LabelStyle);
         }
         return height;
     }
 
-    protected float listHeight;
-    protected float listHeight2;
+    protected float ListHeight;
+    protected float ListHeight2;
 
     float DrawList(Transform[] all, float startY, int depth = 0)
     {
-        var labelStyle = LiveInspector.labelStyle;
-        var arrowRight = arrowRightStyle;
-        var arrowDown = arrowDownStyle;
+        var labelStyle = LiveInspector.LabelStyle;
+        var arrowRight = ArrowRightStyle;
+        var arrowDown = ArrowDownStyle;
         var height = 0f;
         var heightPer = 16f;
         foreach (var t in all)
@@ -328,7 +328,7 @@ public class LiveInspector : MonoBehaviour
             {
                 if (realY > -heightPer && realY < Screen.height + heightPer)
                 {
-                    if (selectedTransform == t)
+                    if (SelectedTransform == t)
                     {
                         GUI.Box(new Rect(-5f, y - 1f, 260f, heightPer + 1f), "");
                     }
@@ -353,7 +353,7 @@ public class LiveInspector : MonoBehaviour
 
                     if (GUI.Button(new Rect(x, y, 250f - x, heightPer), t.name, labelStyle))
                     {
-                        selectedTransform = t;
+                        SelectedTransform = t;
                         ScrollPosition2 = Vector2.zero;
                     }
                 }
@@ -372,5 +372,5 @@ public class LiveInspector : MonoBehaviour
         return height;
     }
 
-    protected Transform selectedTransform;
+    protected Transform SelectedTransform;
 }

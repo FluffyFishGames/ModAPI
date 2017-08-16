@@ -34,8 +34,8 @@ namespace ModAPI.Data.Models
 {
     public class ModProject
     {
-        public string ID;
-        protected string PreviousID;
+        public string Id;
+        protected string PreviousId;
         public Game Game;
         public MultilingualValue Name = new MultilingualValue();
         public MultilingualValue Description = new MultilingualValue();
@@ -46,23 +46,23 @@ namespace ModAPI.Data.Models
 
         public class Button
         {
-            public ModProject project;
-            public string ID;
+            public ModProject Project;
+            public string Id;
             public string StandardKey;
             public MultilingualValue Name = new MultilingualValue();
             public MultilingualValue Description = new MultilingualValue();
 
-            public XElement GetXML()
+            public XElement GetXml()
             {
                 var buttonElement = new XElement("Button");
                 if (StandardKey != "")
                 {
                     buttonElement.SetAttributeValue("Standard", StandardKey);
                 }
-                buttonElement.SetAttributeValue("ID", ID);
+                buttonElement.SetAttributeValue("ID", Id);
 
                 var nameElement = new XElement("Name");
-                foreach (var langKey in project.Languages)
+                foreach (var langKey in Project.Languages)
                 {
                     var langElement = new XElement(langKey, Name.GetString(langKey));
                     nameElement.Add(langElement);
@@ -70,7 +70,7 @@ namespace ModAPI.Data.Models
                 buttonElement.Add(nameElement);
 
                 var descriptionElement = new XElement("Description");
-                foreach (var langKey in project.Languages)
+                foreach (var langKey in Project.Languages)
                 {
                     var langElement = new XElement(langKey, Description.GetString(langKey));
                     descriptionElement.Add(langElement);
@@ -86,7 +86,7 @@ namespace ModAPI.Data.Models
         public void Verify()
         {
             Valid = false;
-            if (!Mod.Header.VerifyModVersion(Version) || !Mod.Header.VerifyModID(ID))
+            if (!Mod.Header.VerifyModVersion(Version) || !Mod.Header.VerifyModId(Id))
             {
                 return;
             }
@@ -99,10 +99,10 @@ namespace ModAPI.Data.Models
                 }
             }
 
-            var ButtonIDs = new List<string>();
+            var buttonIDs = new List<string>();
             foreach (var b in Buttons)
             {
-                if (ButtonIDs.Contains(b.ID))
+                if (buttonIDs.Contains(b.Id))
                 {
                     return;
                 }
@@ -113,7 +113,7 @@ namespace ModAPI.Data.Models
                         return;
                     }
                 }
-                ButtonIDs.Add(b.ID);
+                buttonIDs.Add(b.Id);
             }
 
             Valid = true;
@@ -130,36 +130,36 @@ namespace ModAPI.Data.Models
         public void SaveConfiguration()
         {
             SaveFailed = false;
-            if (ID == "" && PreviousID != "")
+            if (Id == "" && PreviousId != "")
             {
-                ID = PreviousID;
+                Id = PreviousId;
             }
             Verify();
             if (!Valid)
             {
                 var checkPath = GetFolderPath();
-                if (!Mod.Header.VerifyModID(ID) || (PreviousID != ID && PreviousID != "" && Directory.Exists(checkPath)))
+                if (!Mod.Header.VerifyModId(Id) || (PreviousId != Id && PreviousId != "" && Directory.Exists(checkPath)))
                 {
-                    ID = PreviousID;
+                    Id = PreviousId;
                 }
             }
-            if (PreviousID != ID && PreviousID != "")
+            if (PreviousId != Id && PreviousId != "")
             {
                 var checkPath = GetFolderPath();
                 if (checkPath == "" || Directory.Exists(checkPath))
                 {
-                    ID = PreviousID;
+                    Id = PreviousId;
                 }
                 else
                 {
-                    var previousPath = GetFolderPath(PreviousID);
-                    var newPath = GetFolderPath(ID);
-                    var previousProjectPath = newPath + Path.DirectorySeparatorChar + PreviousID + ".csproj";
-                    var newProjectPath = newPath + Path.DirectorySeparatorChar + ID + ".csproj";
-                    var previousSolutionPath = newPath + Path.DirectorySeparatorChar + PreviousID + ".sln";
-                    var newSolutionPath = newPath + Path.DirectorySeparatorChar + ID + ".sln";
-                    var previousSolutionUserOptionsPath = newPath + Path.DirectorySeparatorChar + PreviousID + ".suo";
-                    var newSolutionUserOptionsPath = newPath + Path.DirectorySeparatorChar + ID + ".suo";
+                    var previousPath = GetFolderPath(PreviousId);
+                    var newPath = GetFolderPath(Id);
+                    var previousProjectPath = newPath + Path.DirectorySeparatorChar + PreviousId + ".csproj";
+                    var newProjectPath = newPath + Path.DirectorySeparatorChar + Id + ".csproj";
+                    var previousSolutionPath = newPath + Path.DirectorySeparatorChar + PreviousId + ".sln";
+                    var newSolutionPath = newPath + Path.DirectorySeparatorChar + Id + ".sln";
+                    var previousSolutionUserOptionsPath = newPath + Path.DirectorySeparatorChar + PreviousId + ".suo";
+                    var newSolutionUserOptionsPath = newPath + Path.DirectorySeparatorChar + Id + ".suo";
                     try
                     {
                         Directory.Move(previousPath, newPath);
@@ -179,16 +179,16 @@ namespace ModAPI.Data.Models
                     catch (Exception e)
                     {
                         SaveFailed = true;
-                        ID = PreviousID;
+                        Id = PreviousId;
                         return;
                     }
-                    PreviousID = ID;
+                    PreviousId = Id;
                 }
             }
 
             var configuration = new XDocument();
             var rootElement = new XElement("Mod");
-            rootElement.SetAttributeValue("ID", ID);
+            rootElement.SetAttributeValue("ID", Id);
 
             rootElement.Add(new XElement("Compatible", Game.ModLibrary.GameVersion));
 
@@ -209,7 +209,7 @@ namespace ModAPI.Data.Models
 
             foreach (var button in Buttons)
             {
-                var buttonElement = button.GetXML();
+                var buttonElement = button.GetXml();
                 rootElement.Add(buttonElement);
             }
 
@@ -229,12 +229,12 @@ namespace ModAPI.Data.Models
                 return;
             }
 
-            var projectPath = GetFolderPath() + Path.DirectorySeparatorChar + ID + ".csproj";
-            var solutionPath = GetFolderPath() + Path.DirectorySeparatorChar + ID + ".sln";
+            var projectPath = GetFolderPath() + Path.DirectorySeparatorChar + Id + ".csproj";
+            var solutionPath = GetFolderPath() + Path.DirectorySeparatorChar + Id + ".sln";
 
             var Compile = new List<XElement>();
-            var EmbeddedResources = new List<XElement>();
-            var ModLibrary = new List<Uri>();
+            var embeddedResources = new List<XElement>();
+            var modLibrary = new List<Uri>();
 
             if (File.Exists(projectPath))
             {
@@ -248,7 +248,7 @@ namespace ModAPI.Data.Models
                         {
                             if (subElement.Name.LocalName == "EmbeddedResource")
                             {
-                                EmbeddedResources.Add(subElement);
+                                embeddedResources.Add(subElement);
                             }
                             if (subElement.Name.LocalName == "Compile")
                             {
@@ -259,21 +259,21 @@ namespace ModAPI.Data.Models
                 }
             }
 
-            ModLibrary.Add(new Uri(Path.GetFullPath(Configuration.GetPath("Libraries") + Path.DirectorySeparatorChar + "BaseModLib.dll")));
+            modLibrary.Add(new Uri(Path.GetFullPath(Configuration.GetPath("Libraries") + Path.DirectorySeparatorChar + "BaseModLib.dll")));
             foreach (var assemblyPath in Game.GameConfiguration.IncludeAssemblies)
             {
-                ModLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
+                modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
             }
             foreach (var assemblyPath in Game.GameConfiguration.CopyAssemblies)
             {
-                ModLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
+                modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
             }
 
             var projectUri = new Uri(GetFolderPath());
             var references = "";
             var resources = "";
             var compiles = "";
-            foreach (var uri in ModLibrary)
+            foreach (var uri in modLibrary)
             {
                 var filePath = projectUri.MakeRelativeUri(uri).ToString();
                 references += "<Reference Include=\"" + Path.GetFileNameWithoutExtension(filePath) + "\">\r\n" +
@@ -281,7 +281,7 @@ namespace ModAPI.Data.Models
                               "      <Private>False</Private>\r\n" +
                               "    </Reference>\r\n";
             }
-            foreach (var resource in EmbeddedResources)
+            foreach (var resource in embeddedResources)
             {
                 resources += resource.ToString().Replace("xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"", "") + "\r\n";
             }
@@ -299,8 +299,8 @@ namespace ModAPI.Data.Models
                               "    <ProjectGuid>{53821041-E269-4717-BAED-3C9C6836E83F}</ProjectGuid>\r\n" +
                               "    <OutputType>Library</OutputType>\r\n" +
                               "    <AppDesignerFolder>Properties</AppDesignerFolder>\r\n" +
-                              "    <RootNamespace>" + ID + "</RootNamespace>\r\n" +
-                              "    <AssemblyName>" + ID + "</AssemblyName>\r\n" +
+                              "    <RootNamespace>" + Id + "</RootNamespace>\r\n" +
+                              "    <AssemblyName>" + Id + "</AssemblyName>\r\n" +
                               "    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>\r\n" +
                               "    <FileAlignment>512</FileAlignment>\r\n" +
                               "    <TargetFrameworkProfile />\r\n" +
@@ -329,7 +329,7 @@ namespace ModAPI.Data.Models
                                "# Visual Studio 15\r\n" +
                                "VisualStudioVersion = 15.0.26403.7\r\n" +
                                "MinimumVisualStudioVersion = 10.0.40219.1\r\n" +
-                               "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"" + ID + "\", \"" + ID + ".csproj\", \"{53821041-E269-4717-BAED-3C9C6836E83F}\"\r\n" +
+                               "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"" + Id + "\", \"" + Id + ".csproj\", \"{53821041-E269-4717-BAED-3C9C6836E83F}\"\r\n" +
                                "EndProject\r\n" +
                                "Global\r\n" +
                                "	GlobalSection(SolutionConfigurationPlatforms) = preSolution\r\n" +
@@ -364,11 +364,11 @@ namespace ModAPI.Data.Models
                 if (File.Exists(path))
                 {
                     var configuration = XDocument.Load(path);
-                    ID = configuration.Root.Attribute("ID").Value;
+                    Id = configuration.Root.Attribute("ID").Value;
                     Name = new MultilingualValue();
-                    Name.SetXML(configuration.Root.Element("Name"));
+                    Name.SetXml(configuration.Root.Element("Name"));
                     Description = new MultilingualValue();
-                    Description.SetXML(configuration.Root.Element("Description"));
+                    Description.SetXml(configuration.Root.Element("Description"));
                     Version = configuration.Root.Element("Version").Value;
                     Buttons = new List<Button>();
 
@@ -389,13 +389,13 @@ namespace ModAPI.Data.Models
                     foreach (var button in configuration.Root.Elements("Button"))
                     {
                         var b = new Button();
-                        b.project = this;
-                        b.ID = XMLHelper.GetXMLAttributeAsString(button, "ID", "");
-                        b.StandardKey = XMLHelper.GetXMLAttributeAsString(button, "Standard", "");
+                        b.Project = this;
+                        b.Id = XmlHelper.GetXmlAttributeAsString(button, "ID", "");
+                        b.StandardKey = XmlHelper.GetXmlAttributeAsString(button, "Standard", "");
                         b.Name = new MultilingualValue();
-                        b.Name.SetXML(button.Element("Name"));
+                        b.Name.SetXml(button.Element("Name"));
                         b.Description = new MultilingualValue();
-                        b.Description.SetXML(button.Element("Description"));
+                        b.Description.SetXml(button.Element("Description"));
 
                         foreach (var k in b.Description.GetLanguages())
                         {
@@ -421,12 +421,12 @@ namespace ModAPI.Data.Models
             }
         }
 
-        public ModProject(Game game, string ID)
+        public ModProject(Game game, string id)
         {
             Game = game;
-            this.ID = ID;
-            PreviousID = ID;
-            if (this.ID != "")
+            this.Id = id;
+            PreviousId = id;
+            if (this.Id != "")
             {
                 var path = GetFolderPath();
                 if (!Directory.Exists(path))
@@ -440,16 +440,16 @@ namespace ModAPI.Data.Models
             }
         }
 
-        protected string GetFolderPath(string ID = "")
+        protected string GetFolderPath(string id = "")
         {
-            if (ID == "")
+            if (id == "")
             {
-                ID = this.ID;
+                id = this.Id;
             }
             try
             {
-                return Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + Game.GameConfiguration.ID +
-                                        Path.DirectorySeparatorChar + ID + Path.DirectorySeparatorChar);
+                return Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id +
+                                        Path.DirectorySeparatorChar + id + Path.DirectorySeparatorChar);
             }
             catch (Exception e)
             {
@@ -481,10 +481,10 @@ namespace ModAPI.Data.Models
 
         public void Create(ProgressHandler progress)
         {
-            var modFilePath = GetFolderPath() + Path.DirectorySeparatorChar + "Mod" + Path.DirectorySeparatorChar + ID + ".dll";
+            var modFilePath = GetFolderPath() + Path.DirectorySeparatorChar + "Mod" + Path.DirectorySeparatorChar + Id + ".dll";
             if (!File.Exists(modFilePath))
             {
-                Debug.Log("Mod: " + ID, "Couldn't find the compiled mod dll at \"" + modFilePath + "\".", Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't find the compiled mod dll at \"" + modFilePath + "\".", Debug.Type.Error);
                 SetProgress(progress, "Error.FileNotFound");
                 return;
             }
@@ -492,7 +492,7 @@ namespace ModAPI.Data.Models
             var modInfoPath = GetFolderPath() + Path.DirectorySeparatorChar + "ModInfo.xml";
             if (!File.Exists(modInfoPath))
             {
-                Debug.Log("Mod: " + ID, "Couldn't find the mod configuration at \"" + modInfoPath + "\".", Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't find the mod configuration at \"" + modInfoPath + "\".", Debug.Type.Error);
                 SetProgress(progress, "Error.FileNotFound");
                 return;
             }
@@ -502,7 +502,7 @@ namespace ModAPI.Data.Models
 
             if (!File.Exists(baseModLibPath))
             {
-                Debug.Log("Mod: " + ID, "Couldn't find BaseModLib.dll at \"" + baseModLibPath + "\".", Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't find BaseModLib.dll at \"" + baseModLibPath + "\".", Debug.Type.Error);
                 SetProgress(progress, "Error.FileNotFound");
                 return;
             }
@@ -515,7 +515,7 @@ namespace ModAPI.Data.Models
                 baseModLib = ModuleDefinition.ReadModule(baseModLibPath);
                 SetProgress(progress, 5f);
                 var assemblyResolver = new CustomAssemblyResolver();
-                assemblyResolver.AddPath(Configuration.GetPath("ModLib") + Path.DirectorySeparatorChar + Game.GameConfiguration.ID +
+                assemblyResolver.AddPath(Configuration.GetPath("ModLib") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id +
                                          Path.DirectorySeparatorChar);
                 modModule = ModuleDefinition.ReadModule(modFilePath, new ReaderParameters
                 {
@@ -525,19 +525,19 @@ namespace ModAPI.Data.Models
             }
             catch (Exception e)
             {
-                Debug.Log("Mod: " + ID, "One of the assemblies is corrupted: " + e, Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "One of the assemblies is corrupted: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.CorruptAssembly");
                 return;
             }
 
             var mod = new Mod(Game, "");
-            mod.header = new Mod.Header(mod, File.ReadAllText(modInfoPath));
-            mod.module = modModule;
+            mod.HeaderData = new Mod.Header(mod, File.ReadAllText(modInfoPath));
+            mod.Module = modModule;
             var stream = new MemoryStream();
 
-            mod.module.Write(stream);
+            mod.Module.Write(stream);
             stream.Position = 0;
-            mod.originalModule = ModuleDefinition.ReadModule(stream);
+            mod.OriginalModule = ModuleDefinition.ReadModule(stream);
 
             SetProgress(progress, 15f);
 
@@ -614,7 +614,7 @@ namespace ModAPI.Data.Models
                         {
                             for (var j = 0; j < method.Body.Instructions.Count; j++)
                             {
-                                var methodIL = method.Body.GetILProcessor();
+                                var methodIl = method.Body.GetILProcessor();
 
                                 var instruction = method.Body.Instructions[j];
                                 if (instruction.OpCode == OpCodes.Call && instruction.Operand != null)
@@ -624,8 +624,8 @@ namespace ModAPI.Data.Models
                                         if (((MethodReference) instruction.Operand).FullName == map.Key.FullName)
                                         {
                                             instruction.Operand = type.Module.Import(map.Value);
-                                            var newInstruction = methodIL.Create(OpCodes.Ldstr, ID);
-                                            methodIL.InsertBefore(instruction, newInstruction);
+                                            var newInstruction = methodIl.Create(OpCodes.Ldstr, Id);
+                                            methodIl.InsertBefore(instruction, newInstruction);
                                         }
                                     }
                                 }
@@ -640,7 +640,7 @@ namespace ModAPI.Data.Models
                     if (assemblyName == "" || !assemblyTypes[assemblyName].ContainsKey(type.BaseType.FullName))
                     {
                         var addClass = new Mod.Header.AddClass(mod) { Type = type };
-                        mod.header.AddAddClass(addClass);
+                        mod.HeaderData.AddAddClass(addClass);
                     }
                     else
                     {
@@ -651,7 +651,7 @@ namespace ModAPI.Data.Models
                                 Field = field,
                                 AssemblyName = assemblyName
                             };
-                            mod.header.AddAddField(addField);
+                            mod.HeaderData.AddAddField(addField);
                         }
                         foreach (var method in type.Methods)
                         {
@@ -676,22 +676,22 @@ namespace ModAPI.Data.Models
 
                             if (method.IsVirtual || method.IsStatic || method.IsConstructor)
                             {
-                                foreach (var _m in assemblyTypes[assemblyName][type.BaseType.FullName].Methods)
+                                foreach (var m in assemblyTypes[assemblyName][type.BaseType.FullName].Methods)
                                 {
-                                    if (_m.Name == method.Name)
+                                    if (m.Name == method.Name)
                                     {
-                                        if ((_m.IsStatic && method.IsStatic) || (_m.IsConstructor && method.IsConstructor))
+                                        if ((m.IsStatic && method.IsStatic) || (m.IsConstructor && method.IsConstructor))
                                         {
-                                            if (method.Parameters.Count == _m.Parameters.Count)
+                                            if (method.Parameters.Count == m.Parameters.Count)
                                             {
-                                                var ok = !_m.Parameters.Where((param, pi) => param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName).Any();
+                                                var ok = !m.Parameters.Where((param, pi) => param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName).Any();
                                                 if (ok)
                                                 {
                                                     inject = true;
                                                 }
                                             }
                                         }
-                                        else if (!_m.IsStatic && !method.IsStatic)
+                                        else if (!m.IsStatic && !method.IsStatic)
                                         {
                                             inject = true;
                                         }
@@ -708,7 +708,7 @@ namespace ModAPI.Data.Models
                                     Priority = priority,
                                     AssemblyName = assemblyName
                                 };
-                                mod.header.AddInjectInto(injectInto);
+                                mod.HeaderData.AddInjectInto(injectInto);
                             }
                             else
                             {
@@ -717,7 +717,7 @@ namespace ModAPI.Data.Models
                                     Method = method,
                                     AssemblyName = assemblyName
                                 };
-                                mod.header.AddAddMethod(addMethod);
+                                mod.HeaderData.AddAddMethod(addMethod);
                             }
                         }
                     }
@@ -745,7 +745,7 @@ namespace ModAPI.Data.Models
             }
             catch (Exception e)
             {
-                Debug.Log("Mod: " + ID, "An unexpected error occured while parsing the assembly: " + e, Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "An unexpected error occured while parsing the assembly: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.UnexpectedError");
                 return;
             }
@@ -767,17 +767,17 @@ namespace ModAPI.Data.Models
             {
                 SetProgress(progress, 90f, "SavingMod");
 
-                var modFolder = Path.GetFullPath(Configuration.GetPath("mods") + Path.DirectorySeparatorChar + Game.GameConfiguration.ID);
+                var modFolder = Path.GetFullPath(Configuration.GetPath("mods") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id);
 
                 if (!Directory.Exists(modFolder))
                 {
                     Directory.CreateDirectory(modFolder);
                 }
 
-                mod.FileName = Path.GetFullPath(modFolder + Path.DirectorySeparatorChar + mod.UniqueID + ".mod");
+                mod.FileName = Path.GetFullPath(modFolder + Path.DirectorySeparatorChar + mod.UniqueId + ".mod");
                 if (mod.Save())
                 {
-                    var key = mod.ID + "-" + mod.header.GetVersion();
+                    var key = mod.Id + "-" + mod.HeaderData.GetVersion();
                     if (Mod.Mods.ContainsKey(key))
                     {
                         if (Mod.Mods[key].FileName != mod.FileName)
@@ -794,13 +794,13 @@ namespace ModAPI.Data.Models
                 }
                 else
                 {
-                    Debug.Log("Mod: " + ID, "Could not save the mod.", Debug.Type.ERROR);
+                    Debug.Log("Mod: " + Id, "Could not save the mod.", Debug.Type.Error);
                     SetProgress(progress, "Error.Save");
                 }
             }
             catch (Exception e)
             {
-                Debug.Log("Mod: " + ID, "An error occured while saving the mod: " + e, Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "An error occured while saving the mod: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.Save");
             }
         }

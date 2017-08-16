@@ -31,7 +31,7 @@ namespace ModAPI.Windows.SubWindows
     {
         protected bool Cancelable = false;
         protected Schedule.Task Task;
-        protected ProgressHandler progressHandler;
+        protected ProgressHandler ProgressHandler;
         protected string TaskName;
 
         public delegate void Cancel();
@@ -41,30 +41,30 @@ namespace ModAPI.Windows.SubWindows
         public bool Completed;
         protected bool AutoClose;
 
-        public OperationPending(Schedule.Task Task)
+        public OperationPending(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = Task;
+            this.Task = task;
             Init();
         }
 
-        public OperationPending(string langKey, Schedule.Task Task)
+        public OperationPending(string langKey, Schedule.Task task)
             : base(langKey)
         {
             InitializeComponent();
             LangKey = langKey;
-            this.Task = Task;
+            this.Task = task;
             Init();
         }
 
-        public OperationPending(string langKey, string TaskName, ProgressHandler progressHandler, Cancel cancelCallback = null, bool AutoClose = false)
+        public OperationPending(string langKey, string taskName, ProgressHandler progressHandler, Cancel cancelCallback = null, bool autoClose = false)
             : base(langKey)
         {
             InitializeComponent();
-            this.progressHandler = progressHandler;
-            this.TaskName = TaskName;
+            this.ProgressHandler = progressHandler;
+            this.TaskName = taskName;
             CancelCallback = cancelCallback;
-            this.AutoClose = AutoClose;
+            this.AutoClose = autoClose;
 
             LangKey = langKey;
             Init();
@@ -75,13 +75,13 @@ namespace ModAPI.Windows.SubWindows
             if (Task != null)
             {
                 TaskName = (string) Task.Parameters[0];
-                progressHandler = (ProgressHandler) Task.Parameters[1];
+                ProgressHandler = (ProgressHandler) Task.Parameters[1];
                 CancelCallback = ((Cancel) Task.Parameters[2]);
                 AutoClose = ((bool) Task.Parameters[3]);
             }
 
-            progressHandler.OnChange += (s, e) => Dispatcher.Invoke(delegate { ChangeProgress(); });
-            progressHandler.OnComplete += (s, e) => Dispatcher.Invoke(delegate { OperationComplete(); });
+            ProgressHandler.OnChange += (s, e) => Dispatcher.Invoke(delegate { ChangeProgress(); });
+            ProgressHandler.OnComplete += (s, e) => Dispatcher.Invoke(delegate { OperationComplete(); });
             if (CancelCallback == null)
             {
                 CancelButton.Visibility = Visibility.Collapsed;
@@ -93,7 +93,7 @@ namespace ModAPI.Windows.SubWindows
             SetCloseable(false);
             ChangeProgress();
 
-            if (progressHandler.Progress == 100f)
+            if (ProgressHandler.Progress == 100f)
             {
                 OperationComplete();
             }
@@ -119,9 +119,9 @@ namespace ModAPI.Windows.SubWindows
 
         private void ChangeProgress()
         {
-            ProgressBar.Value = progressHandler.Progress;
-            Utils.Language.SetKey(CurrentTask, "Tasks." + TaskName + "." + progressHandler.Task);
-            if (progressHandler.Task != null && progressHandler.Task.StartsWith("Error."))
+            ProgressBar.Value = ProgressHandler.Progress;
+            Utils.Language.SetKey(CurrentTask, "Tasks." + TaskName + "." + ProgressHandler.Task);
+            if (ProgressHandler.Task != null && ProgressHandler.Task.StartsWith("Error."))
             {
                 ConfirmButton.Visibility = Visibility.Visible;
                 ConfirmButton.Opacity = 1.0;

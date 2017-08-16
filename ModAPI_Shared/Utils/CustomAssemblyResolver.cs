@@ -9,9 +9,9 @@ namespace ModAPI.Utils
     {
         protected List<string> Paths = new List<string>();
 
-        public void AddPath(string Path)
+        public void AddPath(string path)
         {
-            Paths.Add(Path);
+            Paths.Add(path);
         }
 
         public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters)

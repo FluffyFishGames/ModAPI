@@ -37,20 +37,20 @@ namespace ModAPI.Windows.SubWindows
         protected bool Completed;
         protected Schedule.Task Task;
 
-        public SpecifySteamPath(Schedule.Task Task)
+        public SpecifySteamPath(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = Task;
+            this.Task = task;
             SteamPath.Text = Configuration.GetPath("Steam");
             Check();
             SetCloseable(false);
         }
 
-        public SpecifySteamPath(string langKey, Schedule.Task Task)
+        public SpecifySteamPath(string langKey, Schedule.Task task)
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = Task;
+            this.Task = task;
             SteamPath.Text = Configuration.GetPath("Steam");
             Check();
             SetCloseable(false);

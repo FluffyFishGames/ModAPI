@@ -76,7 +76,7 @@ namespace ModAPI.Data
             return "";
         }
 
-        public void SetXML(XElement element)
+        public void SetXml(XElement element)
         {
             if (element == null)
             {
@@ -94,7 +94,7 @@ namespace ModAPI.Data
             }
         }
 
-        public XElement GetXML()
+        public XElement GetXml()
         {
             var element = new XElement("LangItem");
             foreach (var kv in Langs)

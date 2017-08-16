@@ -42,10 +42,10 @@ namespace ModAPI.Components.Inputs
 
         public static void Add(Grid grid, XElement element, string label, Binding value, int row, int startColumn)
         {
-            var minimum = XMLHelper.GetXMLAttributeAsDouble(element, "Min", 0.0);
-            var maximum = XMLHelper.GetXMLAttributeAsDouble(element, "Max", 0.0);
-            var labelStyle = XMLHelper.GetXMLAttributeAsString(element, "LabelStyle", "NormalLabel");
-            var inputStyle = XMLHelper.GetXMLAttributeAsString(element, "InputStyle", "");
+            var minimum = XmlHelper.GetXmlAttributeAsDouble(element, "Min", 0.0);
+            var maximum = XmlHelper.GetXmlAttributeAsDouble(element, "Max", 0.0);
+            var labelStyle = XmlHelper.GetXmlAttributeAsString(element, "LabelStyle", "NormalLabel");
+            var inputStyle = XmlHelper.GetXmlAttributeAsString(element, "InputStyle", "");
 
             Add(grid, label, value, row, minimum, maximum, labelStyle, inputStyle, startColumn);
         }

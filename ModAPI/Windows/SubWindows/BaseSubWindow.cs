@@ -35,11 +35,11 @@ namespace ModAPI.Windows.SubWindows
         {
         }
 
-        protected bool closeable = true;
+        protected bool Closeable = true;
 
         public void SetCloseable(bool closeable)
         {
-            this.closeable = closeable;
+            this.Closeable = closeable;
             var b = ((Button) GetTemplateChild("PART_Close"));
             if (b != null)
             {
@@ -57,7 +57,7 @@ namespace ModAPI.Windows.SubWindows
             base.OnApplyTemplate();
             ((Rectangle) GetTemplateChild("PART_Mover")).MouseDown += (sender, e) => { DragMove(); };
             ((Button) GetTemplateChild("PART_Close")).Click += (sender, e) => { Close(); };
-            ((Button) GetTemplateChild("PART_Close")).Visibility = closeable ? Visibility.Visible : Visibility.Collapsed;
+            ((Button) GetTemplateChild("PART_Close")).Visibility = Closeable ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

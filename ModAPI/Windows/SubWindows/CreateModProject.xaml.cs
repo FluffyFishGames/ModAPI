@@ -51,14 +51,14 @@ namespace ModAPI.Windows.SubWindows
             var path = "";
             try
             {
-                path = Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID +
+                path = Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id +
                                         Path.DirectorySeparatorChar + ID.Text);
             }
             catch (Exception e)
             {
             }
 
-            if (ID.Text == "" || !Mod.Header.VerifyModID(ID.Text) || (path != "" && Directory.Exists(path)))
+            if (ID.Text == "" || !Mod.Header.VerifyModId(ID.Text) || (path != "" && Directory.Exists(path)))
             {
                 if (path != "" && Directory.Exists(path) && ID.Text != "")
                 {

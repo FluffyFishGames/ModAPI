@@ -28,7 +28,7 @@ namespace ModAPI
 {
     public class Console
     {
-        const int MAX_LINES = 200;
+        const int MaxLines = 200;
         public static List<string> Lines = new List<string>();
 
         public delegate void CommandCallback(string param);
@@ -40,27 +40,27 @@ namespace ModAPI
         public delegate void CloseCallback();
 
         public static CloseCallback OnClose;
-        protected static ConsoleComponent consoleComponent;
+        protected static ConsoleComponent ConsoleComponent;
 
         [AddModname]
-        public static void Write(string Message)
+        public static void Write(string message)
         {
         }
 
-        public static Command GetCommand(string Command)
+        public static Command GetCommand(string command)
         {
-            Command = Command.ToLower();
-            if (Commands.ContainsKey(Command))
+            command = command.ToLower();
+            if (Commands.ContainsKey(command))
             {
-                return Commands[Command];
+                return Commands[command];
             }
             return null;
         }
 
-        public static void Write(string Message, string ModName)
+        public static void Write(string message, string modName)
         {
-            Lines.Add("[" + ModName + "]: " + Message);
-            if (Lines.Count > MAX_LINES)
+            Lines.Add("[" + modName + "]: " + message);
+            if (Lines.Count > MaxLines)
             {
                 Lines.RemoveAt(0);
             }
@@ -68,19 +68,19 @@ namespace ModAPI
 
         public static ConsoleComponent GetConsoleComponent()
         {
-            return consoleComponent;
+            return ConsoleComponent;
         }
 
-        public static List<string> GetPossibleValues(string Input)
+        public static List<string> GetPossibleValues(string input)
         {
             var ret = new List<string>();
             try
             {
                 foreach (var command in Commands.Values)
                 {
-                    if (command.IsMatch(Input))
+                    if (command.IsMatch(input))
                     {
-                        return command.GetAutoCompletion(Input);
+                        return command.GetAutoCompletion(input);
                     }
                 }
             }
@@ -91,22 +91,22 @@ namespace ModAPI
             return ret;
         }
 
-        public static void ParseInput(string Input)
+        public static void ParseInput(string input)
         {
             try
             {
-                Input = Input.Trim();
+                input = input.Trim();
                 foreach (var command in Commands.Values)
                 {
-                    if (command.IsMatch(Input))
+                    if (command.IsMatch(input))
                     {
-                        var ErrorText = command.GetErrorText(Input);
-                        if (ErrorText != "")
+                        var errorText = command.GetErrorText(input);
+                        if (errorText != "")
                         {
-                            Write(ErrorText, command.CommandName);
+                            Write(errorText, command.CommandName);
                             return;
                         }
-                        var param = command.GetParameters(Input);
+                        var param = command.GetParameters(input);
                         try
                         {
                             command.OnSubmit(param);
@@ -127,7 +127,7 @@ namespace ModAPI
 
         public static void Switch()
         {
-            if (GetConsoleComponent().opened)
+            if (GetConsoleComponent().Opened)
             {
                 Close();
             }
@@ -175,7 +175,7 @@ namespace ModAPI
             }
         }
 
-        protected static bool initialized;
+        protected static bool Initialized;
         protected static List<string> CommandList = new List<string>();
 
         protected static void Help(object[] param)
@@ -210,24 +210,24 @@ namespace ModAPI
             }
         }
 
-        protected static Command helpCommand;
+        protected static Command HelpCommand;
 
-        public static void Initialize(GameObject SystemObject)
+        public static void Initialize(GameObject systemObject)
         {
-            if (!initialized)
+            if (!Initialized)
             {
-                helpCommand = new Command();
-                helpCommand.OnSubmit = Help;
-                helpCommand.CommandName = "help";
+                HelpCommand = new Command();
+                HelpCommand.OnSubmit = Help;
+                HelpCommand.CommandName = "help";
                 var param = new BaseConsoleParameter();
                 param.Name = "Command";
                 param.IsOptional = true;
                 param.ListValueRequired = true;
                 param.TooltipText = "The command to show help for";
                 param.UseAutoComplete = true;
-                helpCommand.Parameters.Add(param);
+                HelpCommand.Parameters.Add(param);
 
-                RegisterCommand(helpCommand);
+                RegisterCommand(HelpCommand);
 
                 RegisterCommand(new Command
                 {
@@ -254,14 +254,14 @@ namespace ModAPI
                         }
                     }
                 });
-                initialized = true;
+                Initialized = true;
             }
 
-            if (SystemObject.transform.FindChild("__ModAPIConsole__") == null)
+            if (systemObject.transform.FindChild("__ModAPIConsole__") == null)
             {
                 var console = new GameObject("__ModAPIConsole__");
-                consoleComponent = console.AddComponent<ConsoleComponent>();
-                console.transform.parent = SystemObject.transform;
+                ConsoleComponent = console.AddComponent<ConsoleComponent>();
+                console.transform.parent = systemObject.transform;
             }
         }
 
@@ -334,26 +334,26 @@ namespace ModAPI
 
             internal string GetErrorText(string command)
             {
-                var ErrorText = "";
+                var errorText = "";
                 var param = GetParametersAsString(command);
 
                 for (var i = 0; i < Parameters.Count; i++)
                 {
                     if (param.Length <= i && !Parameters[i].IsOptional)
                     {
-                        ErrorText += "Required parameter " + (i + 1) + " is missing. ";
+                        errorText += "Required parameter " + (i + 1) + " is missing. ";
                     }
                     if (param.Length > i && !Parameters[i].Verify(param[i]))
                     {
-                        ErrorText += "Parameter " + (i + 1) + " is invalid. ";
+                        errorText += "Parameter " + (i + 1) + " is invalid. ";
                     }
                 }
                 if (param.Length > Parameters.Count)
                 {
-                    ErrorText += "Too many paramters. Only " + Parameters.Count + " are required. ";
+                    errorText += "Too many paramters. Only " + Parameters.Count + " are required. ";
                 }
 
-                return ErrorText;
+                return errorText;
             }
 
             internal bool IsValid(string command)

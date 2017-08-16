@@ -28,12 +28,12 @@ namespace ModAPI
 
         public static void Add(Mod mod)
         {
-            LoadedMods.Add(mod.ID, mod);
+            LoadedMods.Add(mod.Id, mod);
         }
 
-        public static bool IsModLoaded(string ModID)
+        public static bool IsModLoaded(string modId)
         {
-            return LoadedMods.ContainsKey(ModID);
+            return LoadedMods.ContainsKey(modId);
         }
     }
 }

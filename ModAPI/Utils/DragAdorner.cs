@@ -14,9 +14,9 @@ namespace WPF.JoshSmith.Adorners
     {
         #region Data
 
-        private Rectangle child;
-        private double offsetLeft;
-        private double offsetTop;
+        private Rectangle _child;
+        private double _offsetLeft;
+        private double _offsetTop;
 
         #endregion // Data
 
@@ -36,7 +36,7 @@ namespace WPF.JoshSmith.Adorners
             rect.Width = size.Width;
             rect.Height = size.Height;
             rect.IsHitTestVisible = false;
-            child = rect;
+            _child = rect;
         }
 
         #endregion // Constructor
@@ -54,7 +54,7 @@ namespace WPF.JoshSmith.Adorners
         {
             var result = new GeneralTransformGroup();
             result.Children.Add(base.GetDesiredTransform(transform));
-            result.Children.Add(new TranslateTransform(offsetLeft, offsetTop));
+            result.Children.Add(new TranslateTransform(_offsetLeft, _offsetTop));
             return result;
         }
 
@@ -67,10 +67,10 @@ namespace WPF.JoshSmith.Adorners
         /// </summary>
         public double OffsetLeft
         {
-            get { return offsetLeft; }
+            get { return _offsetLeft; }
             set
             {
-                offsetLeft = value;
+                _offsetLeft = value;
                 UpdateLocation();
             }
         }
@@ -86,8 +86,8 @@ namespace WPF.JoshSmith.Adorners
         /// <param name="top"></param>
         public void SetOffsets(double left, double top)
         {
-            offsetLeft = left;
-            offsetTop = top;
+            _offsetLeft = left;
+            _offsetTop = top;
             UpdateLocation();
         }
 
@@ -100,10 +100,10 @@ namespace WPF.JoshSmith.Adorners
         /// </summary>
         public double OffsetTop
         {
-            get { return offsetTop; }
+            get { return _offsetTop; }
             set
             {
-                offsetTop = value;
+                _offsetTop = value;
                 UpdateLocation();
             }
         }
@@ -121,8 +121,8 @@ namespace WPF.JoshSmith.Adorners
         /// <returns></returns>
         protected override Size MeasureOverride(Size constraint)
         {
-            child.Measure(constraint);
-            return child.DesiredSize;
+            _child.Measure(constraint);
+            return _child.DesiredSize;
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace WPF.JoshSmith.Adorners
         /// <returns></returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            child.Arrange(new Rect(finalSize));
+            _child.Arrange(new Rect(finalSize));
             return finalSize;
         }
 
@@ -143,7 +143,7 @@ namespace WPF.JoshSmith.Adorners
         /// <returns></returns>
         protected override Visual GetVisualChild(int index)
         {
-            return child;
+            return _child;
         }
 
         /// <summary>

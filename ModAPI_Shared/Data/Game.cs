@@ -52,7 +52,7 @@ namespace ModAPI.Data
 
         protected bool RegenerateModLibrary;
         protected Dictionary<string, Mod> FileNameToMod = new Dictionary<string, Mod>();
-        protected Versions versions;
+        protected Versions VersionsData;
         protected string CheckSumBackup;
         protected string CheckSumGame;
         protected string CheckSumModded;
@@ -60,17 +60,17 @@ namespace ModAPI.Data
         public Versions.Version BackupVersion;
         public Versions.Version GameVersion;
 
-        public Game(Configuration.GameConfiguration GameConfiguration)
+        public Game(Configuration.GameConfiguration gameConfiguration)
         {
-            this.GameConfiguration = GameConfiguration;
+            this.GameConfiguration = gameConfiguration;
             ModLibrary = new ModLib(this);
-            GamePath = Configuration.GetPath("Games." + GameConfiguration.ID);
+            GamePath = Configuration.GetPath("Games." + gameConfiguration.Id);
             Verify();
         }
 
         protected void GamePathSpecified()
         {
-            Configuration.SetPath("Games." + GameConfiguration.ID, GamePath, true);
+            Configuration.SetPath("Games." + GameConfiguration.Id, GamePath, true);
             Configuration.Save();
             Verify();
         }
@@ -91,48 +91,48 @@ namespace ModAPI.Data
                 }
             }
 
-            Configuration.SetPath("Games." + GameConfiguration.ID, GamePath, true);
+            Configuration.SetPath("Games." + GameConfiguration.Id, GamePath, true);
 
-            if (versions == null)
+            if (VersionsData == null)
             {
-                versions = new Versions(this);
+                VersionsData = new Versions(this);
             }
-            versions.Refresh();
+            VersionsData.Refresh();
 
             GenerateCheckSums();
 
-            GameVersion = versions.GetVersion(CheckSumGame);
-            BackupVersion = versions.GetVersion(CheckSumBackup);
+            GameVersion = VersionsData.GetVersion(CheckSumGame);
+            BackupVersion = VersionsData.GetVersion(CheckSumBackup);
 
-            if (((GameVersion.IsValid && !BackupVersion.IsValid) || (GameVersion.IsValid && BackupVersion.IsValid && GameVersion.ID != BackupVersion.ID)))
+            if (((GameVersion.IsValid && !BackupVersion.IsValid) || (GameVersion.IsValid && BackupVersion.IsValid && GameVersion.Id != BackupVersion.Id)))
             {
                 BackupGameFiles();
                 Thread.Sleep(1000);
                 GenerateCheckSums();
-                GameVersion = versions.GetVersion(CheckSumGame);
-                BackupVersion = versions.GetVersion(CheckSumBackup);
+                GameVersion = VersionsData.GetVersion(CheckSumGame);
+                BackupVersion = VersionsData.GetVersion(CheckSumBackup);
                 RegenerateModLibrary = true;
             }
 
             if ((CheckSumGame != CheckSumBackup && CheckSumGame != CheckSumModded) || (!GameVersion.IsValid && CheckSumModded != "" && CheckSumModded != CheckSumGame))
             {
                 /*// Auto update the game without the need of Versions.xml
-                if (versions.VersionsList.Count == 0 || versions.VersionsList.All(o => o.CheckSum != CheckSumGame))
+                if (VersionsData.VersionsList.Count == 0 || VersionsData.VersionsList.All(o => o.CheckSum != CheckSumGame))
                 {
                     Debug.Log("Game: " + GameConfiguration.ID, "Auto updating game with checksum: " + CheckSumGame);
-                    versions.VersionsList.Add(new Versions.Version(CheckSumGame));
+                    VersionsData.VersionsList.Add(new Versions.Version(CheckSumGame));
 
                     BackupGameFiles();
                     Thread.Sleep(1000);
                     GenerateCheckSums();
-                    GameVersion = versions.GetVersion(CheckSumGame);
-                    BackupVersion = versions.GetVersion(CheckSumBackup);
+                    GameVersion = VersionsData.GetVersion(CheckSumGame);
+                    BackupVersion = VersionsData.GetVersion(CheckSumBackup);
                     RegenerateModLibrary = true;
                 }
                 else*/
                 {
                     Console.WriteLine("EH?");
-                    Debug.Log("Game: " + GameConfiguration.ID, "Neither the game and modded checksum nor the game and backup checksum did match. Game checksum: " + CheckSumGame);
+                    Debug.Log("Game: " + GameConfiguration.Id, "Neither the game and modded checksum nor the game and backup checksum did match. Game checksum: " + CheckSumGame);
                     Schedule.AddTask("GUI", "RestoreGameFiles", Verify, new object[] { this });
                     Valid = false;
                     RegenerateModLibrary = true;
@@ -140,7 +140,7 @@ namespace ModAPI.Data
                 }
             }
 
-            if (!ModLibrary.Exists || ModLibrary.ModAPIVersion != Version.Descriptor)
+            if (!ModLibrary.Exists || ModLibrary.ModApiVersion != Version.Descriptor)
             {
                 RegenerateModLibrary = true;
                 Schedule.AddTask("SelectNewestModVersions", delegate { }, null);
@@ -152,10 +152,10 @@ namespace ModAPI.Data
             }
         }
 
-        public void CreateModLibrary(bool AutoClose = false)
+        public void CreateModLibrary(bool autoClose = false)
         {
             var progressHandler = new ProgressHandler();
-            Schedule.AddTask("GUI", "OperationPending", null, new object[] { "CreatingModLibrary", progressHandler, null, AutoClose });
+            Schedule.AddTask("GUI", "OperationPending", null, new object[] { "CreatingModLibrary", progressHandler, null, autoClose });
             var t = new Thread(delegate()
             {
                 ModLibrary.Create(progressHandler);
@@ -186,12 +186,12 @@ namespace ModAPI.Data
         {
             if (File.Exists(GamePath) || Directory.Exists(GamePath))
             {
-                var GameFolder = GamePath;
+                var gameFolder = GamePath;
                 if ((File.GetAttributes(GamePath) & FileAttributes.Directory) != FileAttributes.Directory)
                 {
-                    GameFolder = System.IO.Path.GetDirectoryName(GameFolder);
+                    gameFolder = System.IO.Path.GetDirectoryName(gameFolder);
                 }
-                return GameFolder;
+                return gameFolder;
             }
             return "";
         }
@@ -204,19 +204,19 @@ namespace ModAPI.Data
 
             var t = new Thread(delegate()
             {
-                var GameFolder = GetGameFolder();
+                var gameFolder = GetGameFolder();
                 foreach (var n in GameConfiguration.IncludeAssemblies)
                 {
-                    var path = System.IO.Path.GetFullPath(GameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
-                    var backupPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                    var backupPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                                 System.IO.Path.DirectorySeparatorChar + ParsePath(n));
                     Directory.CreateDirectory(System.IO.Path.GetDirectoryName(backupPath));
                     File.Copy(path, backupPath, true);
                 }
                 foreach (var n in GameConfiguration.CopyAssemblies)
                 {
-                    var path = System.IO.Path.GetFullPath(GameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
-                    var backupPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                    var backupPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                                 System.IO.Path.DirectorySeparatorChar + ParsePath(n));
                     Directory.CreateDirectory(System.IO.Path.GetDirectoryName(backupPath));
                     File.Copy(path, backupPath, true);
@@ -231,14 +231,14 @@ namespace ModAPI.Data
             CheckSumBackup = "";
             CheckSumGame = "";
             CheckSumModded = "";
-            var GameFolder = GetGameFolder();
+            var gameFolder = GetGameFolder();
             var digester = MD5.Create();
-            foreach (var p in versions.CheckFiles)
+            foreach (var p in VersionsData.CheckFiles)
             {
-                var gamePath = System.IO.Path.GetFullPath(GameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(p));
-                var backupPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                var gamePath = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(p));
+                var backupPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                             System.IO.Path.DirectorySeparatorChar + ParsePath(p));
-                var moddedPath = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                var moddedPath = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                             System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                 if (File.Exists(gamePath))
                 {
@@ -269,22 +269,22 @@ namespace ModAPI.Data
 
         public bool CheckGamePath()
         {
-            var GameFolder = GetGameFolder();
+            var gameFolder = GetGameFolder();
             foreach (var n in GameConfiguration.IncludeAssemblies)
             {
-                var path = System.IO.Path.GetFullPath(GameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
                 if (!File.Exists(path))
                 {
-                    Debug.Log("Required file \"" + path + "\" couldn't be found.", Debug.Type.WARNING);
+                    Debug.Log("Required file \"" + path + "\" couldn't be found.", Debug.Type.Warning);
                     return false;
                 }
             }
             foreach (var n in GameConfiguration.CopyAssemblies)
             {
-                var path = System.IO.Path.GetFullPath(GameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
                 if (!File.Exists(path))
                 {
-                    Debug.Log("Required file \"" + path + "\" couldn't be found.", Debug.Type.WARNING);
+                    Debug.Log("Required file \"" + path + "\" couldn't be found.", Debug.Type.Warning);
                     return false;
                 }
             }
@@ -293,12 +293,12 @@ namespace ModAPI.Data
 
         public string[] GetIncludedAssemblies()
         {
-            var GameFolder = GetGameFolder();
+            var gameFolder = GetGameFolder();
             var ret = new string[GameConfiguration.IncludeAssemblies.Count];
             for (var i = 0; i < GameConfiguration.IncludeAssemblies.Count; i++)
             {
                 var n = GameConfiguration.IncludeAssemblies[i];
-                var path = System.IO.Path.GetFullPath(GameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
                 ret[i] = path;
             }
             return ret;
@@ -335,11 +335,11 @@ namespace ModAPI.Data
             progress.Task = newTask;
         }
 
-        public void ApplyMods(List<Mod> Mods, ProgressHandler handler)
+        public void ApplyMods(List<Mod> mods, ProgressHandler handler)
         {
             try
             {
-                if (Mods.Count == 0)
+                if (mods.Count == 0)
                 {
                     SetProgress(handler, "Saving");
                     if (!ApplyOriginalFiles())
@@ -358,38 +358,38 @@ namespace ModAPI.Data
                 var modsConfiguration = new XDocument();
                 modsConfiguration.Add(new XElement("RuntimeConfiguration"));
 
-                var LibraryFolder = ModLibrary.GetLibraryFolder();
+                var libraryFolder = ModLibrary.GetLibraryFolder();
 
-                var baseModLibPath = LibraryFolder + System.IO.Path.DirectorySeparatorChar + "BaseModLib.dll";
+                var baseModLibPath = libraryFolder + System.IO.Path.DirectorySeparatorChar + "BaseModLib.dll";
                 var baseModLib = ModuleDefinition.ReadModule(baseModLibPath);
-                var LogType = baseModLib.GetType("ModAPI.Log");
-                var BaseSystemType = baseModLib.GetType("ModAPI.BaseSystem");
-                MethodReference InitializeMethod = null;
-                MethodReference LogMethod = null;
+                var logType = baseModLib.GetType("ModAPI.Log");
+                var baseSystemType = baseModLib.GetType("ModAPI.BaseSystem");
+                MethodReference initializeMethod = null;
+                MethodReference logMethod = null;
 
-                var ConfigurationAttributes = new Dictionary<string, TypeDefinition>();
+                var configurationAttributes = new Dictionary<string, TypeDefinition>();
                 foreach (var modLibType in baseModLib.Types)
                 {
                     if (modLibType.BaseType != null && modLibType.BaseType.Name == "ConfigurationAttribute")
                     {
-                        ConfigurationAttributes.Add(modLibType.FullName, modLibType);
+                        configurationAttributes.Add(modLibType.FullName, modLibType);
                     }
                 }
 
-                foreach (var modLibMethod in LogType.Methods)
+                foreach (var modLibMethod in logType.Methods)
                 {
                     if (modLibMethod.Name == "Write" && modLibMethod.Parameters.Count == 2 && modLibMethod.Parameters[0].ParameterType.FullName == "System.String" &&
                         modLibMethod.Parameters[1].ParameterType.FullName == "System.String")
                     {
-                        LogMethod = modLibMethod;
+                        logMethod = modLibMethod;
                         break;
                     }
                 }
-                foreach (var modLibMethod in BaseSystemType.Methods)
+                foreach (var modLibMethod in baseSystemType.Methods)
                 {
                     if (modLibMethod.Name == "Initialize")
                     {
-                        InitializeMethod = modLibMethod;
+                        initializeMethod = modLibMethod;
                         break;
                     }
                 }
@@ -407,40 +407,40 @@ namespace ModAPI.Data
                 var Assemblies = new Dictionary<string, ModuleDefinition>();
 
                 var assemblyResolver = new CustomAssemblyResolver();
-                assemblyResolver.AddPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                assemblyResolver.AddPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                          System.IO.Path.DirectorySeparatorChar);
 
-                var SearchFolders = new List<string>();
+                var searchFolders = new List<string>();
                 for (var i = 0; i < GameConfiguration.IncludeAssemblies.Count; i++)
                 {
-                    var assemblyPath = Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var assemblyPath = Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                        System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.IncludeAssemblies[i]);
                     var folder = System.IO.Path.GetDirectoryName(assemblyPath);
-                    if (!SearchFolders.Contains(folder))
+                    if (!searchFolders.Contains(folder))
                     {
-                        Debug.Log("ModLib: " + GameConfiguration.ID, "Added folder \"" + folder + "\" to assembly resolver.");
-                        SearchFolders.Add(folder);
+                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.");
+                        searchFolders.Add(folder);
                     }
                 }
                 for (var i = 0; i < GameConfiguration.CopyAssemblies.Count; i++)
                 {
-                    var assemblyPath = Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var assemblyPath = Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                        System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.CopyAssemblies[i]);
                     var folder = System.IO.Path.GetDirectoryName(assemblyPath);
-                    if (!SearchFolders.Contains(folder))
+                    if (!searchFolders.Contains(folder))
                     {
-                        Debug.Log("ModLib: " + GameConfiguration.ID, "Added folder \"" + folder + "\" to assembly resolver.");
-                        SearchFolders.Add(folder);
+                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.");
+                        searchFolders.Add(folder);
                     }
                 }
-                for (var i = 0; i < SearchFolders.Count; i++)
+                for (var i = 0; i < searchFolders.Count; i++)
                 {
-                    assemblyResolver.AddPath(SearchFolders[i]);
+                    assemblyResolver.AddPath(searchFolders[i]);
                 }
 
                 foreach (var p in GameConfiguration.IncludeAssemblies)
                 {
-                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                           System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                     var key = System.IO.Path.GetFileNameWithoutExtension(path);
 
@@ -470,7 +470,7 @@ namespace ModAPI.Data
                 {
                     foreach (var p in GameConfiguration.CopyAssemblies)
                     {
-                        var path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                        var path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                               System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                         var key = System.IO.Path.GetFileNameWithoutExtension(path);
 
@@ -483,247 +483,247 @@ namespace ModAPI.Data
                 }
 
                 SetProgress(handler, 5f);
-                var UnityEngineObject = Assemblies["UnityEngine"].GetType("UnityEngine.Object");
-                var UnityEngineApplication = Assemblies["UnityEngine"].GetType("UnityEngine.Application");
-                var UnityEngineComponent = Assemblies["UnityEngine"].GetType("UnityEngine.Component");
+                var unityEngineObject = Assemblies["UnityEngine"].GetType("UnityEngine.Object");
+                var unityEngineApplication = Assemblies["UnityEngine"].GetType("UnityEngine.Application");
+                var unityEngineComponent = Assemblies["UnityEngine"].GetType("UnityEngine.Component");
 
-                var SystemAppDomain = Assemblies["mscorlib"].GetType("System.AppDomain");
-                var SystemResolveEventHandler = Assemblies["mscorlib"].GetType("System.ResolveEventHandler");
-                var SystemResolveEventArgs = Assemblies["mscorlib"].GetType("System.ResolveEventArgs");
-                var SystemReflectionAssembly = Assemblies["mscorlib"].GetType("System.Reflection.Assembly");
-                var SystemReflectionAssemblyName = Assemblies["mscorlib"].GetType("System.Reflection.AssemblyName");
-                var SystemString = Assemblies["mscorlib"].GetType("System.String");
-                var SystemIOFile = Assemblies["mscorlib"].GetType("System.IO.File");
-                MethodDefinition SystemAppDomainGetCurrentDomain = null;
-                MethodDefinition SystemAppDomainAddAssemblyResolve = null;
-                MethodDefinition SystemResolveEventArgsGetName = null;
-                MethodDefinition SystemResolveEventHandlerCtor = null;
-                MethodDefinition SystemReflectionAssemblyNameCtor = null;
-                MethodDefinition SystemReflectionAssemblyNameGetName = null;
-                MethodDefinition SystemStringFormat = null;
-                MethodDefinition SystemStringConcat = null;
-                MethodDefinition SystemReflectionAssemblyLoadFrom = null;
-                MethodDefinition UnityEngineApplicationGetDataPath = null;
-                MethodDefinition SystemIOFileWriteAllText = null;
+                var systemAppDomain = Assemblies["mscorlib"].GetType("System.AppDomain");
+                var systemResolveEventHandler = Assemblies["mscorlib"].GetType("System.ResolveEventHandler");
+                var systemResolveEventArgs = Assemblies["mscorlib"].GetType("System.ResolveEventArgs");
+                var systemReflectionAssembly = Assemblies["mscorlib"].GetType("System.Reflection.Assembly");
+                var systemReflectionAssemblyName = Assemblies["mscorlib"].GetType("System.Reflection.AssemblyName");
+                var systemString = Assemblies["mscorlib"].GetType("System.String");
+                var systemIoFile = Assemblies["mscorlib"].GetType("System.IO.File");
+                MethodDefinition systemAppDomainGetCurrentDomain = null;
+                MethodDefinition systemAppDomainAddAssemblyResolve = null;
+                MethodDefinition systemResolveEventArgsGetName = null;
+                MethodDefinition systemResolveEventHandlerCtor = null;
+                MethodDefinition systemReflectionAssemblyNameCtor = null;
+                MethodDefinition systemReflectionAssemblyNameGetName = null;
+                MethodDefinition systemStringFormat = null;
+                MethodDefinition systemStringConcat = null;
+                MethodDefinition systemReflectionAssemblyLoadFrom = null;
+                MethodDefinition unityEngineApplicationGetDataPath = null;
+                MethodDefinition systemIoFileWriteAllText = null;
 
-                foreach (var m in UnityEngineApplication.Methods)
+                foreach (var m in unityEngineApplication.Methods)
                 {
                     if (m.Name == "get_dataPath")
                     {
-                        UnityEngineApplicationGetDataPath = m;
+                        unityEngineApplicationGetDataPath = m;
                     }
                 }
 
-                foreach (var m in SystemIOFile.Methods)
+                foreach (var m in systemIoFile.Methods)
                 {
                     if (m.Name == "WriteAllText" && m.Parameters.Count == 2)
                     {
-                        SystemIOFileWriteAllText = m;
+                        systemIoFileWriteAllText = m;
                     }
                 }
-                foreach (var m in SystemAppDomain.Methods)
+                foreach (var m in systemAppDomain.Methods)
                 {
                     if (m.Name == "get_CurrentDomain")
                     {
-                        SystemAppDomainGetCurrentDomain = m;
+                        systemAppDomainGetCurrentDomain = m;
                     }
                     if (m.Name == "add_AssemblyResolve")
                     {
-                        SystemAppDomainAddAssemblyResolve = m;
+                        systemAppDomainAddAssemblyResolve = m;
                     }
                 }
-                foreach (var m in SystemResolveEventHandler.Methods)
+                foreach (var m in systemResolveEventHandler.Methods)
                 {
                     if (m.IsConstructor && m.Parameters.Count == 2 && m.Parameters[0].ParameterType.FullName == "System.Object")
                     {
-                        SystemResolveEventHandlerCtor = m;
+                        systemResolveEventHandlerCtor = m;
                     }
                 }
-                foreach (var m in SystemResolveEventArgs.Methods)
+                foreach (var m in systemResolveEventArgs.Methods)
                 {
                     if (m.Name == "get_Name")
                     {
-                        SystemResolveEventArgsGetName = m;
+                        systemResolveEventArgsGetName = m;
                     }
                 }
-                foreach (var m in SystemReflectionAssembly.Methods)
+                foreach (var m in systemReflectionAssembly.Methods)
                 {
                     if (m.Name == "LoadFrom" && m.Parameters.Count == 1 && m.Parameters[0].ParameterType.FullName == "System.String")
                     {
-                        SystemReflectionAssemblyLoadFrom = m;
+                        systemReflectionAssemblyLoadFrom = m;
                     }
                 }
-                foreach (var m in SystemReflectionAssemblyName.Methods)
+                foreach (var m in systemReflectionAssemblyName.Methods)
                 {
                     if (m.IsConstructor && m.Parameters.Count == 1 && m.Parameters[0].ParameterType.FullName == "System.String")
                     {
-                        SystemReflectionAssemblyNameCtor = m;
+                        systemReflectionAssemblyNameCtor = m;
                     }
                     if (m.Name == "get_Name")
                     {
-                        SystemReflectionAssemblyNameGetName = m;
+                        systemReflectionAssemblyNameGetName = m;
                     }
                 }
-                foreach (var m in SystemString.Methods)
+                foreach (var m in systemString.Methods)
                 {
                     if (m.Name == "Format" && m.Parameters.Count == 2 && m.Parameters[0].ParameterType.FullName == "System.String" && m.Parameters[1].ParameterType.FullName == "System.Object")
                     {
-                        SystemStringFormat = m;
+                        systemStringFormat = m;
                     }
                     if (m.Name == "Concat" && m.Parameters.Count == 2 && m.Parameters[0].ParameterType.FullName == "System.String" && m.Parameters[1].ParameterType.FullName == "System.String")
                     {
-                        SystemStringConcat = m;
+                        systemStringConcat = m;
                     }
                 }
 
-                var ResolveModAssembly = new MethodDefinition("ResolveModAssembly", MethodAttributes.HideBySig | MethodAttributes.Private | MethodAttributes.Static,
-                    Assemblies["UnityEngine"].Import(SystemReflectionAssembly));
-                ResolveModAssembly.Parameters.Add(new ParameterDefinition("sender", ParameterAttributes.None, Assemblies["UnityEngine"].TypeSystem.Object));
-                ResolveModAssembly.Parameters.Add(new ParameterDefinition("e", ParameterAttributes.None, Assemblies["UnityEngine"].Import(SystemResolveEventArgs)));
+                var resolveModAssembly = new MethodDefinition("ResolveModAssembly", MethodAttributes.HideBySig | MethodAttributes.Private | MethodAttributes.Static,
+                    Assemblies["UnityEngine"].Import(systemReflectionAssembly));
+                resolveModAssembly.Parameters.Add(new ParameterDefinition("sender", ParameterAttributes.None, Assemblies["UnityEngine"].TypeSystem.Object));
+                resolveModAssembly.Parameters.Add(new ParameterDefinition("e", ParameterAttributes.None, Assemblies["UnityEngine"].Import(systemResolveEventArgs)));
 
-                if (ResolveModAssembly.Body == null)
+                if (resolveModAssembly.Body == null)
                 {
-                    ResolveModAssembly.Body = new MethodBody(ResolveModAssembly);
+                    resolveModAssembly.Body = new MethodBody(resolveModAssembly);
                 }
 
-                ResolveModAssembly.Body.Variables.Add(new VariableDefinition("filename", Assemblies["UnityEngine"].TypeSystem.String));
-                ResolveModAssembly.Body.Variables.Add(new VariableDefinition("path", Assemblies["UnityEngine"].TypeSystem.String));
-                ResolveModAssembly.Body.Variables.Add(new VariableDefinition("ret", Assemblies["UnityEngine"].Import(SystemReflectionAssembly)));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition("filename", Assemblies["UnityEngine"].TypeSystem.String));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition("path", Assemblies["UnityEngine"].TypeSystem.String));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition("ret", Assemblies["UnityEngine"].Import(systemReflectionAssembly)));
 
-                var _processor = ResolveModAssembly.Body.GetILProcessor();
-                var _tryStart = _processor.Create(OpCodes.Ldarg_1);
-                _processor.Append(_tryStart);
-                _processor.Append(_processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].Import(SystemResolveEventArgsGetName)));
-                _processor.Append(_processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].Import(SystemReflectionAssemblyNameCtor)));
-                _processor.Append(_processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(SystemReflectionAssemblyNameGetName)));
-                _processor.Append(_processor.Create(OpCodes.Stloc_0));
-                _processor.Append(_processor.Create(OpCodes.Call, UnityEngineApplicationGetDataPath));
-                _processor.Append(_processor.Create(OpCodes.Ldstr, "/../Mods/{0}.dll"));
-                _processor.Append(_processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(SystemStringConcat)));
-                _processor.Append(_processor.Create(OpCodes.Ldloc_0));
-                _processor.Append(_processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(SystemStringFormat)));
-                _processor.Append(_processor.Create(OpCodes.Stloc_1));
+                var processor = resolveModAssembly.Body.GetILProcessor();
+                var _tryStart = processor.Create(OpCodes.Ldarg_1);
+                processor.Append(_tryStart);
+                processor.Append(processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].Import(systemResolveEventArgsGetName)));
+                processor.Append(processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].Import(systemReflectionAssemblyNameCtor)));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemReflectionAssemblyNameGetName)));
+                processor.Append(processor.Create(OpCodes.Stloc_0));
+                processor.Append(processor.Create(OpCodes.Call, unityEngineApplicationGetDataPath));
+                processor.Append(processor.Create(OpCodes.Ldstr, "/../Mods/{0}.dll"));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemStringConcat)));
+                processor.Append(processor.Create(OpCodes.Ldloc_0));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemStringFormat)));
+                processor.Append(processor.Create(OpCodes.Stloc_1));
 
-                _processor.Append(_processor.Create(OpCodes.Ldstr, "test.txt"));
-                _processor.Append(_processor.Create(OpCodes.Ldloc_1));
-                _processor.Append(_processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(SystemIOFileWriteAllText)));
+                processor.Append(processor.Create(OpCodes.Ldstr, "test.txt"));
+                processor.Append(processor.Create(OpCodes.Ldloc_1));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemIoFileWriteAllText)));
 
-                _processor.Append(_processor.Create(OpCodes.Ldloc_1));
-                _processor.Append(_processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(SystemReflectionAssemblyLoadFrom)));
-                _processor.Append(_processor.Create(OpCodes.Stloc_2));
+                processor.Append(processor.Create(OpCodes.Ldloc_1));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemReflectionAssemblyLoadFrom)));
+                processor.Append(processor.Create(OpCodes.Stloc_2));
 
-                var exitPoint = _processor.Create(OpCodes.Ldloc_2);
-                _processor.Append(exitPoint);
-                _processor.Append(_processor.Create(OpCodes.Ret));
+                var exitPoint = processor.Create(OpCodes.Ldloc_2);
+                processor.Append(exitPoint);
+                processor.Append(processor.Create(OpCodes.Ret));
 
-                _processor.InsertBefore(exitPoint, _processor.Create(OpCodes.Leave, exitPoint));
-                var _tryEnd = _processor.Create(OpCodes.Pop);
-                _processor.InsertBefore(exitPoint, _tryEnd);
-                _processor.InsertBefore(exitPoint, _processor.Create(OpCodes.Ldnull));
-                _processor.InsertBefore(exitPoint, _processor.Create(OpCodes.Stloc_2));
-                _processor.InsertBefore(exitPoint, _processor.Create(OpCodes.Leave, exitPoint));
+                processor.InsertBefore(exitPoint, processor.Create(OpCodes.Leave, exitPoint));
+                var _tryEnd = processor.Create(OpCodes.Pop);
+                processor.InsertBefore(exitPoint, _tryEnd);
+                processor.InsertBefore(exitPoint, processor.Create(OpCodes.Ldnull));
+                processor.InsertBefore(exitPoint, processor.Create(OpCodes.Stloc_2));
+                processor.InsertBefore(exitPoint, processor.Create(OpCodes.Leave, exitPoint));
 
-                var _exceptionHandler = new ExceptionHandler(ExceptionHandlerType.Catch);
-                _exceptionHandler.TryStart = _tryStart;
-                _exceptionHandler.TryEnd = _tryEnd;
-                _exceptionHandler.HandlerStart = _tryEnd;
-                _exceptionHandler.HandlerEnd = exitPoint;
-                _exceptionHandler.CatchType = Assemblies["UnityEngine"].Import(Assemblies["mscorlib"].GetType("System.Exception"));
-                ResolveModAssembly.Body.ExceptionHandlers.Add(_exceptionHandler);
+                var exceptionHandler = new ExceptionHandler(ExceptionHandlerType.Catch);
+                exceptionHandler.TryStart = _tryStart;
+                exceptionHandler.TryEnd = _tryEnd;
+                exceptionHandler.HandlerStart = _tryEnd;
+                exceptionHandler.HandlerEnd = exitPoint;
+                exceptionHandler.CatchType = Assemblies["UnityEngine"].Import(Assemblies["mscorlib"].GetType("System.Exception"));
+                resolveModAssembly.Body.ExceptionHandlers.Add(exceptionHandler);
 
-                UnityEngineApplication.Methods.Add(ResolveModAssembly);
+                unityEngineApplication.Methods.Add(resolveModAssembly);
 
                 var ctorMethod = new MethodDefinition(".cctor",
                     MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.HideBySig | MethodAttributes.Private | MethodAttributes.Static,
                     Assemblies["UnityEngine"].TypeSystem.Void);
 
-                _processor = ctorMethod.Body.GetILProcessor();
-                var last = _processor.Create(OpCodes.Ret);
-                _processor.Append(last);
-                _processor.InsertBefore(last, _processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(SystemAppDomainGetCurrentDomain)));
-                _processor.InsertBefore(last, _processor.Create(OpCodes.Ldnull));
-                _processor.InsertBefore(last, _processor.Create(OpCodes.Ldftn, ResolveModAssembly));
-                _processor.InsertBefore(last, _processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].Import(SystemResolveEventHandlerCtor)));
-                _processor.InsertBefore(last, _processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].Import(SystemAppDomainAddAssemblyResolve)));
+                processor = ctorMethod.Body.GetILProcessor();
+                var last = processor.Create(OpCodes.Ret);
+                processor.Append(last);
+                processor.InsertBefore(last, processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemAppDomainGetCurrentDomain)));
+                processor.InsertBefore(last, processor.Create(OpCodes.Ldnull));
+                processor.InsertBefore(last, processor.Create(OpCodes.Ldftn, resolveModAssembly));
+                processor.InsertBefore(last, processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].Import(systemResolveEventHandlerCtor)));
+                processor.InsertBefore(last, processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].Import(systemAppDomainAddAssemblyResolve)));
 
-                UnityEngineApplication.Methods.Add(ctorMethod);
+                unityEngineApplication.Methods.Add(ctorMethod);
 
-                foreach (var method in UnityEngineComponent.Methods)
+                foreach (var method in unityEngineComponent.Methods)
                 {
                     if ((method.Name == "GetComponent" || method.Name == "GetComponentInChildren" || method.Name == "GetComponentsInChildren" || method.Name == "GetComponentsInParent" ||
                          method.Name == "get_gameObject" || method.Name == "get_transform" || method.Name == "GetComponents" || method.Name == "SendMessageUpwards" || method.Name == "SendMessage" ||
                          method.Name == "BroadcastMessage") && !method.IsInternalCall)
                     {
-                        _processor = method.Body.GetILProcessor();
+                        processor = method.Body.GetILProcessor();
                         last = method.Body.Instructions[0];
-                        _processor.InsertBefore(last, _processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(InitializeMethod)));
+                        processor.InsertBefore(last, processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(initializeMethod)));
                     }
                 }
 
                 SetProgress(handler, 10f);
 
                 var modTools = new Dictionary<string, MethodDefinition>();
-                var InjectToType = new Dictionary<string, TypeDefinition>();
-                var InjectToMethod = new Dictionary<string, MethodDefinition>();
+                var injectToType = new Dictionary<string, TypeDefinition>();
+                var injectToMethod = new Dictionary<string, MethodDefinition>();
 
                 var injectIntos = new Dictionary<string, Dictionary<int, List<Mod.Header.InjectInto>>>();
                 var addMethods = new Dictionary<string, List<Mod.Header.AddMethod>>();
                 var addFields = new Dictionary<string, List<Mod.Header.AddField>>();
                 var addedTypes = new Dictionary<string, List<TypeDefinition>>();
 
-                var AddedClasses = new Dictionary<TypeReference, TypeDefinition>();
-                var AddedFields = new Dictionary<FieldReference, FieldDefinition>();
-                var AddedMethods = new Dictionary<MethodReference, MethodDefinition>();
-                var InjectedMethods = new Dictionary<MethodReference, MethodDefinition>();
-                var NewMethods = new Dictionary<MethodReference, MethodDefinition>();
-                var TypesMap = new Dictionary<TypeReference, TypeReference>();
+                var addedClasses = new Dictionary<TypeReference, TypeDefinition>();
+                var addedFields = new Dictionary<FieldReference, FieldDefinition>();
+                var addedMethods = new Dictionary<MethodReference, MethodDefinition>();
+                var injectedMethods = new Dictionary<MethodReference, MethodDefinition>();
+                var newMethods = new Dictionary<MethodReference, MethodDefinition>();
+                var typesMap = new Dictionary<TypeReference, TypeReference>();
 
-                var AddReferences = new Dictionary<string, AssemblyNameReference>();
+                var addReferences = new Dictionary<string, AssemblyNameReference>();
 
-                var InsertConstructor = new Dictionary<TypeDefinition, TypeDefinition>();
+                var insertConstructor = new Dictionary<TypeDefinition, TypeDefinition>();
 
-                var ModConfigurations = new Dictionary<string, XElement>();
+                var modConfigurations = new Dictionary<string, XElement>();
                 var c = 0;
-                foreach (var mod in Mods)
+                foreach (var mod in mods)
                 {
                     mod.RewindModule();
                     var modConfiguration = new XElement("Mod");
-                    ModConfigurations.Add(mod.ID, modConfiguration);
-                    modConfiguration.SetAttributeValue("ID", mod.ID);
-                    modConfiguration.SetAttributeValue("UniqueID", mod.UniqueID);
-                    modConfiguration.SetAttributeValue("Version", mod.header.GetVersion());
+                    modConfigurations.Add(mod.Id, modConfiguration);
+                    modConfiguration.SetAttributeValue("ID", mod.Id);
+                    modConfiguration.SetAttributeValue("UniqueID", mod.UniqueId);
+                    modConfiguration.SetAttributeValue("Version", mod.HeaderData.GetVersion());
 
-                    foreach (var button in mod.header.GetButtons())
+                    foreach (var button in mod.HeaderData.GetButtons())
                     {
-                        var AssignedKey = Configuration.GetString("Mods." + GameConfiguration.ID + "." + mod.ID + ".Buttons." + button.ID);
-                        if (AssignedKey == "")
+                        var assignedKey = Configuration.GetString("Mods." + GameConfiguration.Id + "." + mod.Id + ".Buttons." + button.Id);
+                        if (assignedKey == "")
                         {
-                            AssignedKey = button.StandardKey;
+                            assignedKey = button.StandardKey;
                         }
                         var buttonConfiguration = new XElement("Button");
-                        buttonConfiguration.SetAttributeValue("ID", button.ID);
-                        buttonConfiguration.Value = AssignedKey;
+                        buttonConfiguration.SetAttributeValue("ID", button.Id);
+                        buttonConfiguration.Value = assignedKey;
                         modConfiguration.Add(buttonConfiguration);
                     }
 
                     modsConfiguration.Root.Add(modConfiguration);
-                    addedTypes.Add(mod.ID, new List<TypeDefinition>());
-                    foreach (var addClass in mod.header.GetAddClasses())
+                    addedTypes.Add(mod.Id, new List<TypeDefinition>());
+                    foreach (var addClass in mod.HeaderData.GetAddClasses())
                     {
                         foreach (var m in addClass.Type.Methods)
                         {
-                            MonoHelper.ParseCustomAttributes(addClass.Mod, modsConfiguration, m, ConfigurationAttributes);
+                            MonoHelper.ParseCustomAttributes(addClass.Mod, modsConfiguration, m, configurationAttributes);
                         }
 
-                        addedTypes[mod.ID].Add(addClass.Type);
-                        AddedClasses.Add(addClass.Type, addClass.Type);
+                        addedTypes[mod.Id].Add(addClass.Type);
+                        addedClasses.Add(addClass.Type, addClass.Type);
                     }
 
-                    foreach (var addMethod in mod.header.GetAddMethods())
+                    foreach (var addMethod in mod.HeaderData.GetAddMethods())
                     {
-                        if (!TypesMap.ContainsKey(addMethod.Method.DeclaringType))
+                        if (!typesMap.ContainsKey(addMethod.Method.DeclaringType))
                         {
-                            TypesMap.Add(addMethod.Method.DeclaringType, Assemblies[addMethod.AssemblyName].GetType(addMethod.TypeName));
+                            typesMap.Add(addMethod.Method.DeclaringType, Assemblies[addMethod.AssemblyName].GetType(addMethod.TypeName));
                         }
 
                         var key = addMethod.AssemblyName + "::" + addMethod.TypeName;
@@ -734,11 +734,11 @@ namespace ModAPI.Data
                         addMethods[key].Add(addMethod);
                     }
 
-                    foreach (var addField in mod.header.GetAddFields())
+                    foreach (var addField in mod.HeaderData.GetAddFields())
                     {
-                        if (!TypesMap.ContainsKey(addField.Field.DeclaringType))
+                        if (!typesMap.ContainsKey(addField.Field.DeclaringType))
                         {
-                            TypesMap.Add(addField.Field.DeclaringType, Assemblies[addField.AssemblyName].GetType(addField.TypeName));
+                            typesMap.Add(addField.Field.DeclaringType, Assemblies[addField.AssemblyName].GetType(addField.TypeName));
                         }
 
                         var key = addField.AssemblyName + "::" + addField.TypeName;
@@ -749,11 +749,11 @@ namespace ModAPI.Data
                         addFields[key].Add(addField);
                     }
 
-                    foreach (var injectInto in mod.header.GetInjectIntos())
+                    foreach (var injectInto in mod.HeaderData.GetInjectIntos())
                     {
-                        if (!TypesMap.ContainsKey(injectInto.Method.DeclaringType))
+                        if (!typesMap.ContainsKey(injectInto.Method.DeclaringType))
                         {
-                            TypesMap.Add(injectInto.Method.DeclaringType, Assemblies[injectInto.AssemblyName].GetType(injectInto.TypeName));
+                            typesMap.Add(injectInto.Method.DeclaringType, Assemblies[injectInto.AssemblyName].GetType(injectInto.TypeName));
                         }
 
                         var parameters = "";
@@ -780,12 +780,12 @@ namespace ModAPI.Data
                         injectIntos[key][injectInto.Priority].Add(injectInto);
                     }
 
-                    foreach (var entry in TypesMap)
+                    foreach (var entry in typesMap)
                     {
-                        Debug.Log("Game: " + GameConfiguration.ID, "Type entry: " + entry.Key.FullName + " - " + entry.Value.FullName);
+                        Debug.Log("Game: " + GameConfiguration.Id, "Type entry: " + entry.Key.FullName + " - " + entry.Value.FullName);
                     }
 
-                    /*foreach (Mod.Header.AddClass addClass in mod.header.GetAddClasses()) 
+                    /*foreach (Mod.Header.AddClass addClass in mod.HeaderData.GetAddClasses()) 
                     {
                         string key = mod.ID;
                         if (!addClasses.ContainsKey(key))
@@ -793,7 +793,7 @@ namespace ModAPI.Data
                         addClasses[key].Add(addClass);
                     }*/
                     c++;
-                    SetProgress(handler, 10f + (c / (float) Mods.Count) * 20f, "FetchingInjections");
+                    SetProgress(handler, 10f + (c / (float) mods.Count) * 20f, "FetchingInjections");
                 }
 
                 SetProgress(handler, 30f, "Injecting");
@@ -807,7 +807,7 @@ namespace ModAPI.Data
                     {
                         var newField = MonoHelper.CopyField(field.Field);
                         type.Fields.Add(newField);
-                        AddedFields.Add(field.Field, newField);
+                        addedFields.Add(field.Field, newField);
                     }
                 }
                 SetProgress(handler, 35f);
@@ -821,8 +821,8 @@ namespace ModAPI.Data
                     {
                         var newMethod = MonoHelper.CopyMethod(method.Method);
                         type.Methods.Add(newMethod);
-                        MonoHelper.ParseCustomAttributes(method.Mod, modsConfiguration, newMethod, ConfigurationAttributes);
-                        AddedMethods.Add(method.Method, newMethod);
+                        MonoHelper.ParseCustomAttributes(method.Mod, modsConfiguration, newMethod, configurationAttributes);
+                        addedMethods.Add(method.Method, newMethod);
                     }
                 }
                 SetProgress(handler, 40f);
@@ -831,26 +831,26 @@ namespace ModAPI.Data
                 MethodReference methodStringConcat = null;
                 MethodReference methodExceptionConstructor = null;
                 TypeReference typeException = null;
-                foreach (var _m in Assemblies["mscorlib"].GetType("System.Object").Methods)
+                foreach (var m in Assemblies["mscorlib"].GetType("System.Object").Methods)
                 {
-                    if (_m.Name == "ToString")
+                    if (m.Name == "ToString")
                     {
-                        methodObjectToString = _m;
+                        methodObjectToString = m;
                     }
                 }
-                foreach (var _m in Assemblies["mscorlib"].GetType("System.String").Methods)
+                foreach (var m in Assemblies["mscorlib"].GetType("System.String").Methods)
                 {
-                    if (_m.Name == "Concat" && _m.Parameters.Count == 2 && _m.Parameters[0].ParameterType.Name == "String" && _m.Parameters[1].ParameterType.Name == "String")
+                    if (m.Name == "Concat" && m.Parameters.Count == 2 && m.Parameters[0].ParameterType.Name == "String" && m.Parameters[1].ParameterType.Name == "String")
                     {
-                        methodStringConcat = _m;
+                        methodStringConcat = m;
                     }
                 }
                 typeException = Assemblies["mscorlib"].GetType("System.Exception");
-                foreach (var _m in Assemblies["mscorlib"].GetType("System.Exception").Methods)
+                foreach (var m in Assemblies["mscorlib"].GetType("System.Exception").Methods)
                 {
-                    if (_m.IsConstructor && _m.Parameters.Count == 1 && _m.Parameters[0].ParameterType.Name == "String")
+                    if (m.IsConstructor && m.Parameters.Count == 1 && m.Parameters[0].ParameterType.Name == "String")
                     {
-                        methodExceptionConstructor = _m;
+                        methodExceptionConstructor = m;
                     }
                 }
 
@@ -864,13 +864,13 @@ namespace ModAPI.Data
 
                     var Namespace = "";
                     var Type = "";
-                    var Method = "";
-                    var ReturnType = "";
-                    var Parameters = new string[0];
-                    NameResolver.Parse(parts[1], ref Namespace, ref Type, ref Method, ref ReturnType, ref Parameters);
+                    var method = "";
+                    var returnType = "";
+                    var parameters = new string[0];
+                    NameResolver.Parse(parts[1], ref Namespace, ref Type, ref method, ref returnType, ref parameters);
 
-                    var FullTypeName = Namespace + (Namespace != "" ? "." : "") + Type;
-                    var type = Assemblies[parts[0]].GetType(FullTypeName);
+                    var fullTypeName = Namespace + (Namespace != "" ? "." : "") + Type;
+                    var type = Assemblies[parts[0]].GetType(fullTypeName);
 
                     MethodDefinition lastMethod = null;
                     MethodDefinition originalMethod = null;
@@ -880,14 +880,14 @@ namespace ModAPI.Data
                         // Skip instance constructors of static classes
                         continue;
                     }
-                    foreach (var _method in type.Methods)
+                    foreach (var methodDefinition in type.Methods)
                     {
-                        if (_method.Name == Method && _method.Parameters.Count == Parameters.Length && _method.ReturnType.FullName == ReturnType)
+                        if (methodDefinition.Name == method && methodDefinition.Parameters.Count == parameters.Length && methodDefinition.ReturnType.FullName == returnType)
                         {
                             var ok = true;
-                            for (var i = 0; i < _method.Parameters.Count; i++)
+                            for (var i = 0; i < methodDefinition.Parameters.Count; i++)
                             {
-                                if (_method.Parameters[i].ParameterType.FullName != Parameters[i])
+                                if (methodDefinition.Parameters[i].ParameterType.FullName != parameters[i])
                                 {
                                     ok = false;
                                     break;
@@ -895,7 +895,7 @@ namespace ModAPI.Data
                             }
                             if (ok)
                             {
-                                originalMethod = _method;
+                                originalMethod = methodDefinition;
                                 originalMethodFullName = originalMethod.FullName;
                                 break;
                             }
@@ -910,8 +910,8 @@ namespace ModAPI.Data
                     var exceptionConstructor = Assemblies[parts[0]].Import(methodExceptionConstructor);
                     var exception = Assemblies[parts[0]].Import(typeException);
 
-                    var ConstructorInstructions = new List<Instruction>();
-                    var StaticConstructorInstructions = new List<Instruction>();
+                    var constructorInstructions = new List<Instruction>();
+                    var staticConstructorInstructions = new List<Instruction>();
 
                     var num = 0;
                     foreach (var prio in priorities)
@@ -930,7 +930,7 @@ namespace ModAPI.Data
                                         originalMethod.Body.GetILProcessor().Append(currInstruction);
                                     }
                                 }
-                                InjectedMethods.Add(newMethod, originalMethod);
+                                injectedMethods.Add(newMethod, originalMethod);
                             }
                             /*else if (originalMethod.IsStatic)
                             {
@@ -982,12 +982,12 @@ namespace ModAPI.Data
                                 {
                                     if (newMethod.Body.Variables.Count == 0)
                                     {
-                                        Debug.Log("Game: " + GameConfiguration.ID, "newMethod.Name = " + newMethod.Name);
-                                        Debug.Log("Game: " + GameConfiguration.ID, "newMethod.FullName = " + newMethod.FullName);
-                                        Debug.Log("Game: " + GameConfiguration.ID, "newMethod.Attributes = " + newMethod.Attributes);
-                                        Debug.Log("Game: " + GameConfiguration.ID, "newMethod.ReturnType.FullName = " + newMethod.ReturnType.FullName);
-                                        Debug.Log("Game: " + GameConfiguration.ID, "injectInto.Method.Body.Variables.Count = " + injectInto.Method.Body.Variables.Count);
-                                        Debug.Log("Game: " + GameConfiguration.ID, "injectInto.Method.Body.Variables = " + injectInto.Method.Body.Variables);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.Name = " + newMethod.Name);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.FullName = " + newMethod.FullName);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.Attributes = " + newMethod.Attributes);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.ReturnType.FullName = " + newMethod.ReturnType.FullName);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "injectInto.Method.Body.Variables.Count = " + injectInto.Method.Body.Variables.Count);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "injectInto.Method.Body.Variables = " + injectInto.Method.Body.Variables);
 
                                         //Assemblies[injectInto.AssemblyName].GetType(injectInto.TypeName).Module.Import(newMethod.ReturnType).Resolve();
                                         //newMethod.Module.Import(newMethod.ReturnType).Resolve();
@@ -1011,8 +1011,8 @@ namespace ModAPI.Data
                                 ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldloc, exceptionVariable));
                                 ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Callvirt, objectToString));
                                 ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, stringConcat));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldstr, injectInto.Mod.ID));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, LogMethod));
+                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldstr, injectInto.Mod.Id));
+                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, logMethod));
                                 if (!originalMethod.IsStatic)
                                 {
                                     ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldarg_0));
@@ -1042,42 +1042,42 @@ namespace ModAPI.Data
 
                                 lastMethod = newMethod;
                                 type.Methods.Add(newMethod);
-                                InjectedMethods.Add(newMethod, newMethod);
+                                injectedMethods.Add(newMethod, newMethod);
                             }
                         }
                     }
                     if ( /*!originalMethod.IsStatic &&*/ !originalMethod.IsConstructor)
                     {
                         lastMethod.Name = originalMethod.Name;
-                        originalMethod.Name = "__" + Method + "__Original";
+                        originalMethod.Name = "__" + method + "__Original";
                     }
 
                     //if (!originalMethod.IsStatic)
                     {
-                        NewMethods.Add(originalMethod, lastMethod);
+                        newMethods.Add(originalMethod, lastMethod);
                     }
                 }
                 SetProgress(handler, 50f, "Resolving");
 
                 /** RESOLVE ALL LINKS **/
-                foreach (var method in AddedMethods.Values)
+                foreach (var method in addedMethods.Values)
                 {
-                    MonoHelper.Resolve(method.Module, method, AddedClasses, AddedFields, AddedMethods, InjectedMethods, TypesMap);
+                    MonoHelper.Resolve(method.Module, method, addedClasses, addedFields, addedMethods, injectedMethods, typesMap);
                 }
 
-                foreach (var method in InjectedMethods.Values)
+                foreach (var method in injectedMethods.Values)
                 {
-                    MonoHelper.Resolve(method.Module, method, AddedClasses, AddedFields, AddedMethods, InjectedMethods, TypesMap);
+                    MonoHelper.Resolve(method.Module, method, addedClasses, addedFields, addedMethods, injectedMethods, typesMap);
                 }
 
-                foreach (var field in AddedFields.Values)
+                foreach (var field in addedFields.Values)
                 {
-                    MonoHelper.Resolve(field.Module, field, AddedClasses, TypesMap);
+                    MonoHelper.Resolve(field.Module, field, addedClasses, typesMap);
                 }
 
-                var modFolder = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                var modFolder = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                            System.IO.Path.DirectorySeparatorChar + "Mods" + System.IO.Path.DirectorySeparatorChar);
-                var assemblyFolder = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                var assemblyFolder = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                                 System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.AssemblyPath)) + System.IO.Path.DirectorySeparatorChar;
                 if (!Directory.Exists(assemblyFolder))
                 {
@@ -1088,7 +1088,7 @@ namespace ModAPI.Data
                     Directory.CreateDirectory(modFolder);
                 }
 
-                foreach (var mod in Mods)
+                foreach (var mod in mods)
                 {
                     var modModule = mod.GetModuleCopy();
                     for (var j = 0; j < modModule.Types.Count; j++)
@@ -1096,14 +1096,14 @@ namespace ModAPI.Data
                         var t = modModule.Types[j];
                         foreach (var m in t.Methods)
                         {
-                            MonoHelper.Resolve(m.Module, m, AddedClasses, AddedFields, AddedMethods, InjectedMethods, TypesMap);
+                            MonoHelper.Resolve(m.Module, m, addedClasses, addedFields, addedMethods, injectedMethods, typesMap);
                         }
                     }
                     for (var j = 0; j < modModule.Types.Count; j++)
                     {
                         var t = modModule.Types[j];
                         var keep = false;
-                        foreach (var type in addedTypes[mod.ID])
+                        foreach (var type in addedTypes[mod.Id])
                         {
                             if (type.FullName == t.FullName)
                             {
@@ -1120,8 +1120,8 @@ namespace ModAPI.Data
                     var zip = mod.GetResources();
                     if (zip != null)
                     {
-                        zip.Save(modFolder + mod.ID + ".resources");
-                        ModConfigurations[mod.ID].SetAttributeValue("HasResources", "true");
+                        zip.Save(modFolder + mod.Id + ".resources");
+                        modConfigurations[mod.Id].SetAttributeValue("HasResources", "true");
                     }
                 }
 
@@ -1132,7 +1132,7 @@ namespace ModAPI.Data
                     true);
                 foreach (var p in GameConfiguration.IncludeAssemblies)
                 {
-                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                           System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                     var folder = System.IO.Path.GetDirectoryName(path);
                     if (!Directory.Exists(folder))
@@ -1157,12 +1157,12 @@ namespace ModAPI.Data
                         {
                             foreach (var method2 in subType.Methods)
                             {
-                                MonoHelper.Remap(module, method2, NewMethods);
+                                MonoHelper.Remap(module, method2, newMethods);
                             }
                         }
                         foreach (var method in type.Methods)
                         {
-                            MonoHelper.Remap(module, method, NewMethods);
+                            MonoHelper.Remap(module, method, newMethods);
                         }
                     }
                     module.Write(path);
@@ -1170,7 +1170,7 @@ namespace ModAPI.Data
 
                 foreach (var p in GameConfiguration.CopyAssemblies)
                 {
-                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                           System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                     var folder = System.IO.Path.GetDirectoryName(path);
                     if (!Directory.Exists(folder))
@@ -1234,7 +1234,7 @@ namespace ModAPI.Data
             {
                 RemoveModdedFiles();
                 ApplyOriginalFiles();
-                Debug.Log("ModLoader: " + GameConfiguration.ID, "An exception occured: " + e, Debug.Type.ERROR);
+                Debug.Log("ModLoader: " + GameConfiguration.Id, "An exception occured: " + e, Debug.Type.Error);
                 SetProgress(handler, "Error.Unexpected");
                 //Communicator.Error(e.ToString());
             }
@@ -1244,18 +1244,18 @@ namespace ModAPI.Data
         {
             try
             {
-                var OutputFolder = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                var outputFolder = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                               System.IO.Path.DirectorySeparatorChar);
-                if (!Directory.Exists(OutputFolder))
+                if (!Directory.Exists(outputFolder))
                 {
                     return true;
                 }
-                var oldFiles = Directory.GetFiles(OutputFolder);
+                var oldFiles = Directory.GetFiles(outputFolder);
                 foreach (var file in oldFiles)
                 {
                     File.Delete(file);
                 }
-                var oldDirectories = Directory.GetDirectories(OutputFolder);
+                var oldDirectories = Directory.GetDirectories(outputFolder);
                 foreach (var directory in oldDirectories)
                 {
                     Directory.Delete(directory, true);
@@ -1264,7 +1264,7 @@ namespace ModAPI.Data
             }
             catch (Exception e2)
             {
-                Debug.Log("ModLoader: " + GameConfiguration.ID, "Could not remove modded files: " + e2, Debug.Type.ERROR);
+                Debug.Log("ModLoader: " + GameConfiguration.Id, "Could not remove modded files: " + e2, Debug.Type.Error);
                 return false;
             }
         }
@@ -1273,19 +1273,19 @@ namespace ModAPI.Data
         {
             try
             {
-                var OriginalFolder = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.ID +
+                var originalFolder = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                                 System.IO.Path.DirectorySeparatorChar);
                 /*string[] originalFiles = System.IO.Directory.GetFiles(OriginalFolder);
                 foreach (string file in originalFiles)
                     System.IO.File.Copy(file, GamePath + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(file));
                 string[] originalDirectories = System.IO.Directory.GetDirectories(OriginalFolder);
                 foreach (string directory in originalDirectories)*/
-                DirectoryCopy(OriginalFolder, GamePath, true);
+                DirectoryCopy(originalFolder, GamePath, true);
                 return true;
             }
             catch (Exception e2)
             {
-                Debug.Log("ModLoader: " + GameConfiguration.ID, "Could not apply original files to game: " + e2, Debug.Type.ERROR);
+                Debug.Log("ModLoader: " + GameConfiguration.Id, "Could not apply original files to game: " + e2, Debug.Type.Error);
                 return false;
             }
         }
@@ -1336,23 +1336,23 @@ namespace ModAPI.Data
             public HashSet<string> CheckFiles;
             public HashSet<Version> VersionsList;
 
-            public Versions(Game Game)
+            public Versions(Game game)
             {
-                FileName = Configuration.GetPath("Configurations") + System.IO.Path.DirectorySeparatorChar + "games" + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID +
+                FileName = Configuration.GetPath("Configurations") + System.IO.Path.DirectorySeparatorChar + "games" + System.IO.Path.DirectorySeparatorChar + game.GameConfiguration.Id +
                            System.IO.Path.DirectorySeparatorChar +
                            "Versions.xml";
-                this.Game = Game;
+                this.Game = game;
             }
 
-            public Version GetVersion(string CheckSum)
+            public Version GetVersion(string checkSum)
             {
-                if (CheckSum == "")
+                if (checkSum == "")
                 {
                     return Version.Zero;
                 }
                 foreach (var v in VersionsList)
                 {
-                    if (string.Equals(v.CheckSum, CheckSum, StringComparison.CurrentCultureIgnoreCase))
+                    if (string.Equals(v.CheckSum, checkSum, StringComparison.CurrentCultureIgnoreCase))
                     {
                         return v;
                     }
@@ -1394,7 +1394,7 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed parsing versions file: " + e, Debug.Type.ERROR);
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed parsing VersionsData file: " + e, Debug.Type.Error);
                 }
 
                 Valid = true;
@@ -1410,17 +1410,17 @@ namespace ModAPI.Data
                     {
                         try
                         {
-                            responses.Add(client.DownloadString(string.Format(url, Game.GameConfiguration.ID)));
+                            responses.Add(client.DownloadString(string.Format(url, Game.GameConfiguration.Id)));
                         }
                         catch (WebException e)
                         {
                             // Something is wrong with the server or connection
-                            Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed to download one of the version files: " + e, Debug.Type.ERROR);
+                            Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed to download one of the version files: " + e, Debug.Type.Error);
                         }
                         catch (Exception e)
                         {
                             // Something else happened
-                            Debug.Log("Game: " + Game.GameConfiguration.ID, "Something failed while trying to download one of the version files: " + e, Debug.Type.ERROR);
+                            Debug.Log("Game: " + Game.GameConfiguration.Id, "Something failed while trying to download one of the version files: " + e, Debug.Type.Error);
                         }
                     }
                 }
@@ -1444,18 +1444,18 @@ namespace ModAPI.Data
                         }
                         catch (Exception e)
                         {
-                            Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed parsing versions file from server: " + e, Debug.Type.ERROR);
+                            Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed parsing VersionsData file from server: " + e, Debug.Type.Error);
                         }
                     }
 
                     try
                     {
-                        // Save updated versions
-                        var finalDocument = new XDocument(new XElement("versions"));
+                        // Save updated VersionsData
+                        var finalDocument = new XDocument(new XElement("VersionsData"));
                         finalDocument.Root.Add(new XElement("files", CheckFiles.Select(o => new XElement("file", o))));
-                        foreach (var version in VersionsList.OrderBy(o => o.ID))
+                        foreach (var version in VersionsList.OrderBy(o => o.Id))
                         {
-                            var element = new XElement("version", new XAttribute("id", version.ID));
+                            var element = new XElement("version", new XAttribute("id", version.Id));
                             element.Add(new XElement("checksum", version.CheckSum));
                             finalDocument.Root.Add(element);
                         }
@@ -1463,12 +1463,12 @@ namespace ModAPI.Data
                     }
                     catch (Exception e)
                     {
-                        Debug.Log("Game: " + Game.GameConfiguration.ID, "Failed saving version file: " + e, Debug.Type.ERROR);
+                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed saving version file: " + e, Debug.Type.Error);
                     }
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "No version files available on any of the servers: " + string.Join(", ", VersionUpdateDomains), Debug.Type.ERROR);
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "No version files available on any of the servers: " + string.Join(", ", VersionUpdateDomains), Debug.Type.Error);
                 }
             }
 
@@ -1476,26 +1476,26 @@ namespace ModAPI.Data
             {
                 public static readonly Version Zero = default(Version);
 
-                public string ID;
+                public string Id;
                 public string CheckSum;
 
-                public bool IsValid => !string.IsNullOrWhiteSpace(ID) && !string.IsNullOrWhiteSpace(CheckSum);
+                public bool IsValid => !string.IsNullOrWhiteSpace(Id) && !string.IsNullOrWhiteSpace(CheckSum);
 
                 public Version(string checkSum)
                 {
-                    ID = "Auto-Updated";
+                    Id = "Auto-Updated";
                     CheckSum = checkSum;
                 }
 
                 public Version(XElement element)
                 {
-                    ID = XMLHelper.GetXMLAttributeAsString(element, "id");
-                    CheckSum = XMLHelper.GetXMLElementAsString(element, "checksum");
+                    Id = XmlHelper.GetXmlAttributeAsString(element, "id");
+                    CheckSum = XmlHelper.GetXmlElementAsString(element, "checksum");
                 }
 
                 public bool Equals(Version other)
                 {
-                    return string.Equals(ID, other.ID) && string.Equals(CheckSum, other.CheckSum);
+                    return string.Equals(Id, other.Id) && string.Equals(CheckSum, other.CheckSum);
                 }
 
                 public override bool Equals(object obj)
@@ -1511,7 +1511,7 @@ namespace ModAPI.Data
                 {
                     unchecked
                     {
-                        return ((ID != null ? ID.GetHashCode() : 0) * 397) ^ (CheckSum != null ? CheckSum.GetHashCode() : 0);
+                        return ((Id != null ? Id.GetHashCode() : 0) * 397) ^ (CheckSum != null ? CheckSum.GetHashCode() : 0);
                     }
                 }
             }

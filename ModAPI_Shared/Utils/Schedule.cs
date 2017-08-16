@@ -26,53 +26,53 @@ namespace ModAPI.Utils
     public class Schedule
     {
         protected static Dictionary<string, List<Task>> Tasks = new Dictionary<string, List<Task>>();
-        protected static int LastTaskID;
+        protected static int LastTaskId;
 
-        public static Task AddTask(string Target, string TaskName, Action Complete, object[] Parameters, Func<bool> Check = null)
+        public static Task AddTask(string target, string taskName, Action complete, object[] parameters, Func<bool> check = null)
         {
-            Target = Target.ToLower();
-            LastTaskID += 1;
-            var newTask = new Task(LastTaskID, Target, TaskName, Parameters, Complete, Check);
+            target = target.ToLower();
+            LastTaskId += 1;
+            var newTask = new Task(LastTaskId, target, taskName, parameters, complete, check);
             AddTask(newTask);
             return newTask;
         }
 
-        public static Task AddTask(string Target, string TaskName, Action Complete, Func<bool> Check = null)
+        public static Task AddTask(string target, string taskName, Action complete, Func<bool> check = null)
         {
-            Target = Target.ToLower();
-            LastTaskID += 1;
-            var newTask = new Task(LastTaskID, Target, TaskName, new object[0], Complete, Check);
+            target = target.ToLower();
+            LastTaskId += 1;
+            var newTask = new Task(LastTaskId, target, taskName, new object[0], complete, check);
             AddTask(newTask);
             return newTask;
         }
 
-        public static Task AddTask(string TaskName, Action Complete, object[] Parameters, Func<bool> Check = null)
+        public static Task AddTask(string taskName, Action complete, object[] parameters, Func<bool> check = null)
         {
-            LastTaskID += 1;
-            var newTask = new Task(LastTaskID, "global", TaskName, Parameters, Complete, Check);
+            LastTaskId += 1;
+            var newTask = new Task(LastTaskId, "global", taskName, parameters, complete, check);
             AddTask(newTask);
             return newTask;
         }
 
-        public static Task AddTask(string TaskName, Action Complete, Func<bool> Check = null)
+        public static Task AddTask(string taskName, Action complete, Func<bool> check = null)
         {
-            LastTaskID += 1;
-            var newTask = new Task(LastTaskID, "global", TaskName, new object[0], Complete, Check);
+            LastTaskId += 1;
+            var newTask = new Task(LastTaskId, "global", taskName, new object[0], complete, check);
             AddTask(newTask);
             return newTask;
         }
 
-        public static List<Task> GetTasks(string Target, bool includeGlobal = true)
+        public static List<Task> GetTasks(string target, bool includeGlobal = true)
         {
-            Target = Target.ToLower();
+            target = target.ToLower();
             var ret = new List<Task>();
             if (Tasks.ContainsKey("global"))
             {
                 ret.AddRange(Tasks["global"]);
             }
-            if (Tasks.ContainsKey(Target))
+            if (Tasks.ContainsKey(target))
             {
-                ret.AddRange(Tasks[Target]);
+                ret.AddRange(Tasks[target]);
             }
             return ret;
         }
@@ -96,19 +96,19 @@ namespace ModAPI.Utils
             protected Func<bool> _Check;
             protected Action _Complete;
             public string Target;
-            public int ID;
+            public int Id;
             public string Name;
             public object[] Parameters;
             public bool BeingHandled = false;
 
-            public Task(int ID, string Target, string Name, object[] Parameters, Action Complete, Func<bool> Check = null)
+            public Task(int id, string target, string name, object[] parameters, Action complete, Func<bool> check = null)
             {
-                this.Parameters = Parameters;
-                this.Target = Target;
-                this.ID = ID;
-                this.Name = Name;
-                _Check = Check;
-                _Complete = Complete;
+                this.Parameters = parameters;
+                this.Target = target;
+                this.Id = id;
+                this.Name = name;
+                _Check = check;
+                _Complete = complete;
             }
 
             public bool Check()

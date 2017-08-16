@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace ModAPI
 {
-    public class GUI
+    public class Gui
     {
         public static GUISkin Skin;
     }

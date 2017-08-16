@@ -52,7 +52,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         CheckForErrors();
     }
 
-    protected Visibility _IDError = Visibility.Collapsed;
+    protected Visibility _IdError = Visibility.Collapsed;
     protected Visibility _NameError = Visibility.Collapsed;
     protected Visibility _Error = Visibility.Collapsed;
 
@@ -66,38 +66,38 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         get { return _Error; }
     }
 
-    public Visibility IDError
+    public Visibility IdError
     {
-        get { return _IDError; }
+        get { return _IdError; }
     }
 
     public void CheckForErrors()
     {
         _NameError = Visibility.Collapsed;
 
-        foreach (var LangCode in ProjectViewModel.Project.Languages)
+        foreach (var langCode in ProjectViewModel.Project.Languages)
         {
-            if (Button.Name.GetString(LangCode).Trim() == "")
+            if (Button.Name.GetString(langCode).Trim() == "")
             {
                 _NameError = Visibility.Visible;
             }
         }
 
-        _IDError = Visibility.Collapsed;
+        _IdError = Visibility.Collapsed;
 
         foreach (var button in ProjectViewModel.Project.Buttons)
         {
-            if (button != Button && button.ID == Button.ID)
+            if (button != Button && button.Id == Button.Id)
             {
-                _IDError = Visibility.Visible;
+                _IdError = Visibility.Visible;
             }
         }
-        if (Button.ID == "")
+        if (Button.Id == "")
         {
-            _IDError = Visibility.Visible;
+            _IdError = Visibility.Visible;
         }
 
-        _Error = _IDError == Visibility.Visible || _NameError == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
+        _Error = IdError == Visibility.Visible || _NameError == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
 
         OnPropertyChanged("NameError");
         OnPropertyChanged("IDError");
@@ -105,12 +105,12 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         ProjectViewModel.CheckForErrors();
     }
 
-    public string ID
+    public string Id
     {
-        get { return Button.ID; }
+        get { return Button.Id; }
         set
         {
-            Button.ID = value;
+            Button.Id = value;
             ProjectViewModel.Project.SaveConfiguration();
             OnPropertyChanged("ID");
             CheckForErrors();

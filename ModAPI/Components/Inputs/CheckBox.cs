@@ -39,8 +39,8 @@ namespace ModAPI.Components.Inputs
 
         public static void Add(Grid grid, XElement element, string label, Binding value, int row, int startColumn)
         {
-            var labelStyle = XMLHelper.GetXMLAttributeAsString(element, "LabelStyle", "NormalLabel");
-            var inputStyle = XMLHelper.GetXMLAttributeAsString(element, "InputStyle", "");
+            var labelStyle = XmlHelper.GetXmlAttributeAsString(element, "LabelStyle", "NormalLabel");
+            var inputStyle = XmlHelper.GetXmlAttributeAsString(element, "InputStyle", "");
 
             Add(grid, label, value, row, labelStyle, inputStyle, startColumn);
         }

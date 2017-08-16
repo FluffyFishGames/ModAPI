@@ -23,9 +23,9 @@ using ModAPI.Configurations;
 
 namespace ModAPI.Components
 {
-    interface IGUIComponent
+    interface IGuiComponent
     {
-        void AddTab(GUIConfiguration.Tab Tab);
+        void AddTab(GuiConfiguration.Tab tab);
         void SetConfiguration(XDocument document);
     }
 }

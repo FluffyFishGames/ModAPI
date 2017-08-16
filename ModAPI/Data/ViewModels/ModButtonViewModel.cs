@@ -24,13 +24,13 @@ using ModAPI.Data;
 
 public class ModButtonViewModel : INotifyPropertyChanged
 {
-    protected Mod.Header.Button button;
+    protected Mod.Header.Button Button;
     protected string AssignedKey = "";
 
     public ModButtonViewModel(Mod.Header.Button button)
     {
-        this.button = button;
-        AssignedKey = Configuration.GetString("Mods." + button.Mod.Game.GameConfiguration.ID + "." + button.Mod.ID + ".Buttons." + button.ID);
+        this.Button = button;
+        AssignedKey = Configuration.GetString("Mods." + button.Mod.Game.GameConfiguration.Id + "." + button.Mod.Id + ".Buttons." + button.Id);
         if (AssignedKey == "")
         {
             Key = button.StandardKey;
@@ -41,10 +41,10 @@ public class ModButtonViewModel : INotifyPropertyChanged
     {
         get
         {
-            var ret = button.Name.GetString(Configuration.CurrentLanguage.Key, "EN");
-            if (ret == "" && button.Name.GetLanguages().Count > 0)
+            var ret = Button.Name.GetString(Configuration.CurrentLanguage.Key, "EN");
+            if (ret == "" && Button.Name.GetLanguages().Count > 0)
             {
-                ret = button.Name.GetString(button.Name.GetLanguages()[0]);
+                ret = Button.Name.GetString(Button.Name.GetLanguages()[0]);
             }
             return ret;
         }
@@ -54,10 +54,10 @@ public class ModButtonViewModel : INotifyPropertyChanged
     {
         get
         {
-            var ret = button.Description.GetString(Configuration.CurrentLanguage.Key, "EN");
-            if (ret == "" && button.Description.GetLanguages().Count > 0)
+            var ret = Button.Description.GetString(Configuration.CurrentLanguage.Key, "EN");
+            if (ret == "" && Button.Description.GetLanguages().Count > 0)
             {
-                ret = button.Description.GetString(button.Name.GetLanguages()[0]);
+                ret = Button.Description.GetString(Button.Name.GetLanguages()[0]);
             }
             return ret;
         }
@@ -69,7 +69,7 @@ public class ModButtonViewModel : INotifyPropertyChanged
         set
         {
             AssignedKey = value;
-            Configuration.SetString("Mods." + button.Mod.Game.GameConfiguration.ID + "." + button.Mod.ID + ".Buttons." + button.ID, AssignedKey, true);
+            Configuration.SetString("Mods." + Button.Mod.Game.GameConfiguration.Id + "." + Button.Mod.Id + ".Buttons." + Button.Id, AssignedKey, true);
             Configuration.Save();
             OnPropertyChanged("Key");
         }

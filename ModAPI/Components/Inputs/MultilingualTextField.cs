@@ -106,11 +106,11 @@ namespace ModAPI.Components.Inputs
             Languages.CollectionChanged += LanguagesChanged;
             LastLanguages = Languages;
             Items.Clear();
-            foreach (var LangCode in Languages)
+            foreach (var langCode in Languages)
             {
                 var newItem = new ComboBoxItem();
                 newItem.Style = Application.Current.FindResource("ComboBoxItem") as Style;
-                newItem.DataContext = LangCode;
+                newItem.DataContext = langCode;
 
                 var panel = new StackPanel();
                 panel.Orientation = Orientation.Horizontal;
@@ -118,14 +118,14 @@ namespace ModAPI.Components.Inputs
                 image.Height = 20;
                 var source = new BitmapImage();
                 source.BeginInit();
-                source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + LangCode + ".png");
+                source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + langCode + ".png");
                 source.EndInit();
                 image.Source = source;
                 image.Margin = new Thickness(0, 0, 5, 0);
                 panel.Children.Add(image);
 
                 var label = new TextBlock();
-                label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + LangCode);
+                label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + langCode);
                 panel.Children.Add(label);
 
                 newItem.Content = panel;

@@ -52,11 +52,11 @@ namespace ModAPI.Data.Models
 
             if (Name == "")
             {
-                Debug.Log("Data.ClassDefinition", "No class is defined in \"" + configuration + "\".", Debug.Type.WARNING);
+                Debug.Log("Data.ClassDefinition", "No class is defined in \"" + configuration + "\".", Debug.Type.Warning);
             }
             else if (!DynamicTypes.Types.ContainsKey(Name))
             {
-                Debug.Log("Data.ClassDefinition", "Dynamic type \"" + Name + "\" couldn't be found.", Debug.Type.WARNING);
+                Debug.Log("Data.ClassDefinition", "Dynamic type \"" + Name + "\" couldn't be found.", Debug.Type.Warning);
             }
             else
             {
@@ -69,18 +69,18 @@ namespace ModAPI.Data.Models
                     var tagName = sub.Name.LocalName.ToLower();
                     if (tagName == "include")
                     {
-                        var FieldAttribute = sub.Attribute("Field");
-                        if (FieldAttribute == null)
+                        var fieldAttribute = sub.Attribute("Field");
+                        if (fieldAttribute == null)
                         {
-                            Debug.Log("Data.ClassDefinition", "Found invalid include element. Missing Field attribute: " + sub, Debug.Type.WARNING);
+                            Debug.Log("Data.ClassDefinition", "Found invalid include element. Missing Field attribute: " + sub, Debug.Type.Warning);
                         }
                         else
                         {
-                            var field = ClassType.GetField(FieldAttribute.Value);
+                            var field = ClassType.GetField(fieldAttribute.Value);
                             if (field == null)
                             {
-                                Debug.Log("Data.ClassDefinition", "Found invalid include element. The field \"" + FieldAttribute.Value + "\" is mmissin in class \"" + Name + "\".",
-                                    Debug.Type.WARNING);
+                                Debug.Log("Data.ClassDefinition", "Found invalid include element. The field \"" + fieldAttribute.Value + "\" is mmissin in class \"" + Name + "\".",
+                                    Debug.Type.Warning);
                             }
                             else
                             {
@@ -90,25 +90,25 @@ namespace ModAPI.Data.Models
                     }
                     else if (tagName == "all")
                     {
-                        var Exclude = new List<string>();
+                        var exclude = new List<string>();
                         foreach (var sub2 in sub.Elements())
                         {
                             var tagName2 = sub2.Name.LocalName.ToLower();
                             if (tagName2 == "exclude")
                             {
-                                var FieldAttribute = sub2.Attribute("Field");
-                                if (FieldAttribute == null)
+                                var fieldAttribute = sub2.Attribute("Field");
+                                if (fieldAttribute == null)
                                 {
-                                    Debug.Log("Data.ClassDefinition", "Found invalid exclude element. Missing Field attribute: " + sub2, Debug.Type.WARNING);
+                                    Debug.Log("Data.ClassDefinition", "Found invalid exclude element. Missing Field attribute: " + sub2, Debug.Type.Warning);
                                 }
                                 else
                                 {
-                                    Exclude.Add(FieldAttribute.Value);
+                                    exclude.Add(fieldAttribute.Value);
                                 }
                             }
                             else
                             {
-                                Debug.Log("Data.ClassDefinition", "Found invalid child element \"" + tagName2 + "\" for element \"" + tagName + "\".", Debug.Type.WARNING);
+                                Debug.Log("Data.ClassDefinition", "Found invalid child element \"" + tagName2 + "\" for element \"" + tagName + "\".", Debug.Type.Warning);
                             }
                         }
                         var fieldType = "";
@@ -121,7 +121,7 @@ namespace ModAPI.Data.Models
                         var fields = ClassType.GetFields();
                         foreach (var field in fields)
                         {
-                            if (!Exclude.Contains(field.Name) && (fieldType == "" || field.FieldType.FullName == fieldType))
+                            if (!exclude.Contains(field.Name) && (fieldType == "" || field.FieldType.FullName == fieldType))
                             {
                                 AddField(field);
                             }
@@ -129,7 +129,7 @@ namespace ModAPI.Data.Models
                     }
                     else
                     {
-                        Debug.Log("Data.ClassDefinition", "Found unknown child element \"" + tagName + "\".", Debug.Type.WARNING);
+                        Debug.Log("Data.ClassDefinition", "Found unknown child element \"" + tagName + "\".", Debug.Type.Warning);
                     }
                 }
             }

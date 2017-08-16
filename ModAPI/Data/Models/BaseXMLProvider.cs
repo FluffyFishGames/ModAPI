@@ -25,9 +25,9 @@ using ModAPI.Utils;
 
 namespace ModAPI.Data.Models
 {
-    public class XMLParser
+    public class XmlParser
     {
-        public static XElement GetXML(object thisObj)
+        public static XElement GetXml(object thisObj)
         {
             var root = new XElement("Object");
             root.SetAttributeValue("Type", thisObj.GetType().FullName);
@@ -35,9 +35,9 @@ namespace ModAPI.Data.Models
             foreach (var field in fields)
             {
                 var obj = field.GetValue(thisObj);
-                if (obj is IXMLProvider)
+                if (obj is IXmlProvider)
                 {
-                    var subElement = ((IXMLProvider) obj).GetXML();
+                    var subElement = ((IXmlProvider) obj).GetXml();
                     var typeAttribute = subElement.Attribute("Type");
                     if (typeAttribute != null)
                     {
@@ -87,9 +87,9 @@ namespace ModAPI.Data.Models
             XElement subElement2 = null;
             if (o != null)
             {
-                if (o is IXMLProvider)
+                if (o is IXmlProvider)
                 {
-                    subElement2 = ((IXMLProvider) o).GetXML();
+                    subElement2 = ((IXmlProvider) o).GetXml();
                     subElement2.Name = "Item";
                     var typeAttribute = subElement2.Attribute("Type");
                     if (typeAttribute != null)
@@ -116,10 +116,10 @@ namespace ModAPI.Data.Models
         public static object ReadItem(XElement arrayElement, Type elementType)
         {
             object ret = null;
-            if (typeof(IXMLProvider).IsAssignableFrom(elementType))
+            if (typeof(IXmlProvider).IsAssignableFrom(elementType))
             {
                 var newObj = Activator.CreateInstance(elementType);
-                ((IXMLProvider) newObj).SetXML(arrayElement);
+                ((IXmlProvider) newObj).SetXml(arrayElement);
                 ret = newObj;
             }
             else
@@ -129,7 +129,7 @@ namespace ModAPI.Data.Models
             return ret;
         }
 
-        public static void SetXML(object thisObj, XElement element)
+        public static void SetXml(object thisObj, XElement element)
         {
             var fields = thisObj.GetType().GetFields();
             foreach (var field in fields)
@@ -140,7 +140,7 @@ namespace ModAPI.Data.Models
                     if (field.FieldType.IsArray)
                     {
                         var elementType = field.FieldType.GetElementType();
-                        var arrayLength = XMLHelper.GetXMLAttributeAsInt(subElement, "Length", 0);
+                        var arrayLength = XmlHelper.GetXmlAttributeAsInt(subElement, "Length", 0);
                         var newArray = Array.CreateInstance(elementType, arrayLength);
                         var i = 0;
                         foreach (var arrayElement in subElement.Elements())
@@ -153,7 +153,7 @@ namespace ModAPI.Data.Models
                     else if (typeof(IList).IsAssignableFrom(field.FieldType))
                     {
                         var elementType = field.FieldType.GetGenericArguments()[0];
-                        var listLength = XMLHelper.GetXMLAttributeAsInt(subElement, "Length", 0);
+                        var listLength = XmlHelper.GetXmlAttributeAsInt(subElement, "Length", 0);
                         var newList = (IList) Activator.CreateInstance(field.FieldType);
                         foreach (var listElement in subElement.Elements())
                         {
@@ -161,10 +161,10 @@ namespace ModAPI.Data.Models
                         }
                         field.SetValue(thisObj, newList);
                     }
-                    else if (typeof(IXMLProvider).IsAssignableFrom(field.FieldType))
+                    else if (typeof(IXmlProvider).IsAssignableFrom(field.FieldType))
                     {
                         var newObj = Activator.CreateInstance(field.FieldType);
-                        ((IXMLProvider) newObj).SetXML(subElement);
+                        ((IXmlProvider) newObj).SetXml(subElement);
                         field.SetValue(thisObj, newObj);
                     }
                     else
@@ -176,16 +176,16 @@ namespace ModAPI.Data.Models
         }
     }
 
-    public class BaseXMLProvider : IXMLProvider
+    public class BaseXmlProvider : IXmlProvider
     {
-        public virtual XElement GetXML()
+        public virtual XElement GetXml()
         {
-            return XMLParser.GetXML(this);
+            return XmlParser.GetXml(this);
         }
 
-        public virtual void SetXML(XElement element)
+        public virtual void SetXml(XElement element)
         {
-            XMLParser.SetXML(this, element);
+            XmlParser.SetXml(this, element);
         }
     }
 }

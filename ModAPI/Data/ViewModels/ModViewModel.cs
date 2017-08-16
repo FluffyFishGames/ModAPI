@@ -38,7 +38,7 @@ using TextBox = System.Windows.Controls.TextBox;
 
 public class ModViewModel : INotifyPropertyChanged
 {
-    public ObservableDictionary<int, Mod> versions = new ObservableDictionary<int, Mod>();
+    public ObservableDictionary<int, Mod> VersionsData = new ObservableDictionary<int, Mod>();
     protected ObservableCollection<ListViewItem> _Versions = new ObservableCollection<ListViewItem>();
     protected ObservableCollection<Grid> _Buttons = new ObservableCollection<Grid>();
 
@@ -66,8 +66,8 @@ public class ModViewModel : INotifyPropertyChanged
 
     public ModViewModel(Mod mod)
     {
-        versions.CollectionChanged += VersionsChanged;
-        versions.Add(Mod.Header.ParseModVersion(mod.header.GetVersion()), mod);
+        VersionsData.CollectionChanged += VersionsChanged;
+        VersionsData.Add(Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()), mod);
     }
 
     protected bool _Initialized;
@@ -78,29 +78,29 @@ public class ModViewModel : INotifyPropertyChanged
         {
             _Initialized = true;
             VersionsChanged(null, null);
-            var mod = versions[versions.Keys.First()];
-            _Selected = Configuration.GetString("Mods." + mod.Game.GameConfiguration.ID + "." + mod.ID + ".Selected") == "true";
+            var mod = VersionsData[VersionsData.Keys.First()];
+            _Selected = Configuration.GetString("Mods." + mod.Game.GameConfiguration.Id + "." + mod.Id + ".Selected") == "true";
         }
     }
 
     protected void VersionsChanged(object sender, EventArgs e)
     {
-        if (versions.Count == 0)
+        if (VersionsData.Count == 0)
         {
             return;
         }
         for (var i = 0; i < _Versions.Count; i++)
         {
             var item = _Versions[i];
-            var mod = ((ModVersionViewModel) item.DataContext).mod;
-            if (!versions.Values.Contains(mod))
+            var mod = ((ModVersionViewModel) item.DataContext).Mod;
+            if (!VersionsData.Values.Contains(mod))
             {
                 _Versions.RemoveAt(i);
                 i--;
             }
         }
 
-        var versionKeys = versions.Keys.ToList();
+        var versionKeys = VersionsData.Keys.ToList();
         versionKeys.Sort();
         versionKeys.Reverse();
         var old = _Versions.ToArray();
@@ -108,7 +108,7 @@ public class ModViewModel : INotifyPropertyChanged
 
         foreach (var n in versionKeys)
         {
-            var mod = versions[n];
+            var mod = VersionsData[n];
             var add = true;
             /*foreach (ListViewItem item in _Versions)
             {
@@ -157,12 +157,12 @@ public class ModViewModel : INotifyPropertyChanged
         if (_Initialized)
         {
             DontSaveVersion = true;
-            var versionToPrefer = Configuration.GetInt("Mods." + versions[versions.Keys.ToArray()[0]].Game.GameConfiguration.ID + "." + versions[versions.Keys.ToArray()[0]].ID + ".Version");
+            var versionToPrefer = Configuration.GetInt("Mods." + VersionsData[VersionsData.Keys.ToArray()[0]].Game.GameConfiguration.Id + "." + VersionsData[VersionsData.Keys.ToArray()[0]].Id + ".Version");
             var found = false;
             foreach (var item in _Versions)
             {
-                var mod = ((ModVersionViewModel) item.DataContext).mod;
-                var build = Mod.Header.ParseModVersion(mod.header.GetVersion());
+                var mod = ((ModVersionViewModel) item.DataContext).Mod;
+                var build = Mod.Header.ParseModVersion(mod.HeaderData.GetVersion());
                 if (build == versionToPrefer)
                 {
                     SelectedVersion = item;
@@ -195,8 +195,8 @@ public class ModViewModel : INotifyPropertyChanged
     {
         set
         {
-            var mod = versions[versions.Keys.First()];
-            Configuration.SetString("Mods." + mod.Game.GameConfiguration.ID + "." + mod.ID + ".Selected", value ? "true" : "false", true);
+            var mod = VersionsData[VersionsData.Keys.First()];
+            Configuration.SetString("Mods." + mod.Game.GameConfiguration.Id + "." + mod.Id + ".Selected", value ? "true" : "false", true);
             Configuration.Save();
             _Selected = value;
         }
@@ -214,13 +214,13 @@ public class ModViewModel : INotifyPropertyChanged
             var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
             if (vm != null)
             {
-                var mod = vm.mod;
+                var mod = vm.Mod;
                 if (mod != null)
                 {
-                    var ret = mod.header.GetName().GetString(Configuration.CurrentLanguage.Key, "EN");
-                    if (ret == "" && mod.header.GetName().GetLanguages().Count > 0)
+                    var ret = mod.HeaderData.GetName().GetString(Configuration.CurrentLanguage.Key, "EN");
+                    if (ret == "" && mod.HeaderData.GetName().GetLanguages().Count > 0)
                     {
-                        ret = mod.header.GetName().GetString(mod.header.GetName().GetLanguages()[0]);
+                        ret = mod.HeaderData.GetName().GetString(mod.HeaderData.GetName().GetLanguages()[0]);
                     }
                     return ret;
                 }
@@ -241,13 +241,13 @@ public class ModViewModel : INotifyPropertyChanged
 
             if (vm != null)
             {
-                var mod = vm.mod;
+                var mod = vm.Mod;
                 if (mod != null)
                 {
-                    var ret = mod.header.GetDescription().GetString(Configuration.CurrentLanguage.Key, "EN");
-                    if (ret == "" && mod.header.GetDescription().GetLanguages().Count > 0)
+                    var ret = mod.HeaderData.GetDescription().GetString(Configuration.CurrentLanguage.Key, "EN");
+                    if (ret == "" && mod.HeaderData.GetDescription().GetLanguages().Count > 0)
                     {
-                        ret = mod.header.GetDescription().GetString(mod.header.GetDescription().GetLanguages()[0]);
+                        ret = mod.HeaderData.GetDescription().GetString(mod.HeaderData.GetDescription().GetLanguages()[0]);
                     }
                     return ret;
                 }
@@ -256,18 +256,18 @@ public class ModViewModel : INotifyPropertyChanged
         }
     }
 
-    public string ID
+    public string Id
     {
         get
         {
-            if (versions.Count == 0)
+            if (VersionsData.Count == 0)
             {
                 return "";
             }
-            var mod = versions[versions.Keys.First()];
+            var mod = VersionsData[VersionsData.Keys.First()];
             if (mod != null)
             {
-                return mod.ID;
+                return mod.Id;
             }
             return "";
         }
@@ -287,23 +287,23 @@ public class ModViewModel : INotifyPropertyChanged
                 _Buttons = new ObservableCollection<Grid>();
                 if (vm != null)
                 {
-                    var mod = vm.mod;
+                    var mod = vm.Mod;
 
                     if (mod != null)
                     {
                         if (!DontSaveVersion)
                         {
-                            Configuration.SetInt("Mods." + mod.Game.GameConfiguration.ID + "." + mod.ID + ".Version", Mod.Header.ParseModVersion(mod.header.GetVersion()), true);
+                            Configuration.SetInt("Mods." + mod.Game.GameConfiguration.Id + "." + mod.Id + ".Version", Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()), true);
                             Configuration.Save();
                         }
 
-                        foreach (var button in mod.header.GetButtons())
+                        foreach (var button in mod.HeaderData.GetButtons())
                         {
                             var panel = new StackPanel();
                             var label = new TextBlock();
                         }
 
-                        foreach (var button in mod.header.GetButtons())
+                        foreach (var button in mod.HeaderData.GetButtons())
                         {
                             var panel = new Grid();
                             panel.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -429,10 +429,10 @@ public class ModViewModel : INotifyPropertyChanged
             var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
             if (vm != null)
             {
-                var mod = vm.mod;
+                var mod = vm.Mod;
                 if (mod != null)
                 {
-                    return mod.header.GetVersion();
+                    return mod.HeaderData.GetVersion();
                 }
             }
             return "";

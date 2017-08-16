@@ -40,34 +40,34 @@ namespace ModAPI
         {
         }
 
-        internal static void Write(object a, string ModName)
+        internal static void Write(object a, string modName)
         {
             if (a != null)
             {
-                Write(a.ToString(), ModName);
+                Write(a.ToString(), modName);
             }
             else
             {
-                Write("null", ModName);
+                Write("null", modName);
             }
         }
 
-        internal static void Write(string s, string ModName)
+        internal static void Write(string s, string modName)
         {
-            var currentDir = Path.GetFullPath(BaseSystem.ModsFolder + "Logs" + Path.DirectorySeparatorChar);
+            var currentDir = Path.GetFullPath(BaseSystem._modsFolder + "Logs" + Path.DirectorySeparatorChar);
             if (!Directory.Exists(currentDir))
             {
                 Directory.CreateDirectory(currentDir);
             }
 
-            if (!FileStreams.ContainsKey(ModName))
+            if (!FileStreams.ContainsKey(modName))
             {
-                var fileName = currentDir + ModName + ".log";
-                FileStreams.Add(ModName, new FileStream(fileName, FileMode.Create));
+                var fileName = currentDir + modName + ".log";
+                FileStreams.Add(modName, new FileStream(fileName, FileMode.Create));
             }
             var w = Encoding.UTF8.GetBytes("[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "] " + s + "\r\n");
-            FileStreams[ModName].Write(w, 0, w.Length);
-            FileStreams[ModName].Flush();
+            FileStreams[modName].Write(w, 0, w.Length);
+            FileStreams[modName].Flush();
         }
     }
 }

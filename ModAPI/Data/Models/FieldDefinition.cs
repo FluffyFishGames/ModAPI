@@ -36,10 +36,10 @@ namespace ModAPI.Data.Models
         {
         }
 
-        public FieldDefinition(string FieldName, Type FieldType)
+        public FieldDefinition(string fieldName, Type fieldType)
         {
-            this.FieldType = FieldType;
-            this.FieldName = FieldName;
+            this.FieldType = fieldType;
+            this.FieldName = fieldName;
         }
 
         public string GetExtra(string key, string standard)
@@ -112,7 +112,7 @@ namespace ModAPI.Data.Models
             }
             if (ClassName == "" || FieldName == "")
             {
-                Debug.Log("ModAPI.Data", "Invalid FieldDefinition: " + element, Debug.Type.WARNING);
+                Debug.Log("ModAPI.Data", "Invalid FieldDefinition: " + element, Debug.Type.Warning);
             }
         }
     }

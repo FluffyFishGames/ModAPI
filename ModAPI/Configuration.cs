@@ -43,13 +43,13 @@ public class OldConfiguration
 
     public enum ResultCode
     {
-        OK,
+        Ok,
         ERROR
     }
 
     public enum ErrorCode
     {
-        CONFIG_CORRUPTED
+        ConfigCorrupted
     }
 
     public static ErrorCode Error;
@@ -126,7 +126,7 @@ public class OldConfiguration
         return null;
     }
 
-    public static string GetChecksum(string GamePath)
+    public static string GetChecksum(string gamePath)
     {
         var b1 = new byte[0];
         var b2 = new byte[0];
@@ -135,28 +135,28 @@ public class OldConfiguration
 
         try
         {
-            b1 = File.ReadAllBytes(GamePath + "\\theforest_data\\Managed\\Assembly-CSharp.dll");
+            b1 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-CSharp.dll");
         }
         catch (Exception e)
         {
         }
         try
         {
-            b2 = File.ReadAllBytes(GamePath + "\\theforest_data\\Managed\\Assembly-CSharp-firstpass.dll");
+            b2 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-CSharp-firstpass.dll");
         }
         catch (Exception e)
         {
         }
         try
         {
-            b3 = File.ReadAllBytes(GamePath + "\\theforest_data\\Managed\\Assembly-UnityScript.dll");
+            b3 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-UnityScript.dll");
         }
         catch (Exception e)
         {
         }
         try
         {
-            b4 = File.ReadAllBytes(GamePath + "\\theforest_data\\Managed\\Assembly-UnityScript-firstpass.dll");
+            b4 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-UnityScript-firstpass.dll");
         }
         catch (Exception e)
         {
@@ -175,7 +175,7 @@ public class OldConfiguration
     {
         public class Version
         {
-            public string BuildID;
+            public string BuildId;
             public string Number;
             public string Hash;
         }
@@ -192,7 +192,7 @@ public class OldConfiguration
                 var parts = line.Split(new[] { "|" }, StringSplitOptions.None);
                 var newVersion = new Version();
                 newVersion.Number = parts[0];
-                newVersion.BuildID = parts[1];
+                newVersion.BuildId = parts[1];
                 newVersion.Hash = parts[2];
                 Versions.Add(newVersion);
             }
@@ -200,7 +200,7 @@ public class OldConfiguration
 
         public bool LoadHashesFromNet()
         {
-            var request = (HttpWebRequest) WebRequest.Create("http://www.souldrinker.de/modapi/theforest/versions.txt");
+            var request = (HttpWebRequest) WebRequest.Create("http://www.souldrinker.de/modapi/theforest/VersionsData.txt");
             var response = (HttpWebResponse) request.GetResponse();
             if (response.StatusCode == HttpStatusCode.Found)
             {
@@ -256,18 +256,18 @@ public class OldConfiguration
             }
         }*/
 
-        return ResultCode.OK;
+        return ResultCode.Ok;
     }
 
     public static void Save()
     {
-        var ConfigData = "";
+        var ConfigDataInst = "";
         var keys = Data.Keys.ToArray();
         for (var i = 0; i < keys.Length; i++)
         {
-            ConfigData += (i != 0 ? "\r\n" : "") + keys[i] + "=" + Data[keys[i]];
+            ConfigDataInst += (i != 0 ? "\r\n" : "") + keys[i] + "=" + Data[keys[i]];
         }
-        File.WriteAllText(ProgramPath + "config.dat", ConfigData);
+        File.WriteAllText(ProgramPath + "config.dat", ConfigDataInst);
     }
 
     public static void AddLanguage(Language language)

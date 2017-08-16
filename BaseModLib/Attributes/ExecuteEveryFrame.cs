@@ -30,9 +30,9 @@ namespace ModAPI.Attributes
     {
         protected bool OnlyInGame;
 
-        public ExecuteEveryFrame(bool OnlyInGame = true)
+        public ExecuteEveryFrame(bool onlyInGame = true)
         {
-            this.OnlyInGame = OnlyInGame;
+            this.OnlyInGame = onlyInGame;
         }
     }
 }

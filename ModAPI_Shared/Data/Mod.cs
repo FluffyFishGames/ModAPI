@@ -35,42 +35,42 @@ namespace ModAPI.Data
 {
     public class Mod
     {
-        public string ID;
+        public string Id;
         public bool Valid;
         public DateTime LoadedDate;
         public Game Game;
         public ZipFile Resources;
 
-        public string UniqueID
+        public string UniqueId
         {
             get
             {
                 var md5 = MD5.Create();
                 var unique = md5.ComputeHash(GetHashBytes());
-                return ID + "-" + header.GetVersion() + "-" + BitConverter.ToString(unique).ToLower().Replace("-", "");
+                return Id + "-" + HeaderData.GetVersion() + "-" + BitConverter.ToString(unique).ToLower().Replace("-", "");
             }
         }
 
         public static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
         protected static Dictionary<string, Mod> FilenameToMod = new Dictionary<string, Mod>();
 
-        protected static bool modsLoaded = false;
+        protected static bool ModsLoaded = false;
         public string FileName = "";
 
-        public Header header;
-        public ModuleDefinition module;
-        public ModuleDefinition originalModule;
+        public Header HeaderData;
+        public ModuleDefinition Module;
+        public ModuleDefinition OriginalModule;
         public bool HasResources;
         public int ResourcesIndex;
 
-        protected bool loaded;
-        protected string headerText = "";
-        protected string assemblyText = "";
+        protected bool Loaded;
+        protected string HeaderText = "";
+        protected string AssemblyText = "";
 
         public byte[] GetHashBytes()
         {
             var hashBytes = new List<byte>();
-            hashBytes.AddRange(header.GetHashBytes());
+            hashBytes.AddRange(HeaderData.GetHashBytes());
             return hashBytes.ToArray();
         }
 
@@ -89,19 +89,19 @@ namespace ModAPI.Data
         public void Verify()
         {
             Valid = true;
-            if (header == null)
+            if (HeaderData == null)
             {
                 Valid = false;
             }
             else
             {
-                header.Verify();
-                if (!header.Valid)
+                HeaderData.Verify();
+                if (!HeaderData.Valid)
                 {
                     Valid = false;
                 }
             }
-            if (module == null)
+            if (Module == null)
             {
                 Valid = false;
             }
@@ -109,18 +109,18 @@ namespace ModAPI.Data
 
         public Header GetHeader()
         {
-            if (header != null || Load())
+            if (HeaderData != null || Load())
             {
-                return header;
+                return HeaderData;
             }
             return null;
         }
 
         public ModuleDefinition GetModule()
         {
-            if (module != null || Load())
+            if (Module != null || Load())
             {
-                return module;
+                return Module;
             }
             return null;
         }
@@ -128,9 +128,9 @@ namespace ModAPI.Data
         public void RewindModule()
         {
             var stream = new MemoryStream();
-            originalModule.Write(stream);
+            OriginalModule.Write(stream);
             stream.Position = 0;
-            module = ModuleDefinition.ReadModule(stream);
+            Module = ModuleDefinition.ReadModule(stream);
             AssignModule();
         }
 
@@ -138,12 +138,12 @@ namespace ModAPI.Data
         {
             try
             {
-                var modContent = header.GetXML().ToString();
+                var modContent = HeaderData.GetXml().ToString();
                 modContent += "\r\n";
                 var stream = new MemoryStream();
-                module.Write(stream);
+                Module.Write(stream);
                 stream.Position = 0;
-                originalModule = ModuleDefinition.ReadModule(stream);
+                OriginalModule = ModuleDefinition.ReadModule(stream);
                 stream.Position = 0;
                 var modBytes = new byte[stream.Length];
                 stream.Read(modBytes, 0, (int) stream.Length); //max size of mods are 2047,9MB
@@ -181,14 +181,14 @@ namespace ModAPI.Data
             }
             catch (Exception e)
             {
-                Debug.Log("Mod: " + ID, "Couldn't save mod to: \"" + FileName + "\": " + e, Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't save mod to: \"" + FileName + "\": " + e, Debug.Type.Error);
                 return false;
             }
         }
 
         public bool Load()
         {
-            if (loaded)
+            if (Loaded)
             {
                 return true;
             }
@@ -220,18 +220,18 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't load the mod at \"" + FileName + "\". Exception: " + e, Debug.Type.WARNING);
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". Exception: " + e, Debug.Type.Warning);
                     return false;
                 }
 
                 var text = Encoding.UTF8.GetString(decompressedBytes);
                 var parts = text.Split(new[] { "\n" }, StringSplitOptions.None);
-                var header = "";
+                var HeaderData = "";
 
                 var headerSize = 0;
                 for (var i = 0; i < parts.Length; i++)
                 {
-                    header += parts[i] + "\n";
+                    HeaderData += parts[i] + "\n";
                     headerSize += parts[i].Length + 1;
                     if (parts[i].EndsWith("</Mod>\r"))
                     {
@@ -239,12 +239,12 @@ namespace ModAPI.Data
                     }
                     if (i == parts.Length - 1)
                     {
-                        Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't load the mod at \"" + FileName + "\". File-header is corrupted.", Debug.Type.WARNING);
+                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". File-HeaderData is corrupted.", Debug.Type.Warning);
                         return false;
                     }
                 }
 
-                this.header = new Header(this, header);
+                this.HeaderData = new Header(this, HeaderData);
                 var assemblyText = text.Substring(headerSize);
                 var resourcesIndex = assemblyText.IndexOf("\r\n\r\n");
                 if (resourcesIndex > 0)
@@ -252,10 +252,10 @@ namespace ModAPI.Data
                     // Resources found
                     HasResources = true;
                     assemblyText = assemblyText.Substring(0, resourcesIndex);
-                    ResourcesIndex = Encoding.UTF8.GetBytes(assemblyText + "\r\n\r\n").Length + Encoding.UTF8.GetBytes(header).Length;
+                    ResourcesIndex = Encoding.UTF8.GetBytes(assemblyText + "\r\n\r\n").Length + Encoding.UTF8.GetBytes(HeaderData).Length;
                 }
 
-                Debug.Log("Game: " + Game.GameConfiguration.ID, "Successfully loaded mod header \"" + ID + "\" in version \"" + this.header.GetVersion() + "\" at \"" + FileName + "\"");
+                Debug.Log("Game: " + Game.GameConfiguration.Id, "Successfully loaded mod HeaderData \"" + Id + "\" in version \"" + this.HeaderData.GetVersion() + "\" at \"" + FileName + "\"");
 
                 try
                 {
@@ -263,21 +263,21 @@ namespace ModAPI.Data
                     var dllStream = new MemoryStream(dllBytes);
                     dllStream.Position = 0;
 
-                    originalModule = ModuleDefinition.ReadModule(dllStream);
+                    OriginalModule = ModuleDefinition.ReadModule(dllStream);
                     dllStream.Position = 0;
-                    module = ModuleDefinition.ReadModule(dllStream);
+                    Module = ModuleDefinition.ReadModule(dllStream);
 
                     AssignModule();
 
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Successfully loaded mod module \"" + ID + "\" in version \"" + this.header.GetVersion() + "\" at \"" + FileName + "\"");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Successfully loaded mod module \"" + Id + "\" in version \"" + this.HeaderData.GetVersion() + "\" at \"" + FileName + "\"");
                 }
                 catch (Exception e)
                 {
-                    module = null;
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't load the mod at \"" + FileName + "\". File-module is corrupted. Exception: " + e, Debug.Type.WARNING);
+                    Module = null;
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". File-module is corrupted. Exception: " + e, Debug.Type.Warning);
                     return false;
                 }
-                loaded = true;
+                Loaded = true;
                 Verify();
                 LoadedDate = new DateTime();
                 return true;
@@ -289,7 +289,7 @@ namespace ModAPI.Data
         {
             //byte[] dllBytes = Convert.FromBase64String(this.assemblyText);
             var dllStream = new MemoryStream();
-            originalModule.Write(dllStream);
+            OriginalModule.Write(dllStream);
             dllStream.Position = 0;
             return ModuleDefinition.ReadModule(dllStream);
         }
@@ -324,7 +324,7 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't load the mod at \"" + FileName + "\". Exception: " + e, Debug.Type.WARNING);
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". Exception: " + e, Debug.Type.Warning);
                     return null;
                 }
                 try
@@ -338,7 +338,7 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't load the resources for the mod at \"" + FileName + "\". Exception: " + e, Debug.Type.WARNING);
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the resources for the mod at \"" + FileName + "\". Exception: " + e, Debug.Type.Warning);
                     return null;
                 }
             }
@@ -347,52 +347,52 @@ namespace ModAPI.Data
 
         protected void AssignModule()
         {
-            foreach (var i in header.GetAddClasses())
+            foreach (var i in HeaderData.GetAddClasses())
             {
-                var type = TypeResolver.FindTypeDefinition(module, i.TypeName);
+                var type = TypeResolver.FindTypeDefinition(Module, i.TypeName);
                 if (type != null)
                 {
                     i.Type = type;
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't find type \"" + i.TypeName + "\" in mod \"" + ID + "\" but it is declared in its header as add class.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find type \"" + i.TypeName + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as add class.");
                 }
             }
-            foreach (var i in header.GetAddMethods())
+            foreach (var i in HeaderData.GetAddMethods())
             {
-                var method = TypeResolver.FindMethodDefinition(module, i.Path);
+                var method = TypeResolver.FindMethodDefinition(Module, i.Path);
                 if (method != null)
                 {
                     i.Method = method;
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't find method \"" + i.Path + "\" in mod \"" + ID + "\" but it is declared in its header as add method.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find method \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as add method.");
                 }
             }
-            foreach (var i in header.GetInjectIntos())
+            foreach (var i in HeaderData.GetInjectIntos())
             {
-                var method = TypeResolver.FindMethodDefinition(module, i.Path);
+                var method = TypeResolver.FindMethodDefinition(Module, i.Path);
                 if (method != null)
                 {
                     i.Method = method;
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't find method \"" + i.Path + "\" in mod \"" + ID + "\" but it is declared in its header as inject into.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find method \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as inject into.");
                 }
             }
-            foreach (var i in header.GetAddFields())
+            foreach (var i in HeaderData.GetAddFields())
             {
-                var field = TypeResolver.FindFieldDefinition(module, i.Path);
+                var field = TypeResolver.FindFieldDefinition(Module, i.Path);
                 if (field != null)
                 {
                     i.Field = field;
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.ID, "Can't find field \"" + i.Path + "\" in mod \"" + ID + "\" but it is declared in its header as add field.");
+                    Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't find field \"" + i.Path + "\" in mod \"" + Id + "\" but it is declared in its HeaderData as add field.");
                 }
             }
         }
@@ -429,7 +429,7 @@ namespace ModAPI.Data
         {
             public bool Valid;
             public Mod Mod;
-            protected string ID;
+            protected string Id;
             protected string Version;
             protected string Compatible;
             protected int VersionNumber;
@@ -444,7 +444,7 @@ namespace ModAPI.Data
             public byte[] GetHashBytes()
             {
                 var hashBytes = new List<byte>();
-                hashBytes.AddRange(Encoding.UTF8.GetBytes(ID));
+                hashBytes.AddRange(Encoding.UTF8.GetBytes(Id));
                 hashBytes.AddRange(Encoding.UTF8.GetBytes(Version));
                 hashBytes.AddRange(Name.GetHashBytes());
                 hashBytes.AddRange(Encoding.UTF8.GetBytes(Compatible));
@@ -478,7 +478,7 @@ namespace ModAPI.Data
                 Mod = mod;
             }
 
-            public static bool VerifyModID(string name)
+            public static bool VerifyModId(string name)
             {
                 var validation = new Regex("^[a-zA-Z0-9_]+$");
                 return validation.IsMatch(name);
@@ -510,26 +510,26 @@ namespace ModAPI.Data
                 }
             }
 
-            public bool SetID(string ID)
+            public bool SetId(string id)
             {
-                if (VerifyModID(ID))
+                if (VerifyModId(id))
                 {
-                    this.ID = ID;
-                    Mod.ID = this.ID;
+                    this.Id = id;
+                    Mod.Id = this.Id;
                     return true;
                 }
-                Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration: The ID \"" + ID + "\" is invalid.", Debug.Type.WARNING);
+                Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration: The ID \"" + id + "\" is invalid.", Debug.Type.Warning);
                 return false;
             }
 
-            protected bool SetID(XAttribute attribute)
+            protected bool SetId(XAttribute attribute)
             {
                 if (attribute == null)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration: The ID is missing.", Debug.Type.WARNING);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration: The ID is missing.", Debug.Type.Warning);
                     return false;
                 }
-                return SetID(attribute.Value);
+                return SetId(attribute.Value);
             }
 
             public string GetVersion()
@@ -570,7 +570,7 @@ namespace ModAPI.Data
                     }
                     return true;
                 }
-                Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration for ID \"" + ID + "\": The version string is invalid.", Debug.Type.WARNING);
+                Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Id + "\": The version string is invalid.", Debug.Type.Warning);
                 return false;
             }
 
@@ -578,7 +578,7 @@ namespace ModAPI.Data
             {
                 if (element == null)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration for ID \"" + ID + "\": The version string is missing.", Debug.Type.WARNING);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Id + "\": The version string is missing.", Debug.Type.Warning);
                     return false;
                 }
                 return SetVersion(element.Value);
@@ -594,11 +594,11 @@ namespace ModAPI.Data
             {
                 if (element == null)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration for ID \"" + ID + "\": The name is missing.", Debug.Type.WARNING);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Id + "\": The name is missing.", Debug.Type.Warning);
                     return false;
                 }
                 var val = new MultilingualValue();
-                val.SetXML(element);
+                val.SetXml(element);
                 return SetName(val);
             }
 
@@ -612,11 +612,11 @@ namespace ModAPI.Data
             {
                 if (element == null)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration for ID \"" + ID + "\": The description is missing.", Debug.Type.WARNING);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Id + "\": The description is missing.", Debug.Type.Warning);
                     return false;
                 }
                 var val = new MultilingualValue();
-                val.SetXML(element);
+                val.SetXml(element);
                 return SetDescription(val);
             }
 
@@ -636,10 +636,10 @@ namespace ModAPI.Data
                 {
                     foreach (var otherButton in Buttons)
                     {
-                        if (button.ID == otherButton.ID)
+                        if (button.Id == otherButton.Id)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.ID,
-                                "Invalid mod configuration for ID \"" + ID + "\": There are more than one button with ID \"" + button.ID + "\".", Debug.Type.WARNING);
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id,
+                                "Invalid mod configuration for ID \"" + Id + "\": There are more than one button with ID \"" + button.Id + "\".", Debug.Type.Warning);
                             return false;
                         }
                     }
@@ -655,7 +655,7 @@ namespace ModAPI.Data
             public bool AddButton(XElement element)
             {
                 var button = new Button(Mod);
-                if (button.SetXML(element))
+                if (button.SetXml(element))
                 {
                     return AddButton(button);
                 }
@@ -720,7 +720,7 @@ namespace ModAPI.Data
             public bool AddInjectInto(XElement element)
             {
                 var obj = new InjectInto(Mod);
-                obj.SetXML(element);
+                obj.SetXml(element);
                 return AddInjectInto(obj);
             }
 
@@ -737,7 +737,7 @@ namespace ModAPI.Data
             public bool AddAddClass(XElement element)
             {
                 var obj = new AddClass(Mod);
-                obj.SetXML(element);
+                obj.SetXml(element);
                 return AddAddClass(obj);
             }
 
@@ -754,7 +754,7 @@ namespace ModAPI.Data
             public bool AddAddField(XElement element)
             {
                 var obj = new AddField(Mod);
-                obj.SetXML(element);
+                obj.SetXml(element);
                 return AddAddField(obj);
             }
 
@@ -771,54 +771,54 @@ namespace ModAPI.Data
             public bool AddAddMethod(XElement element)
             {
                 var obj = new AddMethod(Mod);
-                obj.SetXML(element);
+                obj.SetXml(element);
                 return AddAddMethod(obj);
             }
 
-            public XDocument GetXML()
+            public XDocument GetXml()
             {
                 var document = new XDocument();
                 var rootElement = new XElement("Mod");
-                rootElement.SetAttributeValue("ID", ID);
+                rootElement.SetAttributeValue("ID", Id);
                 rootElement.Add(new XElement("Compatible", Compatible));
                 rootElement.Add(new XElement("Version", Version));
 
-                var nameElement = Name.GetXML();
+                var nameElement = Name.GetXml();
                 nameElement.Name = "Name";
                 rootElement.Add(nameElement);
 
-                var descriptionElement = Description.GetXML();
+                var descriptionElement = Description.GetXml();
                 descriptionElement.Name = "Description";
                 rootElement.Add(descriptionElement);
 
                 foreach (var button in Buttons)
                 {
-                    rootElement.Add(button.GetXML());
+                    rootElement.Add(button.GetXml());
                 }
                 foreach (var injectInto in InjectIntos)
                 {
-                    rootElement.Add(injectInto.GetXML());
+                    rootElement.Add(injectInto.GetXml());
                 }
                 foreach (var addField in AddFields)
                 {
-                    rootElement.Add(addField.GetXML());
+                    rootElement.Add(addField.GetXml());
                 }
                 foreach (var addMethod in AddMethods)
                 {
-                    rootElement.Add(addMethod.GetXML());
+                    rootElement.Add(addMethod.GetXml());
                 }
                 foreach (var addClass in AddClasses)
                 {
-                    rootElement.Add(addClass.GetXML());
+                    rootElement.Add(addClass.GetXml());
                 }
 
                 document.Add(rootElement);
                 return document;
             }
 
-            public void SetXML(XDocument configuration)
+            public void SetXml(XDocument configuration)
             {
-                if (!SetID(configuration.Root.Attribute("ID")))
+                if (!SetId(configuration.Root.Attribute("ID")))
                 {
                     return;
                 }
@@ -868,7 +868,7 @@ namespace ModAPI.Data
             public void Verify()
             {
                 Valid = true;
-                if (ID == "")
+                if (Id == "")
                 {
                     Valid = false;
                 }
@@ -887,11 +887,11 @@ namespace ModAPI.Data
                 var buttonIDs = new List<string>();
                 foreach (var b in Buttons)
                 {
-                    if (buttonIDs.Contains(b.ID))
+                    if (buttonIDs.Contains(b.Id))
                     {
                         Valid = false;
                     }
-                    buttonIDs.Add(b.ID);
+                    buttonIDs.Add(b.Id);
                 }
 
                 foreach (var i in InjectIntos)
@@ -928,18 +928,18 @@ namespace ModAPI.Data
                 }
             }
 
-            public Header(Mod mod, string header)
+            public Header(Mod mod, string HeaderData)
             {
                 Mod = mod;
                 try
                 {
-                    var configuration = XDocument.Parse(header);
-                    SetXML(configuration);
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Successfully parsed mod header of mod \"" + ID + "\".");
+                    var configuration = XDocument.Parse(HeaderData);
+                    SetXml(configuration);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Successfully parsed mod HeaderData of mod \"" + Id + "\".");
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Error while parsing header of mod \"" + ID + "\". Filename: \"" + Mod.FileName + "\"", Debug.Type.WARNING);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Error while parsing HeaderData of mod \"" + Id + "\". Filename: \"" + Mod.FileName + "\"", Debug.Type.Warning);
                     Valid = false;
                 }
             }
@@ -947,7 +947,7 @@ namespace ModAPI.Data
             public class Button
             {
                 public string StandardKey;
-                public string ID;
+                public string Id;
                 public MultilingualValue Name;
                 public MultilingualValue Description;
                 public Mod Mod;
@@ -956,7 +956,7 @@ namespace ModAPI.Data
                 public byte[] GetHashBytes()
                 {
                     var hashBytes = new List<byte>();
-                    hashBytes.AddRange(Encoding.UTF8.GetBytes(ID));
+                    hashBytes.AddRange(Encoding.UTF8.GetBytes(Id));
                     hashBytes.AddRange(Encoding.UTF8.GetBytes(StandardKey));
                     hashBytes.AddRange(Name.GetHashBytes());
                     hashBytes.AddRange(Description.GetHashBytes());
@@ -968,32 +968,32 @@ namespace ModAPI.Data
                     Mod = mod;
                 }
 
-                public bool SetXML(XElement element)
+                public bool SetXml(XElement element)
                 {
-                    ID = XMLHelper.GetXMLAttributeAsString(element, "ID", "");
-                    if (ID == "")
+                    Id = XmlHelper.GetXmlAttributeAsString(element, "ID", "");
+                    if (Id == "")
                     {
-                        Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration for ID \"" + Mod.ID + "\": A button is missing an ID.", Debug.Type.WARNING);
+                        Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Mod.Id + "\": A button is missing an ID.", Debug.Type.Warning);
                         return false;
                     }
-                    StandardKey = XMLHelper.GetXMLAttributeAsString(element, "Standard", "");
+                    StandardKey = XmlHelper.GetXmlAttributeAsString(element, "Standard", "");
                     if (element.Element("Name") == null)
                     {
-                        Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Invalid mod configuration for ID \"" + Mod.ID + "\": The button \"" + ID + "\" has no name.",
-                            Debug.Type.WARNING);
+                        Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Mod.Id + "\": The button \"" + Id + "\" has no name.",
+                            Debug.Type.Warning);
                         return false;
                     }
                     Name = new MultilingualValue();
-                    Name.SetXML(element.Element("Name"));
+                    Name.SetXml(element.Element("Name"));
                     Description = new MultilingualValue();
-                    Description.SetXML(element.Element("Description"));
+                    Description.SetXml(element.Element("Description"));
                     return true;
                 }
 
-                public XElement GetXML()
+                public XElement GetXml()
                 {
                     var ret = new XElement("Button");
-                    ret.SetAttributeValue("ID", ID);
+                    ret.SetAttributeValue("ID", Id);
                     if (StandardKey != "")
                     {
                         ret.SetAttributeValue("Standard", StandardKey);
@@ -1003,13 +1003,13 @@ namespace ModAPI.Data
                     }
                     if (Name != null)
                     {
-                        var name = Name.GetXML();
+                        var name = Name.GetXml();
                         name.Name = "Name";
                         ret.Add(name);
                     }
                     if (Description != null)
                     {
-                        var desc = Description.GetXML();
+                        var desc = Description.GetXml();
                         desc.Name = "Description";
                         ret.Add(desc);
                     }
@@ -1056,18 +1056,18 @@ namespace ModAPI.Data
                     }
                 }
 
-                public void SetXML(XElement element)
+                public void SetXml(XElement element)
                 {
-                    AssemblyName = XMLHelper.GetXMLAttributeAsString(element, "AssemblyName", "");
-                    MethodName = XMLHelper.GetXMLAttributeAsString(element, "MethodName", "");
-                    TypeName = XMLHelper.GetXMLAttributeAsString(element, "TypeName", "");
-                    ReturnType = XMLHelper.GetXMLAttributeAsString(element, "ReturnType", "");
-                    Path = XMLHelper.GetXMLAttributeAsString(element, "Path", "");
-                    CheckSum = XMLHelper.GetXMLAttributeAsString(element, "CheckSum", "");
+                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName", "");
+                    MethodName = XmlHelper.GetXmlAttributeAsString(element, "MethodName", "");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
+                    ReturnType = XmlHelper.GetXmlAttributeAsString(element, "ReturnType", "");
+                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path", "");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
                     Verify();
                 }
 
-                public XElement GetXML()
+                public XElement GetXml()
                 {
                     UpdateValues();
                     var ret = new XElement("AddMethod");
@@ -1085,10 +1085,10 @@ namespace ModAPI.Data
                     Valid = true;
                     if (_Method != null)
                     {
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
-                        if (CheckSum != NewCheckSum)
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
+                        if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Mismatched checksum at \"" + Mod.ID + ".AddMethods." + Path + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddMethods." + Path + "\".");
                             Valid = false;
                         }
                     }
@@ -1104,10 +1104,10 @@ namespace ModAPI.Data
                         Path = _Method.FullName;
 
                         /** @TODO: Replace this basic checksum creation with something better **/
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
                         if (CheckSum == "")
                         {
-                            CheckSum = NewCheckSum;
+                            CheckSum = newCheckSum;
                         }
                         Verify();
                     }
@@ -1153,14 +1153,14 @@ namespace ModAPI.Data
                     }
                 }
 
-                public void SetXML(XElement element)
+                public void SetXml(XElement element)
                 {
-                    AssemblyName = XMLHelper.GetXMLAttributeAsString(element, "AssemblyName", "");
-                    TypeName = XMLHelper.GetXMLAttributeAsString(element, "TypeName", "");
-                    FieldType = XMLHelper.GetXMLAttributeAsString(element, "FieldType", "");
-                    FieldName = XMLHelper.GetXMLAttributeAsString(element, "FieldName", "");
-                    Path = XMLHelper.GetXMLAttributeAsString(element, "Path", "");
-                    CheckSum = XMLHelper.GetXMLAttributeAsString(element, "CheckSum", "");
+                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName", "");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
+                    FieldType = XmlHelper.GetXmlAttributeAsString(element, "FieldType", "");
+                    FieldName = XmlHelper.GetXmlAttributeAsString(element, "FieldName", "");
+                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path", "");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
                     Verify();
                 }
 
@@ -1169,16 +1169,16 @@ namespace ModAPI.Data
                     Valid = true;
                     if (_Field != null)
                     {
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Field)).ToLower().Replace("-", "");
-                        if (CheckSum != NewCheckSum)
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Field)).ToLower().Replace("-", "");
+                        if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Mismatched checksum at \"" + Mod.ID + ".AddFields." + Path + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddFields." + Path + "\".");
                             Valid = false;
                         }
                     }
                 }
 
-                public XElement GetXML()
+                public XElement GetXml()
                 {
                     UpdateValues();
                     var ret = new XElement("AddField");
@@ -1201,10 +1201,10 @@ namespace ModAPI.Data
                         Path = _Field.FullName;
 
                         /** @TODO: Replace this basic checksum creation with something better **/
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Field)).ToLower().Replace("-", "");
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Field)).ToLower().Replace("-", "");
                         if (CheckSum == "")
                         {
-                            CheckSum = NewCheckSum;
+                            CheckSum = newCheckSum;
                         }
                         Verify();
                     }
@@ -1251,18 +1251,18 @@ namespace ModAPI.Data
                     }
                 }
 
-                public void SetXML(XElement element)
+                public void SetXml(XElement element)
                 {
-                    AssemblyName = XMLHelper.GetXMLAttributeAsString(element, "AssemblyName", "");
-                    TypeName = XMLHelper.GetXMLAttributeAsString(element, "TypeName", "");
-                    MethodName = XMLHelper.GetXMLAttributeAsString(element, "MethodName", "");
-                    Path = XMLHelper.GetXMLAttributeAsString(element, "Path", "");
-                    Priority = XMLHelper.GetXMLAttributeAsInt(element, "Priority", 0);
-                    CheckSum = XMLHelper.GetXMLAttributeAsString(element, "CheckSum", "");
+                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName", "");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
+                    MethodName = XmlHelper.GetXmlAttributeAsString(element, "MethodName", "");
+                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path", "");
+                    Priority = XmlHelper.GetXmlAttributeAsInt(element, "Priority", 0);
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
                     Verify();
                 }
 
-                public XElement GetXML()
+                public XElement GetXml()
                 {
                     UpdateValues();
                     var ret = new XElement("InjectInto");
@@ -1280,10 +1280,10 @@ namespace ModAPI.Data
                     Valid = true;
                     if (_Method != null)
                     {
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
-                        if (CheckSum != NewCheckSum)
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
+                        if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Mismatched checksum at \"" + Mod.ID + ".InjectIntos." + Path + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".InjectIntos." + Path + "\".");
                             Valid = false;
                         }
                     }
@@ -1306,10 +1306,10 @@ namespace ModAPI.Data
                         }
 
                         /** @TODO: Replace this basic checksum creation with something better **/
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
                         if (CheckSum == "")
                         {
-                            CheckSum = NewCheckSum;
+                            CheckSum = newCheckSum;
                         }
                         Verify();
                     }
@@ -1348,10 +1348,10 @@ namespace ModAPI.Data
                     }
                 }
 
-                public void SetXML(XElement element)
+                public void SetXml(XElement element)
                 {
-                    TypeName = XMLHelper.GetXMLAttributeAsString(element, "TypeName", "");
-                    CheckSum = XMLHelper.GetXMLAttributeAsString(element, "CheckSum", "");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
                     Verify();
                 }
 
@@ -1360,16 +1360,16 @@ namespace ModAPI.Data
                     Valid = true;
                     if (_Type != null)
                     {
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Type)).ToLower().Replace("-", "");
-                        if (CheckSum != NewCheckSum)
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Type)).ToLower().Replace("-", "");
+                        if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.ID, "Mismatched checksum at \"" + Mod.ID + ".AddClasses." + TypeName + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddClasses." + TypeName + "\".");
                             Valid = false;
                         }
                     }
                 }
 
-                public XElement GetXML()
+                public XElement GetXml()
                 {
                     UpdateValues();
                     var ret = new XElement("AddClass");
@@ -1384,10 +1384,10 @@ namespace ModAPI.Data
                     {
                         TypeName = _Type.FullName;
                         /** @TODO: Replace this basic checksum creation with something better **/
-                        var NewCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Type)).ToLower().Replace("-", "");
+                        var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Type)).ToLower().Replace("-", "");
                         if (CheckSum == "")
                         {
-                            CheckSum = NewCheckSum;
+                            CheckSum = newCheckSum;
                         }
                         Verify();
                     }

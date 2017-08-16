@@ -43,13 +43,13 @@ namespace ModAPI
             public enum KeyState
             {
                 DOWN,
-                UP,
-                PRESSED,
-                NONE
+                Up,
+                Pressed,
+                None
             }
 
-            public string ModID = "";
-            public string ID = "";
+            public string ModId = "";
+            public string Id = "";
 
             public KeyState EventState()
             {
@@ -69,14 +69,14 @@ namespace ModAPI
                 }
                 if (allPressed && Down)
                 {
-                    return KeyState.PRESSED;
+                    return KeyState.Pressed;
                 }
                 if (!allPressed && Down)
                 {
                     Down = false;
-                    return KeyState.UP;
+                    return KeyState.Up;
                 }
-                return KeyState.NONE;
+                return KeyState.None;
             }
         }
 
@@ -100,17 +100,17 @@ namespace ModAPI
 
             foreach (var keyEvent in Events)
             {
-                CurrentStates[keyEvent.ModID + "::" + keyEvent.ID] = keyEvent.EventState();
+                CurrentStates[keyEvent.ModId + "::" + keyEvent.Id] = keyEvent.EventState();
             }
         }
 
-        public static void Initialize(GameObject Parent)
+        public static void Initialize(GameObject parent)
         {
-            if (Parent.transform.FindChild("__ModAPIInputManager__") == null)
+            if (parent.transform.FindChild("__ModAPIInputManager__") == null)
             {
-                var InputManager = new GameObject("__ModAPIInputManager__");
-                InputManager.AddComponent<Input>();
-                InputManager.transform.parent = Parent.transform;
+                var inputManager = new GameObject("__ModAPIInputManager__");
+                inputManager.AddComponent<Input>();
+                inputManager.transform.parent = parent.transform;
             }
 
             if (!Initialized)
@@ -129,8 +129,8 @@ namespace ModAPI
                     foreach (var kv in mod.Buttons)
                     {
                         var newEvent = new KeyEvent();
-                        newEvent.ModID = mod.ID;
-                        newEvent.ID = kv.Key;
+                        newEvent.ModId = mod.Id;
+                        newEvent.Id = kv.Key;
                         var allKeys = kv.Value.Split(new[] { "+" }, StringSplitOptions.None);
                         foreach (var k in allKeys)
                         {
@@ -148,7 +148,7 @@ namespace ModAPI
                                 File.AppendAllText("Test.txt", k);
                             }
                         }
-                        CurrentStates.Add(newEvent.ModID + "::" + newEvent.ID, KeyEvent.KeyState.NONE);
+                        CurrentStates.Add(newEvent.ModId + "::" + newEvent.Id, KeyEvent.KeyState.None);
                         Events.Add(newEvent);
                     }
                 }
@@ -157,64 +157,64 @@ namespace ModAPI
         }
 
         [AddModname]
-        public static string GetKeyBindingAsString(string ButtonName)
+        public static string GetKeyBindingAsString(string buttonName)
         {
             return "";
         }
 
         [AddModname]
-        public static bool GetButton(string ButtonName)
+        public static bool GetButton(string buttonName)
         {
             return false;
         }
 
         [AddModname]
-        public static bool GetButtonDown(string ButtonName)
+        public static bool GetButtonDown(string buttonName)
         {
             return false;
         }
 
         [AddModname]
-        public static bool GetButtonUp(string ButtonName)
+        public static bool GetButtonUp(string buttonName)
         {
             return false;
         }
 
-        protected static string GetKeyBindingAsString(string ButtonName, string ModName)
+        protected static string GetKeyBindingAsString(string buttonName, string modName)
         {
-            if (Mods.LoadedMods[ModName].Buttons.ContainsKey(ButtonName))
+            if (Mods.LoadedMods[modName].Buttons.ContainsKey(buttonName))
             {
-                return Mods.LoadedMods[ModName].Buttons[ButtonName];
+                return Mods.LoadedMods[modName].Buttons[buttonName];
             }
             return "";
         }
 
-        protected static bool GetButton(string ButtonName, string ModName)
+        protected static bool GetButton(string buttonName, string modName)
         {
-            if (CurrentStates.ContainsKey(ModName + "::" + ButtonName))
+            if (CurrentStates.ContainsKey(modName + "::" + buttonName))
             {
-                var state = CurrentStates[ModName + "::" + ButtonName];
-                return state == KeyEvent.KeyState.DOWN || state == KeyEvent.KeyState.PRESSED;
+                var state = CurrentStates[modName + "::" + buttonName];
+                return state == KeyEvent.KeyState.DOWN || state == KeyEvent.KeyState.Pressed;
             }
             return false;
         }
 
-        protected static bool GetButtonDown(string ButtonName, string ModName)
+        protected static bool GetButtonDown(string buttonName, string modName)
         {
-            if (CurrentStates.ContainsKey(ModName + "::" + ButtonName))
+            if (CurrentStates.ContainsKey(modName + "::" + buttonName))
             {
-                var state = CurrentStates[ModName + "::" + ButtonName];
+                var state = CurrentStates[modName + "::" + buttonName];
                 return state == KeyEvent.KeyState.DOWN;
             }
             return false;
         }
 
-        protected static bool GetButtonUp(string ButtonName, string ModName)
+        protected static bool GetButtonUp(string buttonName, string modName)
         {
-            if (CurrentStates.ContainsKey(ModName + "::" + ButtonName))
+            if (CurrentStates.ContainsKey(modName + "::" + buttonName))
             {
-                var state = CurrentStates[ModName + "::" + ButtonName];
-                return state == KeyEvent.KeyState.UP;
+                var state = CurrentStates[modName + "::" + buttonName];
+                return state == KeyEvent.KeyState.Up;
             }
             return false;
         }

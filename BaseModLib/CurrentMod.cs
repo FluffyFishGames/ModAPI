@@ -30,9 +30,9 @@ namespace ModAPI
             return "";
         }
 
-        protected string GetID(string ModID)
+        protected string GetId(string modId)
         {
-            return ModID;
+            return modId;
         }
     }
 }

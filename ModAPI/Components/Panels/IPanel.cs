@@ -26,7 +26,7 @@ namespace ModAPI.Components.Panels
     public interface IPanel
     {
         void SetConfiguration(XDocument configurationm);
-        void SetTab(GUIConfiguration.Tab tab);
+        void SetTab(GuiConfiguration.Tab tab);
         string GetLangRoot();
 
         void Preload(ProgressHandler handler);

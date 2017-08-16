@@ -597,123 +597,123 @@ namespace ModAPI.Components
             Margin = new Thickness(-Overflow.Left, -Overflow.Top, -Overflow.Right, -Overflow.Bottom);
             MouseRect.Margin = Overflow;
 
-            var BorderTop = BorderSize.Top;
-            if (BorderTop < 0)
+            var borderTop = BorderSize.Top;
+            if (borderTop < 0)
             {
-                BorderTop = Border.Top;
+                borderTop = Border.Top;
             }
-            if (BorderTop < 0)
+            if (borderTop < 0)
             {
-                BorderTop = 0;
-            }
-
-            var BorderLeft = BorderSize.Left;
-            if (BorderLeft < 0)
-            {
-                BorderLeft = Border.Left;
-            }
-            if (BorderLeft < 0)
-            {
-                BorderLeft = 0;
+                borderTop = 0;
             }
 
-            var BorderRight = BorderSize.Right;
-            if (BorderRight < 0)
+            var borderLeft = BorderSize.Left;
+            if (borderLeft < 0)
             {
-                BorderRight = Border.Right;
+                borderLeft = Border.Left;
             }
-            if (BorderRight < 0)
+            if (borderLeft < 0)
             {
-                BorderRight = 0;
-            }
-
-            var BorderBottom = BorderSize.Bottom;
-            if (BorderBottom < 0)
-            {
-                BorderBottom = Border.Bottom;
-            }
-            if (BorderBottom < 0)
-            {
-                BorderBottom = 0;
+                borderLeft = 0;
             }
 
-            TopRow.Height = new GridLength(BorderTop);
+            var borderRight = BorderSize.Right;
+            if (borderRight < 0)
+            {
+                borderRight = Border.Right;
+            }
+            if (borderRight < 0)
+            {
+                borderRight = 0;
+            }
+
+            var borderBottom = BorderSize.Bottom;
+            if (borderBottom < 0)
+            {
+                borderBottom = Border.Bottom;
+            }
+            if (borderBottom < 0)
+            {
+                borderBottom = 0;
+            }
+
+            TopRow.Height = new GridLength(borderTop);
             //CenterRow.Height = new GridLength(0, GridUnitType.Auto);
-            BottomRow.Height = new GridLength(BorderBottom);
+            BottomRow.Height = new GridLength(borderBottom);
 
-            LeftColumn.Width = new GridLength(BorderLeft);
+            LeftColumn.Width = new GridLength(borderLeft);
             //CenterColumn.Width = new GridLength(0, GridUnitType.Auto);
-            RightColumn.Width = new GridLength(BorderRight);
+            RightColumn.Width = new GridLength(borderRight);
 
             ContentElement.Margin = new Thickness(ContentOffset.X, ContentOffset.Y, 0, 0);
 
             var visibility = Visibility.Hidden;
 
             visibility = NormalSource == null || Selected ? Visibility.Collapsed : Visibility.Visible;
-            NormalTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            NormalTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
-            NormalTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            NormalLeftRect.Visibility = BorderLeft > 0 ? visibility : Visibility.Collapsed;
+            NormalTopLeftRect.Visibility = borderLeft > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            NormalTopRect.Visibility = borderTop > 0 ? visibility : Visibility.Collapsed;
+            NormalTopRightRect.Visibility = borderRight > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            NormalLeftRect.Visibility = borderLeft > 0 ? visibility : Visibility.Collapsed;
             NormalCenterRect.Visibility = visibility;
-            NormalRightRect.Visibility = BorderRight > 0 ? visibility : Visibility.Collapsed;
-            NormalBottomLeftRect.Visibility = BorderLeft > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            NormalBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            NormalBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
+            NormalRightRect.Visibility = borderRight > 0 ? visibility : Visibility.Collapsed;
+            NormalBottomLeftRect.Visibility = borderLeft > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
+            NormalBottomRect.Visibility = borderBottom > 0 ? visibility : Visibility.Collapsed;
+            NormalBottomRightRect.Visibility = borderRight > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
 
             visibility = HoverSource == null || Selected ? Visibility.Collapsed : Visibility.Visible;
-            HoverTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            HoverTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
-            HoverTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            HoverLeftRect.Visibility = BorderLeft > 0 ? visibility : Visibility.Collapsed;
+            HoverTopLeftRect.Visibility = borderLeft > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            HoverTopRect.Visibility = borderTop > 0 ? visibility : Visibility.Collapsed;
+            HoverTopRightRect.Visibility = borderRight > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            HoverLeftRect.Visibility = borderLeft > 0 ? visibility : Visibility.Collapsed;
             HoverCenterRect.Visibility = visibility;
-            HoverRightRect.Visibility = BorderRight > 0 ? visibility : Visibility.Collapsed;
-            HoverBottomLeftRect.Visibility = BorderLeft > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            HoverBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            HoverBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
+            HoverRightRect.Visibility = borderRight > 0 ? visibility : Visibility.Collapsed;
+            HoverBottomLeftRect.Visibility = borderLeft > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
+            HoverBottomRect.Visibility = borderBottom > 0 ? visibility : Visibility.Collapsed;
+            HoverBottomRightRect.Visibility = borderRight > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
 
             visibility = ActiveSource == null || Selected ? Visibility.Collapsed : Visibility.Visible;
-            ActiveTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            ActiveTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
-            ActiveTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            ActiveLeftRect.Visibility = BorderLeft > 0 ? visibility : Visibility.Collapsed;
+            ActiveTopLeftRect.Visibility = borderLeft > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            ActiveTopRect.Visibility = borderTop > 0 ? visibility : Visibility.Collapsed;
+            ActiveTopRightRect.Visibility = borderRight > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            ActiveLeftRect.Visibility = borderLeft > 0 ? visibility : Visibility.Collapsed;
             ActiveCenterRect.Visibility = visibility;
-            ActiveRightRect.Visibility = BorderRight > 0 ? visibility : Visibility.Collapsed;
-            ActiveBottomLeftRect.Visibility = BorderLeft > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            ActiveBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            ActiveBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
+            ActiveRightRect.Visibility = borderRight > 0 ? visibility : Visibility.Collapsed;
+            ActiveBottomLeftRect.Visibility = borderLeft > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
+            ActiveBottomRect.Visibility = borderBottom > 0 ? visibility : Visibility.Collapsed;
+            ActiveBottomRightRect.Visibility = borderRight > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
 
             visibility = SelectedNormalSource == null || !Selected ? Visibility.Collapsed : Visibility.Visible;
-            SelectedNormalTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedNormalTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedNormalTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedNormalLeftRect.Visibility = BorderLeft > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalTopLeftRect.Visibility = borderLeft > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalTopRect.Visibility = borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalTopRightRect.Visibility = borderRight > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalLeftRect.Visibility = borderLeft > 0 ? visibility : Visibility.Collapsed;
             SelectedNormalCenterRect.Visibility = visibility;
-            SelectedNormalRightRect.Visibility = BorderRight > 0 ? visibility : Visibility.Collapsed;
-            SelectedNormalBottomLeftRect.Visibility = BorderLeft > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            SelectedNormalBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            SelectedNormalBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalRightRect.Visibility = borderRight > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalBottomLeftRect.Visibility = borderLeft > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalBottomRect.Visibility = borderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedNormalBottomRightRect.Visibility = borderRight > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
 
             visibility = SelectedActiveSource == null || !Selected ? Visibility.Collapsed : Visibility.Visible;
-            SelectedActiveTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedActiveTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedActiveTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedActiveLeftRect.Visibility = BorderLeft > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveTopLeftRect.Visibility = borderLeft > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveTopRect.Visibility = borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveTopRightRect.Visibility = borderRight > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveLeftRect.Visibility = borderLeft > 0 ? visibility : Visibility.Collapsed;
             SelectedActiveCenterRect.Visibility = visibility;
-            SelectedActiveRightRect.Visibility = BorderRight > 0 ? visibility : Visibility.Collapsed;
-            SelectedActiveBottomLeftRect.Visibility = BorderLeft > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            SelectedActiveBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            SelectedActiveBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveRightRect.Visibility = borderRight > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveBottomLeftRect.Visibility = borderLeft > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveBottomRect.Visibility = borderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedActiveBottomRightRect.Visibility = borderRight > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
 
             visibility = SelectedHoverSource == null || !Selected ? Visibility.Collapsed : Visibility.Visible;
-            SelectedHoverTopLeftRect.Visibility = BorderLeft > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedHoverTopRect.Visibility = BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedHoverTopRightRect.Visibility = BorderRight > 0 && BorderTop > 0 ? visibility : Visibility.Collapsed;
-            SelectedHoverLeftRect.Visibility = BorderLeft > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverTopLeftRect.Visibility = borderLeft > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverTopRect.Visibility = borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverTopRightRect.Visibility = borderRight > 0 && borderTop > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverLeftRect.Visibility = borderLeft > 0 ? visibility : Visibility.Collapsed;
             SelectedHoverCenterRect.Visibility = visibility;
-            SelectedHoverRightRect.Visibility = BorderRight > 0 ? visibility : Visibility.Collapsed;
-            SelectedHoverBottomLeftRect.Visibility = BorderLeft > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            SelectedHoverBottomRect.Visibility = BorderBottom > 0 ? visibility : Visibility.Collapsed;
-            SelectedHoverBottomRightRect.Visibility = BorderRight > 0 && BorderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverRightRect.Visibility = borderRight > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverBottomLeftRect.Visibility = borderLeft > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverBottomRect.Visibility = borderBottom > 0 ? visibility : Visibility.Collapsed;
+            SelectedHoverBottomRightRect.Visibility = borderRight > 0 && borderBottom > 0 ? visibility : Visibility.Collapsed;
 
             if (NormalSource != null)
             {

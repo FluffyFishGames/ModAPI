@@ -23,22 +23,22 @@ using ModAPI.Data;
 
 public class ModVersionViewModel : INotifyPropertyChanged
 {
-    public Mod mod;
+    public Mod Mod;
     protected string AssignedKey = "";
 
     public ModVersionViewModel(Mod mod)
     {
-        this.mod = mod;
+        this.Mod = mod;
     }
 
     public string Version
     {
-        get { return mod.header.GetVersion(); }
+        get { return Mod.HeaderData.GetVersion(); }
     }
 
     public string Compatible
     {
-        get { return mod.header.GetCompatible(); }
+        get { return Mod.HeaderData.GetCompatible(); }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

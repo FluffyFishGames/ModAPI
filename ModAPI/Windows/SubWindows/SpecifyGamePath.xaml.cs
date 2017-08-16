@@ -37,21 +37,21 @@ namespace ModAPI.Windows.SubWindows
         protected Schedule.Task Task;
         protected bool Completed;
 
-        public SpecifyGamePath(Schedule.Task Task)
+        public SpecifyGamePath(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = Task;
-            GamePath.Text = ((Game) Task.Parameters[0]).GamePath;
+            this.Task = task;
+            GamePath.Text = ((Game) task.Parameters[0]).GamePath;
             Check();
             SetCloseable(false);
         }
 
-        public SpecifyGamePath(string langKey, Schedule.Task Task)
+        public SpecifyGamePath(string langKey, Schedule.Task task)
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = Task;
-            GamePath.Text = ((Game) Task.Parameters[0]).GamePath;
+            this.Task = task;
+            GamePath.Text = ((Game) task.Parameters[0]).GamePath;
             Check();
             SetCloseable(false);
         }

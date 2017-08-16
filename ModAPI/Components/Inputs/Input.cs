@@ -31,7 +31,7 @@ namespace ModAPI.Components.Inputs
     {
         public static void Add(Grid grid, XElement element, string label, Binding value, int row, int startColumn)
         {
-            var inputType = XMLHelper.GetXMLAttributeAsString(element, "InputType", "TextField");
+            var inputType = XmlHelper.GetXmlAttributeAsString(element, "InputType", "TextField");
             Add(grid, element, inputType, label, value, row, startColumn);
         }
 

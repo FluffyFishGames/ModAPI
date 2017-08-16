@@ -49,9 +49,9 @@ public class ModProjectsViewModel : INotifyPropertyChanged
         FindProjects();
     }
 
-    public void CreateProject(string ID)
+    public void CreateProject(string id)
     {
-        ModProjects.Add(new ModProject(App.Game, ID));
+        ModProjects.Add(new ModProject(App.Game, id));
         FindProjects();
         _SelectedProject = ModProjects.Count;
         OnPropertyChanged("SelectedProject");
@@ -76,7 +76,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
     {
         try
         {
-            var path = Path.GetFullPath(Configuration.GetPath("projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID);
+            var path = Path.GetFullPath(Configuration.GetPath("projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id);
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -91,13 +91,13 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                     var add = true;
                     foreach (var project in ModProjects)
                     {
-                        if (project.ID == id)
+                        if (project.Id == id)
                         {
                             add = false;
                             break;
                         }
                     }
-                    if (add && Mod.Header.VerifyModID(id))
+                    if (add && Mod.Header.VerifyModId(id))
                     {
                         ModProjects.Add(new ModProject(App.Game, id));
                     }
@@ -158,7 +158,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
             for (var i = 0; i < ModProjects.Count; i++)
             {
                 var p = ModProjects[i];
-                var checkPath = Configuration.GetPath("projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID + Path.DirectorySeparatorChar + p.ID;
+                var checkPath = Configuration.GetPath("projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id + Path.DirectorySeparatorChar + p.Id;
                 if (!Directory.Exists(checkPath))
                 {
                     ModProjects.RemoveAt(i);

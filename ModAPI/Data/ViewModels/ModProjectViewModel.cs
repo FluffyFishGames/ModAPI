@@ -41,9 +41,9 @@ public class ModProjectViewModel : INotifyPropertyChanged
         }
         Project.Name.OnChange += NameChanged;
         Project.Description.OnChange += NameChanged;
-        foreach (var LangCode in Project.Languages)
+        foreach (var langCode in Project.Languages)
         {
-            AddLanguageButton(LangCode);
+            AddLanguageButton(langCode);
             /*<Button Style="{StaticResource NormalButton}">
                                                     <StackPanel Orientation="Horizontal" Margin="-10,-17,-10,-16">
                                                         <TextBlock Text="Englisch" VerticalAlignment="Center" Margin="10,0,10,0" />
@@ -67,7 +67,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
         try
         {
             var button = new ModProject.Button();
-            button.project = Project;
+            button.Project = Project;
             Project.Buttons.Add(button);
             var _button = new ModProjectButton();
             _button.DataContext = new ModProjectButtonViewModel(this, button);
@@ -107,18 +107,18 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     protected void RemoveLanguage(object sender, EventArgs e)
     {
-        var LangCode = (string) (((Button) sender).DataContext);
-        _Languages.Remove(LangCode);
-        Project.Languages.Remove(LangCode);
+        var langCode = (string) (((Button) sender).DataContext);
+        _Languages.Remove(langCode);
+        Project.Languages.Remove(langCode);
         _LanguageButtons.Remove((Button) sender);
         CheckForErrors();
     }
 
-    protected void AddLanguageButton(string LangCode)
+    protected void AddLanguageButton(string langCode)
     {
         var newButton = new Button();
         newButton.Style = Application.Current.FindResource("NormalButton") as Style;
-        newButton.DataContext = LangCode;
+        newButton.DataContext = langCode;
         newButton.Click += RemoveLanguage;
         newButton.Margin = new Thickness(0, 0, 10, 4);
 
@@ -128,7 +128,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
         image.Height = 20;
         var source = new BitmapImage();
         source.BeginInit();
-        source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + LangCode + ".png");
+        source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + langCode + ".png");
         source.EndInit();
         image.Source = source;
         image.Margin = new Thickness(0, 0, 5, 0);
@@ -145,13 +145,13 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
         var label = new TextBlock();
         label.FontSize = 16;
-        label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + LangCode);
+        label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + langCode);
         panel.Children.Add(label);
         panel.Children.Add(image2);
 
         newButton.Content = panel;
         _LanguageButtons.Add(newButton);
-        _Languages.Add(LangCode);
+        _Languages.Add(langCode);
     }
 
     public string Version
@@ -215,9 +215,9 @@ public class ModProjectViewModel : INotifyPropertyChanged
         _NameError = Visibility.Collapsed;
         _SaveError = Project.SaveFailed ? Visibility.Visible : Visibility.Collapsed;
 
-        foreach (var LangCode in Project.Languages)
+        foreach (var langCode in Project.Languages)
         {
-            if (Project.Name.GetString(LangCode).Trim() == "")
+            if (Project.Name.GetString(langCode).Trim() == "")
             {
                 _NameError = Visibility.Visible;
             }
@@ -254,12 +254,12 @@ public class ModProjectViewModel : INotifyPropertyChanged
         CheckForErrors();
     }
 
-    public string ID
+    public string Id
     {
-        get { return Project.ID; }
+        get { return Project.Id; }
         set
         {
-            Project.ID = value;
+            Project.Id = value;
             Project.SaveConfiguration();
             OnPropertyChanged("ID");
             CheckForErrors();

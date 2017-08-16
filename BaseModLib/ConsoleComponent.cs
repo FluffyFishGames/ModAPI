@@ -27,51 +27,51 @@ namespace ModAPI
 {
     public class ConsoleComponent : MonoBehaviour
     {
-        public bool opened;
-        public bool justOpened;
-        protected bool addParam;
-        protected bool submit;
+        public bool Opened;
+        public bool JustOpened;
+        protected bool AddParam;
+        protected bool Submit;
         protected List<string> Last = new List<string>();
         protected int LastPosition = -1;
 
-        void OnGUI()
+        void OnGui()
         {
-            if (opened)
+            if (Opened)
             {
-                if (autoCompletionMax > -1)
+                if (AutoCompletionMax > -1)
                 {
-                    if (currentAutocompletion == -1)
+                    if (CurrentAutocompletion == -1)
                     {
-                        currentAutocompletion = 0;
+                        CurrentAutocompletion = 0;
                     }
                     if (Event.current.keyCode == KeyCode.DownArrow && Event.current.type == EventType.KeyDown)
                     {
-                        currentAutocompletion += 1;
-                        if (currentAutocompletion > autoCompletionMax)
+                        CurrentAutocompletion += 1;
+                        if (CurrentAutocompletion > AutoCompletionMax)
                         {
-                            currentAutocompletion = 0;
+                            CurrentAutocompletion = 0;
                         }
                         Event.current.Use();
                     }
                     if (Event.current.keyCode == KeyCode.UpArrow && Event.current.type == EventType.KeyDown)
                     {
-                        currentAutocompletion -= 1;
-                        if (currentAutocompletion < 0)
+                        CurrentAutocompletion -= 1;
+                        if (CurrentAutocompletion < 0)
                         {
-                            currentAutocompletion = autoCompletionMax;
+                            CurrentAutocompletion = AutoCompletionMax;
                         }
                         Event.current.Use();
                     }
-                    if (currentAutocompletion > -1)
+                    if (CurrentAutocompletion > -1)
                     {
                         if ((Event.current.keyCode == KeyCode.RightArrow || Event.current.keyCode == KeyCode.Space || Event.current.keyCode == KeyCode.Return) &&
                             Event.current.type == EventType.KeyDown)
                         {
                             if (Event.current.keyCode == KeyCode.Return)
                             {
-                                submit = true;
+                                Submit = true;
                             }
-                            addParam = true;
+                            AddParam = true;
                             Event.current.Use();
                             return;
                         }
@@ -86,12 +86,12 @@ namespace ModAPI
                             LastPosition--;
                             if (LastPosition <= 0)
                             {
-                                input = "";
+                                Input = "";
                                 LastPosition = 0;
                             }
                             else
                             {
-                                input = Last[LastPosition];
+                                Input = Last[LastPosition];
                             }
                             Event.current.Use();
                         }
@@ -101,7 +101,7 @@ namespace ModAPI
                         if (LastPosition < Last.Count - 1)
                         {
                             LastPosition++;
-                            input = Last[LastPosition];
+                            Input = Last[LastPosition];
                             Event.current.Use();
                         }
                     }
@@ -113,11 +113,11 @@ namespace ModAPI
                     }
                     if (Event.current.keyCode == KeyCode.Return && Event.current.type == EventType.KeyDown)
                     {
-                        submit = true;
+                        Submit = true;
                     }
                 }
 
-                UnityEngine.GUI.skin = GUI.Skin;
+                UnityEngine.GUI.skin = Gui.Skin;
                 UnityEngine.GUI.color = new Color(1f, 1f, 1f, 1f);
                 UnityEngine.GUI.backgroundColor = new Color(1f, 1f, 1f, 1f);
                 UnityEngine.GUI.contentColor = new Color(1f, 1f, 1f, 1f);
@@ -135,47 +135,47 @@ namespace ModAPI
                 UnityEngine.GUI.TextArea(new Rect(x + 10f, y + 40f, width - 20f, height - 85f), string.Join("\r\n", n.ToArray()));
                 UnityEngine.GUI.enabled = true;
                 UnityEngine.GUI.SetNextControlName("Input");
-                input = UnityEngine.GUI.TextField(new Rect(x + 10f, y + height - 40f, width - 20f, 25f), input);
-                input = input.Replace("â", "a");
-                input = input.Replace("Â", "A");
-                input = input.Replace("ô", "o");
-                input = input.Replace("Ô", "O");
-                input = input.Replace("î", "i");
-                input = input.Replace("Î", "I");
-                input = input.Replace("û", "u");
-                input = input.Replace("Û", "U");
-                input = input.Replace("ê", "e");
-                input = input.Replace("Ê", "E");
+                Input = UnityEngine.GUI.TextField(new Rect(x + 10f, y + height - 40f, width - 20f, 25f), Input);
+                Input = Input.Replace("â", "a");
+                Input = Input.Replace("Â", "A");
+                Input = Input.Replace("ô", "o");
+                Input = Input.Replace("Ô", "O");
+                Input = Input.Replace("î", "i");
+                Input = Input.Replace("Î", "I");
+                Input = Input.Replace("û", "u");
+                Input = Input.Replace("Û", "U");
+                Input = Input.Replace("ê", "e");
+                Input = Input.Replace("Ê", "E");
 
-                input = input.Replace("á", "a");
-                input = input.Replace("Á", "A");
-                input = input.Replace("ó", "o");
-                input = input.Replace("Ó", "O");
-                input = input.Replace("í", "i");
-                input = input.Replace("Í", "I");
-                input = input.Replace("ú", "u");
-                input = input.Replace("Ú", "U");
-                input = input.Replace("é", "e");
-                input = input.Replace("É", "E");
+                Input = Input.Replace("á", "a");
+                Input = Input.Replace("Á", "A");
+                Input = Input.Replace("ó", "o");
+                Input = Input.Replace("Ó", "O");
+                Input = Input.Replace("í", "i");
+                Input = Input.Replace("Í", "I");
+                Input = Input.Replace("ú", "u");
+                Input = Input.Replace("Ú", "U");
+                Input = Input.Replace("é", "e");
+                Input = Input.Replace("É", "E");
 
-                if (input.StartsWith("^"))
+                if (Input.StartsWith("^"))
                 {
-                    input = input.Substring(1);
+                    Input = Input.Substring(1);
                 }
-                var spaceIndex = input.IndexOf(" ");
+                var spaceIndex = Input.IndexOf(" ");
                 var editor = (TextEditor) GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
-                if (spaceIndex > 0 && editor.pos == input.Length && editor.pos == editor.selectPos)
+                if (spaceIndex > 0 && editor.pos == Input.Length && editor.pos == editor.selectPos)
                 {
-                    var command = input.Substring(0, spaceIndex);
+                    var command = Input.Substring(0, spaceIndex);
                     var c = Console.GetCommand(command);
-                    var possible = Console.GetPossibleValues(input);
-                    var lastIndex = input.LastIndexOf(" ");
+                    var possible = Console.GetPossibleValues(Input);
+                    var lastIndex = Input.LastIndexOf(" ");
                     try
                     {
                         if (possible.Count > 1)
                         {
-                            var _left = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(input.Substring(0, lastIndex))).x - 10f;
-                            var _right = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(input + ".")).x - 5f;
+                            var left = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(Input.Substring(0, lastIndex))).x - 10f;
+                            var right = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(Input + ".")).x - 5f;
 
                             var labelWidth = 0f;
                             foreach (var poss in possible)
@@ -193,14 +193,14 @@ namespace ModAPI
                             {
                                 contentHeight = maxHeight;
                             }
-                            UnityEngine.GUI.Box(new Rect(x + 10f + _left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "");
+                            UnityEngine.GUI.Box(new Rect(x + 10f + left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "");
 
                             var maxNum = possible.Count;
                             var perPage = (int) (contentHeight / entryHeight);
                             var istartIndex = 0;
-                            if (currentAutocompletion > perPage / 2)
+                            if (CurrentAutocompletion > perPage / 2)
                             {
-                                istartIndex = currentAutocompletion - perPage / 2;
+                                istartIndex = CurrentAutocompletion - perPage / 2;
                             }
                             if (istartIndex > possible.Count - perPage)
                             {
@@ -210,37 +210,37 @@ namespace ModAPI
                             {
                                 maxNum = perPage;
                             }
-                            autoCompletionMax = possible.Count - 1;
+                            AutoCompletionMax = possible.Count - 1;
                             for (var i = 0; i < maxNum; i++)
                             {
-                                if (istartIndex + i == currentAutocompletion)
+                                if (istartIndex + i == CurrentAutocompletion)
                                 {
-                                    UnityEngine.GUI.Box(new Rect(x + 10f + _left, y + height - 40f - contentHeight + i * entryHeight, labelWidth + 10f, entryHeight), "", GUI.Skin.button);
+                                    UnityEngine.GUI.Box(new Rect(x + 10f + left, y + height - 40f - contentHeight + i * entryHeight, labelWidth + 10f, entryHeight), "", Gui.Skin.button);
                                 }
-                                UnityEngine.GUI.Label(new Rect(x + 10f + _left + 5f, y + height - 40f - contentHeight + i * entryHeight, labelWidth, entryHeight), possible.ElementAt(istartIndex + i));
+                                UnityEngine.GUI.Label(new Rect(x + 10f + left + 5f, y + height - 40f - contentHeight + i * entryHeight, labelWidth, entryHeight), possible.ElementAt(istartIndex + i));
                             }
 
-                            if (currentAutocompletion > -1)
+                            if (CurrentAutocompletion > -1)
                             {
-                                var _n = possible[currentAutocompletion].Substring(input.Substring(lastIndex + 1).Length);
-                                UnityEngine.GUI.Label(new Rect(x + 10f + _right, y + height - 43f + 3f, 200f, 20f), _n);
+                                var _n = possible[CurrentAutocompletion].Substring(Input.Substring(lastIndex + 1).Length);
+                                UnityEngine.GUI.Label(new Rect(x + 10f + right, y + height - 43f + 3f, 200f, 20f), _n);
 
-                                if (addParam)
+                                if (AddParam)
                                 {
-                                    var newInput = input.Substring(0, lastIndex) + " ";
-                                    if (possible[currentAutocompletion].Contains(" "))
+                                    var newInput = Input.Substring(0, lastIndex) + " ";
+                                    if (possible[CurrentAutocompletion].Contains(" "))
                                     {
-                                        newInput += "\"" + possible[currentAutocompletion] + "\" ";
+                                        newInput += "\"" + possible[CurrentAutocompletion] + "\" ";
                                     }
                                     else
                                     {
-                                        newInput += possible[currentAutocompletion] + " ";
+                                        newInput += possible[CurrentAutocompletion] + " ";
                                     }
-                                    input = newInput;
-                                    addParam = false;
+                                    Input = newInput;
+                                    AddParam = false;
 
-                                    editor.pos = input.Length;
-                                    editor.selectPos = input.Length;
+                                    editor.pos = Input.Length;
+                                    editor.selectPos = Input.Length;
                                 }
                             }
                         }
@@ -251,44 +251,44 @@ namespace ModAPI
                     }
                 }
 
-                if (UnityEngine.GUI.GetNameOfFocusedControl() == "Input" && ((submit && !addParam)) && input.Trim() != "")
+                if (UnityEngine.GUI.GetNameOfFocusedControl() == "Input" && ((Submit && !AddParam)) && Input.Trim() != "")
                 {
-                    Console.ParseInput(input);
-                    Last.Insert(0, input);
-                    input = "";
+                    Console.ParseInput(Input);
+                    Last.Insert(0, Input);
+                    Input = "";
                     LastPosition = -1;
-                    submit = false;
+                    Submit = false;
                 }
                 Event.current.mousePosition = new Vector2(0f, 0f);
-                if (justOpened)
+                if (JustOpened)
                 {
                     UnityEngine.GUI.FocusControl("Input");
-                    justOpened = false;
+                    JustOpened = false;
                 }
             }
-            if (lastInput != input)
+            if (LastInput != Input)
             {
-                currentAutocompletion = -1;
-                autoCompletionMax = -1;
+                CurrentAutocompletion = -1;
+                AutoCompletionMax = -1;
             }
-            lastInput = input;
+            LastInput = Input;
         }
 
-        protected string lastInput = "";
-        protected int currentAutocompletion = -1;
-        protected int autoCompletionMax = -1;
+        protected string LastInput = "";
+        protected int CurrentAutocompletion = -1;
+        protected int AutoCompletionMax = -1;
 
-        protected string input = "";
+        protected string Input = "";
 
         public void Open()
         {
-            opened = true;
-            justOpened = true;
+            Opened = true;
+            JustOpened = true;
         }
 
         public void Close()
         {
-            opened = false;
+            Opened = false;
         }
 
         void Update()

@@ -34,13 +34,13 @@ namespace ModAPI
         public Complete OnComplete;
         public Change OnChange;
         protected List<Task> Tasks = new List<Task>();
-        protected int currentTask;
-        protected float overallWeight;
+        protected int CurrentTask;
+        protected float OverallWeight;
 
         public void AddTask(TaskMethod task, float weight)
         {
             Tasks.Add(new Task(this, weight, task));
-            overallWeight += weight;
+            OverallWeight += weight;
         }
 
         protected void ProgressChanged()
@@ -48,7 +48,7 @@ namespace ModAPI
             var progress = 0f;
             foreach (var t in Tasks)
             {
-                progress += (t.Progress.Progress) * (t.Weight / overallWeight);
+                progress += (t.Progress.Progress) * (t.Weight / OverallWeight);
             }
             Progress = progress;
             if (OnChange != null)
@@ -64,14 +64,14 @@ namespace ModAPI
         public void Start()
         {
             Progress = 0;
-            currentTask = -1;
+            CurrentTask = -1;
             Next();
         }
 
         protected void Next()
         {
-            currentTask += 1;
-            if (Tasks.Count <= currentTask)
+            CurrentTask += 1;
+            if (Tasks.Count <= CurrentTask)
             {
                 if (OnComplete != null)
                 {
@@ -80,7 +80,7 @@ namespace ModAPI
             }
             else
             {
-                Tasks[currentTask].Start();
+                Tasks[CurrentTask].Start();
             }
         }
 
@@ -89,7 +89,7 @@ namespace ModAPI
             public ProgressHandler Progress;
             public TaskMethod Method;
             public float Weight;
-            protected ProgressChain chain;
+            protected ProgressChain Chain;
 
             public void Start()
             {
@@ -99,7 +99,7 @@ namespace ModAPI
             public Task(ProgressChain chain, float weight, TaskMethod method)
             {
                 Weight = weight;
-                this.chain = chain;
+                this.Chain = chain;
                 Progress = new ProgressHandler();
                 Progress.OnChange += (s, e) => { chain.ProgressChanged(); };
                 Progress.OnComplete += (s, e) => { chain.Next(); };

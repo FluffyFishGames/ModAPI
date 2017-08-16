@@ -33,13 +33,13 @@ namespace UnityEngine
 
     public class Object
     {
-        public string name;
-        public HideFlags hideFlags;
-        public bool active;
+        public string Name;
+        public HideFlags HideFlags;
+        public bool Active;
 
         public Object(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
         public Object()
@@ -47,22 +47,22 @@ namespace UnityEngine
         }
     }
 
-    public class ComponentXMLProvider : Component, IXMLProvider
+    public class ComponentXmlProvider : Component, IXmlProvider
     {
-        public virtual XElement GetXML()
+        public virtual XElement GetXml()
         {
-            return XMLParser.GetXML(this);
+            return XmlParser.GetXml(this);
         }
 
-        public virtual void SetXML(XElement element)
+        public virtual void SetXml(XElement element)
         {
-            XMLParser.SetXML(this, element);
+            XmlParser.SetXml(this, element);
         }
     }
 
     public class BaseUnity : Object
     {
-        public object[] data;
+        public object[] Data;
 
         public BaseUnity()
         {
@@ -74,7 +74,7 @@ namespace UnityEngine
 
         public BaseUnity(object[] data)
         {
-            this.data = data;
+            this.Data = data;
         }
     }
 
@@ -119,8 +119,8 @@ namespace UnityEngine
 
     public class Component : BaseUnity
     {
-        public byte[] byteData;
-        public object[] componentData;
+        public byte[] ByteData;
+        public object[] ComponentData;
 
         public Component()
         {
@@ -380,75 +380,75 @@ namespace UnityEngine
         }
     }
 
-    public class Color : BaseXMLProvider
+    public class Color : BaseXmlProvider
     {
-        public float r;
-        public float g;
-        public float b;
-        public float a;
+        public float R;
+        public float G;
+        public float B;
+        public float A;
 
         public Color(float r, float g, float b, float a)
         {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
+            this.R = r;
+            this.G = g;
+            this.B = b;
+            this.A = a;
         }
     }
 
-    public class Vector2 : BaseXMLProvider
+    public class Vector2 : BaseXmlProvider
     {
-        public static Vector2 zero = new Vector2(0f, 0f);
+        public static Vector2 Zero = new Vector2(0f, 0f);
 
-        public float x;
-        public float y;
+        public float X;
+        public float Y;
 
         public Vector2(float x, float y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
     }
 
-    public class Vector3 : IXMLProvider
+    public class Vector3 : IXmlProvider
     {
-        public static Vector3 zero = new Vector3(0f, 0f, 0f);
+        public static Vector3 Zero = new Vector3(0f, 0f, 0f);
 
-        public float x;
-        public float y;
-        public float z;
+        public float X;
+        public float Y;
+        public float Z;
 
         public Vector3()
         {
         }
 
-        public XElement GetXML()
+        public XElement GetXml()
         {
             var root = new XElement("Vector3");
-            root.Add(new XElement("X", x));
-            root.Add(new XElement("Y", y));
-            root.Add(new XElement("Z", z));
+            root.Add(new XElement("X", X));
+            root.Add(new XElement("Y", Y));
+            root.Add(new XElement("Z", Z));
             root.SetAttributeValue("Type", "UnityEngine.Vector3");
             return root;
         }
 
-        public void SetXML(XElement element)
+        public void SetXml(XElement element)
         {
-            x = XMLHelper.GetXMLElementAsFloat(element, "X", x);
-            y = XMLHelper.GetXMLElementAsFloat(element, "Y", y);
-            z = XMLHelper.GetXMLElementAsFloat(element, "Z", z);
+            X = XmlHelper.GetXmlElementAsFloat(element, "X", X);
+            Y = XmlHelper.GetXmlElementAsFloat(element, "Y", Y);
+            Z = XmlHelper.GetXmlElementAsFloat(element, "Z", Z);
         }
 
         public Vector3(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public static bool operator ==(Vector3 x, Vector3 y)
         {
-            return x.x == y.x && x.y == y.y && x.z == y.z;
+            return x.X == y.X && x.Y == y.Y && x.Z == y.Z;
         }
 
         public static bool operator !=(Vector3 x, Vector3 y)
@@ -459,64 +459,64 @@ namespace UnityEngine
 
     public class Vector4
     {
-        public float x;
-        public float y;
-        public float z;
-        public float w;
+        public float X;
+        public float Y;
+        public float Z;
+        public float W;
 
-        public static Vector4 zero = new Vector4(0, 0, 0, 0);
+        public static Vector4 Zero = new Vector4(0, 0, 0, 0);
 
         public Vector4(float x, float y, float z, float w)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.w = w;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.W = w;
         }
     }
 
-    public class Quaternion : IXMLProvider
+    public class Quaternion : IXmlProvider
     {
-        public static Quaternion identity = new Quaternion(0f, 0f, 0f, 1f);
-        public float x;
-        public float y;
-        public float z;
-        public float w;
+        public static Quaternion Identity = new Quaternion(0f, 0f, 0f, 1f);
+        public float X;
+        public float Y;
+        public float Z;
+        public float W;
 
         public Quaternion()
         {
         }
 
-        public XElement GetXML()
+        public XElement GetXml()
         {
             var root = new XElement("Quaternion");
-            root.Add(new XElement("X", x));
-            root.Add(new XElement("Y", y));
-            root.Add(new XElement("Z", z));
-            root.Add(new XElement("W", w));
+            root.Add(new XElement("X", X));
+            root.Add(new XElement("Y", Y));
+            root.Add(new XElement("Z", Z));
+            root.Add(new XElement("W", W));
             root.SetAttributeValue("Type", "UnityEngine.Quaternion");
             return root;
         }
 
-        public void SetXML(XElement element)
+        public void SetXml(XElement element)
         {
-            x = XMLHelper.GetXMLElementAsFloat(element, "X", x);
-            y = XMLHelper.GetXMLElementAsFloat(element, "Y", y);
-            z = XMLHelper.GetXMLElementAsFloat(element, "Z", z);
-            w = XMLHelper.GetXMLElementAsFloat(element, "W", w);
+            X = XmlHelper.GetXmlElementAsFloat(element, "X", X);
+            Y = XmlHelper.GetXmlElementAsFloat(element, "Y", Y);
+            Z = XmlHelper.GetXmlElementAsFloat(element, "Z", Z);
+            W = XmlHelper.GetXmlElementAsFloat(element, "W", W);
         }
 
         public Quaternion(float x, float y, float z, float w)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.w = w;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.W = w;
         }
 
         public static bool operator ==(Quaternion x, Quaternion y)
         {
-            return x.x == y.x && x.y == y.y && x.z == y.z && x.w == y.w;
+            return x.X == y.X && x.Y == y.Y && x.Z == y.Z && x.W == y.W;
         }
 
         public static bool operator !=(Quaternion x, Quaternion y)
@@ -525,10 +525,10 @@ namespace UnityEngine
         }
     }
 
-    public class Transform : BaseXMLProvider
+    public class Transform : BaseXmlProvider
     {
-        public Vector3 localPosition;
-        public Quaternion localRotation;
-        public Vector3 localScale;
+        public Vector3 LocalPosition;
+        public Quaternion LocalRotation;
+        public Vector3 LocalScale;
     }
 }

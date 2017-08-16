@@ -30,7 +30,7 @@ namespace ModAPI.Utils
                     }
                     catch (Exception ex)
                     {
-                        Debug.Log("LanguageHelper", "It seems like InitializeComponent is called in constructor of \"" + current.GetType().FullName + "\".", Debug.Type.WARNING);
+                        Debug.Log("LanguageHelper", "It seems like InitializeComponent is called in constructor of \"" + current.GetType().FullName + "\".", Debug.Type.Warning);
                     }
                 }
                 if (rootPart != "")

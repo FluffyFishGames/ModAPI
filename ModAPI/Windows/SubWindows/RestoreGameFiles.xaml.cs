@@ -37,19 +37,19 @@ namespace ModAPI.Windows.SubWindows
     {
         protected Schedule.Task Task;
 
-        public RestoreGameFiles(Schedule.Task Task)
+        public RestoreGameFiles(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = Task;
+            this.Task = task;
             Check();
             SetCloseable(false);
         }
 
-        public RestoreGameFiles(string langKey, Schedule.Task Task)
+        public RestoreGameFiles(string langKey, Schedule.Task task)
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = Task;
+            this.Task = task;
             Check();
             SetCloseable(false);
         }
@@ -152,7 +152,7 @@ namespace ModAPI.Windows.SubWindows
                     var steamPath = Configuration.GetPath("Steam");
                     var p = new Process();
                     p.StartInfo.FileName = steamPath + Path.DirectorySeparatorChar + "Steam.exe";
-                    p.StartInfo.Arguments = "steam://validate/" + App.Game.GameConfiguration.SteamAppID;
+                    p.StartInfo.Arguments = "steam://validate/" + App.Game.GameConfiguration.SteamAppId;
                     p.StartInfo.UseShellExecute = false;
                     p.Start();
                     progressHandler.Task = "Restore";
@@ -199,11 +199,11 @@ namespace ModAPI.Windows.SubWindows
                             }
                             if (check)
                             {
-                                if (n.EndsWith("AppID " + App.Game.GameConfiguration.SteamAppID + " state changed : Fully Installed,"))
+                                if (n.EndsWith("AppID " + App.Game.GameConfiguration.SteamAppId + " state changed : Fully Installed,"))
                                 {
                                     state = 3;
                                 }
-                                else if (n.Contains("AppID " + App.Game.GameConfiguration.SteamAppID) && n.Contains("(Suspended)"))
+                                else if (n.Contains("AppID " + App.Game.GameConfiguration.SteamAppId) && n.Contains("(Suspended)"))
                                 {
                                     state = 1;
                                 }

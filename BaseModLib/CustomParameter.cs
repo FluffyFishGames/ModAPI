@@ -34,48 +34,48 @@ namespace ModAPI
             ParameterType = type;
         }
 
-        public CustomParameter(List<string> Possible)
+        public CustomParameter(List<string> possible)
         {
-            for (var i = 0; i < Possible.Count; i++)
+            for (var i = 0; i < possible.Count; i++)
             {
-                Possible[i] = Possible[i].ToLower();
+                possible[i] = possible[i].ToLower();
             }
-            this.Possible = Possible;
+            this.Possible = possible;
         }
 
-        public CustomParameter(string[] Possible)
+        public CustomParameter(string[] possible)
         {
-            for (var i = 0; i < Possible.Length; i++)
+            for (var i = 0; i < possible.Length; i++)
             {
-                Possible[i] = Possible[i].ToLower();
+                possible[i] = possible[i].ToLower();
             }
-            this.Possible = Possible.ToList();
+            this.Possible = possible.ToList();
         }
 
-        public CustomParameter(ParameterType type, bool Required)
+        public CustomParameter(ParameterType type, bool required)
         {
             ParameterType = type;
-            this.Required = Required;
+            this.Required = required;
         }
 
-        public CustomParameter(List<string> Possible, bool Required)
+        public CustomParameter(List<string> possible, bool required)
         {
-            for (var i = 0; i < Possible.Count; i++)
+            for (var i = 0; i < possible.Count; i++)
             {
-                Possible[i] = Possible[i].ToLower();
+                possible[i] = possible[i].ToLower();
             }
-            this.Possible = Possible;
-            this.Required = Required;
+            this.Possible = possible;
+            this.Required = required;
         }
 
-        public CustomParameter(string[] Possible, bool Required)
+        public CustomParameter(string[] possible, bool required)
         {
-            for (var i = 0; i < Possible.Length; i++)
+            for (var i = 0; i < possible.Length; i++)
             {
-                Possible[i] = Possible[i].ToLower();
+                possible[i] = possible[i].ToLower();
             }
-            this.Possible = Possible.ToList();
-            this.Required = Required;
+            this.Possible = possible.ToList();
+            this.Required = required;
         }
     }
 }

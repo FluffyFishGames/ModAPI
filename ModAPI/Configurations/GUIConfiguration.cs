@@ -26,52 +26,52 @@ using System.Xml.Linq;
 
 namespace ModAPI.Configurations
 {
-    public class GUIConfiguration
+    public class GuiConfiguration
     {
         public enum ResultCode
         {
-            OK,
+            Ok,
             ERROR
         }
 
         public enum ErrorCode
         {
-            FILE_NOT_FOUND,
-            MALFORMED_CONFIGURATION
+            FileNotFound,
+            MalformedConfiguration
         }
 
         public static ErrorCode Error;
         public static string ErrorString = "";
         public static List<Tab> Tabs;
 
-        protected static ProgressHandler currentProgressHandler;
+        protected static ProgressHandler CurrentProgressHandler;
 
         protected static void ChangeProgress(float progress)
         {
-            if (currentProgressHandler != null)
+            if (CurrentProgressHandler != null)
             {
-                currentProgressHandler.Progress = progress;
+                CurrentProgressHandler.Progress = progress;
             }
         }
 
         public static ResultCode Load(ProgressHandler handler)
         {
-            currentProgressHandler = handler;
+            CurrentProgressHandler = handler;
             var gameConfigPath = Configuration.GetPath("GameConfigurations");
             if (gameConfigPath == "")
             {
-                Error = ErrorCode.MALFORMED_CONFIGURATION;
+                Error = ErrorCode.MalformedConfiguration;
                 ErrorString = "Couldn't find the game configurations path.";
-                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
+                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.Error);
                 return ResultCode.ERROR;
             }
 
             var gameConfigFile = Path.GetFullPath(gameConfigPath + Path.DirectorySeparatorChar + Configuration.CurrentGame + Path.DirectorySeparatorChar + "GUI.xml");
             if (!File.Exists(gameConfigFile))
             {
-                Error = ErrorCode.FILE_NOT_FOUND;
+                Error = ErrorCode.FileNotFound;
                 ErrorString = "Couldn't find the file \"" + gameConfigFile + "\".";
-                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
+                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.Error);
                 return ResultCode.ERROR;
             }
 
@@ -82,29 +82,29 @@ namespace ModAPI.Configurations
                 Tabs = new List<Tab>();
                 if (!ParseTabs(configuration.Root))
                 {
-                    Error = ErrorCode.MALFORMED_CONFIGURATION;
+                    Error = ErrorCode.MalformedConfiguration;
                     ErrorString = "The configuration file \"" + gameConfigFile + "\" contains invalid elements.";
-                    Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
+                    Debug.Log("GUIConfiguration", ErrorString, Debug.Type.Error);
                     return ResultCode.ERROR;
                 }
             }
             catch (XmlException ex)
             {
-                Error = ErrorCode.MALFORMED_CONFIGURATION;
+                Error = ErrorCode.MalformedConfiguration;
                 ErrorString = "The file \"" + gameConfigFile + "\" couldn't be parsed. Exception: " + ex;
-                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
+                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.Error);
                 return ResultCode.ERROR;
             }
             catch (Exception ex)
             {
-                Error = ErrorCode.MALFORMED_CONFIGURATION;
+                Error = ErrorCode.MalformedConfiguration;
                 ErrorString = "The file \"" + gameConfigFile + "\" couldn't be parsed. Unexpected exception: " + ex;
-                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.ERROR);
+                Debug.Log("GUIConfiguration", ErrorString, Debug.Type.Error);
                 return ResultCode.ERROR;
             }
             Debug.Log("GUIConfiguration", "Successfully parsed the GUI configuration.");
             ChangeProgress(100f);
-            return ResultCode.OK;
+            return ResultCode.Ok;
         }
 
         static bool ParseTabs(XElement parent, Tab parentTab = null)
@@ -173,13 +173,13 @@ namespace ModAPI.Configurations
                     }
                     catch (XmlException e)
                     {
-                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Exception: " + e, Debug.Type.ERROR);
+                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Exception: " + e, Debug.Type.Error);
                         Error = true;
                         return;
                     }
                     catch (Exception e)
                     {
-                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Unexpected exception: " + e, Debug.Type.ERROR);
+                        Debug.Log("GUIConfiguration", "The file \"" + configFile + "\" couldn't be parsed. Unexpected exception: " + e, Debug.Type.Error);
                         Error = true;
                         return;
                     }
@@ -188,14 +188,14 @@ namespace ModAPI.Configurations
 
                 if (TypeName == "")
                 {
-                    Debug.Log("GUIConfiguration", "No type defined for tab", Debug.Type.ERROR);
+                    Debug.Log("GUIConfiguration", "No type defined for tab", Debug.Type.Error);
                     Error = true;
                     return;
                 }
                 ComponentType = Type.GetType(TypeName);
                 if (ComponentType == null)
                 {
-                    Debug.Log("GUIConfiguration", "Component type \"" + TypeName + "\" couldn't be found.", Debug.Type.ERROR);
+                    Debug.Log("GUIConfiguration", "Component type \"" + TypeName + "\" couldn't be found.", Debug.Type.Error);
                     Error = true;
                     return;
                 }

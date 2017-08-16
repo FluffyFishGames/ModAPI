@@ -38,15 +38,15 @@ namespace ModAPI
 
         public enum ResultCode
         {
-            OK,
+            Ok,
             ERROR
         }
 
         public enum ErrorCode
         {
-            FILE_NOT_FOUND,
-            MALFORMED_CONFIGURATION,
-            UNEXPECTED
+            FileNotFound,
+            MalformedConfiguration,
+            Unexpected
         }
 
         public static ErrorCode Error;
@@ -91,47 +91,47 @@ namespace ModAPI
         }
 
         protected static Dictionary<string, TypeBuilder> buildingTypes = new Dictionary<string, TypeBuilder>();
-        protected static Dictionary<string, FieldBuilder> buildingFields = new Dictionary<string, FieldBuilder>();
-        protected static Dictionary<string, List<WaitForType>> waitForType = new Dictionary<string, List<WaitForType>>();
-        protected static Dictionary<string, Action<Type>> typeParsed = new Dictionary<string, Action<Type>>();
-        protected static Dictionary<string, int> typeWaiting = new Dictionary<string, int>();
-        protected static AssemblyBuilder assemblyBuilder;
-        protected static ModuleBuilder moduleBuilder;
+        protected static Dictionary<string, FieldBuilder> BuildingFields = new Dictionary<string, FieldBuilder>();
+        protected static Dictionary<string, List<WaitForType>> WaitForTypeDictionary = new Dictionary<string, List<WaitForType>>();
+        protected static Dictionary<string, Action<Type>> TypeParsed = new Dictionary<string, Action<Type>>();
+        protected static Dictionary<string, int> TypeWaiting = new Dictionary<string, int>();
+        protected static AssemblyBuilder AssemblyBuilder;
+        protected static ModuleBuilder ModuleBuilder;
 
         protected class WaitForType
         {
-            protected TypeBuilder newType;
-            protected Type fieldType;
-            protected string fieldTypeName;
-            protected string fieldName;
-            protected string waitName;
-            protected bool isProperty;
+            protected TypeBuilder NewType;
+            protected Type FieldType;
+            protected string FieldTypeName;
+            protected string FieldName;
+            protected string WaitName;
+            protected bool IsProperty;
 
             public WaitForType(TypeBuilder newType, string fieldTypeName, string waitName, string fieldName, bool isProperty = false)
             {
-                this.isProperty = isProperty;
-                this.newType = newType;
-                this.fieldTypeName = fieldTypeName;
-                this.fieldName = fieldName;
-                this.waitName = waitName;
+                this.IsProperty = isProperty;
+                this.NewType = newType;
+                this.FieldTypeName = fieldTypeName;
+                this.FieldName = fieldName;
+                this.WaitName = waitName;
 
-                if (!typeParsed.ContainsKey(waitName))
+                if (!DynamicTypes.TypeParsed.ContainsKey(waitName))
                 {
-                    typeParsed.Add(waitName, TypeParsed);
+                    DynamicTypes.TypeParsed.Add(waitName, TypeParsed);
                 }
-                if (!waitForType.ContainsKey(waitName))
+                if (!WaitForTypeDictionary.ContainsKey(waitName))
                 {
-                    waitForType.Add(waitName, new List<WaitForType>());
+                    WaitForTypeDictionary.Add(waitName, new List<WaitForType>());
                 }
 
-                waitForType[waitName].Add(this);
+                WaitForTypeDictionary[waitName].Add(this);
             }
 
             public void TypeParsed(Type type)
             {
-                if (waitForType.ContainsKey(type.FullName))
+                if (WaitForTypeDictionary.ContainsKey(type.FullName))
                 {
-                    foreach (var t in waitForType[type.FullName])
+                    foreach (var t in WaitForTypeDictionary[type.FullName])
                     {
                         t.Parsed();
                     }
@@ -140,32 +140,32 @@ namespace ModAPI
 
             public void Parsed()
             {
-                fieldType = DynamicTypes.GetType(fieldTypeName);
-                if (fieldType == null)
+                FieldType = DynamicTypes.GetType(FieldTypeName);
+                if (FieldType == null)
                 {
-                    Debug.Log("DynamicTypes.WaitForType", "Couldn't find type \"" + fieldTypeName + "\".", Debug.Type.ERROR);
+                    Debug.Log("DynamicTypes.WaitForType", "Couldn't find type \"" + FieldTypeName + "\".", Debug.Type.Error);
                 }
                 else
                 {
-                    if (isProperty)
+                    if (IsProperty)
                     {
-                        if (ParseProperty(newType, fieldType, fieldTypeName, fieldName))
+                        if (ParseProperty(NewType, FieldType, FieldTypeName, FieldName))
                         {
-                            typeWaiting[newType.FullName]--;
-                            if (typeWaiting[newType.FullName] == 0)
+                            TypeWaiting[NewType.FullName]--;
+                            if (TypeWaiting[NewType.FullName] == 0)
                             {
-                                TypeComplete(newType);
+                                TypeComplete(NewType);
                             }
                         }
                     }
                     else
                     {
-                        if (ParseField(newType, fieldType, fieldTypeName, fieldName))
+                        if (ParseField(NewType, FieldType, FieldTypeName, FieldName))
                         {
-                            typeWaiting[newType.FullName]--;
-                            if (typeWaiting[newType.FullName] == 0)
+                            TypeWaiting[NewType.FullName]--;
+                            if (TypeWaiting[NewType.FullName] == 0)
                             {
-                                TypeComplete(newType);
+                                TypeComplete(NewType);
                             }
                         }
                     }
@@ -193,7 +193,7 @@ namespace ModAPI
                     var gt = GetType(p[i]);
                     if (gt == null)
                     {
-                        Debug.Log("DynamicTypes", "GetType wasn't able to resolve type \"" + p[i] + "\" of generic type \"" + type + "\".", Debug.Type.ERROR);
+                        Debug.Log("DynamicTypes", "GetType wasn't able to resolve type \"" + p[i] + "\" of generic type \"" + type + "\".", Debug.Type.Error);
                     }
                     else
                     {
@@ -277,7 +277,7 @@ namespace ModAPI
 
         protected static void ParseClass(XElement el, TypeBuilder parentType = null)
         {
-            var ClassName = el.Attribute("Name").Value;
+            var className = el.Attribute("Name").Value;
             var Namespace = "";
             if (el.Attribute("Namespace") != null)
             {
@@ -294,7 +294,7 @@ namespace ModAPI
             {
                 try
                 {
-                    newType = parentType.DefineNestedType(ClassName, TypeAttributes.NestedPublic | TypeAttributes.Class);
+                    newType = parentType.DefineNestedType(className, TypeAttributes.NestedPublic | TypeAttributes.Class);
                 }
                 catch (Exception e)
                 {
@@ -303,7 +303,7 @@ namespace ModAPI
             }
             else
             {
-                newType = moduleBuilder.DefineType(Namespace + ClassName, TypeAttributes.Public | TypeAttributes.Class);
+                newType = ModuleBuilder.DefineType(Namespace + className, TypeAttributes.Public | TypeAttributes.Class);
             }
 
             Type baseType = null;
@@ -313,7 +313,7 @@ namespace ModAPI
             }
             if (baseType == null)
             {
-                baseType = typeof(BaseXMLProvider);
+                baseType = typeof(BaseXmlProvider);
             }
             newType.SetParent(baseType);
             Debug.Log("DynamicTypes", "Parsing dynamic type \"" + newType.FullName + "\".");
@@ -330,11 +330,11 @@ namespace ModAPI
                 var propertyType = GetType(typeName);
                 if (!ParseProperty(newType, propertyType, typeName, propertyName))
                 {
-                    if (!typeWaiting.ContainsKey(newType.FullName))
+                    if (!TypeWaiting.ContainsKey(newType.FullName))
                     {
-                        typeWaiting.Add(newType.FullName, 0);
+                        TypeWaiting.Add(newType.FullName, 0);
                     }
-                    typeWaiting[newType.FullName]++;
+                    TypeWaiting[newType.FullName]++;
                 }
             }
 
@@ -345,15 +345,15 @@ namespace ModAPI
                 var fieldType = GetType(typeName);
                 if (!ParseField(newType, fieldType, typeName, fieldName))
                 {
-                    if (!typeWaiting.ContainsKey(newType.FullName))
+                    if (!TypeWaiting.ContainsKey(newType.FullName))
                     {
-                        typeWaiting.Add(newType.FullName, 0);
+                        TypeWaiting.Add(newType.FullName, 0);
                     }
-                    typeWaiting[newType.FullName]++;
+                    TypeWaiting[newType.FullName]++;
                 }
             }
 
-            if (!typeWaiting.ContainsKey(newType.FullName))
+            if (!TypeWaiting.ContainsKey(newType.FullName))
             {
                 TypeComplete(newType);
             }
@@ -365,9 +365,9 @@ namespace ModAPI
 
         protected static void TypeComplete(TypeBuilder newType)
         {
-            if (typeParsed.ContainsKey(newType.FullName))
+            if (TypeParsed.ContainsKey(newType.FullName))
             {
-                typeParsed[newType.FullName](newType);
+                TypeParsed[newType.FullName](newType);
             }
             Debug.Log("DynamicTypes", "Successfully parsed dynamic type \"" + newType.FullName + "\".");
         }
@@ -388,7 +388,7 @@ namespace ModAPI
             }
             else
             {
-                Debug.Log("DynamicTypes", "Empty field name in type \"" + newType.FullName + "\".", Debug.Type.WARNING);
+                Debug.Log("DynamicTypes", "Empty field name in type \"" + newType.FullName + "\".", Debug.Type.Warning);
             }
             return false;
         }
@@ -408,18 +408,18 @@ namespace ModAPI
 
                 var getter = newType.DefineMethod("get_" + propertyName, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, CallingConventions.HasThis,
                     propertyType, Type.EmptyTypes);
-                var getterIL = getter.GetILGenerator();
-                getterIL.Emit(OpCodes.Ldarg_0);
-                getterIL.Emit(OpCodes.Ldfld, field);
-                getterIL.Emit(OpCodes.Ret);
+                var getterIl = getter.GetILGenerator();
+                getterIl.Emit(OpCodes.Ldarg_0);
+                getterIl.Emit(OpCodes.Ldfld, field);
+                getterIl.Emit(OpCodes.Ret);
 
                 var setter = newType.DefineMethod("set_" + propertyName, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, CallingConventions.HasThis,
                     null, new[] { propertyType });
-                var setterIL = setter.GetILGenerator();
-                setterIL.Emit(OpCodes.Ldarg_0);
-                setterIL.Emit(OpCodes.Ldarg_1);
-                setterIL.Emit(OpCodes.Stfld, field);
-                setterIL.Emit(OpCodes.Ret);
+                var setterIl = setter.GetILGenerator();
+                setterIl.Emit(OpCodes.Ldarg_0);
+                setterIl.Emit(OpCodes.Ldarg_1);
+                setterIl.Emit(OpCodes.Stfld, field);
+                setterIl.Emit(OpCodes.Ret);
 
                 property.SetGetMethod(getter);
                 property.SetSetMethod(setter);
@@ -429,7 +429,7 @@ namespace ModAPI
             }
             else
             {
-                Debug.Log("DynamicTypes", "Empty property name in type \"" + newType.FullName + "\".", Debug.Type.WARNING);
+                Debug.Log("DynamicTypes", "Empty property name in type \"" + newType.FullName + "\".", Debug.Type.Warning);
             }
             return false;
         }
@@ -442,12 +442,12 @@ namespace ModAPI
             {
                 try
                 {
-                    var DynamicClasses = XDocument.Load(fileName);
+                    var dynamicClasses = XDocument.Load(fileName);
                     var assemblyName = new AssemblyName("DynamicClasses");
-                    assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-                    moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicClassesModule");
+                    AssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+                    ModuleBuilder = AssemblyBuilder.DefineDynamicModule("DynamicClassesModule");
                     progressHandler.Progress = 10f;
-                    var classes = DynamicClasses.Root.Elements("Class");
+                    var classes = dynamicClasses.Root.Elements("Class");
                     float count = classes.Count();
                     var done = 0f;
                     foreach (var el in classes)
@@ -467,23 +467,23 @@ namespace ModAPI
                 }
                 catch (XmlException e)
                 {
-                    Error = ErrorCode.MALFORMED_CONFIGURATION;
+                    Error = ErrorCode.MalformedConfiguration;
                     ErrorString = "The dynamic types configuration file is malformed. Exception: " + e;
-                    Debug.Log("DynamicTypes", ErrorString, Debug.Type.ERROR);
+                    Debug.Log("DynamicTypes", ErrorString, Debug.Type.Error);
                     return ResultCode.ERROR;
                 }
                 catch (Exception e)
                 {
-                    Error = ErrorCode.UNEXPECTED;
+                    Error = ErrorCode.Unexpected;
                     ErrorString = "Unexpected exception while parsing dynamic types: " + e;
-                    Debug.Log("DynamicTypes", ErrorString, Debug.Type.ERROR);
+                    Debug.Log("DynamicTypes", ErrorString, Debug.Type.Error);
                     return ResultCode.ERROR;
                 }
-                return ResultCode.OK;
+                return ResultCode.Ok;
             }
-            Error = ErrorCode.FILE_NOT_FOUND;
+            Error = ErrorCode.FileNotFound;
             ErrorString = "The dynamic types configuration file \"" + fileName + "\" couldn't be found.";
-            Debug.Log("DynamicTypes", ErrorString, Debug.Type.ERROR);
+            Debug.Log("DynamicTypes", ErrorString, Debug.Type.Error);
             return ResultCode.ERROR;
         }
     }

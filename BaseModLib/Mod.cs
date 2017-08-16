@@ -26,27 +26,27 @@ namespace ModAPI
 {
     public class Mod
     {
-        public string ID;
-        public string UniqueID;
+        public string Id;
+        public string UniqueId;
         public string Version;
         public Assembly Assembly;
         public bool HasResources;
 
         public Dictionary<string, string> Buttons;
 
-        public Mod(XElement Configuration)
+        public Mod(XElement configuration)
         {
-            ID = Configuration.Attribute("ID").Value;
-            UniqueID = Configuration.Attribute("UniqueID").Value;
-            Version = Configuration.Attribute("Version").Value;
-            var hasResoucresAttribute = Configuration.Attribute("HasResources");
+            Id = configuration.Attribute("ID").Value;
+            UniqueId = configuration.Attribute("UniqueID").Value;
+            Version = configuration.Attribute("Version").Value;
+            var hasResoucresAttribute = configuration.Attribute("HasResources");
             if (hasResoucresAttribute != null)
             {
                 HasResources = hasResoucresAttribute.Value.ToLower() == "true";
             }
 
             Buttons = new Dictionary<string, string>();
-            foreach (var button in Configuration.Elements("Button"))
+            foreach (var button in configuration.Elements("Button"))
             {
                 Buttons.Add(button.Attribute("ID").Value, button.Value);
             }

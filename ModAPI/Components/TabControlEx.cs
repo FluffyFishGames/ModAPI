@@ -38,7 +38,7 @@ namespace ModAPI.Components
             get { return _ExtraPanel; }
             set { _ExtraPanel = value; }
         }
-        private Panel ItemsHolderPanel;
+        private Panel _itemsHolderPanel;
 
         public void Preload(ProgressHandler handler)
         {
@@ -52,12 +52,12 @@ namespace ModAPI.Components
             }
         }
 
-        Action _Loaded;
-        Action _LoadNext;
+        Action _loaded;
+        Action _loadNext;
 
         public void PreloadTab(ProgressHandler handler, TabItem item)
         {
-            _LoadNext = () =>
+            _loadNext = () =>
             {
                 var currIndex = Items.IndexOf(item);
                 handler.Progress = (currIndex / (Items.Count - 1f)) * 100f;
@@ -77,19 +77,19 @@ namespace ModAPI.Components
                     SelectedIndex = 0;
                 }
             };
-            _Loaded = () =>
+            _loaded = () =>
             {
                 if (item.Content is IPanel)
                 {
                     var currIndex = Items.IndexOf(item);
                     var subHandler = new ProgressHandler();
-                    subHandler.OnComplete += delegate { _LoadNext(); };
+                    subHandler.OnComplete += delegate { _loadNext(); };
                     subHandler.OnChange += delegate { handler.Progress = ((((float) currIndex - 1) / (Items.Count - 1f)) + (subHandler.Progress / 100f * 1f / (Items.Count - 1f))) * 100f; };
                     ((IPanel) item.Content).Preload(subHandler);
                 }
                 else
                 {
-                    _LoadNext();
+                    _loadNext();
                 }
             };
             item.Loaded += item_GotFocus;
@@ -98,13 +98,13 @@ namespace ModAPI.Components
             UpdateLayout();
             if (item.IsLoaded)
             {
-                _Loaded();
+                _loaded();
             }
         }
 
         void item_GotFocus(object sender, RoutedEventArgs e)
         {
-            _Loaded();
+            _loaded();
             ((TabItem) sender).Loaded -= item_GotFocus;
         }
 
@@ -139,7 +139,7 @@ namespace ModAPI.Components
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            ItemsHolderPanel = GetTemplateChild("PART_ItemsHolder") as Panel;
+            _itemsHolderPanel = GetTemplateChild("PART_ItemsHolder") as Panel;
 
             UpdateSelectedItem();
         }
@@ -152,7 +152,7 @@ namespace ModAPI.Components
         {
             base.OnItemsChanged(e);
 
-            if (ItemsHolderPanel == null)
+            if (_itemsHolderPanel == null)
             {
                 return;
             }
@@ -160,7 +160,7 @@ namespace ModAPI.Components
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Reset:
-                    ItemsHolderPanel.Children.Clear();
+                    _itemsHolderPanel.Children.Clear();
                     break;
 
                 case NotifyCollectionChangedAction.Add:
@@ -172,7 +172,7 @@ namespace ModAPI.Components
                             var cp = FindChildContentPresenter(item);
                             if (cp != null)
                             {
-                                ItemsHolderPanel.Children.Remove(cp);
+                                _itemsHolderPanel.Children.Remove(cp);
                             }
                         }
                     }
@@ -196,7 +196,7 @@ namespace ModAPI.Components
 
         private void UpdateSelectedItem()
         {
-            if (ItemsHolderPanel == null)
+            if (_itemsHolderPanel == null)
             {
                 return;
             }
@@ -209,7 +209,7 @@ namespace ModAPI.Components
             }
 
             // show the right child
-            foreach (ContentPresenter child in ItemsHolderPanel.Children)
+            foreach (ContentPresenter child in _itemsHolderPanel.Children)
             {
                 child.Visibility = ((child.Tag as TabItem).IsSelected) ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -237,7 +237,7 @@ namespace ModAPI.Components
             cp.ContentStringFormat = SelectedContentStringFormat;
             cp.Visibility = Visibility.Collapsed;
             cp.Tag = (item is TabItem) ? item : (ItemContainerGenerator.ContainerFromItem(item));
-            ItemsHolderPanel.Children.Add(cp);
+            _itemsHolderPanel.Children.Add(cp);
             return cp;
         }
 
@@ -253,12 +253,12 @@ namespace ModAPI.Components
                 return null;
             }
 
-            if (ItemsHolderPanel == null)
+            if (_itemsHolderPanel == null)
             {
                 return null;
             }
 
-            foreach (ContentPresenter cp in ItemsHolderPanel.Children)
+            foreach (ContentPresenter cp in _itemsHolderPanel.Children)
             {
                 if (cp.Content == data)
                 {

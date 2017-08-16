@@ -32,12 +32,12 @@ namespace ModAPI
     {
         public static string Version = "0.1.9";
 
-        public ResourceDictionary languageDictionary;
+        public ResourceDictionary LanguageDictionary;
         public static App Instance;
         public static Game Game;
 
-        public static string rootPath;
-        public static string updatePath;
+        public static string RootPath;
+        public static string UpdatePath;
 
         static void CopyFiles(string directory, string b = "")
         {
@@ -46,7 +46,7 @@ namespace ModAPI
             {
                 try
                 {
-                    File.Copy(file, rootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
+                    File.Copy(file, RootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
                     File.Delete(file);
                 }
                 catch (Exception e)
@@ -65,13 +65,13 @@ namespace ModAPI
         public App()
         {
             AssemblyResolver.Initialize();
-            rootPath = Path.GetFullPath(".");
-            updatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
+            RootPath = Path.GetFullPath(".");
+            UpdatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
 
-            if (Directory.Exists(updatePath))
+            if (Directory.Exists(UpdatePath))
             {
-                CopyFiles(updatePath);
-                Directory.Delete(updatePath, true);
+                CopyFiles(UpdatePath);
+                Directory.Delete(UpdatePath, true);
             }
 
             Debug.Environment = "ModAPI";

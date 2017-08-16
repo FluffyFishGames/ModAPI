@@ -27,13 +27,13 @@ namespace Updater
 {
     class Updater
     {
-        public static string rootPath;
-        public static string updatePath;
+        public static string RootPath;
+        public static string UpdatePath;
 
         public static void Update()
         {
-            rootPath = Path.GetFullPath(".");
-            updatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
+            RootPath = Path.GetFullPath(".");
+            UpdatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
             var c = 100;
             while (c > 0)
             {
@@ -60,9 +60,9 @@ namespace Updater
                 c--;
             }
 
-            if (c > 0 && Directory.Exists(updatePath))
+            if (c > 0 && Directory.Exists(UpdatePath))
             {
-                CopyFiles(updatePath);
+                CopyFiles(UpdatePath);
                 var p = new Process();
                 p.StartInfo.FileName = "ModAPI.exe";
                 p.StartInfo.Verb = "runas";
@@ -77,7 +77,7 @@ namespace Updater
             {
                 try
                 {
-                    File.Copy(file, rootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
+                    File.Copy(file, RootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
                     File.Delete(file);
                 }
                 catch (Exception e)

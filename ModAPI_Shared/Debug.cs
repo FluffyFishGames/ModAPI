@@ -30,31 +30,31 @@ namespace ModAPI
         public static string Environment = "global";
         public static bool Verbose = false;
 
-        protected static string lastEnvironment = "";
-        protected static FileStream logStream;
-        protected static StreamWriter logWriter;
+        protected static string LastEnvironment = "";
+        protected static FileStream LogStream;
+        protected static StreamWriter LogWriter;
 
         public enum Type
         {
-            NOTICE,
-            WARNING,
-            ERROR
+            Notice,
+            Warning,
+            Error
         }
 
-        public static void Log(string type, string message, Type logType = Type.NOTICE)
+        public static void Log(string type, string message, Type logType = Type.Notice)
         {
             var logFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment + ".log";
             if (logFileName.StartsWith("" + Path.DirectorySeparatorChar))
             {
                 logFileName = logFileName.Substring(1);
             }
-            if (Environment != lastEnvironment || logStream == null || !logStream.CanWrite)
+            if (Environment != LastEnvironment || LogStream == null || !LogStream.CanWrite)
             {
-                if (logStream != null)
+                if (LogStream != null)
                 {
                     try
                     {
-                        logStream.Close();
+                        LogStream.Close();
                     }
                     catch (Exception ex)
                     {
@@ -93,19 +93,19 @@ namespace ModAPI
                     File.Move(logFileName, directory + Environment + ".0.log");
                 }
 
-                logStream = new FileStream(logFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-                logWriter = new StreamWriter(logStream);
-                lastEnvironment = Environment;
+                LogStream = new FileStream(logFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
+                LogWriter = new StreamWriter(LogStream);
+                LastEnvironment = Environment;
             }
 
-            if (logWriter != null)
+            if (LogWriter != null)
             {
                 var prefix = "";
-                if (logType == Type.WARNING)
+                if (logType == Type.Warning)
                 {
                     prefix = "WARNING: ";
                 }
-                if (logType == Type.ERROR)
+                if (logType == Type.Error)
                 {
                     prefix = "ERROR: ";
                 }
@@ -114,13 +114,13 @@ namespace ModAPI
                 {
                     Console.WriteLine(msg);
                 }
-                logWriter.WriteLine(msg);
-                logWriter.Flush();
-                logStream.Flush();
+                LogWriter.WriteLine(msg);
+                LogWriter.Flush();
+                LogStream.Flush();
             }
         }
 
-        public static void Log(string type, object message, Type logType = Type.NOTICE)
+        public static void Log(string type, object message, Type logType = Type.Notice)
         {
             Log(type, message.ToString());
         }

@@ -25,81 +25,81 @@ namespace ModAPI.Utils
 {
     public class TypeResolver
     {
-        protected static List<ModuleDefinition> modules = new List<ModuleDefinition>();
+        protected static List<ModuleDefinition> Modules = new List<ModuleDefinition>();
 
         public static void AddGlobalModule(ModuleDefinition module)
         {
-            modules.Add(module);
+            Modules.Add(module);
         }
 
         public static void ResetGlobalModules()
         {
-            modules = new List<ModuleDefinition>();
+            Modules = new List<ModuleDefinition>();
         }
 
-        public static MethodDefinition FindMethodDefinition(ModuleDefinition module, string Path, bool global = false)
+        public static MethodDefinition FindMethodDefinition(ModuleDefinition module, string path, bool global = false)
         {
             var Namespace = "";
-            var Method = "";
-            var Type = "";
-            var ReturnType = "";
-            var Arguments = new string[0];
-            NameResolver.Parse(Path, ref Namespace, ref Type, ref Method, ref ReturnType, ref Arguments);
+            var method = "";
+            var type = "";
+            var returnType = "";
+            var arguments = new string[0];
+            NameResolver.Parse(path, ref Namespace, ref type, ref method, ref returnType, ref arguments);
 
-            return GetMethodDefinition(module, Namespace, Method, Type, ReturnType, Arguments);
+            return GetMethodDefinition(module, Namespace, method, type, returnType, arguments);
         }
 
-        public static MethodReference FindMethodReference(ModuleDefinition module, string Path, bool global = false)
+        public static MethodReference FindMethodReference(ModuleDefinition module, string path, bool global = false)
         {
             var Namespace = "";
-            var Method = "";
-            var Type = "";
-            var ReturnType = "";
-            var Arguments = new string[0];
-            NameResolver.Parse(Path, ref Namespace, ref Type, ref Method, ref ReturnType, ref Arguments);
+            var method = "";
+            var type = "";
+            var returnType = "";
+            var arguments = new string[0];
+            NameResolver.Parse(path, ref Namespace, ref type, ref method, ref returnType, ref arguments);
 
-            return GetMethodReference(module, Namespace, Method, Type, ReturnType, Arguments);
+            return GetMethodReference(module, Namespace, method, type, returnType, arguments);
         }
 
-        public static TypeDefinition FindTypeDefinition(ModuleDefinition module, string Path)
+        public static TypeDefinition FindTypeDefinition(ModuleDefinition module, string path)
         {
             var Namespace = "";
             var Type = "";
-            NameResolver.Parse(Path, ref Namespace, ref Type);
+            NameResolver.Parse(path, ref Namespace, ref Type);
 
             var type = GetTypeDefinition(module, Namespace, Type);
             return type;
         }
 
-        public static FieldDefinition FindFieldDefinition(ModuleDefinition module, string Path)
+        public static FieldDefinition FindFieldDefinition(ModuleDefinition module, string path)
         {
             var Namespace = "";
-            var Type = "";
-            var FieldName = "";
-            var FieldType = "";
-            NameResolver.Parse(Path, ref Namespace, ref Type, ref FieldName, ref FieldType);
+            var type = "";
+            var fieldName = "";
+            var fieldType = "";
+            NameResolver.Parse(path, ref Namespace, ref type, ref fieldName, ref fieldType);
 
-            var field = GetFieldDefinition(module, Namespace, Type, FieldName, FieldType);
+            var field = GetFieldDefinition(module, Namespace, type, fieldName, fieldType);
             return field;
         }
 
-        public static FieldReference FindFieldReference(ModuleDefinition module, string Path)
+        public static FieldReference FindFieldReference(ModuleDefinition module, string path)
         {
             var Namespace = "";
-            var Type = "";
-            var FieldName = "";
-            var FieldType = "";
-            NameResolver.Parse(Path, ref Namespace, ref Type, ref FieldName, ref FieldType);
+            var type = "";
+            var fieldName = "";
+            var fieldType = "";
+            NameResolver.Parse(path, ref Namespace, ref type, ref fieldName, ref fieldType);
 
-            var field = GetFieldReference(module, Namespace, Type, FieldName, FieldType);
+            var field = GetFieldReference(module, Namespace, type, fieldName, fieldType);
             return field;
         }
 
-        public static TypeReference FindTypeReference(ModuleDefinition module, string Path)
+        public static TypeReference FindTypeReference(ModuleDefinition module, string path)
         {
             var Namespace = "";
             var Type = "";
-            NameResolver.Parse(Path, ref Namespace, ref Type);
+            NameResolver.Parse(path, ref Namespace, ref Type);
 
             var type = GetTypeReference(module, Namespace, Type);
             return type;
@@ -110,7 +110,7 @@ namespace ModAPI.Utils
             var type = module.GetType(Namespace, Type);
             if (type == null)
             {
-                foreach (var gmodule in modules)
+                foreach (var gmodule in Modules)
                 {
                     type = GetTypeDefinition(gmodule, Namespace, Type);
                     if (type != null)
@@ -122,17 +122,17 @@ namespace ModAPI.Utils
             return type;
         }
 
-        public static MethodDefinition GetMethodDefinition(ModuleDefinition module, string Namespace, string Method, string Type, string ReturnType, string[] Arguments, bool global = false)
+        public static MethodDefinition GetMethodDefinition(ModuleDefinition module, string Namespace, string Method, string Type, string returnType, string[] arguments, bool global = false)
         {
             var type = module.GetType(Namespace, Type);
             foreach (var method in type.Methods)
             {
-                if (Method == method.Name && method.ReturnType.FullName == ReturnType && method.Parameters.Count == Arguments.Length)
+                if (Method == method.Name && method.ReturnType.FullName == returnType && method.Parameters.Count == arguments.Length)
                 {
                     var ok = true;
                     for (var k = 0; k < method.Parameters.Count; k++)
                     {
-                        if (method.Parameters[k].ParameterType.FullName != Arguments[k])
+                        if (method.Parameters[k].ParameterType.FullName != arguments[k])
                         {
                             ok = false;
                             break;
@@ -146,9 +146,9 @@ namespace ModAPI.Utils
             }
             if (!global)
             {
-                foreach (var gmodule in modules)
+                foreach (var gmodule in Modules)
                 {
-                    var m = GetMethodDefinition(gmodule, Namespace, Method, Type, ReturnType, Arguments, true);
+                    var m = GetMethodDefinition(gmodule, Namespace, Method, Type, returnType, arguments, true);
                     if (m != null)
                     {
                         return m;
@@ -158,13 +158,13 @@ namespace ModAPI.Utils
             return null;
         }
 
-        public static FieldDefinition GetFieldDefinition(ModuleDefinition module, string Namespace, string Type, string FieldName, string FieldType)
+        public static FieldDefinition GetFieldDefinition(ModuleDefinition module, string Namespace, string Type, string fieldName, string fieldType)
         {
             var type = module.GetType(Namespace, Type);
 
             if (type == null)
             {
-                foreach (var gmodule in modules)
+                foreach (var gmodule in Modules)
                 {
                     type = GetTypeDefinition(gmodule, Namespace, Type);
                     if (type != null)
@@ -178,7 +178,7 @@ namespace ModAPI.Utils
             {
                 foreach (var field in type.Fields)
                 {
-                    if (field.Name == FieldName && field.FieldType.FullName == FieldType)
+                    if (field.Name == fieldName && field.FieldType.FullName == fieldType)
                     {
                         return field;
                     }
@@ -201,9 +201,9 @@ namespace ModAPI.Utils
             return module.Import(type);
         }
 
-        public static MethodReference GetMethodReference(ModuleDefinition module, string Namespace, string Method, string Type, string ReturnType, string[] Arguments)
+        public static MethodReference GetMethodReference(ModuleDefinition module, string Namespace, string method, string type, string returnType, string[] arguments)
         {
-            var m = GetMethodDefinition(module, Namespace, Method, Type, ReturnType, Arguments);
+            var m = GetMethodDefinition(module, Namespace, method, type, returnType, arguments);
             if (m == null)
             {
                 return null;
@@ -215,9 +215,9 @@ namespace ModAPI.Utils
             return module.Import(m);
         }
 
-        public static FieldReference GetFieldReference(ModuleDefinition module, string Namespace, string Type, string FieldName, string FieldType)
+        public static FieldReference GetFieldReference(ModuleDefinition module, string Namespace, string type, string fieldName, string fieldType)
         {
-            var f = GetFieldDefinition(module, Namespace, Type, FieldName, FieldType);
+            var f = GetFieldDefinition(module, Namespace, type, fieldName, fieldType);
             if (f == null)
             {
                 return null;

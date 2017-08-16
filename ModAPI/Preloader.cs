@@ -55,7 +55,7 @@ namespace ModAPI
 
             chain.AddTask(delegate(ProgressHandler handler)
             {
-                if (GUIConfiguration.Load(handler) == GUIConfiguration.ResultCode.ERROR)
+                if (GuiConfiguration.Load(handler) == GuiConfiguration.ResultCode.ERROR)
                 {
                     handler.Progress = 100f;
                 }

@@ -33,7 +33,7 @@ namespace ModAPI.Windows.SubWindows
     /// </summary>
     public partial class UpdateAvailable : BaseSubWindow
     {
-        protected string newVersion = "";
+        protected string NewVersion = "";
 
         public UpdateAvailable()
         {
@@ -44,7 +44,7 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.newVersion = newVersion;
+            this.NewVersion = newVersion;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -57,7 +57,7 @@ namespace ModAPI.Windows.SubWindows
             var handler = new ProgressHandler();
             var t = new Thread(delegate()
             {
-                var request = (HttpWebRequest) WebRequest.Create("http://www.modapi.cc/app/archives/" + newVersion + ".zip");
+                var request = (HttpWebRequest) WebRequest.Create("http://www.modapi.cc/app/archives/" + NewVersion + ".zip");
                 var response = (HttpWebResponse) request.GetResponse();
                 var s = response.GetResponseStream();
                 var buffer = new byte[4096];

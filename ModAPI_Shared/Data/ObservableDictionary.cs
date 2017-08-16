@@ -35,42 +35,42 @@ namespace System.Collections.ObjectModel
         private const string IndexerName = "Item[]";
         private const string KeysName = "Keys";
         private const string ValuesName = "Values";
-        private IDictionary<TKey, TValue> _Dictionary;
+        private IDictionary<TKey, TValue> _dictionary;
         protected IDictionary<TKey, TValue> Dictionary
         {
-            get { return _Dictionary; }
+            get { return _dictionary; }
         }
 
         #region Constructors
 
         public ObservableDictionary()
         {
-            _Dictionary = new Dictionary<TKey, TValue>();
+            _dictionary = new Dictionary<TKey, TValue>();
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            _Dictionary = new Dictionary<TKey, TValue>(dictionary);
+            _dictionary = new Dictionary<TKey, TValue>(dictionary);
         }
 
         public ObservableDictionary(IEqualityComparer<TKey> comparer)
         {
-            _Dictionary = new Dictionary<TKey, TValue>(comparer);
+            _dictionary = new Dictionary<TKey, TValue>(comparer);
         }
 
         public ObservableDictionary(int capacity)
         {
-            _Dictionary = new Dictionary<TKey, TValue>(capacity);
+            _dictionary = new Dictionary<TKey, TValue>(capacity);
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            _Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
+            _dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
         }
 
         public ObservableDictionary(int capacity, IEqualityComparer<TKey> comparer)
         {
-            _Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+            _dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
         }
 
         #endregion
@@ -223,7 +223,7 @@ namespace System.Collections.ObjectModel
                 }
                 else
                 {
-                    _Dictionary = new Dictionary<TKey, TValue>(items);
+                    _dictionary = new Dictionary<TKey, TValue>(items);
                 }
                 OnCollectionChanged(NotifyCollectionChangedAction.Add, items.ToArray());
             }

@@ -32,9 +32,9 @@ namespace ModAPI
             return null;
         }
 
-        public static Texture2D GetTexture(string resourceIdentifier, string ModID)
+        public static Texture2D GetTexture(string resourceIdentifier, string modId)
         {
-            var key = ModID + "::" + resourceIdentifier.ToLower();
+            var key = modId + "::" + resourceIdentifier.ToLower();
             if (TextureResources.ContainsKey(key))
             {
                 return TextureResources[key];
@@ -46,7 +46,7 @@ namespace ModAPI
 
         internal static void Add(Mod mod, string path, Texture2D texture)
         {
-            var key = mod.ID + "::" + path.ToLower();
+            var key = mod.Id + "::" + path.ToLower();
             if (!TextureResources.ContainsKey(key))
             {
                 TextureResources.Add(key, texture);

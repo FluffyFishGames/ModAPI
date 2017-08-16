@@ -27,18 +27,18 @@ namespace ModAPI.Utils
 {
     public class Path
     {
-        protected static IPathParser[] parsers = { new RegistryParser(), new ConfigurationPathParser() };
-        protected static Dictionary<string, string> globalVariables = new Dictionary<string, string>();
+        protected static IPathParser[] Parsers = { new RegistryParser(), new ConfigurationPathParser() };
+        protected static Dictionary<string, string> GlobalVariables = new Dictionary<string, string>();
 
         public static void SetGlobalVariable(string name, string path)
         {
-            if (globalVariables.ContainsKey(name))
+            if (GlobalVariables.ContainsKey(name))
             {
-                globalVariables[name] = path;
+                GlobalVariables[name] = path;
             }
             else
             {
-                globalVariables.Add(name, path);
+                GlobalVariables.Add(name, path);
             }
         }
 
@@ -58,7 +58,7 @@ namespace ModAPI.Utils
 
         public static string Parse(string path, Dictionary<string, string> variables)
         {
-            foreach (var parser in parsers)
+            foreach (var parser in Parsers)
             {
                 var identifier = parser.GetIdentifier();
                 var index = -1;
@@ -80,7 +80,7 @@ namespace ModAPI.Utils
             {
                 path = path.Replace("%" + kv.Key + "%", kv.Value);
             }
-            foreach (var kv in globalVariables)
+            foreach (var kv in GlobalVariables)
             {
                 path = path.Replace("%" + kv.Key + "%", kv.Value);
             }
