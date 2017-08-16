@@ -247,7 +247,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
         {
             Project.Id = value;
             Project.SaveConfiguration();
-            OnPropertyChanged("ID");
+            OnPropertyChanged("Id");
             CheckForErrors();
         }
     }

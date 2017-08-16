@@ -88,7 +88,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         _Error = IdError == Visibility.Visible || _NameError == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
 
         OnPropertyChanged("NameError");
-        OnPropertyChanged("IDError");
+        OnPropertyChanged("IdError");
         OnPropertyChanged("Error");
         ProjectViewModel.CheckForErrors();
     }
@@ -99,7 +99,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         {
             Button.Id = value;
             ProjectViewModel.Project.SaveConfiguration();
-            OnPropertyChanged("ID");
+            OnPropertyChanged("Id");
             CheckForErrors();
         }
     }

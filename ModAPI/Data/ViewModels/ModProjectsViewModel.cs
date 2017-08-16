@@ -150,7 +150,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                     image2.SetBinding(Image.VisibilityProperty, "SaveError");
 
                     var label = new TextBlock();
-                    label.SetBinding(TextBlock.TextProperty, "ID");
+                    label.SetBinding(TextBlock.TextProperty, "Id");
 
                     panel.Children.Add(label);
                     panel.Children.Add(image);
