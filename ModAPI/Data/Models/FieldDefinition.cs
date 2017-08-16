@@ -38,8 +38,8 @@ namespace ModAPI.Data.Models
 
         public FieldDefinition(string fieldName, Type fieldType)
         {
-            this.FieldType = fieldType;
-            this.FieldName = fieldName;
+            FieldType = fieldType;
+            FieldName = fieldName;
         }
 
         public string GetExtra(string key, string standard)

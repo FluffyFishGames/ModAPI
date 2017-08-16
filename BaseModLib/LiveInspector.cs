@@ -22,8 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ModAPI;
 using UnityEngine;
 using Console = ModAPI.Console;
+using Input = UnityEngine.Input;
 
 public class LiveInspector : MonoBehaviour
 {
@@ -101,7 +103,7 @@ public class LiveInspector : MonoBehaviour
     {
         if (show)
         {
-            GUI.skin = ModAPI.Gui.Skin;
+            GUI.skin = Gui.Skin;
             if (WhiteLabelStyle == null)
             {
                 WhiteLabelStyle = GUI.skin.GetStyle("WhiteLabel");
@@ -185,7 +187,7 @@ public class LiveInspector : MonoBehaviour
     float DrawComponents(Transform t)
     {
         var height = 10f;
-        var labelStyle = LiveInspector.LabelStyle;
+        var labelStyle = LabelStyle;
         var arrowRight = DarkArrowRightStyle;
         var arrowDown = DarkArrowDownStyle;
         var components = t.GetComponents<Component>();
@@ -308,7 +310,7 @@ public class LiveInspector : MonoBehaviour
 
     float DrawList(Transform[] all, float startY, int depth = 0)
     {
-        var labelStyle = LiveInspector.LabelStyle;
+        var labelStyle = LabelStyle;
         var arrowRight = ArrowRightStyle;
         var arrowDown = ArrowDownStyle;
         var height = 0f;

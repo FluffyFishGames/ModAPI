@@ -29,7 +29,7 @@ public class ModButtonViewModel : INotifyPropertyChanged
 
     public ModButtonViewModel(Mod.Header.Button button)
     {
-        this.Button = button;
+        Button = button;
         AssignedKey = Configuration.GetString("Mods." + button.Mod.Game.GameConfiguration.Id + "." + button.Mod.Id + ".Buttons." + button.Id);
         if (AssignedKey == "")
         {

@@ -44,7 +44,7 @@ namespace ModAPI.Windows.SubWindows
         public OperationPending(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             Init();
         }
 
@@ -53,7 +53,7 @@ namespace ModAPI.Windows.SubWindows
         {
             InitializeComponent();
             LangKey = langKey;
-            this.Task = task;
+            Task = task;
             Init();
         }
 
@@ -61,10 +61,10 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.ProgressHandler = progressHandler;
-            this.TaskName = taskName;
+            ProgressHandler = progressHandler;
+            TaskName = taskName;
             CancelCallback = cancelCallback;
-            this.AutoClose = autoClose;
+            AutoClose = autoClose;
 
             LangKey = langKey;
             Init();

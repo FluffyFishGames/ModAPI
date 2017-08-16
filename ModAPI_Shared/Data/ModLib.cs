@@ -42,7 +42,7 @@ namespace ModAPI.Data
 
         public ModLib(Game game)
         {
-            this.Game = game;
+            Game = game;
             var libraryPath = GetLibraryFolder();
             var filePath = libraryPath + Path.DirectorySeparatorChar + "BaseModLib.dll";
             if (File.Exists(filePath))
@@ -64,7 +64,7 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Modlib: " + this.Game.GameConfiguration.Id, "Modlibrary is invalid. Exception: " + e, Debug.Type.Warning);
+                    Debug.Log("Modlib: " + Game.GameConfiguration.Id, "Modlibrary is invalid. Exception: " + e, Debug.Type.Warning);
                 }
             }
         }

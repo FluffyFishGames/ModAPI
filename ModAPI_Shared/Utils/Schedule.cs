@@ -103,10 +103,10 @@ namespace ModAPI.Utils
 
             public Task(int id, string target, string name, object[] parameters, Action complete, Func<bool> check = null)
             {
-                this.Parameters = parameters;
-                this.Target = target;
-                this.Id = id;
-                this.Name = name;
+                Parameters = parameters;
+                Target = target;
+                Id = id;
+                Name = name;
                 _Check = check;
                 _Complete = complete;
             }

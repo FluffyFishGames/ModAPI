@@ -40,7 +40,7 @@ namespace ModAPI.Windows.SubWindows
         public RestoreGameFiles(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             Check();
             SetCloseable(false);
         }
@@ -49,7 +49,7 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             Check();
             SetCloseable(false);
         }

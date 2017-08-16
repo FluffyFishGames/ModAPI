@@ -424,9 +424,9 @@ namespace ModAPI.Data.Models
         public ModProject(Game game, string id)
         {
             Game = game;
-            this.Id = id;
+            Id = id;
             PreviousId = id;
-            if (this.Id != "")
+            if (Id != "")
             {
                 var path = GetFolderPath();
                 if (!Directory.Exists(path))
@@ -444,7 +444,7 @@ namespace ModAPI.Data.Models
         {
             if (id == "")
             {
-                id = this.Id;
+                id = Id;
             }
             try
             {

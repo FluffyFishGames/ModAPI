@@ -44,7 +44,7 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.NewVersion = newVersion;
+            NewVersion = newVersion;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

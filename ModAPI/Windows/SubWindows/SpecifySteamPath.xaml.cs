@@ -40,7 +40,7 @@ namespace ModAPI.Windows.SubWindows
         public SpecifySteamPath(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             SteamPath.Text = Configuration.GetPath("Steam");
             Check();
             SetCloseable(false);
@@ -50,7 +50,7 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             SteamPath.Text = Configuration.GetPath("Steam");
             Check();
             SetCloseable(false);

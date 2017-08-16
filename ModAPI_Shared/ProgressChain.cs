@@ -99,7 +99,7 @@ namespace ModAPI
             public Task(ProgressChain chain, float weight, TaskMethod method)
             {
                 Weight = weight;
-                this.Chain = chain;
+                Chain = chain;
                 Progress = new ProgressHandler();
                 Progress.OnChange += (s, e) => { chain.ProgressChanged(); };
                 Progress.OnComplete += (s, e) => { chain.Next(); };

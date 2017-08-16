@@ -514,8 +514,8 @@ namespace ModAPI.Data
             {
                 if (VerifyModId(id))
                 {
-                    this.Id = id;
-                    Mod.Id = this.Id;
+                    Id = id;
+                    Mod.Id = Id;
                     return true;
                 }
                 Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration: The ID \"" + id + "\" is invalid.", Debug.Type.Warning);

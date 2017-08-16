@@ -28,7 +28,7 @@ public class ModVersionViewModel : INotifyPropertyChanged
 
     public ModVersionViewModel(Mod mod)
     {
-        this.Mod = mod;
+        Mod = mod;
     }
 
     public string Version

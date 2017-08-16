@@ -133,7 +133,7 @@ namespace ModAPI
                             }
                             else
                             {
-                                BaseSystem.ExecuteEveryFrame.Add(new Execution { Method = m, ModId = executeEveryFrame.Attribute("ModID").Value });
+                                ExecuteEveryFrame.Add(new Execution { Method = m, ModId = executeEveryFrame.Attribute("ModID").Value });
                             }
                         }
                         else
@@ -147,7 +147,7 @@ namespace ModAPI
                         var m = FindMethod(executeOnApplicationStart.Value);
                         if (m != null)
                         {
-                            BaseSystem.ExecuteOnApplicationStart.Add(new Execution { Method = m, ModId = executeOnApplicationStart.Attribute("ModID").Value });
+                            ExecuteOnApplicationStart.Add(new Execution { Method = m, ModId = executeOnApplicationStart.Attribute("ModID").Value });
                         }
                         else
                         {
@@ -160,7 +160,7 @@ namespace ModAPI
                         var m = FindMethod(executeOnGameStart.Value);
                         if (m != null)
                         {
-                            BaseSystem.ExecuteOnGameStart.Add(new Execution { Method = m, ModId = executeOnGameStart.Attribute("ModID").Value });
+                            ExecuteOnGameStart.Add(new Execution { Method = m, ModId = executeOnGameStart.Attribute("ModID").Value });
                         }
                         else
                         {
@@ -356,7 +356,7 @@ namespace ModAPI
                 if (Camera.current != null)
                 {
                     var cam = Camera.current;
-                    UnityEngine.GUI.DrawTexture(new Rect(0, 0, cam.pixelWidth, cam.pixelHeight), BackgroundTexture);
+                    GUI.DrawTexture(new Rect(0, 0, cam.pixelWidth, cam.pixelHeight), BackgroundTexture);
 
                     var loadingBarWidth = cam.pixelWidth * 0.3f;
                     var loadingBarHeight = 50f;
@@ -366,21 +366,21 @@ namespace ModAPI
                     var percentDisplay = new GUIContent(Mathf.Ceil(Progress * 10f) / 10f + "%");
                     var labelSize = WhiteLabel.CalcSize(percentDisplay);
 
-                    UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - labelSize.x / 2f + 1f, y - labelSize.y - 5f + 1f, labelSize.x + 20f, labelSize.y), percentDisplay, BlackLabel);
-                    UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - labelSize.x / 2f, y - labelSize.y - 5f, labelSize.x + 20f, labelSize.y), percentDisplay, WhiteLabel);
+                    GUI.Label(new Rect(x + loadingBarWidth / 2f - labelSize.x / 2f + 1f, y - labelSize.y - 5f + 1f, labelSize.x + 20f, labelSize.y), percentDisplay, BlackLabel);
+                    GUI.Label(new Rect(x + loadingBarWidth / 2f - labelSize.x / 2f, y - labelSize.y - 5f, labelSize.x + 20f, labelSize.y), percentDisplay, WhiteLabel);
 
                     var taskDisplay = new GUIContent("Loading resources...");
                     var label2Size = WhiteLabel.CalcSize(taskDisplay);
 
-                    UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - label2Size.x / 2f + 1f, y + loadingBarHeight + 5f + 1f, label2Size.x + 20f, label2Size.y), taskDisplay, BlackLabel);
-                    UnityEngine.GUI.Label(new Rect(x + loadingBarWidth / 2f - label2Size.x / 2f, y + loadingBarHeight + 5f, label2Size.x + 20f, label2Size.y), taskDisplay, WhiteLabel);
+                    GUI.Label(new Rect(x + loadingBarWidth / 2f - label2Size.x / 2f + 1f, y + loadingBarHeight + 5f + 1f, label2Size.x + 20f, label2Size.y), taskDisplay, BlackLabel);
+                    GUI.Label(new Rect(x + loadingBarWidth / 2f - label2Size.x / 2f, y + loadingBarHeight + 5f, label2Size.x + 20f, label2Size.y), taskDisplay, WhiteLabel);
 
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y, loadingBarWidth * (Progress / 100f), loadingBarHeight), GrayTexture);
+                    GUI.DrawTexture(new Rect(x, y, loadingBarWidth * (Progress / 100f), loadingBarHeight), GrayTexture);
 
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y, loadingBarWidth, 1), WhiteTexture);
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y + loadingBarHeight, loadingBarWidth, 1), WhiteTexture);
-                    UnityEngine.GUI.DrawTexture(new Rect(x, y, 1, loadingBarHeight), WhiteTexture);
-                    UnityEngine.GUI.DrawTexture(new Rect(x + loadingBarWidth, y, 1, loadingBarHeight), WhiteTexture);
+                    GUI.DrawTexture(new Rect(x, y, loadingBarWidth, 1), WhiteTexture);
+                    GUI.DrawTexture(new Rect(x, y + loadingBarHeight, loadingBarWidth, 1), WhiteTexture);
+                    GUI.DrawTexture(new Rect(x, y, 1, loadingBarHeight), WhiteTexture);
+                    GUI.DrawTexture(new Rect(x + loadingBarWidth, y, 1, loadingBarHeight), WhiteTexture);
 
                     /*UnityEngine.GUI.DrawTexture(new Rect(x + 1, y + loadingBarHeight + 1, loadingBarWidth, 1), this.blackTexture);
                     UnityEngine.GUI.DrawTexture(new Rect(x + loadingBarWidth + 1, y + 1, 1, loadingBarHeight), this.blackTexture);

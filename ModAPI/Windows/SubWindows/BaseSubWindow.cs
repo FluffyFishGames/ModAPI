@@ -39,7 +39,7 @@ namespace ModAPI.Windows.SubWindows
 
         public void SetCloseable(bool closeable)
         {
-            this.Closeable = closeable;
+            Closeable = closeable;
             var b = ((Button) GetTemplateChild("PART_Close"));
             if (b != null)
             {

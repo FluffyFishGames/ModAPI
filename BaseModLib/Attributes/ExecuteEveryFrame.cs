@@ -32,7 +32,7 @@ namespace ModAPI.Attributes
 
         public ExecuteEveryFrame(bool onlyInGame = true)
         {
-            this.OnlyInGame = onlyInGame;
+            OnlyInGame = onlyInGame;
         }
     }
 }

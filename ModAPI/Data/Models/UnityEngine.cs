@@ -39,7 +39,7 @@ namespace UnityEngine
 
         public Object(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         public Object()
@@ -74,7 +74,7 @@ namespace UnityEngine
 
         public BaseUnity(object[] data)
         {
-            this.Data = data;
+            Data = data;
         }
     }
 
@@ -389,10 +389,10 @@ namespace UnityEngine
 
         public Color(float r, float g, float b, float a)
         {
-            this.R = r;
-            this.G = g;
-            this.B = b;
-            this.A = a;
+            R = r;
+            G = g;
+            B = b;
+            A = a;
         }
     }
 
@@ -405,8 +405,8 @@ namespace UnityEngine
 
         public Vector2(float x, float y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
     }
 
@@ -441,9 +441,9 @@ namespace UnityEngine
 
         public Vector3(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public static bool operator ==(Vector3 x, Vector3 y)
@@ -468,10 +468,10 @@ namespace UnityEngine
 
         public Vector4(float x, float y, float z, float w)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
     }
 
@@ -508,10 +508,10 @@ namespace UnityEngine
 
         public Quaternion(float x, float y, float z, float w)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         public static bool operator ==(Quaternion x, Quaternion y)

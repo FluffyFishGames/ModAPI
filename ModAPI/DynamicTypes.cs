@@ -109,11 +109,11 @@ namespace ModAPI
 
             public WaitForType(TypeBuilder newType, string fieldTypeName, string waitName, string fieldName, bool isProperty = false)
             {
-                this.IsProperty = isProperty;
-                this.NewType = newType;
-                this.FieldTypeName = fieldTypeName;
-                this.FieldName = fieldName;
-                this.WaitName = waitName;
+                IsProperty = isProperty;
+                NewType = newType;
+                FieldTypeName = fieldTypeName;
+                FieldName = fieldName;
+                WaitName = waitName;
 
                 if (!DynamicTypes.TypeParsed.ContainsKey(waitName))
                 {

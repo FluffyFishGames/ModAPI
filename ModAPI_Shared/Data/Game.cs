@@ -62,7 +62,7 @@ namespace ModAPI.Data
 
         public Game(Configuration.GameConfiguration gameConfiguration)
         {
-            this.GameConfiguration = gameConfiguration;
+            GameConfiguration = gameConfiguration;
             ModLibrary = new ModLib(this);
             GamePath = Configuration.GetPath("Games." + gameConfiguration.Id);
             Verify();
@@ -1341,7 +1341,7 @@ namespace ModAPI.Data
                 FileName = Configuration.GetPath("Configurations") + System.IO.Path.DirectorySeparatorChar + "games" + System.IO.Path.DirectorySeparatorChar + game.GameConfiguration.Id +
                            System.IO.Path.DirectorySeparatorChar +
                            "Versions.xml";
-                this.Game = game;
+                Game = game;
             }
 
             public Version GetVersion(string checkSum)

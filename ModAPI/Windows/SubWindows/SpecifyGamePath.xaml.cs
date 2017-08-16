@@ -40,7 +40,7 @@ namespace ModAPI.Windows.SubWindows
         public SpecifyGamePath(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             GamePath.Text = ((Game) task.Parameters[0]).GamePath;
             Check();
             SetCloseable(false);
@@ -50,7 +50,7 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = task;
+            Task = task;
             GamePath.Text = ((Game) task.Parameters[0]).GamePath;
             Check();
             SetCloseable(false);

@@ -40,7 +40,7 @@ namespace ModAPI
             {
                 possible[i] = possible[i].ToLower();
             }
-            this.Possible = possible;
+            Possible = possible;
         }
 
         public CustomParameter(string[] possible)
@@ -49,13 +49,13 @@ namespace ModAPI
             {
                 possible[i] = possible[i].ToLower();
             }
-            this.Possible = possible.ToList();
+            Possible = possible.ToList();
         }
 
         public CustomParameter(ParameterType type, bool required)
         {
             ParameterType = type;
-            this.Required = required;
+            Required = required;
         }
 
         public CustomParameter(List<string> possible, bool required)
@@ -64,8 +64,8 @@ namespace ModAPI
             {
                 possible[i] = possible[i].ToLower();
             }
-            this.Possible = possible;
-            this.Required = required;
+            Possible = possible;
+            Required = required;
         }
 
         public CustomParameter(string[] possible, bool required)
@@ -74,8 +74,8 @@ namespace ModAPI
             {
                 possible[i] = possible[i].ToLower();
             }
-            this.Possible = possible.ToList();
-            this.Required = required;
+            Possible = possible.ToList();
+            Required = required;
         }
     }
 }

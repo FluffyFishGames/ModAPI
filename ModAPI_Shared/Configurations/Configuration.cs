@@ -218,7 +218,7 @@ namespace ModAPI.Configurations
 
         public static ResultCode Load(ProgressHandler progressHandler = null)
         {
-            Configuration.ProgressHandler = progressHandler;
+            ProgressHandler = progressHandler;
 
             var configurationFileName = FindConfiguration(Directory.GetCurrentDirectory());
             if (configurationFileName != "" && File.Exists(configurationFileName))
