@@ -143,10 +143,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     protected internal void OnPropertyChanged(string propertyname)
     {
-        if (PropertyChanged != null)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
 
     public ObservableCollection<string> Languages

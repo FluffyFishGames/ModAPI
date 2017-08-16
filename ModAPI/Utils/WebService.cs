@@ -66,10 +66,7 @@ namespace ModAPI.Utils
             }
             if (UserId > 0 && Hash != null && Hash != "")
             {
-                if (OnDoLogin != null)
-                {
-                    OnDoLogin();
-                }
+                OnDoLogin?.Invoke();
                 GetUserInformation();
                 /*new Request()
                 {
@@ -106,10 +103,7 @@ namespace ModAPI.Utils
 
         public static void Login(string username, string password)
         {
-            if (OnDoLogin != null)
-            {
-                OnDoLogin();
-            }
+            OnDoLogin?.Invoke();
             new Request
             {
                 Path = "Login",
@@ -196,10 +190,7 @@ namespace ModAPI.Utils
             Configuration.SetString("Login.User", "", true);
             Configuration.SetString("Login.Hash", "", true);
             Configuration.Save();
-            if (OnLogout != null)
-            {
-                OnLogout();
-            }
+            OnLogout?.Invoke();
         }
 
         public class User
@@ -254,10 +245,7 @@ namespace ModAPI.Utils
                                 }
                             }
                         }
-                        if (OnAvatarChange != null)
-                        {
-                            OnAvatarChange();
-                        }
+                        OnAvatarChange?.Invoke();
                     });
                 t.Start();
             }

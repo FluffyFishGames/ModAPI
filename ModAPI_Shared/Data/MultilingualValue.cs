@@ -57,10 +57,7 @@ namespace ModAPI.Data
             {
                 Langs.Add(langKey, value);
             }
-            if (OnChange != null)
-            {
-                OnChange(this, new EventArgs());
-            }
+            OnChange?.Invoke(this, new EventArgs());
         }
 
         public string GetString(string langKey, string standardLanguage = "")

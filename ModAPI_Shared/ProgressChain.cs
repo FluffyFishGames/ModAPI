@@ -51,10 +51,7 @@ namespace ModAPI
                 progress += (t.Progress.Progress) * (t.Weight / OverallWeight);
             }
             Progress = progress;
-            if (OnChange != null)
-            {
-                OnChange();
-            }
+            OnChange?.Invoke();
             if (Progress == 100f && OnComplete != null)
             {
                 OnComplete();
@@ -73,10 +70,7 @@ namespace ModAPI
             CurrentTask += 1;
             if (Tasks.Count <= CurrentTask)
             {
-                if (OnComplete != null)
-                {
-                    OnComplete();
-                }
+                OnComplete?.Invoke();
             }
             else
             {

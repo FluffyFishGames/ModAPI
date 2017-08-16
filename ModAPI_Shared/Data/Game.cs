@@ -159,10 +159,7 @@ namespace ModAPI.Data
             var t = new Thread(delegate()
             {
                 ModLibrary.Create(progressHandler);
-                if (OnModlibUpdate != null)
-                {
-                    OnModlibUpdate(this, new EventArgs());
-                }
+                OnModlibUpdate?.Invoke(this, new EventArgs());
             });
             t.Start();
         }

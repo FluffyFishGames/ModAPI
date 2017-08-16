@@ -268,46 +268,31 @@ namespace System.Collections.ObjectModel
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void OnCollectionChanged()
         {
             OnPropertyChanged();
-            if (CollectionChanged != null)
-            {
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, KeyValuePair<TKey, TValue> changedItem)
         {
             OnPropertyChanged();
-            if (CollectionChanged != null)
-            {
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(action, changedItem, 0));
-            }
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, changedItem, 0));
         }
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, KeyValuePair<TKey, TValue> newItem, KeyValuePair<TKey, TValue> oldItem)
         {
             OnPropertyChanged();
-            if (CollectionChanged != null)
-            {
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(action, newItem, oldItem, 0));
-            }
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, newItem, oldItem, 0));
         }
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, IList newItems)
         {
             OnPropertyChanged();
-            if (CollectionChanged != null)
-            {
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(action, newItems, 0));
-            }
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, newItems, 0));
         }
     }
 }

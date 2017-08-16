@@ -340,10 +340,7 @@ public class OldConfiguration
             App.Instance.Resources.MergedDictionaries.Add(Languages[language].Resource);
             CurrentLanguage = Languages[language].Resource;
 
-            if (OnLanguageChanged != null)
-            {
-                OnLanguageChanged();
-            }
+            OnLanguageChanged?.Invoke();
         }
         return false;
     }

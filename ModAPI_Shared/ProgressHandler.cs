@@ -37,10 +37,7 @@ namespace ModAPI
             set
             {
                 _Task = value;
-                if (OnChange != null)
-                {
-                    OnChange(this, new EventArgs());
-                }
+                OnChange?.Invoke(this, new EventArgs());
             }
         }
         protected float _Progress;
@@ -52,10 +49,7 @@ namespace ModAPI
             set
             {
                 _Progress = value;
-                if (OnChange != null)
-                {
-                    OnChange(this, new EventArgs());
-                }
+                OnChange?.Invoke(this, new EventArgs());
                 /*if (OnChange != null)
                     OnChange();*/
                 if (value == 100f)

@@ -358,10 +358,7 @@ namespace ModAPI.Configurations
                 CurrentLanguage = Languages[langCode];
                 Debug.Log("Configuration", "Language changed to " + CurrentLanguage.Key);
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(Languages[langCode].Get("Locale"));
-                if (OnLanguageChanged != null)
-                {
-                    OnLanguageChanged();
-                }
+                OnLanguageChanged?.Invoke();
             }
         }
 

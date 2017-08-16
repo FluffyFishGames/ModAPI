@@ -123,10 +123,7 @@ namespace ModAPI.Utils
             public void Complete()
             {
                 Schedule.Complete(this);
-                if (_Complete != null)
-                {
-                    _Complete();
-                }
+                _Complete?.Invoke();
             }
         }
     }

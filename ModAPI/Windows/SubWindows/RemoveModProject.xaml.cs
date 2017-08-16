@@ -47,10 +47,7 @@ namespace ModAPI.Windows.SubWindows
             RemoveList.Text = removeList;
             ConfirmButton.Click += (a, b) =>
             {
-                if (Confirm != null)
-                {
-                    Confirm(Data);
-                }
+                Confirm?.Invoke(Data);
                 Close();
             };
             CancelButton.Click += (a, b) => { Close(); };

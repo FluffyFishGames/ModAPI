@@ -145,10 +145,7 @@ namespace ModAPI
         public static void Close()
         {
             GetConsoleComponent().Close();
-            if (OnClose != null)
-            {
-                OnClose();
-            }
+            OnClose?.Invoke();
         }
 
         public static void RegisterCommand(Command command)
