@@ -149,11 +149,7 @@ namespace WPF.JoshSmith.Adorners
         /// <summary>
         /// Override.  Always returns 1.
         /// </summary>
-        protected override int VisualChildrenCount
-        {
-            get { return 1; }
-        }
-
+        protected override int VisualChildrenCount => 1;
         #endregion // Protected Overrides
 
         #region Private Helpers

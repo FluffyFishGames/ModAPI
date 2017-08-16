@@ -36,11 +36,7 @@ namespace System.Collections.ObjectModel
         private const string KeysName = "Keys";
         private const string ValuesName = "Values";
         private IDictionary<TKey, TValue> _dictionary;
-        protected IDictionary<TKey, TValue> Dictionary
-        {
-            get { return _dictionary; }
-        }
-
+        protected IDictionary<TKey, TValue> Dictionary => _dictionary;
         #region Constructors
 
         public ObservableDictionary()
@@ -87,11 +83,7 @@ namespace System.Collections.ObjectModel
             return Dictionary.ContainsKey(key);
         }
 
-        public ICollection<TKey> Keys
-        {
-            get { return Dictionary.Keys; }
-        }
-
+        public ICollection<TKey> Keys => Dictionary.Keys;
         public bool Remove(TKey key)
         {
             if (key == null)
@@ -114,11 +106,7 @@ namespace System.Collections.ObjectModel
             return Dictionary.TryGetValue(key, out value);
         }
 
-        public ICollection<TValue> Values
-        {
-            get { return Dictionary.Values; }
-        }
-        public TValue this[TKey key]
+        public ICollection<TValue> Values => Dictionary.Values; public TValue this[TKey key]
         {
             get
             {
@@ -156,15 +144,7 @@ namespace System.Collections.ObjectModel
             Dictionary.CopyTo(array, arrayIndex);
         }
 
-        public int Count
-        {
-            get { return Dictionary.Count; }
-        }
-        public bool IsReadOnly
-        {
-            get { return Dictionary.IsReadOnly; }
-        }
-
+        public int Count => Dictionary.Count; public bool IsReadOnly => Dictionary.IsReadOnly;
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
             return Remove(item.Key);

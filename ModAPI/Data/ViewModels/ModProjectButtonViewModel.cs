@@ -56,21 +56,9 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
     protected Visibility _NameError = Visibility.Collapsed;
     protected Visibility _Error = Visibility.Collapsed;
 
-    public Visibility NameError
-    {
-        get { return _NameError; }
-    }
-
-    public Visibility Error
-    {
-        get { return _Error; }
-    }
-
-    public Visibility IdError
-    {
-        get { return _IdError; }
-    }
-
+    public Visibility NameError => _NameError;
+    public Visibility Error => _Error;
+    public Visibility IdError => _IdError;
     public void CheckForErrors()
     {
         _NameError = Visibility.Collapsed;
@@ -127,16 +115,8 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         }
     }
 
-    public MultilingualValue Name
-    {
-        get { return Button.Name; }
-    }
-
-    public MultilingualValue Description
-    {
-        get { return Button.Description; }
-    }
-
+    public MultilingualValue Name => Button.Name;
+    public MultilingualValue Description => Button.Description;
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected internal void OnPropertyChanged(string propertyname)
@@ -144,8 +124,5 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
 
-    public ObservableCollection<string> Languages
-    {
-        get { return ProjectViewModel.Languages; }
-    }
+    public ObservableCollection<string> Languages => ProjectViewModel.Languages;
 }

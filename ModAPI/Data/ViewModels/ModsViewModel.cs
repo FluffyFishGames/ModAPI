@@ -285,11 +285,7 @@ public class ModsViewModel : INotifyPropertyChanged
 
     protected ObservableCollection<ListViewItem> _Mods = new ObservableCollection<ListViewItem>();
 
-    public ObservableCollection<ListViewItem> Mods
-    {
-        get { return _Mods; }
-    }
-
+    public ObservableCollection<ListViewItem> Mods => _Mods;
     protected int _SelectedMod = -1;
 
     public int SelectedMod

@@ -31,16 +31,8 @@ public class ModVersionViewModel : INotifyPropertyChanged
         Mod = mod;
     }
 
-    public string Version
-    {
-        get { return Mod.HeaderData.GetVersion(); }
-    }
-
-    public string Compatible
-    {
-        get { return Mod.HeaderData.GetCompatible(); }
-    }
-
+    public string Version => Mod.HeaderData.GetVersion();
+    public string Compatible => Mod.HeaderData.GetCompatible();
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected internal void OnPropertyChanged(string propertyname)

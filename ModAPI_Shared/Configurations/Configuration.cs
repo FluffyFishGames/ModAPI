@@ -715,11 +715,7 @@ namespace ModAPI.Configurations
                     return _SelectFile;
                 }
             }
-            public string Name
-            {
-                get { return _Name; }
-            }
-
+            public string Name => _Name;
             public string AssemblyPath
             {
                 get

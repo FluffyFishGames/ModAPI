@@ -203,11 +203,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
 
     protected ObservableCollection<ListViewItem> _Projects;
 
-    public ObservableCollection<ListViewItem> Projects
-    {
-        get { return _Projects; }
-    }
-
+    public ObservableCollection<ListViewItem> Projects => _Projects;
     protected int _SelectedProject = -1;
 
     public int SelectedProject

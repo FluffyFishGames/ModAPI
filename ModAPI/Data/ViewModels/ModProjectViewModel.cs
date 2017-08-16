@@ -189,40 +189,12 @@ public class ModProjectViewModel : INotifyPropertyChanged
     protected Visibility _SaveError = Visibility.Collapsed;
     protected Visibility _Error = Visibility.Collapsed;
 
-    public Visibility NameError
-    {
-        get { return _NameError; }
-    }
-
-    public Visibility SaveError
-    {
-        get { return _SaveError; }
-    }
-
-    public Visibility Error
-    {
-        get { return _Error; }
-    }
-
-    public Visibility VersionError
-    {
-        get { return _VersionError; }
-    }
-
-    public Visibility LanguagesError
-    {
-        get { return _LanguagesError; }
-    }
-    public Visibility SettingsError
-    {
-        get { return _SettingsError; }
-    }
-
-    public Visibility ButtonsError
-    {
-        get { return _ButtonsError; }
-    }
-
+    public Visibility NameError => _NameError;
+    public Visibility SaveError => _SaveError;
+    public Visibility Error => _Error;
+    public Visibility VersionError => _VersionError;
+    public Visibility LanguagesError => _LanguagesError; public Visibility SettingsError => _SettingsError;
+    public Visibility ButtonsError => _ButtonsError;
     public void CheckForErrors()
     {
         _VersionError = Mod.Header.VerifyModVersion(Project.Version) ? Visibility.Collapsed : Visibility.Visible;
@@ -280,16 +252,8 @@ public class ModProjectViewModel : INotifyPropertyChanged
         }
     }
 
-    public MultilingualValue Name
-    {
-        get { return Project.Name; }
-    }
-
-    public MultilingualValue Description
-    {
-        get { return Project.Description; }
-    }
-
+    public MultilingualValue Name => Project.Name;
+    public MultilingualValue Description => Project.Description;
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected internal void OnPropertyChanged(string propertyname)
@@ -299,22 +263,11 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     protected ObservableCollection<Button> _LanguageButtons = new ObservableCollection<Button>();
 
-    public ObservableCollection<Button> LanguageButtons
-    {
-        get { return _LanguageButtons; }
-    }
-
+    public ObservableCollection<Button> LanguageButtons => _LanguageButtons;
     protected ObservableCollection<ModProjectButton> _Buttons = new ObservableCollection<ModProjectButton>();
 
-    public ObservableCollection<ModProjectButton> Buttons
-    {
-        get { return _Buttons; }
-    }
-
+    public ObservableCollection<ModProjectButton> Buttons => _Buttons;
     protected ObservableCollection<string> _Languages = new ObservableCollection<string>();
 
-    public ObservableCollection<string> Languages
-    {
-        get { return _Languages; }
-    }
+    public ObservableCollection<string> Languages => _Languages;
 }

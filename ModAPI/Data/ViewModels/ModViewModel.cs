@@ -42,16 +42,8 @@ public class ModViewModel : INotifyPropertyChanged
     protected ObservableCollection<ListViewItem> _Versions = new ObservableCollection<ListViewItem>();
     protected ObservableCollection<Grid> _Buttons = new ObservableCollection<Grid>();
 
-    public ObservableCollection<ListViewItem> Versions
-    {
-        get { return _Versions; }
-    }
-
-    public ObservableCollection<Grid> Buttons
-    {
-        get { return _Buttons; }
-    }
-
+    public ObservableCollection<ListViewItem> Versions => _Versions;
+    public ObservableCollection<Grid> Buttons => _Buttons;
     public void Update()
     {
         OnPropertyChanged("Name");
