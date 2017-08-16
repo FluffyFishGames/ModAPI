@@ -929,12 +929,12 @@ namespace ModAPI.Data
                 }
             }
 
-            public Header(Mod mod, string HeaderData)
+            public Header(Mod mod, string header)
             {
                 Mod = mod;
                 try
                 {
-                    var configuration = XDocument.Parse(HeaderData);
+                    var configuration = XDocument.Parse(header);
                     SetXml(configuration);
                     Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Successfully parsed mod HeaderData of mod \"" + Id + "\".");
                 }
@@ -1049,8 +1049,7 @@ namespace ModAPI.Data
 
                 public MethodDefinition Method
                 {
-                    get { return _Method; }
-                    set
+                    get => _Method; set
                     {
                         _Method = value;
                         UpdateValues();
@@ -1146,8 +1145,7 @@ namespace ModAPI.Data
 
                 public FieldDefinition Field
                 {
-                    get { return _Field; }
-                    set
+                    get => _Field; set
                     {
                         _Field = value;
                         UpdateValues();
@@ -1244,8 +1242,7 @@ namespace ModAPI.Data
 
                 public MethodDefinition Method
                 {
-                    get { return _Method; }
-                    set
+                    get => _Method; set
                     {
                         _Method = value;
                         UpdateValues();
@@ -1341,8 +1338,7 @@ namespace ModAPI.Data
 
                 public TypeDefinition Type
                 {
-                    get { return _Type; }
-                    set
+                    get => _Type; set
                     {
                         _Type = value;
                         UpdateValues();

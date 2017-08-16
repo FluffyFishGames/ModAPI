@@ -69,8 +69,7 @@ namespace WPF.JoshSmith.Adorners
         /// </summary>
         public double OffsetLeft
         {
-            get { return _offsetLeft; }
-            set
+            get => _offsetLeft; set
             {
                 _offsetLeft = value;
                 UpdateLocation();
@@ -102,8 +101,7 @@ namespace WPF.JoshSmith.Adorners
         /// </summary>
         public double OffsetTop
         {
-            get { return _offsetTop; }
-            set
+            get => _offsetTop; set
             {
                 _offsetTop = value;
                 UpdateLocation();

@@ -172,8 +172,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     public string Version
     {
-        get { return Project.Version; }
-        set
+        get => Project.Version; set
         {
             Project.Version = value;
             Project.SaveConfiguration();
@@ -272,8 +271,7 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     public string Id
     {
-        get { return Project.Id; }
-        set
+        get => Project.Id; set
         {
             Project.Id = value;
             Project.SaveConfiguration();

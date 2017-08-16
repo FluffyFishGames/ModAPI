@@ -38,7 +38,7 @@ namespace ModAPI.Data.Models
                 _MaxValue = value;
                 CheckMinMax();
             }
-            get { return _MaxValue; }
+            get => _MaxValue;
         }
 
         protected object _MinValue;
@@ -49,7 +49,7 @@ namespace ModAPI.Data.Models
                 _MinValue = value;
                 CheckMinMax();
             }
-            get { return _MinValue; }
+            get => _MinValue;
         }
 
         protected object _Value;
@@ -116,7 +116,7 @@ namespace ModAPI.Data.Models
                 }
                 CheckMinMax();
             }
-            get { return _Value; }
+            get => _Value;
         }
 
         void CheckMinMax()

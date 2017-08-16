@@ -33,8 +33,7 @@ namespace ModAPI
         protected string _Task;
         public string Task
         {
-            get { return _Task; }
-            set
+            get => _Task; set
             {
                 _Task = value;
                 OnChange?.Invoke(this, new EventArgs());
@@ -45,8 +44,7 @@ namespace ModAPI
 
         public float Progress
         {
-            get { return _Progress; }
-            set
+            get => _Progress; set
             {
                 _Progress = value;
                 OnChange?.Invoke(this, new EventArgs());

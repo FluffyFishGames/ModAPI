@@ -107,8 +107,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public string Id
     {
-        get { return Button.Id; }
-        set
+        get => Button.Id; set
         {
             Button.Id = value;
             ProjectViewModel.Project.SaveConfiguration();
@@ -119,8 +118,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public string StandardKey
     {
-        get { return Button.StandardKey; }
-        set
+        get => Button.StandardKey; set
         {
             Button.StandardKey = value;
             ProjectViewModel.Project.SaveConfiguration();

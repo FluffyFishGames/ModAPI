@@ -34,8 +34,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public int Language
     {
-        get { return Configuration.Languages.Keys.ToList().IndexOf(Configuration.CurrentLanguage.Key.ToLower()); }
-        set
+        get => Configuration.Languages.Keys.ToList().IndexOf(Configuration.CurrentLanguage.Key.ToLower()); set
         {
             Configuration.ChangeLanguage(Configuration.Languages.Keys.ToList()[value]);
             Configuration.SetString("Language", Configuration.Languages.Keys.ToList()[value], true);
@@ -45,8 +44,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public bool UpdateVersionsTable
     {
-        get { return Configuration.GetString("UpdateVersions") == "true"; }
-        set
+        get => Configuration.GetString("UpdateVersions") == "true"; set
         {
             Configuration.SetString("UpdateVersions", value ? "true" : "false", true);
             Configuration.Save();
@@ -55,8 +53,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public bool AutoUpdate
     {
-        get { return Configuration.GetString("AutoUpdate") == "true"; }
-        set
+        get => Configuration.GetString("AutoUpdate") == "true"; set
         {
             Configuration.SetString("AutoUpdate", value ? "true" : "false", true);
             Configuration.Save();
@@ -64,8 +61,7 @@ public class SettingsViewModel : INotifyPropertyChanged
     }
     public bool UseSteam
     {
-        get { return Configuration.GetString("UseSteam") == "true"; }
-        set
+        get => Configuration.GetString("UseSteam") == "true"; set
         {
             Configuration.SetString("UseSteam", value ? "true" : "false", true);
             Configuration.Save();

@@ -54,7 +54,7 @@ public class ModsViewModel : INotifyPropertyChanged
                 _SelectNewestModVersions = value;
             }
         }
-        get { return _SelectNewestModVersions; }
+        get => _SelectNewestModVersions;
     }
 
     public void Update()
@@ -294,8 +294,7 @@ public class ModsViewModel : INotifyPropertyChanged
 
     public int SelectedMod
     {
-        get { return _SelectedMod; }
-        set
+        get => _SelectedMod; set
         {
             _SelectedMod = value;
             if (_SelectedMod >= 0)

@@ -478,29 +478,24 @@ namespace ModAPI
 
             public bool UseAutoComplete
             {
-                get { return _UseAutoComplete; }
-                set { _UseAutoComplete = value; }
+                get => _UseAutoComplete; set => _UseAutoComplete = value;
             }
             public bool IsOptional
             {
-                get { return _IsOptional; }
-                set { _IsOptional = value; }
+                get => _IsOptional; set => _IsOptional = value;
             }
             public bool ListValueRequired
             {
-                get { return _ListValueRequired; }
-                set { _ListValueRequired = value; }
+                get => _ListValueRequired; set => _ListValueRequired = value;
             }
 
             public string TooltipText
             {
-                get { return _TooltipText; }
-                set { _TooltipText = value; }
+                get => _TooltipText; set => _TooltipText = value;
             }
             public string Name
             {
-                get { return _Name; }
-                set { _Name = value; }
+                get => _Name; set => _Name = value;
             }
             public List<string> Values;
 

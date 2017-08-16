@@ -45,8 +45,7 @@ namespace ModAPI.Components
 
         public string Title
         {
-            get { return (string) GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
+            get => (string) GetValue(TitleProperty); set => SetValue(TitleProperty, value);
         }
 
         public Grid InnerElement;

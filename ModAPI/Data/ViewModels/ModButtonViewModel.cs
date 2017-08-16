@@ -65,8 +65,7 @@ public class ModButtonViewModel : INotifyPropertyChanged
 
     public string Key
     {
-        get { return AssignedKey; }
-        set
+        get => AssignedKey; set
         {
             AssignedKey = value;
             Configuration.SetString("Mods." + Button.Mod.Game.GameConfiguration.Id + "." + Button.Mod.Id + ".Buttons." + Button.Id, AssignedKey, true);

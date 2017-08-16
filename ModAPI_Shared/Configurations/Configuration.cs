@@ -635,7 +635,7 @@ namespace ModAPI.Configurations
                     }
                     return ret;
                 }
-                set { StringValue = value + ""; }
+                set => StringValue = value + "";
             }
         }
 

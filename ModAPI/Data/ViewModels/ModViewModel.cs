@@ -204,7 +204,7 @@ public class ModViewModel : INotifyPropertyChanged
             Configuration.Save();
             _Selected = value;
         }
-        get { return _Selected; }
+        get => _Selected;
     }
 
     public string Name
@@ -281,8 +281,7 @@ public class ModViewModel : INotifyPropertyChanged
 
     public ListViewItem SelectedVersion
     {
-        get { return _SelectedVersion; }
-        set
+        get => _SelectedVersion; set
         {
             _SelectedVersion = value;
             if (_SelectedVersion != null)

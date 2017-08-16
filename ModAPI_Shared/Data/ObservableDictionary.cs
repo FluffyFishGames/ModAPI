@@ -125,7 +125,7 @@ namespace System.Collections.ObjectModel
                 TValue value;
                 return TryGetValue(key, out value) ? value : default(TValue);
             }
-            set { Insert(key, value, false); }
+            set => Insert(key, value, false);
         }
 
         #endregion
