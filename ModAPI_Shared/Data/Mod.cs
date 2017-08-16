@@ -971,13 +971,13 @@ namespace ModAPI.Data
 
                 public bool SetXml(XElement element)
                 {
-                    Id = XmlHelper.GetXmlAttributeAsString(element, "ID", "");
+                    Id = XmlHelper.GetXmlAttributeAsString(element, "ID");
                     if (Id == "")
                     {
                         Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Mod.Id + "\": A button is missing an ID.", Debug.Type.Warning);
                         return false;
                     }
-                    StandardKey = XmlHelper.GetXmlAttributeAsString(element, "Standard", "");
+                    StandardKey = XmlHelper.GetXmlAttributeAsString(element, "Standard");
                     if (element.Element("Name") == null)
                     {
                         Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Invalid mod configuration for ID \"" + Mod.Id + "\": The button \"" + Id + "\" has no name.",
@@ -1058,12 +1058,12 @@ namespace ModAPI.Data
 
                 public void SetXml(XElement element)
                 {
-                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName", "");
-                    MethodName = XmlHelper.GetXmlAttributeAsString(element, "MethodName", "");
-                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
-                    ReturnType = XmlHelper.GetXmlAttributeAsString(element, "ReturnType", "");
-                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path", "");
-                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
+                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName");
+                    MethodName = XmlHelper.GetXmlAttributeAsString(element, "MethodName");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName");
+                    ReturnType = XmlHelper.GetXmlAttributeAsString(element, "ReturnType");
+                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum");
                     Verify();
                 }
 
@@ -1154,12 +1154,12 @@ namespace ModAPI.Data
 
                 public void SetXml(XElement element)
                 {
-                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName", "");
-                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
-                    FieldType = XmlHelper.GetXmlAttributeAsString(element, "FieldType", "");
-                    FieldName = XmlHelper.GetXmlAttributeAsString(element, "FieldName", "");
-                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path", "");
-                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
+                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName");
+                    FieldType = XmlHelper.GetXmlAttributeAsString(element, "FieldType");
+                    FieldName = XmlHelper.GetXmlAttributeAsString(element, "FieldName");
+                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum");
                     Verify();
                 }
 
@@ -1251,12 +1251,12 @@ namespace ModAPI.Data
 
                 public void SetXml(XElement element)
                 {
-                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName", "");
-                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
-                    MethodName = XmlHelper.GetXmlAttributeAsString(element, "MethodName", "");
-                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path", "");
-                    Priority = XmlHelper.GetXmlAttributeAsInt(element, "Priority", 0);
-                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
+                    AssemblyName = XmlHelper.GetXmlAttributeAsString(element, "AssemblyName");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName");
+                    MethodName = XmlHelper.GetXmlAttributeAsString(element, "MethodName");
+                    Path = XmlHelper.GetXmlAttributeAsString(element, "Path");
+                    Priority = XmlHelper.GetXmlAttributeAsInt(element, "Priority");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum");
                     Verify();
                 }
 
@@ -1347,8 +1347,8 @@ namespace ModAPI.Data
 
                 public void SetXml(XElement element)
                 {
-                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName", "");
-                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum", "");
+                    TypeName = XmlHelper.GetXmlAttributeAsString(element, "TypeName");
+                    CheckSum = XmlHelper.GetXmlAttributeAsString(element, "CheckSum");
                     Verify();
                 }
 

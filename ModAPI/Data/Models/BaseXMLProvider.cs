@@ -140,7 +140,7 @@ namespace ModAPI.Data.Models
                     if (field.FieldType.IsArray)
                     {
                         var elementType = field.FieldType.GetElementType();
-                        var arrayLength = XmlHelper.GetXmlAttributeAsInt(subElement, "Length", 0);
+                        var arrayLength = XmlHelper.GetXmlAttributeAsInt(subElement, "Length");
                         var newArray = Array.CreateInstance(elementType, arrayLength);
                         var i = 0;
                         foreach (var arrayElement in subElement.Elements())
@@ -153,7 +153,7 @@ namespace ModAPI.Data.Models
                     else if (typeof(IList).IsAssignableFrom(field.FieldType))
                     {
                         var elementType = field.FieldType.GetGenericArguments()[0];
-                        var listLength = XmlHelper.GetXmlAttributeAsInt(subElement, "Length", 0);
+                        var listLength = XmlHelper.GetXmlAttributeAsInt(subElement, "Length");
                         var newList = (IList) Activator.CreateInstance(field.FieldType);
                         foreach (var listElement in subElement.Elements())
                         {

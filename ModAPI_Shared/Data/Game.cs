@@ -143,7 +143,7 @@ namespace ModAPI.Data
             if (!ModLibrary.Exists || ModLibrary.ModApiVersion != Version.Descriptor)
             {
                 RegenerateModLibrary = true;
-                Schedule.AddTask("SelectNewestModVersions", delegate { }, null);
+                Schedule.AddTask("SelectNewestModVersions", delegate { });
             }
 
             if (RegenerateModLibrary)

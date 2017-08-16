@@ -391,8 +391,8 @@ namespace ModAPI.Data.Models
                         var b = new Button
                         {
                             Project = this,
-                            Id = XmlHelper.GetXmlAttributeAsString(button, "ID", ""),
-                            StandardKey = XmlHelper.GetXmlAttributeAsString(button, "Standard", ""),
+                            Id = XmlHelper.GetXmlAttributeAsString(button, "ID"),
+                            StandardKey = XmlHelper.GetXmlAttributeAsString(button, "Standard"),
                             Name = new MultilingualValue()
                         };
                         b.Name.SetXml(button.Element("Name"));

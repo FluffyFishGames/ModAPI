@@ -874,7 +874,7 @@ namespace ModAPI.Configurations
                 var id = document.Root.Attribute("id");
                 Id = id.Value;
 
-                SteamAppId = XmlHelper.GetXmlElementAsString(document.Root, "steamAppID", "");
+                SteamAppId = XmlHelper.GetXmlElementAsString(document.Root, "steamAppID");
                 var extends = document.Root.Attribute("extends");
                 if (extends != null)
                 {
