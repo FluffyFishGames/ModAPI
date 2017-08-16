@@ -59,6 +59,7 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
     public Visibility NameError => _NameError;
     public Visibility Error => _Error;
     public Visibility IdError => _IdError;
+
     public void CheckForErrors()
     {
         _NameError = Visibility.Collapsed;
@@ -95,7 +96,8 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public string Id
     {
-        get => Button.Id; set
+        get => Button.Id;
+        set
         {
             Button.Id = value;
             ProjectViewModel.Project.SaveConfiguration();
@@ -106,7 +108,8 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public string StandardKey
     {
-        get => Button.StandardKey; set
+        get => Button.StandardKey;
+        set
         {
             Button.StandardKey = value;
             ProjectViewModel.Project.SaveConfiguration();

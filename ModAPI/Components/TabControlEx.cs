@@ -35,7 +35,8 @@ namespace ModAPI.Components
         protected FrameworkElement _ExtraPanel;
         public FrameworkElement ExtraPanel
         {
-            get => _ExtraPanel; set => _ExtraPanel = value;
+            get => _ExtraPanel;
+            set => _ExtraPanel = value;
         }
         private Panel _itemsHolderPanel;
 

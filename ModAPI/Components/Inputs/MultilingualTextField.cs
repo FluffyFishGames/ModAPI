@@ -34,7 +34,8 @@ namespace ModAPI.Components.Inputs
             DependencyProperty.Register("CurrentText", typeof(String), typeof(MultilingualTextField), new PropertyMetadata("", TextChanged));
         public string CurrentText
         {
-            get => (string) GetValue(CurrentTextProperty); set
+            get => (string) GetValue(CurrentTextProperty);
+            set
             {
                 var item = (ComboBoxItem) SelectedItem;
                 if (item != null)
@@ -76,7 +77,8 @@ namespace ModAPI.Components.Inputs
             new PropertyMetadata(new MultilingualValue(), ValueChanged));
         public MultilingualValue Value
         {
-            get => (MultilingualValue) GetValue(ValueProperty); set => SetValue(ValueProperty, value);
+            get => (MultilingualValue) GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
         }
 
         public static readonly DependencyProperty LanguagesProperty = DependencyProperty.Register("Languages", typeof(ObservableCollection<string>), typeof(MultilingualTextField),
@@ -84,7 +86,8 @@ namespace ModAPI.Components.Inputs
 
         public ObservableCollection<string> Languages
         {
-            get => (ObservableCollection<string>) GetValue(LanguagesProperty); set => SetValue(LanguagesProperty, value);
+            get => (ObservableCollection<string>) GetValue(LanguagesProperty);
+            set => SetValue(LanguagesProperty, value);
         }
 
         public static void OnLanguagesChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

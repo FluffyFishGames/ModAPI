@@ -44,6 +44,7 @@ public class ModViewModel : INotifyPropertyChanged
 
     public ObservableCollection<ListViewItem> Versions => _Versions;
     public ObservableCollection<Grid> Buttons => _Buttons;
+
     public void Update()
     {
         OnPropertyChanged("Name");
@@ -153,7 +154,8 @@ public class ModViewModel : INotifyPropertyChanged
         if (_Initialized)
         {
             DontSaveVersion = true;
-            var versionToPrefer = Configuration.GetInt("Mods." + VersionsData[VersionsData.Keys.ToArray()[0]].Game.GameConfiguration.Id + "." + VersionsData[VersionsData.Keys.ToArray()[0]].Id + ".Version");
+            var versionToPrefer = Configuration.GetInt("Mods." + VersionsData[VersionsData.Keys.ToArray()[0]].Game.GameConfiguration.Id + "." + VersionsData[VersionsData.Keys.ToArray()[0]].Id +
+                                                       ".Version");
             var found = false;
             foreach (var item in _Versions)
             {
@@ -273,7 +275,8 @@ public class ModViewModel : INotifyPropertyChanged
 
     public ListViewItem SelectedVersion
     {
-        get => _SelectedVersion; set
+        get => _SelectedVersion;
+        set
         {
             _SelectedVersion = value;
             if (_SelectedVersion != null)

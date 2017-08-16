@@ -69,7 +69,8 @@ namespace WPF.JoshSmith.Adorners
         /// </summary>
         public double OffsetLeft
         {
-            get => _offsetLeft; set
+            get => _offsetLeft;
+            set
             {
                 _offsetLeft = value;
                 UpdateLocation();
@@ -101,7 +102,8 @@ namespace WPF.JoshSmith.Adorners
         /// </summary>
         public double OffsetTop
         {
-            get => _offsetTop; set
+            get => _offsetTop;
+            set
             {
                 _offsetTop = value;
                 UpdateLocation();
@@ -150,6 +152,7 @@ namespace WPF.JoshSmith.Adorners
         /// Override.  Always returns 1.
         /// </summary>
         protected override int VisualChildrenCount => 1;
+
         #endregion // Protected Overrides
 
         #region Private Helpers

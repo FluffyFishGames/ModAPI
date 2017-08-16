@@ -1050,7 +1050,8 @@ namespace ModAPI.Data
 
                 public MethodDefinition Method
                 {
-                    get => _Method; set
+                    get => _Method;
+                    set
                     {
                         _Method = value;
                         UpdateValues();
@@ -1146,7 +1147,8 @@ namespace ModAPI.Data
 
                 public FieldDefinition Field
                 {
-                    get => _Field; set
+                    get => _Field;
+                    set
                     {
                         _Field = value;
                         UpdateValues();
@@ -1243,7 +1245,8 @@ namespace ModAPI.Data
 
                 public MethodDefinition Method
                 {
-                    get => _Method; set
+                    get => _Method;
+                    set
                     {
                         _Method = value;
                         UpdateValues();
@@ -1339,7 +1342,8 @@ namespace ModAPI.Data
 
                 public TypeDefinition Type
                 {
-                    get => _Type; set
+                    get => _Type;
+                    set
                     {
                         _Type = value;
                         UpdateValues();

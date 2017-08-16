@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -824,7 +823,7 @@ namespace ModAPI
                 var win =
                     new RemoveModProject("Lang.Windows.RemoveModProject", CurrentModProjectViewModel.Project.Id, CurrentModProjectViewModel.Project)
                     {
-                        Confirm = delegate (object obj)
+                        Confirm = delegate(object obj)
                         {
                             ProjectList.SelectedIndex = -1;
                             NoProjectSelected.Visibility = Visibility.Visible;

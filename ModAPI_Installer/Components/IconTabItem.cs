@@ -37,27 +37,32 @@ namespace ModAPI.Components
         public static readonly DependencyProperty ShowWarningProperty = DependencyProperty.Register("ShowWarning", typeof(Visibility), typeof(IconTabItem), new PropertyMetadata(Visibility.Collapsed));
         public BitmapSource CurrentIconSource
         {
-            get => GetValue(CurrentIconSourceProperty) as BitmapSource; set => SetValue(CurrentIconSourceProperty, value);
+            get => GetValue(CurrentIconSourceProperty) as BitmapSource;
+            set => SetValue(CurrentIconSourceProperty, value);
         }
 
         public BitmapSource IconSource
         {
-            get => GetValue(IconSourceProperty) as BitmapSource; set => SetValue(IconSourceProperty, value);
+            get => GetValue(IconSourceProperty) as BitmapSource;
+            set => SetValue(IconSourceProperty, value);
         }
 
         public BitmapSource SelectedIconSource
         {
-            get => GetValue(SelectedIconSourceProperty) as BitmapSource; set => SetValue(SelectedIconSourceProperty, value);
+            get => GetValue(SelectedIconSourceProperty) as BitmapSource;
+            set => SetValue(SelectedIconSourceProperty, value);
         }
 
         public string Label
         {
-            get => (string) GetValue(LabelProperty); set => SetValue(LabelProperty, value);
+            get => (string) GetValue(LabelProperty);
+            set => SetValue(LabelProperty, value);
         }
 
         public Visibility ShowWarning
         {
-            get => (Visibility) GetValue(ShowWarningProperty); set => SetValue(ShowWarningProperty, value);
+            get => (Visibility) GetValue(ShowWarningProperty);
+            set => SetValue(ShowWarningProperty, value);
         }
     }
 }

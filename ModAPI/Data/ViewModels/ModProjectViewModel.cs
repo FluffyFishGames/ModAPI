@@ -172,7 +172,8 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     public string Version
     {
-        get => Project.Version; set
+        get => Project.Version;
+        set
         {
             Project.Version = value;
             Project.SaveConfiguration();
@@ -193,8 +194,10 @@ public class ModProjectViewModel : INotifyPropertyChanged
     public Visibility SaveError => _SaveError;
     public Visibility Error => _Error;
     public Visibility VersionError => _VersionError;
-    public Visibility LanguagesError => _LanguagesError; public Visibility SettingsError => _SettingsError;
+    public Visibility LanguagesError => _LanguagesError;
+    public Visibility SettingsError => _SettingsError;
     public Visibility ButtonsError => _ButtonsError;
+
     public void CheckForErrors()
     {
         _VersionError = Mod.Header.VerifyModVersion(Project.Version) ? Visibility.Collapsed : Visibility.Visible;
@@ -243,7 +246,8 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     public string Id
     {
-        get => Project.Id; set
+        get => Project.Id;
+        set
         {
             Project.Id = value;
             Project.SaveConfiguration();

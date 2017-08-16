@@ -446,97 +446,116 @@ namespace ModAPI.Components
 
         public Double NormalOpacity
         {
-            get => (Double) GetValue(NormalOpacityProperty); set => SetValue(NormalOpacityProperty, value);
+            get => (Double) GetValue(NormalOpacityProperty);
+            set => SetValue(NormalOpacityProperty, value);
         }
 
         public Double HoverOpacity
         {
-            get => (Double) GetValue(HoverOpacityProperty); set => SetValue(HoverOpacityProperty, value);
+            get => (Double) GetValue(HoverOpacityProperty);
+            set => SetValue(HoverOpacityProperty, value);
         }
 
         public Color TextColor
         {
-            get => (Color) GetValue(TextColorProperty); set => SetValue(TextColorProperty, value);
+            get => (Color) GetValue(TextColorProperty);
+            set => SetValue(TextColorProperty, value);
         }
 
         public Color SelectedTextColor
         {
-            get => (Color) GetValue(SelectedTextColorProperty); set => SetValue(SelectedTextColorProperty, value);
+            get => (Color) GetValue(SelectedTextColorProperty);
+            set => SetValue(SelectedTextColorProperty, value);
         }
 
         public bool BlendNormal
         {
-            get => (bool) GetValue(BlendNormalProperty); set => SetValue(BlendNormalProperty, value);
+            get => (bool) GetValue(BlendNormalProperty);
+            set => SetValue(BlendNormalProperty, value);
         }
 
         public bool Selected
         {
-            get => (bool) GetValue(SelectedProperty); set => SetValue(SelectedProperty, value);
+            get => (bool) GetValue(SelectedProperty);
+            set => SetValue(SelectedProperty, value);
         }
 
         public Double ActiveOpacity
         {
-            get => (Double) GetValue(ActiveOpacityProperty); set => SetValue(ActiveOpacityProperty, value);
+            get => (Double) GetValue(ActiveOpacityProperty);
+            set => SetValue(ActiveOpacityProperty, value);
         }
 
         public object InnerContent
         {
-            get => GetValue(InnerContentProperty); set => SetValue(InnerContentProperty, value);
+            get => GetValue(InnerContentProperty);
+            set => SetValue(InnerContentProperty, value);
         }
 
         public BitmapSource NormalSource
         {
-            get => GetValue(NormalSourceProperty) as BitmapSource; set => SetValue(NormalSourceProperty, value);
+            get => GetValue(NormalSourceProperty) as BitmapSource;
+            set => SetValue(NormalSourceProperty, value);
         }
 
         public BitmapSource HoverSource
         {
-            get => GetValue(HoverSourceProperty) as BitmapSource; set => SetValue(HoverSourceProperty, value);
+            get => GetValue(HoverSourceProperty) as BitmapSource;
+            set => SetValue(HoverSourceProperty, value);
         }
 
         public BitmapSource ActiveSource
         {
-            get => GetValue(ActiveSourceProperty) as BitmapSource; set => SetValue(ActiveSourceProperty, value);
+            get => GetValue(ActiveSourceProperty) as BitmapSource;
+            set => SetValue(ActiveSourceProperty, value);
         }
 
         public BitmapSource SelectedNormalSource
         {
-            get => GetValue(SelectedNormalSourceProperty) as BitmapSource; set => SetValue(SelectedNormalSourceProperty, value);
+            get => GetValue(SelectedNormalSourceProperty) as BitmapSource;
+            set => SetValue(SelectedNormalSourceProperty, value);
         }
 
         public BitmapSource SelectedHoverSource
         {
-            get => GetValue(SelectedHoverSourceProperty) as BitmapSource; set => SetValue(SelectedHoverSourceProperty, value);
+            get => GetValue(SelectedHoverSourceProperty) as BitmapSource;
+            set => SetValue(SelectedHoverSourceProperty, value);
         }
 
         public BitmapSource SelectedActiveSource
         {
-            get => GetValue(SelectedActiveSourceProperty) as BitmapSource; set => SetValue(SelectedActiveSourceProperty, value);
+            get => GetValue(SelectedActiveSourceProperty) as BitmapSource;
+            set => SetValue(SelectedActiveSourceProperty, value);
         }
 
         public Point ContentOffset
         {
-            get => (Point) GetValue(ContentOffsetProperty); set => SetValue(ContentOffsetProperty, value);
+            get => (Point) GetValue(ContentOffsetProperty);
+            set => SetValue(ContentOffsetProperty, value);
         }
 
         public Thickness Border
         {
-            get => (Thickness) GetValue(BorderProperty); set => SetValue(BorderProperty, value);
+            get => (Thickness) GetValue(BorderProperty);
+            set => SetValue(BorderProperty, value);
         }
 
         public Thickness BorderSize
         {
-            get => (Thickness) GetValue(BorderSizeProperty); set => SetValue(BorderSizeProperty, value);
+            get => (Thickness) GetValue(BorderSizeProperty);
+            set => SetValue(BorderSizeProperty, value);
         }
 
         public Thickness InnerPadding
         {
-            get => (Thickness) GetValue(InnerPaddingProperty); set => SetValue(InnerPaddingProperty, value);
+            get => (Thickness) GetValue(InnerPaddingProperty);
+            set => SetValue(InnerPaddingProperty, value);
         }
 
         public Thickness Overflow
         {
-            get => (Thickness) GetValue(OverflowProperty); set => SetValue(OverflowProperty, value);
+            get => (Thickness) GetValue(OverflowProperty);
+            set => SetValue(OverflowProperty, value);
         }
 
         /*static Scale9()

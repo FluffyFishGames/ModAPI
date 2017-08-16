@@ -189,6 +189,7 @@ namespace ModAPI.Data.Models
         }
 
         public bool Changed => _Value != InitValue;
+
         public void Save()
         {
             DynamicTypes.Set(ContainerObject, Field.FieldName, Value);

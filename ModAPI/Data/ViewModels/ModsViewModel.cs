@@ -290,7 +290,8 @@ public class ModsViewModel : INotifyPropertyChanged
 
     public int SelectedMod
     {
-        get => _SelectedMod; set
+        get => _SelectedMod;
+        set
         {
             _SelectedMod = value;
             if (_SelectedMod >= 0)

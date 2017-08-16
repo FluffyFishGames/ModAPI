@@ -208,7 +208,8 @@ public class ModProjectsViewModel : INotifyPropertyChanged
 
     public int SelectedProject
     {
-        get => _SelectedProject; set
+        get => _SelectedProject;
+        set
         {
             _SelectedProject = value;
             if (_SelectedProject >= 0)
