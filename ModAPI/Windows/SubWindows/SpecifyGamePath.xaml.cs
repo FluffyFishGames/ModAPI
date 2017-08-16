@@ -98,11 +98,11 @@ namespace ModAPI.Windows.SubWindows
 
         private void OnClickBrowse(object sender, RoutedEventArgs e)
         {
-            var openFileDialog1 = new OpenFileDialog();
-
-            openFileDialog1.Filter = App.Game.GameConfiguration.SelectFile + "|" + App.Game.GameConfiguration.SelectFile;
-            openFileDialog1.RestoreDirectory = true;
-
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Filter = App.Game.GameConfiguration.SelectFile + "|" + App.Game.GameConfiguration.SelectFile,
+                RestoreDirectory = true
+            };
             if (openFileDialog1.ShowDialog() == true)
             {
                 GamePath.Text = Path.GetDirectoryName(openFileDialog1.FileName);

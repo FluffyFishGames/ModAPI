@@ -213,15 +213,19 @@ namespace ModAPI
         {
             if (!Initialized)
             {
-                HelpCommand = new Command();
-                HelpCommand.OnSubmit = Help;
-                HelpCommand.CommandName = "help";
-                var param = new BaseConsoleParameter();
-                param.Name = "Command";
-                param.IsOptional = true;
-                param.ListValueRequired = true;
-                param.TooltipText = "The command to show help for";
-                param.UseAutoComplete = true;
+                HelpCommand = new Command
+                {
+                    OnSubmit = Help,
+                    CommandName = "help"
+                };
+                var param = new BaseConsoleParameter
+                {
+                    Name = "Command",
+                    IsOptional = true,
+                    ListValueRequired = true,
+                    TooltipText = "The command to show help for",
+                    UseAutoComplete = true
+                };
                 HelpCommand.Parameters.Add(param);
 
                 RegisterCommand(HelpCommand);

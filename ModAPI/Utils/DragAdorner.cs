@@ -31,11 +31,13 @@ namespace WPF.JoshSmith.Adorners
         public DragAdorner(UIElement adornedElement, Size size, Brush brush)
             : base(adornedElement)
         {
-            var rect = new Rectangle();
-            rect.Fill = brush;
-            rect.Width = size.Width;
-            rect.Height = size.Height;
-            rect.IsHitTestVisible = false;
+            var rect = new Rectangle
+            {
+                Fill = brush,
+                Width = size.Width,
+                Height = size.Height,
+                IsHitTestVisible = false
+            };
             _child = rect;
         }
 

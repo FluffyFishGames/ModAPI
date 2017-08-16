@@ -182,9 +182,11 @@ public class ModsViewModel : INotifyPropertyChanged
                 {
                     var item = new ListViewItem();
 
-                    var outerPanel = new StackPanel();
-                    outerPanel.Orientation = Orientation.Horizontal;
-                    outerPanel.Margin = new Thickness(-5, 0, 0, 0);
+                    var outerPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Margin = new Thickness(-5, 0, 0, 0)
+                    };
                     var checkBox = new CheckBox();
                     checkBox.SetBinding(CheckBox.IsCheckedProperty, "Selected");
                     outerPanel.Children.Add(checkBox);

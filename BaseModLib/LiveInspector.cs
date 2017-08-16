@@ -108,8 +108,10 @@ public class LiveInspector : MonoBehaviour
             {
                 WhiteLabelStyle = GUI.skin.GetStyle("WhiteLabel");
                 LabelStyle = GUI.skin.label;
-                BoldLabelStyle = new GUIStyle(LabelStyle);
-                BoldLabelStyle.fontStyle = FontStyle.Bold;
+                BoldLabelStyle = new GUIStyle(LabelStyle)
+                {
+                    fontStyle = FontStyle.Bold
+                };
                 BoldLabelStyle.normal.textColor = new Color(0f, 0f, 0f, 1f);
                 ArrowRightStyle = GUI.skin.GetStyle("ArrowRight");
                 ArrowDownStyle = GUI.skin.GetStyle("ArrowDown");

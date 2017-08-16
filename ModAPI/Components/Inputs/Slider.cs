@@ -55,8 +55,10 @@ namespace ModAPI.Components.Inputs
             var column = startColumn;
             if (label != "")
             {
-                var labelElement = new TextBlock();
-                labelElement.Style = App.Instance.Resources[labelStyle] as Style;
+                var labelElement = new TextBlock
+                {
+                    Style = App.Instance.Resources[labelStyle] as Style
+                };
                 labelElement.SetResourceReference(TextBlock.TextProperty, label);
                 labelElement.VerticalAlignment = VerticalAlignment.Center;
                 labelElement.Margin = new Thickness(column > 0 ? 5 : 0, 0, 10, 0);
@@ -67,12 +69,14 @@ namespace ModAPI.Components.Inputs
                 column += 1;
             }
 
-            var inputElement = new System.Windows.Controls.Slider();
-            inputElement.Orientation = Orientation.Horizontal;
-            inputElement.Minimum = minimum;
-            inputElement.Maximum = maximum;
-            inputElement.HorizontalAlignment = HorizontalAlignment.Stretch;
-            inputElement.Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5);
+            var inputElement = new System.Windows.Controls.Slider
+            {
+                Orientation = Orientation.Horizontal,
+                Minimum = minimum,
+                Maximum = maximum,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5)
+            };
             if (inputStyle != "")
             {
                 var s = App.Instance.Resources[inputStyle] as Style;

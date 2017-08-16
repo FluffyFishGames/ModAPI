@@ -306,14 +306,20 @@ namespace ModAPI
 
             foreach (var langCode in Languages)
             {
-                var newItem = new ComboBoxItem();
-                newItem.Style = Application.Current.FindResource("ComboBoxItem") as Style;
-                newItem.DataContext = langCode;
+                var newItem = new ComboBoxItem
+                {
+                    Style = Application.Current.FindResource("ComboBoxItem") as Style,
+                    DataContext = langCode
+                };
                 LanguageItems.Add(langCode, newItem);
-                var panel = new StackPanel();
-                panel.Orientation = Orientation.Horizontal;
-                var image = new Image();
-                image.Height = 20;
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal
+                };
+                var image = new Image
+                {
+                    Height = 20
+                };
                 var source = new BitmapImage();
                 source.BeginInit();
                 source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + langCode + ".png");
@@ -322,9 +328,10 @@ namespace ModAPI
                 image.Margin = new Thickness(0, 0, 5, 0);
                 panel.Children.Add(image);
 
-                var label = new TextBlock();
-
-                label.FontSize = 16;
+                var label = new TextBlock
+                {
+                    FontSize = 16
+                };
                 label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + langCode);
                 panel.Children.Add(label);
 
@@ -511,10 +518,14 @@ namespace ModAPI
 
         void AddLanguage(Configuration.Language language)
         {
-            var c = new ComboBoxItem();
-            c.Style = Application.Current.FindResource("ComboBoxItem") as Style;
-            var panel = new StackPanel();
-            panel.Orientation = Orientation.Horizontal;
+            var c = new ComboBoxItem
+            {
+                Style = Application.Current.FindResource("ComboBoxItem") as Style
+            };
+            var panel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal
+            };
             c.Content = panel;
 
             if (language.ImageStream != null)
@@ -530,12 +541,12 @@ namespace ModAPI
                 panel.Children.Add(i);
             }
 
-            var text = new TextBlock();
-
-            text.VerticalAlignment = VerticalAlignment.Center;
-            text.Text = language.Resource["LangName"] as String;
-            text.FontSize = 16;
-
+            var text = new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Text = language.Resource["LangName"] as String,
+                FontSize = 16
+            };
             panel.Children.Add(text);
             LanguageSelector.Items.Add(c);
         }
@@ -809,15 +820,17 @@ namespace ModAPI
             if (CurrentModProjectViewModel != null)
             {
                 var win =
-                    new RemoveModProject("Lang.Windows.RemoveModProject", CurrentModProjectViewModel.Project.Id, CurrentModProjectViewModel.Project);
-                win.Confirm = delegate(object obj)
-                {
-                    ProjectList.SelectedIndex = -1;
-                    NoProjectSelected.Visibility = Visibility.Visible;
-                    SelectedProject.DataContext = null;
-                    SelectedProject.Visibility = Visibility.Collapsed;
-                    ModProjects.Remove((ModProject) obj);
-                };
+                    new RemoveModProject("Lang.Windows.RemoveModProject", CurrentModProjectViewModel.Project.Id, CurrentModProjectViewModel.Project)
+                    {
+                        Confirm = delegate (object obj)
+                        {
+                            ProjectList.SelectedIndex = -1;
+                            NoProjectSelected.Visibility = Visibility.Visible;
+                            SelectedProject.DataContext = null;
+                            SelectedProject.Visibility = Visibility.Collapsed;
+                            ModProjects.Remove((ModProject) obj);
+                        }
+                    };
                 win.ShowSubWindow();
                 win.Show();
             }

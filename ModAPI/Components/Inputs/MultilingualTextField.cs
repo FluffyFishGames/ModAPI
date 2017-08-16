@@ -108,14 +108,19 @@ namespace ModAPI.Components.Inputs
             Items.Clear();
             foreach (var langCode in Languages)
             {
-                var newItem = new ComboBoxItem();
-                newItem.Style = Application.Current.FindResource("ComboBoxItem") as Style;
-                newItem.DataContext = langCode;
-
-                var panel = new StackPanel();
-                panel.Orientation = Orientation.Horizontal;
-                var image = new Image();
-                image.Height = 20;
+                var newItem = new ComboBoxItem
+                {
+                    Style = Application.Current.FindResource("ComboBoxItem") as Style,
+                    DataContext = langCode
+                };
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal
+                };
+                var image = new Image
+                {
+                    Height = 20
+                };
                 var source = new BitmapImage();
                 source.BeginInit();
                 source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + langCode + ".png");

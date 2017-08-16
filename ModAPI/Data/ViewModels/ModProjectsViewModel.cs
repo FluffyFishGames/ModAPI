@@ -118,11 +118,15 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                 }
                 if (add)
                 {
-                    var newItem = new ListViewItem();
-                    newItem.DataContext = new ModProjectViewModel(project);
+                    var newItem = new ListViewItem
+                    {
+                        DataContext = new ModProjectViewModel(project)
+                    };
                     var panel = new Grid();
-                    var image = new Image();
-                    image.Height = 20;
+                    var image = new Image
+                    {
+                        Height = 20
+                    };
                     var source = new BitmapImage();
                     source.BeginInit();
                     source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Icon_Warning.png");
@@ -132,8 +136,10 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                     //image.Margin = new Thickness(0, 0, 5, 0);
                     image.SetBinding(Image.VisibilityProperty, "Error");
 
-                    var image2 = new Image();
-                    image2.Height = 20;
+                    var image2 = new Image
+                    {
+                        Height = 20
+                    };
                     var source2 = new BitmapImage();
                     source2.BeginInit();
                     source2.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Icon_Error.png");

@@ -121,16 +121,20 @@ public class ModViewModel : INotifyPropertyChanged
             if (add)
             {
                 var newItem = new ListViewItem();
-                var panel = new StackPanel();
-                panel.Orientation = Orientation.Vertical;
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Vertical
+                };
                 newItem.DataContext = new ModVersionViewModel(mod);
 
                 var label = new TextBlock();
                 label.SetBinding(TextBlock.TextProperty, "Version");
                 label.Style = (Style) Application.Current.FindResource("HeaderLabel");
 
-                var panel2 = new StackPanel();
-                panel2.Orientation = Orientation.Horizontal;
+                var panel2 = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal
+                };
                 var compatibleLabel = new TextBlock();
                 compatibleLabel.SetResourceReference(TextBlock.TextProperty, "Lang.Mods.Labels.Compatible");
                 compatibleLabel.FontSize = 14;
@@ -305,8 +309,10 @@ public class ModViewModel : INotifyPropertyChanged
 
                         foreach (var button in mod.HeaderData.GetButtons())
                         {
-                            var panel = new Grid();
-                            panel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                            var panel = new Grid
+                            {
+                                HorizontalAlignment = HorizontalAlignment.Stretch
+                            };
                             var col1 = new ColumnDefinition();
                             var col2 = new ColumnDefinition();
                             var col3 = new ColumnDefinition();
@@ -322,22 +328,28 @@ public class ModViewModel : INotifyPropertyChanged
                             var bvm = new ModButtonViewModel(button);
                             panel.DataContext = bvm;
 
-                            var label = new TextBlock();
-                            label.Style = Application.Current.FindResource("NormalLabel") as Style;
+                            var label = new TextBlock
+                            {
+                                Style = Application.Current.FindResource("NormalLabel") as Style
+                            };
                             label.SetBinding(TextBlock.TextProperty, "Name");
                             label.VerticalAlignment = VerticalAlignment.Center;
                             label.Margin = new Thickness(0, 0, 10, 0);
                             Grid.SetColumn(label, 0);
 
-                            var label2 = new TextBlock();
-                            label2.Style = Application.Current.FindResource("NormalLabel") as Style;
+                            var label2 = new TextBlock
+                            {
+                                Style = Application.Current.FindResource("NormalLabel") as Style
+                            };
                             label2.SetBinding(TextBlock.TextProperty, "Description");
                             label2.VerticalAlignment = VerticalAlignment.Center;
                             label2.TextWrapping = TextWrapping.Wrap;
                             label2.Margin = new Thickness(10, 0, 0, 0);
 
-                            var input = new TextBox();
-                            input.IsReadOnly = true;
+                            var input = new TextBox
+                            {
+                                IsReadOnly = true
+                            };
                             input.KeyUp += delegate(object o, KeyEventArgs e) { ChangeStandardKey(o, e, bvm); };
                             input.KeyDown += delegate(object o, KeyEventArgs e) { StandardKeyDown(o, e, bvm); };
                             input.SetBinding(TextBox.TextProperty, "Key");

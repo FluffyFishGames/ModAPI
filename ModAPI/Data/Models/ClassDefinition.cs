@@ -137,10 +137,12 @@ namespace ModAPI.Data.Models
 
         void AddField(FieldInfo field)
         {
-            var newField = new FieldDefinition();
-            newField.ClassName = Name;
-            newField.FieldName = field.Name;
-            newField.FieldType = field.FieldType;
+            var newField = new FieldDefinition
+            {
+                ClassName = Name,
+                FieldName = field.Name,
+                FieldType = field.FieldType
+            };
             Fields.Add(field.Name, newField);
         }
     }

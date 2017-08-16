@@ -128,9 +128,11 @@ namespace ModAPI
                 {
                     foreach (var kv in mod.Buttons)
                     {
-                        var newEvent = new KeyEvent();
-                        newEvent.ModId = mod.Id;
-                        newEvent.Id = kv.Key;
+                        var newEvent = new KeyEvent
+                        {
+                            ModId = mod.Id,
+                            Id = kv.Key
+                        };
                         var allKeys = kv.Value.Split(new[] { "+" }, StringSplitOptions.None);
                         foreach (var k in allKeys)
                         {

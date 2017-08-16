@@ -118,8 +118,10 @@ namespace ModAPI.Configurations
                 }
                 else
                 {
-                    var dat = new ConfigData();
-                    dat.StringValue = value;
+                    var dat = new ConfigData
+                    {
+                        StringValue = value
+                    };
                     UserConfigData.Add(key, dat);
                 }
             }
@@ -131,8 +133,10 @@ namespace ModAPI.Configurations
                 }
                 else
                 {
-                    var dat = new ConfigData();
-                    dat.StringValue = value;
+                    var dat = new ConfigData
+                    {
+                        StringValue = value
+                    };
                     ConfigDataInst.Add(key, dat);
                 }
             }
@@ -149,8 +153,10 @@ namespace ModAPI.Configurations
                 }
                 else
                 {
-                    var dat = new ConfigData();
-                    dat.IntValue = value;
+                    var dat = new ConfigData
+                    {
+                        IntValue = value
+                    };
                     UserConfigData.Add(key, dat);
                 }
             }
@@ -162,8 +168,10 @@ namespace ModAPI.Configurations
                 }
                 else
                 {
-                    var dat = new ConfigData();
-                    dat.IntValue = value;
+                    var dat = new ConfigData
+                    {
+                        IntValue = value
+                    };
                     ConfigDataInst.Add(key, dat);
                 }
             }

@@ -195,8 +195,10 @@ namespace ModAPI.Data
 
         protected void BackupGameFiles()
         {
-            var progressHandler = new ProgressHandler();
-            progressHandler.Task = "CreatingBackup";
+            var progressHandler = new ProgressHandler
+            {
+                Task = "CreatingBackup"
+            };
             Schedule.AddTask("GUI", "OperationPending", null, new object[] { "BackupGameFiles", progressHandler, null, true });
 
             var t = new Thread(delegate()
@@ -620,12 +622,14 @@ namespace ModAPI.Data
                 processor.InsertBefore(exitPoint, processor.Create(OpCodes.Stloc_2));
                 processor.InsertBefore(exitPoint, processor.Create(OpCodes.Leave, exitPoint));
 
-                var exceptionHandler = new ExceptionHandler(ExceptionHandlerType.Catch);
-                exceptionHandler.TryStart = _tryStart;
-                exceptionHandler.TryEnd = _tryEnd;
-                exceptionHandler.HandlerStart = _tryEnd;
-                exceptionHandler.HandlerEnd = exitPoint;
-                exceptionHandler.CatchType = Assemblies["UnityEngine"].Import(Assemblies["mscorlib"].GetType("System.Exception"));
+                var exceptionHandler = new ExceptionHandler(ExceptionHandlerType.Catch)
+                {
+                    TryStart = _tryStart,
+                    TryEnd = _tryEnd,
+                    HandlerStart = _tryEnd,
+                    HandlerEnd = exitPoint,
+                    CatchType = Assemblies["UnityEngine"].Import(Assemblies["mscorlib"].GetType("System.Exception"))
+                };
                 resolveModAssembly.Body.ExceptionHandlers.Add(exceptionHandler);
 
                 unityEngineApplication.Methods.Add(resolveModAssembly);

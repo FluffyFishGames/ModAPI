@@ -30,9 +30,10 @@ public class LanguageList
 
     public void Add(OldConfiguration.Language language)
     {
-        var c = new ComboBoxItem();
-
-        c.Content = language.Resource["LangCode"] as String;
+        var c = new ComboBoxItem
+        {
+            Content = language.Resource["LangCode"] as String
+        };
         Items.Add(c);
     }
 }

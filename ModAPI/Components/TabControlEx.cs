@@ -230,13 +230,15 @@ namespace ModAPI.Components
             }
 
             // the actual child to be added.  cp.Tag is a reference to the TabItem
-            cp = new ContentPresenter();
-            cp.Content = (item is TabItem) ? (item as TabItem).Content : item;
-            cp.ContentTemplate = SelectedContentTemplate;
-            cp.ContentTemplateSelector = SelectedContentTemplateSelector;
-            cp.ContentStringFormat = SelectedContentStringFormat;
-            cp.Visibility = Visibility.Collapsed;
-            cp.Tag = (item is TabItem) ? item : (ItemContainerGenerator.ContainerFromItem(item));
+            cp = new ContentPresenter
+            {
+                Content = (item is TabItem) ? (item as TabItem).Content : item,
+                ContentTemplate = SelectedContentTemplate,
+                ContentTemplateSelector = SelectedContentTemplateSelector,
+                ContentStringFormat = SelectedContentStringFormat,
+                Visibility = Visibility.Collapsed,
+                Tag = (item is TabItem) ? item : (ItemContainerGenerator.ContainerFromItem(item))
+            };
             _itemsHolderPanel.Children.Add(cp);
             return cp;
         }

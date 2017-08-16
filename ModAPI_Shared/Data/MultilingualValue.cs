@@ -96,8 +96,10 @@ namespace ModAPI.Data
             var element = new XElement("LangItem");
             foreach (var kv in Langs)
             {
-                var subElement = new XElement(kv.Key.ToUpper());
-                subElement.Value = kv.Value;
+                var subElement = new XElement(kv.Key.ToUpper())
+                {
+                    Value = kv.Value
+                };
                 element.Add(subElement);
             }
             return element;

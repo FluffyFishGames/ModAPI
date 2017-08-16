@@ -54,8 +54,10 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
         foreach (var button in project.Buttons)
         {
-            var _button = new ModProjectButton();
-            _button.DataContext = new ModProjectButtonViewModel(this, button);
+            var _button = new ModProjectButton
+            {
+                DataContext = new ModProjectButtonViewModel(this, button)
+            };
             _Buttons.Add(_button);
         }
 
@@ -66,11 +68,15 @@ public class ModProjectViewModel : INotifyPropertyChanged
     {
         try
         {
-            var button = new ModProject.Button();
-            button.Project = Project;
+            var button = new ModProject.Button
+            {
+                Project = Project
+            };
             Project.Buttons.Add(button);
-            var _button = new ModProjectButton();
-            _button.DataContext = new ModProjectButtonViewModel(this, button);
+            var _button = new ModProjectButton
+            {
+                DataContext = new ModProjectButtonViewModel(this, button)
+            };
             _Buttons.Add(_button);
         }
         catch (Exception e)
@@ -116,16 +122,22 @@ public class ModProjectViewModel : INotifyPropertyChanged
 
     protected void AddLanguageButton(string langCode)
     {
-        var newButton = new Button();
-        newButton.Style = Application.Current.FindResource("NormalButton") as Style;
-        newButton.DataContext = langCode;
+        var newButton = new Button
+        {
+            Style = Application.Current.FindResource("NormalButton") as Style,
+            DataContext = langCode
+        };
         newButton.Click += RemoveLanguage;
         newButton.Margin = new Thickness(0, 0, 10, 4);
 
-        var panel = new StackPanel();
-        panel.Orientation = Orientation.Horizontal;
-        var image = new Image();
-        image.Height = 20;
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal
+        };
+        var image = new Image
+        {
+            Height = 20
+        };
         var source = new BitmapImage();
         source.BeginInit();
         source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Lang_" + langCode + ".png");
@@ -134,8 +146,10 @@ public class ModProjectViewModel : INotifyPropertyChanged
         image.Margin = new Thickness(0, 0, 5, 0);
         panel.Children.Add(image);
 
-        var image2 = new Image();
-        image2.Height = 24;
+        var image2 = new Image
+        {
+            Height = 24
+        };
         var source2 = new BitmapImage();
         source2.BeginInit();
         source2.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Icon_Delete.png");
@@ -143,8 +157,10 @@ public class ModProjectViewModel : INotifyPropertyChanged
         image2.Source = source2;
         image2.Margin = new Thickness(5, 0, 0, 0);
 
-        var label = new TextBlock();
-        label.FontSize = 16;
+        var label = new TextBlock
+        {
+            FontSize = 16
+        };
         label.SetResourceReference(TextBlock.TextProperty, "Lang.Languages." + langCode);
         panel.Children.Add(label);
         panel.Children.Add(image2);

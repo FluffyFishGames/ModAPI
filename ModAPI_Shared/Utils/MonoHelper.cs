@@ -391,9 +391,10 @@ namespace ModAPI.Utils
 
             foreach (var generic in method.GenericParameters)
             {
-                var newGeneric = new GenericParameter(generic.Name, newReference);
-                newGeneric.Attributes = generic.Attributes;
-
+                var newGeneric = new GenericParameter(generic.Name, newReference)
+                {
+                    Attributes = generic.Attributes
+                };
                 newReference.GenericParameters.Add(newGeneric);
             }
             if (method.ReturnType is GenericParameter)

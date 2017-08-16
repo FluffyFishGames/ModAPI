@@ -50,8 +50,10 @@ namespace ModAPI.Components.Inputs
             var column = startColumn;
             if (label != "")
             {
-                var labelElement = new TextBlock();
-                labelElement.Style = App.Instance.Resources[labelStyle] as Style;
+                var labelElement = new TextBlock
+                {
+                    Style = App.Instance.Resources[labelStyle] as Style
+                };
                 labelElement.SetResourceReference(TextBlock.TextProperty, label);
                 labelElement.VerticalAlignment = VerticalAlignment.Center;
                 labelElement.Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5);
@@ -62,12 +64,14 @@ namespace ModAPI.Components.Inputs
                 column += 1;
             }
 
-            var inputElement = new TextBlock();
-            inputElement.HorizontalAlignment = HorizontalAlignment.Center;
-            inputElement.VerticalAlignment = VerticalAlignment.Center;
+            var inputElement = new TextBlock
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
 
-            inputElement.Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5);
-            inputElement.Style = App.Instance.Resources["HeaderLabel"] as Style;
+                Margin = new Thickness(column > 0 ? 5 : 0, 0, 0, 5),
+                Style = App.Instance.Resources["HeaderLabel"] as Style
+            };
             inputElement.SetBinding(TextBlock.TextProperty, value);
 
             grid.Children.Add(inputElement);

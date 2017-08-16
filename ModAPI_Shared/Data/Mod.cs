@@ -260,9 +260,10 @@ namespace ModAPI.Data
                 try
                 {
                     var dllBytes = Convert.FromBase64String(assemblyText);
-                    var dllStream = new MemoryStream(dllBytes);
-                    dllStream.Position = 0;
-
+                    var dllStream = new MemoryStream(dllBytes)
+                    {
+                        Position = 0
+                    };
                     OriginalModule = ModuleDefinition.ReadModule(dllStream);
                     dllStream.Position = 0;
                     Module = ModuleDefinition.ReadModule(dllStream);

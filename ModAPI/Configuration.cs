@@ -190,10 +190,12 @@ public class OldConfiguration
             {
                 var line = lines[i].Replace("\r", "").Trim();
                 var parts = line.Split(new[] { "|" }, StringSplitOptions.None);
-                var newVersion = new Version();
-                newVersion.Number = parts[0];
-                newVersion.BuildId = parts[1];
-                newVersion.Hash = parts[2];
+                var newVersion = new Version
+                {
+                    Number = parts[0],
+                    BuildId = parts[1],
+                    Hash = parts[2]
+                };
                 Versions.Add(newVersion);
             }
         }
@@ -283,10 +285,14 @@ public class OldConfiguration
 
             foreach (var language in Languages.Values)
             {
-                var c = new ComboBoxItem();
-                c.Style = Application.Current.FindResource("ComboBoxItem") as Style;
-                var panel = new StackPanel();
-                panel.Orientation = Orientation.Horizontal;
+                var c = new ComboBoxItem
+                {
+                    Style = Application.Current.FindResource("ComboBoxItem") as Style
+                };
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal
+                };
                 c.Content = panel;
 
                 var fileName = "langs/" + language.Resource["LangCode"] + ".png";
@@ -310,12 +316,13 @@ public class OldConfiguration
                     panel.Children.Add(i);
                 }
 
-                var text = new TextBlock();
-                text.Name = "Label";
+                var text = new TextBlock
+                {
+                    Name = "Label",
 
-                text.VerticalAlignment = VerticalAlignment.Center;
-                text.Text = language.Resource["LangName"] as String;
-
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Text = language.Resource["LangName"] as String
+                };
                 panel.Children.Add(text);
 
                 LanguageItems.Add(c);

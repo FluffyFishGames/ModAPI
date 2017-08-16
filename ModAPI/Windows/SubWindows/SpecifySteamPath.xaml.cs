@@ -98,10 +98,10 @@ namespace ModAPI.Windows.SubWindows
 
         private void OnClickBrowse(object sender, RoutedEventArgs e)
         {
-            var openFileDialog1 = new OpenFileDialog();
-
-            openFileDialog1.Filter = "Steam.exe|Steam.exe";
-
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Filter = "Steam.exe|Steam.exe"
+            };
             if (openFileDialog1.ShowDialog() == true)
             {
                 SteamPath.Text = Path.GetDirectoryName(openFileDialog1.FileName);

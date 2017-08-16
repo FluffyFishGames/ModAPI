@@ -388,11 +388,13 @@ namespace ModAPI.Data.Models
                     }
                     foreach (var button in configuration.Root.Elements("Button"))
                     {
-                        var b = new Button();
-                        b.Project = this;
-                        b.Id = XmlHelper.GetXmlAttributeAsString(button, "ID", "");
-                        b.StandardKey = XmlHelper.GetXmlAttributeAsString(button, "Standard", "");
-                        b.Name = new MultilingualValue();
+                        var b = new Button
+                        {
+                            Project = this,
+                            Id = XmlHelper.GetXmlAttributeAsString(button, "ID", ""),
+                            StandardKey = XmlHelper.GetXmlAttributeAsString(button, "Standard", ""),
+                            Name = new MultilingualValue()
+                        };
                         b.Name.SetXml(button.Element("Name"));
                         b.Description = new MultilingualValue();
                         b.Description.SetXml(button.Element("Description"));
