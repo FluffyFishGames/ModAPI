@@ -577,7 +577,7 @@ namespace ModAPI
                 ((Button) FindName("NormalizeButton")).Width = 0;
             }
 
-            VersionLabel.Text = Version.Descriptor + " [" + Version.Number + "]";
+            VersionLabel.Text = Version.Descriptor + " [" + Version.BuildDate + "]";
         }
 
         public Dictionary<string, Grid> InventoryElements = new Dictionary<string, Grid>();
