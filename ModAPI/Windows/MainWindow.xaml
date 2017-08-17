@@ -38,6 +38,7 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Components:TabControlEx x:Name="Tabs" Grid.Row="0" SnapsToDevicePixels="True" Style="{StaticResource TopTabs}" SelectionChanged="Tabs_SelectionChanged">
+            <!-- TODO: Disabled Login components due to php backend not functioning on modapi.cc
             <Components:TabControlEx.ExtraPanel>
                 <Grid Height="60" Margin="-7,-10,-7,-10">
                     <Grid x:Name="LoginLoader" Visibility="Collapsed">
@@ -82,6 +83,7 @@
                     </StackPanel>
                 </Grid>
             </Components:TabControlEx.ExtraPanel>
+            -->
             <Components:TabControlEx.Items>
                 <Components:IconTabItem SnapsToDevicePixels="True" Label="{DynamicResource Lang.Mods.Tab}" IconSource="/resources/textures/Icons/IconTop_Mods.png" SelectedIconSource="/resources/textures/Icons/IconTop_Mods_Selected.png" Style="{StaticResource TopTab}">
                     <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

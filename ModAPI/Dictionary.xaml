@@ -1311,6 +1311,7 @@
                             KeyboardNavigation.TabIndex="1"
                             Background="Transparent" />
                             <Image SnapsToDevicePixels="True" Grid.Column="1" HorizontalAlignment="Stretch" Source="/resources/textures/NewGUI/TopFading.png" Margin="0" VerticalAlignment="Stretch" Stretch="Fill" />
+                            <!-- TODO: Disabled Login components due to php backend not functioning on modapi.cc
                             <Components:Scale9 x:Name="Scale9Control" Grid.Column="2"
                                             NormalSource="/resources/textures/NewGUI/TopTab_Selected.png" 
                                             Border="16, 64, 16, 40"
@@ -1323,6 +1324,7 @@
                                     <ContentPresenter Content="{TemplateBinding ExtraPanel}" Grid.Column="2" />
                                 </Components:Scale9.InnerContent>
                             </Components:Scale9>
+                            -->
                             <Image SnapsToDevicePixels="True" Grid.Column="3" HorizontalAlignment="Stretch" Source="/resources/textures/NewGUI/TopFading.png" Margin="0" VerticalAlignment="Stretch" Stretch="Fill" />
                         </Grid>
                         <Grid x:Name="PART_ItemsHolder" SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="4" />

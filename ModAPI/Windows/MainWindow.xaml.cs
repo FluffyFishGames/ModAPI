@@ -221,6 +221,7 @@ namespace ModAPI
         protected Dictionary<string, ComboBoxItem> LanguageItems = new Dictionary<string, ComboBoxItem>();
         protected SettingsViewModel SettingsVm;
 
+        /* TODO: Disabled Login components due to php backend not functioning on modapi.cc
         protected void ShowLoginLoader()
         {
             Dispatcher.Invoke(delegate
@@ -288,6 +289,7 @@ namespace ModAPI
                 LoggedIn.Visibility = Visibility.Collapsed;
             });
         }
+        */
 
         public MainWindow()
         {
@@ -299,10 +301,12 @@ namespace ModAPI
             InitializeComponent();
             Instance = this;
 
+            /* TODO: Disabled Login components due to php backend not functioning on modapi.cc
             WebService.OnDoLogin = ShowLoginLoader;
             WebService.OnLogin = ShowLoginUser;
             WebService.OnLoginError = ShowLoginError;
             WebService.OnLogout = ShowLogin;
+            */
             WebService.Initialize();
 
             foreach (var langCode in Languages)
@@ -415,8 +419,10 @@ namespace ModAPI
 
         void GuiTick(object sender, EventArgs e)
         {
+            /* TODO: Disabled Login components due to php backend not functioning on modapi.cc
             LoginLoaderRotation.Angle += 5;
             UserAvatarLoaderRotation.Angle += 5;
+            */
             if (!FirstSetup)
             {
                 var tasks = Schedule.GetTasks("GUI");
