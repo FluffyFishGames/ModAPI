@@ -14,6 +14,12 @@ namespace ModAPI.Utils
             Paths.Add(path);
         }
 
+        public void Dispose()
+        {
+            Paths.Clear();
+            Paths = null;
+        }
+
         public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters)
         {
             return Resolve(fullName);

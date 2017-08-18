@@ -585,9 +585,9 @@ namespace ModAPI.Data
                     resolveModAssembly.Body = new MethodBody(resolveModAssembly);
                 }
 
-                resolveModAssembly.Body.Variables.Add(new VariableDefinition("filename", Assemblies["UnityEngine"].TypeSystem.String));
-                resolveModAssembly.Body.Variables.Add(new VariableDefinition("path", Assemblies["UnityEngine"].TypeSystem.String));
-                resolveModAssembly.Body.Variables.Add(new VariableDefinition("ret", Assemblies["UnityEngine"].Import(systemReflectionAssembly)));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].TypeSystem.String));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].TypeSystem.String));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].Import(systemReflectionAssembly)));
 
                 var processor = resolveModAssembly.Body.GetILProcessor();
                 var _tryStart = processor.Create(OpCodes.Ldarg_1);
@@ -999,7 +999,7 @@ namespace ModAPI.Data
                                         returnVariable = newMethod.Body.Variables[newMethod.Body.Variables.Count - 1];
                                     }
                                 }
-                                var exceptionVariable = new VariableDefinition("___ModAPIException___", exception);
+                                var exceptionVariable = new VariableDefinition(exception);
                                 newMethod.Body.Variables.Add(exceptionVariable);
 
                                 var ilProcessor = newMethod.Body.GetILProcessor();

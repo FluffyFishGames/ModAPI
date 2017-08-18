@@ -99,7 +99,7 @@ namespace ModAPI.Utils
 
                 foreach (var var in method.Body.Variables)
                 {
-                    var newVar = new VariableDefinition(var.Name, var.VariableType);
+                    var newVar = new VariableDefinition(var.VariableType);
                     newMethod.Body.Variables.Add(newVar);
                 }
 
@@ -477,14 +477,14 @@ namespace ModAPI.Utils
                     var valid = true;
                     foreach (var interfc in attributeType.Interfaces)
                     {
-                        if (interfc.Name == "IStaticAttribute" && !method.IsStatic)
+                        if (interfc.InterfaceType.Name == "IStaticAttribute" && !method.IsStatic)
                         {
                             Debug.Log("Modloader: " + mod.Game.GameConfiguration.Id,
                                 "Method \"" + method.FullName + "\" is using attribute \"" + method.CustomAttributes[k].AttributeType.FullName +
                                 "\" which is only suitable for static methods but isn't marked as static.", Debug.Type.Warning);
                             valid = false;
                         }
-                        if (interfc.Name == "INoParametersAttribute" && method.Parameters.Count > 0)
+                        if (interfc.InterfaceType.Name == "INoParametersAttribute" && method.Parameters.Count > 0)
                         {
                             Debug.Log("Modloader: " + mod.Game.GameConfiguration.Id,
                                 "Method \"" + method.FullName + "\" is using attribute \"" + method.CustomAttributes[k].AttributeType.FullName +
