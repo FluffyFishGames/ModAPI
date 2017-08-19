@@ -12,7 +12,6 @@
   <excludeType>Car*</excludeType>
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\The Forest</searchPath>
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\The Forest</searchPath>
-  <copyAssembly>%fileBase%_data/Managed/AmplifyColor.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/AmplifyMotion.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Boo.Lang.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Posix.dll</copyAssembly>
