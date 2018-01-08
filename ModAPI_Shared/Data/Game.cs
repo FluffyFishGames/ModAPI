@@ -1363,13 +1363,7 @@ namespace ModAPI.Data
 
             public void Refresh()
             {
-                CheckFiles = new HashSet<string>
-                {
-                    "%fileBase%_data/Managed/Assembly-CSharp-firstpass.dll",
-                    "%fileBase%_data/Managed/Assembly-CSharp.dll",
-                    "%fileBase%_data/Managed/Assembly-UnityScript-firstpass.dll",
-                    "%fileBase%_data/Managed/Assembly-UnityScript.dll"
-                };
+                CheckFiles = new HashSet<string>();
                 VersionsList = new HashSet<Version>();
 
                 if (Configuration.GetString("UpdateVersions").ToLower() == "true")
@@ -1383,10 +1377,7 @@ namespace ModAPI.Data
 
                     foreach (var element in document.Root.Element("files").Elements("file"))
                     {
-                        if (!CheckFiles.Contains(element.Value))
-                        {
-                            CheckFiles.Add(element.Value);
-                        }
+                        CheckFiles.Add(element.Value);
                     }
                     foreach (var element in document.Root.Elements("version"))
                     {
