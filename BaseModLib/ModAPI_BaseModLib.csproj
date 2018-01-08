@@ -74,12 +74,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml">
-      <HintPath>..\libs\System.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <HintPath>..\libs\System.Xml.Linq.dll</HintPath>
-    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\gamefiles\original\TheForest\TheForest_data\Managed\UnityEngine.dll</HintPath>
     </Reference>
