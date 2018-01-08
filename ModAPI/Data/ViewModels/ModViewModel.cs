@@ -374,16 +374,75 @@ public class ModViewModel : INotifyPropertyChanged
         var t = (TextBox) sender;
         t.Focus();
         var kc = new KeysConverter();
-        var a = "";
+        var keys = new List<string>();
         PressedKeys.Sort();
         PressedKeys.Reverse();
         foreach (var k in PressedKeys)
         {
-            if (a != "")
+            var keyString = kc.ConvertToString(k) ?? string.Empty;
+
+            switch (k)
             {
-                a += "+";
+                case Key.NumPad0:
+                case Key.NumPad1:
+                case Key.NumPad2:
+                case Key.NumPad3:
+                case Key.NumPad4:
+                case Key.NumPad5:
+                case Key.NumPad6:
+                case Key.NumPad7:
+                case Key.NumPad8:
+                case Key.NumPad9:
+
+                    keyString = keyString.Replace("NumPad", "Keypad");
+                    break;
+
+                case Key.D0:
+                case Key.D1:
+                case Key.D2:
+                case Key.D3:
+                case Key.D4:
+                case Key.D5:
+                case Key.D6:
+                case Key.D7:
+                case Key.D8:
+                case Key.D9:
+
+                    keyString = keyString.Replace("D", "Alpha");
+                    break;
+
+                case Key.OemBackslash:
+                case Key.OemComma:
+                case Key.OemMinus:
+                case Key.OemPeriod:
+                case Key.OemPlus:
+                case Key.OemSemicolon:
+
+                    keyString = keyString.Replace("Oem", "");
+                    break;
+
+                case Key.OemQuestion:
+
+                    keyString = "Slash";
+                    break;
+
+                case Key.OemQuotes:
+
+                    keyString = "Quote";
+                    break;
+
+                case Key.OemOpenBrackets:
+
+                    keyString = "LeftBracket";
+                    break;
+
+                case Key.OemCloseBrackets:
+
+                    keyString = "RightBracket";
+                    break;
             }
-            a += kc.ConvertToString(k)?.Replace("NumPad", "Keypad");
+
+            keys.Add(keyString);
         }
 
         if (e.Key == Key.RightAlt)
@@ -402,7 +461,7 @@ public class ModViewModel : INotifyPropertyChanged
         }
         else
         {
-            button.Key = a;
+            button.Key = string.Join("+", keys);
             if (PressedKeys.Count > 0)
             {
                 Ignore = true;
