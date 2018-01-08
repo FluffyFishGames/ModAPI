@@ -383,7 +383,7 @@ public class ModViewModel : INotifyPropertyChanged
             {
                 a += "+";
             }
-            a += kc.ConvertToString(k);
+            a += kc.ConvertToString(k)?.Replace("NumPad", "Keypad");
         }
 
         if (e.Key == Key.RightAlt)
