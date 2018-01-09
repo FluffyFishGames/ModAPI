@@ -28,6 +28,8 @@
   <copyAssembly>%fileBase%_data/Managed/System.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Security.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/System.Xml.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/TheForest.Commons.dll</copyAssembly>
+  <copyAssembly>%fileBase%_data/Managed/TheForest.Modding.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/UnityEngine.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/UnityEngine.Analytics.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/UnityEngine.Networking.dll</copyAssembly>
