@@ -348,7 +348,7 @@ namespace ModAPI
             }
             Loading = ToLoad.Count > 0;
         }
-        
+
         // ReSharper disable once InconsistentNaming
         void OnGUI()
         {

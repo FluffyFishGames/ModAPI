@@ -31,8 +31,9 @@ namespace ModAPI
         private static int _buildDate = -1;
         public static int BuildDate => _buildDate > -1 ? _buildDate : (_buildDate = int.Parse((Assembly.GetExecutingAssembly().GetBuildDateTime() ?? DateTime.Now).ToString("yyyyMMdd")));
 
-        #pragma warning disable 169
-        #pragma warning disable 649
+#pragma warning disable 169
+#pragma warning disable 649
+
         // ReSharper disable once InconsistentNaming
         struct _IMAGE_FILE_HEADER
         {
@@ -49,7 +50,10 @@ namespace ModAPI
         {
             var path = new Uri(assembly.GetName().CodeBase).LocalPath;
 
-            if (!File.Exists(path)) return null;
+            if (!File.Exists(path))
+            {
+                return null;
+            }
 
             var headerDefinition = typeof(_IMAGE_FILE_HEADER);
 

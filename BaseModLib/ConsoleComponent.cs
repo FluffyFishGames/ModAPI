@@ -33,7 +33,7 @@ namespace ModAPI
         protected bool Submit;
         protected List<string> Last = new List<string>();
         protected int LastPosition = -1;
-        
+
         // ReSharper disable once InconsistentNaming
         void OnGUI()
         {
