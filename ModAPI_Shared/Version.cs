@@ -27,7 +27,7 @@ namespace ModAPI
 {
     public static class Version
     {
-        public static readonly string Descriptor = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public static readonly string Descriptor = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         private static int _buildDate = -1;
         public static int BuildDate => _buildDate > -1 ? _buildDate : (_buildDate = int.Parse((Assembly.GetExecutingAssembly().GetBuildDateTime() ?? DateTime.Now).ToString("yyyyMMdd")));
 
