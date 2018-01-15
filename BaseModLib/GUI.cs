@@ -18,11 +18,24 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
+using System;
 using UnityEngine;
 
 namespace ModAPI
 {
+    [Obsolete("Use ModAPI.GUI instead!")]
     public class Gui
+    {
+        [Obsolete("Use ModAPI.GUI.Skin instead!")]
+        public static GUISkin Skin
+        {
+            get => GUI.Skin;
+            set => GUI.Skin = value;
+        }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class GUI
     {
         public static GUISkin Skin;
     }
