@@ -227,6 +227,15 @@
     <Content Include="resources\langs\Language.ES.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\langs\Language.FR.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.KR.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.PL.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="resources\textures\Icons\Icon_CreateMod.png" />
     <Resource Include="resources\textures\NewGUI\PanelButtons.png" />
     <Resource Include="resources\textures\backgroundShadow.png" />
@@ -240,6 +249,21 @@
     <Resource Include="resources\textures\Icons\Icon_Logout.png" />
     <Resource Include="resources\textures\Icons\Loader.png" />
     <Content Include="resources\langs\Language.ES.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.FR.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.KR.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\langs\Language.PL.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

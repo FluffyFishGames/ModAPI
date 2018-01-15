@@ -1,0 +1,209 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <s:String x:Key="LangCode">KO</s:String>
+    <s:String x:Key="Locale">ko-KR</s:String>
+    <s:String x:Key="LangName">Korean</s:String>
+
+    <s:String x:Key="Lang.Window.Version">버전:</s:String>
+    <s:String x:Key="Lang.Window.Copyright">만든이 FluffyFish</s:String>
+    <s:String x:Key="Lang.Logout">로그아웃</s:String>
+    <s:String x:Key="Lang.Loading">로딩중...</s:String>
+    <s:String x:Key="Lang.Login">로그인</s:String>
+    <s:String x:Key="Lang.UserGroup.Administrator">관리자</s:String>
+    <s:String x:Key="Lang.UserGroup.Press">Press</s:String>
+    <s:String x:Key="Lang.UserGroup.Moderator">Moderator</s:String>
+    <s:String x:Key="Lang.UserGroup.User">User</s:String>
+    
+    <s:String x:Key="Lang.Windows.Login.Title">로그인</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">www.modapi.de 에 로그인할 아이디와 비밀번호를 입력하여 주십시오.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Login">로그인</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">취소</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Username">아이디:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Password">비밀번호:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Errors.WrongLogin">사용자 아이디 및 비밀번호가 잘못되었습니다.</s:String>
+    
+    <s:String x:Key="Lang.Windows.OperationPending.Title">진행중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Continue">계속</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Cancel">취소</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.BackupGameFiles.CreatingBackup">게임파일 백업중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.RemovingOldFiles">이전 파일 제거중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CreatingModToolkit">Mod 유틸리티 생성중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.ModifyingAssemblies">게임라이브러리 변경중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CopyingAssemblies">게임라이브러리 복사중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Finish">Mod 라이브러리를 성공적으로 생성하였습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.BaseModLibNotFound">오류!: BaseModLib 를 찾을 수 없습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyFileNotFound">오류!: 게임라이브러리를 찾을 수 없습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.CopyAssemblyFileNotFound">오류!: 게임라이브러리를 찾을 수 없습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyException">오류!: 게임 라이브러리를 변경하는 동안 예기치 않은 오류가 발생했습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Finish">Mod 가 성공적으로 생성되었습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.SavingMod">mod 파일을 생성중입니다...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.FetchingTypes">모든 유형을 가져오고 있습니다...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.ConvertingClasses">형식 변환중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Preparing">mod 작성 준비중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.Save">오류!: mod 를 저장할 수 없습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.UnexpectedError">오류!: 예기치 않은 오류가 발생했습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.FileNotFound">오류!: 파일을 찾을 수 없습니다. 이 프로젝트가 컴파일되지 않았습니다..</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.CorruptedAssembly">오류!: 어셈블리 중 하나가 손상된 것으로 보입니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Preparing">Mod 환경을 준비중입니다...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.FetchingInjections">파일을 가져옵니다...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Injecting">게임파일 조작중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Resolving">MSIL Code 를 분석하고 있습니다...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Saving">파일 저장중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Error.Unexpected">오류!: mod 를 적용하는동안 오류가 발생했습니다.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Restore">파일 복원중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.Cancelled">오류!: 사용자에 의해 복구가 취소 되었습니다!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.NoConnection">오류!: 스팀이 인터넷에 연결되어 있지 않습니다!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">오류!: 스팀이 닫혀 있습니다!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">업데이트 다운로드중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">업데이트 압축푸는중...</s:String>
+
+    <s:String x:Key="Lang.Windows.CreateModProject.Title">Mod 프로젝트 생성</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Text">새로운 프로젝트의 ID를 입력하십시오. ID는 고유해야하며 "_" 영/숫자 문자를 포함 할 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Errors.ID">이미 ID와 프로젝트가 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Cancel">취소</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Add">추가</s:String>
+
+    <s:String x:Key="Lang.Windows.RemoveModProject.Title">프로젝트 제거</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPre">프로젝트를 제거하시겠습니까?</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPost">프로젝트가 복구되지 않습니다. 모든 프로젝트 파일이 제거됩니다.</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">취소</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">제거</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">경로 입력</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">설치된 게임을 찾을 수 없습니다. 게임경로를 직접 입력하시기 바랍니다.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">브라우저</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">계속</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">스팀경로 입력</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Text">설치된 스팀을 찾을 수 없습니다. 스팀경로를 직접 입력하시기 바랍니다.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Browse">브라우저</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Continue">계속</s:String>
+
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Title">게임버전을 감지할 수 없습니다.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoVersionUpdate">게임 버전을 감지 할 수 없습니다. 새로운 게임 버전을 감지하기 위해 버전 테이블 업데이트를 활성화 해야 합니다. 게임 파일의 손상 또는 ModAPI 외부에서 수정하는 것도 가능합니다.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.VersionNotFound"> 게임 버전을 감지 할 수 없습니다. 게임 데이터는 ModAPI 외부에서 수정 된 것으로 보입니다.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoSteamText">스팀 연결이 비활성화 되어있어, ModAPI 의 게임 파일을 복원 할 수 없습니다. 게임 파일의 원래 상태를 복원하고 ModAPI 를 다시 확인하시기 바랍니다. 또한 ModAPI는 게임 파일을 복원 할 수 있는 스팀 연결을 활성화 할 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.SteamText">ModAPI 에서 스팀을 통해 복원하기를 원합니까?</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateVersionUpdate">업데이트 활성화됨</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateSteam">스팀 연결 활성화됨</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Restore">파일 복구</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Recheck">재-확인</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Close">종료</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Yes">예</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">아니오</s:String>
+
+    <s:String x:Key="Lang.Windows.FirstSetup.Title">환영합니다!</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">ModAPI 첫 시작화면입니다. 시작하기전에 다음과 같은 옵션을 확인해야합니다:</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">자동-업데이트</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">자동 업데이트 기능을 사용하면 ModAPI의 새 버전이 나왔을 때 정보를 얻을 수 있습니다. 이 부분이 체크 되어 있으면 새로운 업데이트를 적용 할 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Steam">스팀 연결</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">스팀에 접속되어 있으면 게임 스팀 기능 (예를 들어, 스팀 오버레이)에 액세스 할 수 있습니다. 손상되었거나 잘못되어 있다면 ModAPI는 게임 파일을 복원 할 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">버전 테이블 업데이트</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">버전 테이블 업데이트를 활성화하면 ModAPI의 버전 테이블을 다운로드합니다. 새로운 업데이트를 수동으로 업데이트하지 않고 자동으로 ModAPI에 의해 인식되는것을 의미합니다. 새로운 버전이 적용되기까지 최대 24 시간이 걸릴 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">계속</s:String>
+
+
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Title">사용 가능한 업데이트!</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Text">새로운 버전인 ModAPI 가 있습니다. 지금 업데이트를 시작하시겠습니까?</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">지금 업데이트</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">나중에 업데이트</s:String>
+
+
+    <s:String x:Key="Lang.Languages.EN">영어</s:String>
+    <s:String x:Key="Lang.Languages.DE">독일어</s:String>
+    <s:String x:Key="Lang.Languages.FR">프랑스어</s:String>
+    <s:String x:Key="Lang.Languages.ES">스페인어</s:String>
+    <s:String x:Key="Lang.Languages.RU">러시아</s:String>
+    <s:String x:Key="Lang.Languages.HI">힌디어</s:String>
+    <s:String x:Key="Lang.Languages.AR">아랍어</s:String>
+    <s:String x:Key="Lang.Languages.TR">터키어</s:String>
+    <s:String x:Key="Lang.Languages.IT">이탈리아</s:String>
+    <s:String x:Key="Lang.Languages.VI">베트남어</s:String>
+    <s:String x:Key="Lang.Languages.ZH">중국어</s:String>
+    <s:String x:Key="Lang.Languages.JA">일본어</s:String>
+    <s:String x:Key="Lang.Languages.KO">한국어</s:String>
+    <s:String x:Key="Lang.Languages.BN">뱅골어</s:String>
+    <s:String x:Key="Lang.Languages.PT">포루투갈어</s:String>
+
+    <s:String x:Key="Lang.Development.Tab">개발</s:String>
+    <s:String x:Key="Lang.Development.Settings.Tab">설정</s:String>
+    <s:String x:Key="Lang.Development.Keys.Tab">할당 가능한 키</s:String>
+    <s:String x:Key="Lang.Development.Projects">프로젝트</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Name">이름:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Description">설명:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.StandardKey">Standardkey:</s:String>
+    <s:String x:Key="Lang.Development.Languages.Tab">언어</s:String>
+    <s:String x:Key="Lang.Development.Languages.AddLanguage">언어 추가</s:String>
+    <s:String x:Key="Lang.Development.Languages.SelectedLanguages">언어 선택됨</s:String>
+    <s:String x:Key="Lang.Development.Languages.Buttons.AddLanguage">추가</s:String>
+
+    <s:String x:Key="Lang.Development.NoProjectSelected">프로젝트가 선택되지 않았습니다.</s:String>
+    <s:String x:Key="Lang.Development.SelectedProject">프로젝트 선택</s:String>
+    <s:String x:Key="Lang.Development.Errors.Save">프로젝트를 저장하는 동안 오류가 발생했습니다. 프로젝트가 닫혀 있는지 확인하고 다른 응용 프로그램이 액세스 되어 있는지 확인 하시기 바랍니다.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidID">ID 는 "_"영/숫자 문자를 포함하고 허용됩니다. 이 ID 이어야하며 고유해야합니다.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidButtonID">ID는 고유해야합니다.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidVersion">버전은 4자리로 표기할 수 있고, 점으로 구분하며 0-99 로 표기할 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidName">모두 선택된 언어가 있어야합니다.</s:String>
+    <s:String x:Key="Lang.Development.Errors.NoLanguageSelected">하나 이상의 언어를 선택해야합니다.</s:String>
+
+    <s:String x:Key="Lang.Development.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Labels.StandardKey">Standardkey:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Version">버전:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Name">이름:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Description">설명:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary">Mod 라이브러리</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.CreationTime">생성된 시간:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.GameVersion">게임 버전:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.ModAPIVersion">ModAPI 버전:</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateModLibrary">Mod 라이브러리 재생성</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateProject">새로운 프로젝트 생성</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveProject">프로젝트 제거</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateMod">Mod 생성</s:String>
+    <s:String x:Key="Lang.Development.Buttons.AddButton">키 추가</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveButton">키 제거</s:String>
+
+    <s:String x:Key="Lang.Mods.Tab">모드</s:String>
+    <s:String x:Key="Lang.Mods.Title">Mod 목록</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.StartGame">게임 시작</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.SelectVersion">버전 선택</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Informations">정보</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Settings">설정</s:String>
+    <s:String x:Key="Lang.Mods.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Version">버전 선택:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.AvailableVersions">유효 버전:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Name">이름:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Description">설명:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Buttons">단축키</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Compatible">호환성:</s:String>
+
+    <s:String x:Key="Lang.Mods.Welcome.Title0">환영합니다!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text0">게임에 mod 를 적용하려면 먼저 modAPI 를 활성화해야 합니다. In order to do so you have to click the round button left to the mod name. To change key bindings you can select a mod in the list and switch to the "Settings" tab.</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text1">mod 와 게임을 시작하려면 오른쪽 하단에 있는 "게임 시작" 을 클릭해야 합니다.</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Title1">오류?</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2">오류가 발생하는 경우에 포럼에서 도움을 요청하시기 바랍니다. www.modapi.de</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text3">log 파일을 첨부하는것을 잊지 마십시오. &quot;ModAPI.log&quot; logs 폴더에서 찾아보십시오. 이 파일은 문제 해결을 위한 중요한 정보가 포함되어 있습니다.</s:String>
+
+    <s:String x:Key="Lang.Savegames.Tab">점수</s:String>
+    <s:String x:Key="Lang.Savegames.Title">당신의 점수</s:String>
+    <s:String x:Key="Lang.Savegames.MainSavegame">기본 점수</s:String>
+
+    <s:String x:Key="Lang.Savegames.SelectedSavegame">선정 점수:</s:String>
+    <s:String x:Key="Lang.Savegames.Options">옵션:</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Save">저장</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.SaveAs">다른 이름으로 저장...</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Delete">삭제</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.CreateBackup">백업 생성</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.RemoveAllBackups">모든 백업 제거</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.LoadBackup">백업 불러오기</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.DeleteBackup">백업 삭제</s:String>
+
+    <s:String x:Key="Lang.Options.Tab">설정</s:String>
+    <s:String x:Key="Lang.Options.Labels.Language">언어 선택:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">최신버전 유지:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AutoUpdate">업데이트 검색:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteam">스팀 연결:</s:String>
+</ResourceDictionary>
+    
