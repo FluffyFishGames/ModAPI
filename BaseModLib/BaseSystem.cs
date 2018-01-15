@@ -183,7 +183,7 @@ namespace ModAPI
                             Log.Write("Asset bundle: " + o, "Core");
                             if (o is GUISkin)
                             {
-                                GUI.Skin = (GUISkin) o;
+                                Interface.Skin = (GUISkin) o;
                             }
                         }
                     }
@@ -330,8 +330,8 @@ namespace ModAPI
             GrayTexture.SetPixel(0, 0, new Color(0.6f, 0.6f, 0.6f));
             GrayTexture.Apply();
 
-            WhiteLabel = new GUIStyle(GUI.Skin.label);
-            BlackLabel = new GUIStyle(GUI.Skin.label);
+            WhiteLabel = new GUIStyle(Interface.Skin.label);
+            BlackLabel = new GUIStyle(Interface.Skin.label);
             WhiteLabel.fontSize = 20;
             BlackLabel.fontSize = 20;
 

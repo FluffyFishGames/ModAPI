@@ -22,8 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ModAPI;
 using UnityEngine;
 using Console = ModAPI.Console;
+using Input = UnityEngine.Input;
 
 public class LiveInspector : MonoBehaviour
 {
@@ -102,7 +104,7 @@ public class LiveInspector : MonoBehaviour
     {
         if (show)
         {
-            GUI.skin = ModAPI.GUI.Skin;
+            GUI.skin = Interface.Skin;
             if (WhiteLabelStyle == null)
             {
                 WhiteLabelStyle = GUI.skin.GetStyle("WhiteLabel");

@@ -111,7 +111,7 @@
     <Compile Include="ConsoleComponent.cs" />
     <Compile Include="CurrentMod.cs" />
     <Compile Include="CustomParameter.cs" />
-    <Compile Include="GUI.cs" />
+    <Compile Include="Interface.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="LiveInspector.cs" />
     <Compile Include="Log.cs" />

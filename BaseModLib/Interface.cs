@@ -23,19 +23,19 @@ using UnityEngine;
 
 namespace ModAPI
 {
-    [Obsolete("Use ModAPI.GUI instead!")]
+    [Obsolete("Use ModAPI.Interface instead!")]
     public class Gui
     {
-        [Obsolete("Use ModAPI.GUI.Skin instead!")]
+        [Obsolete("Use ModAPI.Interface.Skin instead!")]
         public static GUISkin Skin
         {
-            get => GUI.Skin;
-            set => GUI.Skin = value;
+            get => Interface.Skin;
+            set => Interface.Skin = value;
         }
     }
 
     // ReSharper disable once InconsistentNaming
-    public class GUI
+    public class Interface
     {
         public static GUISkin Skin;
     }

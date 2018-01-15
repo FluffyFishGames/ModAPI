@@ -118,25 +118,25 @@ namespace ModAPI
                     }
                 }
 
-                UnityEngine.GUI.skin = GUI.Skin;
-                UnityEngine.GUI.color = new Color(1f, 1f, 1f, 1f);
-                UnityEngine.GUI.backgroundColor = new Color(1f, 1f, 1f, 1f);
-                UnityEngine.GUI.contentColor = new Color(1f, 1f, 1f, 1f);
-                UnityEngine.GUI.depth = -100;
+                GUI.skin = Interface.Skin;
+                GUI.color = new Color(1f, 1f, 1f, 1f);
+                GUI.backgroundColor = new Color(1f, 1f, 1f, 1f);
+                GUI.contentColor = new Color(1f, 1f, 1f, 1f);
+                GUI.depth = -100;
 
                 var width = Screen.width / 2f;
                 var height = 400f;
                 var x = Screen.width - width - 10f;
                 var y = Screen.height - height - 10f;
-                UnityEngine.GUI.Box(new Rect(x, y, width, height), "Console", UnityEngine.GUI.skin.window);
+                GUI.Box(new Rect(x, y, width, height), "Console", GUI.skin.window);
                 var n = Console.Lines.ToList();
                 n.Reverse();
-                UnityEngine.GUI.enabled = false;
-                UnityEngine.GUI.color = new Color(1f, 1f, 1f, 1f);
-                UnityEngine.GUI.TextArea(new Rect(x + 10f, y + 40f, width - 20f, height - 85f), string.Join("\r\n", n.ToArray()));
-                UnityEngine.GUI.enabled = true;
-                UnityEngine.GUI.SetNextControlName("Input");
-                Input = UnityEngine.GUI.TextField(new Rect(x + 10f, y + height - 40f, width - 20f, 25f), Input);
+                GUI.enabled = false;
+                GUI.color = new Color(1f, 1f, 1f, 1f);
+                GUI.TextArea(new Rect(x + 10f, y + 40f, width - 20f, height - 85f), string.Join("\r\n", n.ToArray()));
+                GUI.enabled = true;
+                GUI.SetNextControlName("Input");
+                Input = GUI.TextField(new Rect(x + 10f, y + height - 40f, width - 20f, 25f), Input);
                 Input = Input.Replace("â", "a");
                 Input = Input.Replace("Â", "A");
                 Input = Input.Replace("ô", "o");
@@ -175,13 +175,13 @@ namespace ModAPI
                     {
                         if (possible.Count > 1)
                         {
-                            var left = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(Input.Substring(0, lastIndex))).x - 10f;
-                            var right = UnityEngine.GUI.skin.textField.CalcSize(new GUIContent(Input + ".")).x - 5f;
+                            var left = GUI.skin.textField.CalcSize(new GUIContent(Input.Substring(0, lastIndex))).x - 10f;
+                            var right = GUI.skin.textField.CalcSize(new GUIContent(Input + ".")).x - 5f;
 
                             var labelWidth = 0f;
                             foreach (var poss in possible)
                             {
-                                var w = UnityEngine.GUI.skin.label.CalcSize(new GUIContent(poss)).x;
+                                var w = GUI.skin.label.CalcSize(new GUIContent(poss)).x;
                                 if (w > labelWidth)
                                 {
                                     labelWidth = w;
@@ -194,7 +194,7 @@ namespace ModAPI
                             {
                                 contentHeight = maxHeight;
                             }
-                            UnityEngine.GUI.Box(new Rect(x + 10f + left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "");
+                            GUI.Box(new Rect(x + 10f + left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "");
 
                             var maxNum = possible.Count;
                             var perPage = (int) (contentHeight / entryHeight);
@@ -216,15 +216,15 @@ namespace ModAPI
                             {
                                 if (istartIndex + i == CurrentAutocompletion)
                                 {
-                                    UnityEngine.GUI.Box(new Rect(x + 10f + left, y + height - 40f - contentHeight + i * entryHeight, labelWidth + 10f, entryHeight), "", GUI.Skin.button);
+                                    GUI.Box(new Rect(x + 10f + left, y + height - 40f - contentHeight + i * entryHeight, labelWidth + 10f, entryHeight), "", Interface.Skin.button);
                                 }
-                                UnityEngine.GUI.Label(new Rect(x + 10f + left + 5f, y + height - 40f - contentHeight + i * entryHeight, labelWidth, entryHeight), possible.ElementAt(istartIndex + i));
+                                GUI.Label(new Rect(x + 10f + left + 5f, y + height - 40f - contentHeight + i * entryHeight, labelWidth, entryHeight), possible.ElementAt(istartIndex + i));
                             }
 
                             if (CurrentAutocompletion > -1)
                             {
                                 var _n = possible[CurrentAutocompletion].Substring(Input.Substring(lastIndex + 1).Length);
-                                UnityEngine.GUI.Label(new Rect(x + 10f + right, y + height - 43f + 3f, 200f, 20f), _n);
+                                GUI.Label(new Rect(x + 10f + right, y + height - 43f + 3f, 200f, 20f), _n);
 
                                 if (AddParam)
                                 {
@@ -252,7 +252,7 @@ namespace ModAPI
                     }
                 }
 
-                if (UnityEngine.GUI.GetNameOfFocusedControl() == "Input" && ((Submit && !AddParam)) && Input.Trim() != "")
+                if (GUI.GetNameOfFocusedControl() == "Input" && ((Submit && !AddParam)) && Input.Trim() != "")
                 {
                     Console.ParseInput(Input);
                     Last.Insert(0, Input);
@@ -263,7 +263,7 @@ namespace ModAPI
                 Event.current.mousePosition = new Vector2(0f, 0f);
                 if (JustOpened)
                 {
-                    UnityEngine.GUI.FocusControl("Input");
+                    GUI.FocusControl("Input");
                     JustOpened = false;
                 }
             }
