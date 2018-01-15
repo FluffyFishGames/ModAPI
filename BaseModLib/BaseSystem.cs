@@ -183,7 +183,7 @@ namespace ModAPI
                             Log.Write("Asset bundle: " + o, "Core");
                             if (o is GUISkin)
                             {
-                                Interface.Skin = (GUISkin) o;
+                                Gui.Skin = (GUISkin) o;
                             }
                         }
                     }

@@ -27,16 +27,12 @@ namespace ModAPI
     public class Gui
     {
         [Obsolete("Use ModAPI.Interface.Skin instead!")]
-        public static GUISkin Skin
-        {
-            get => Interface.Skin;
-            set => Interface.Skin = value;
-        }
+        public static GUISkin Skin;
     }
 
     // ReSharper disable once InconsistentNaming
     public class Interface
     {
-        public static GUISkin Skin;
+        public static GUISkin Skin => Gui.Skin;
     }
 }
