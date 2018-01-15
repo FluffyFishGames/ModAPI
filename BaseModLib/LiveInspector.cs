@@ -102,23 +102,23 @@ public class LiveInspector : MonoBehaviour
     {
         if (show)
         {
-            UnityEngine.GUI.skin = ModAPI.GUI.Skin;
+            GUI.skin = ModAPI.GUI.Skin;
             if (WhiteLabelStyle == null)
             {
-                WhiteLabelStyle = UnityEngine.GUI.skin.GetStyle("WhiteLabel");
-                LabelStyle = UnityEngine.GUI.skin.label;
+                WhiteLabelStyle = GUI.skin.GetStyle("WhiteLabel");
+                LabelStyle = GUI.skin.label;
                 BoldLabelStyle = new GUIStyle(LabelStyle)
                 {
                     fontStyle = FontStyle.Bold
                 };
                 BoldLabelStyle.normal.textColor = new Color(0f, 0f, 0f, 1f);
-                ArrowRightStyle = UnityEngine.GUI.skin.GetStyle("ArrowRight");
-                ArrowDownStyle = UnityEngine.GUI.skin.GetStyle("ArrowDown");
-                DarkArrowRightStyle = UnityEngine.GUI.skin.GetStyle("DarkArrowRight");
-                DarkArrowDownStyle = UnityEngine.GUI.skin.GetStyle("DarkArrowDown");
+                ArrowRightStyle = GUI.skin.GetStyle("ArrowRight");
+                ArrowDownStyle = GUI.skin.GetStyle("ArrowDown");
+                DarkArrowRightStyle = GUI.skin.GetStyle("DarkArrowRight");
+                DarkArrowDownStyle = GUI.skin.GetStyle("DarkArrowDown");
             }
             var height = Screen.height - Top;
-            UnityEngine.GUI.depth = -1000;
+            GUI.depth = -1000;
 
             var createRoot = false;
             if (NextCheck > 0f)
@@ -162,14 +162,14 @@ public class LiveInspector : MonoBehaviour
             FieldNum = 0;
             if (SelectedTransform != null)
             {
-                UnityEngine.GUI.Box(new Rect(240, Top - 10, 300 + 10, height + 20), "", UnityEngine.GUI.skin.window);
-                ScrollPosition2 = UnityEngine.GUI.BeginScrollView(new Rect(250, 0, 300, height), ScrollPosition2, new Rect(0, 0, 10, ListHeight2));
+                GUI.Box(new Rect(240, Top - 10, 300 + 10, height + 20), "", GUI.skin.window);
+                ScrollPosition2 = GUI.BeginScrollView(new Rect(250, 0, 300, height), ScrollPosition2, new Rect(0, 0, 10, ListHeight2));
                 ListHeight2 = DrawComponents(SelectedTransform);
-                UnityEngine.GUI.EndScrollView();
+                GUI.EndScrollView();
             }
 
-            UnityEngine.GUI.Box(new Rect(-10, Top - 10, 250 + 10, height + 20), "", UnityEngine.GUI.skin.window);
-            ScrollPosition = UnityEngine.GUI.BeginScrollView(new Rect(0, 0, 250, height - 30), ScrollPosition, new Rect(0, 0, 10, ListHeight));
+            GUI.Box(new Rect(-10, Top - 10, 250 + 10, height + 20), "", GUI.skin.window);
+            ScrollPosition = GUI.BeginScrollView(new Rect(0, 0, 250, height - 30), ScrollPosition, new Rect(0, 0, 10, ListHeight));
 
             var tt = new List<Transform>();
             foreach (var n in names)
@@ -177,8 +177,8 @@ public class LiveInspector : MonoBehaviour
                 tt.Add(RootElements[n]);
             }
             ListHeight = DrawList(tt.ToArray(), 0);
-            UnityEngine.GUI.EndScrollView();
-            SearchString = UnityEngine.GUI.TextField(new Rect(0, height - 30, 250, 30), SearchString);
+            GUI.EndScrollView();
+            SearchString = GUI.TextField(new Rect(0, height - 30, 250, 30), SearchString);
         }
     }
 
@@ -193,11 +193,11 @@ public class LiveInspector : MonoBehaviour
         var arrowDown = DarkArrowDownStyle;
         var components = t.GetComponents<Component>();
         var heightPer = 20f;
-        UnityEngine.GUI.TextField(new Rect(20f, height, 230f, 20f), "Name: " + t.gameObject.name);
+        GUI.TextField(new Rect(20f, height, 230f, 20f), "Name: " + t.gameObject.name);
         height += 20;
-        UnityEngine.GUI.Label(new Rect(20f, height, 230f, 20f), "Tag: " + t.gameObject.tag);
+        GUI.Label(new Rect(20f, height, 230f, 20f), "Tag: " + t.gameObject.tag);
         height += 20;
-        UnityEngine.GUI.Label(new Rect(20f, height, 230f, 20f), "Layer: " + t.gameObject.layer);
+        GUI.Label(new Rect(20f, height, 230f, 20f), "Layer: " + t.gameObject.layer);
         height += 20;
         for (var i = 0; i < components.Length; i++)
         {
@@ -206,19 +206,19 @@ public class LiveInspector : MonoBehaviour
             var comp = components[i];
             if (ExpandedComponents.Contains(comp))
             {
-                if (UnityEngine.GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowDown))
+                if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowDown))
                 {
                     ExpandedComponents.Remove(comp);
                 }
             }
             else
             {
-                if (UnityEngine.GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowRight))
+                if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowRight))
                 {
                     ExpandedComponents.Add(comp);
                 }
             }
-            UnityEngine.GUI.Label(new Rect(20, y, 230f, heightPer), comp.GetType().FullName, labelStyle);
+            GUI.Label(new Rect(20, y, 230f, heightPer), comp.GetType().FullName, labelStyle);
             height += heightPer;
             if (ExpandedComponents.Contains(comp))
             {
@@ -277,31 +277,31 @@ public class LiveInspector : MonoBehaviour
     float DrawField(string Name, object value, float startY)
     {
         var height = 40f;
-        UnityEngine.GUI.Label(new Rect(20f, startY, 150f, 20f), Name + ":", BoldLabelStyle);
+        GUI.Label(new Rect(20f, startY, 150f, 20f), Name + ":", BoldLabelStyle);
         if (value != null)
         {
             if (value.GetType().FullName == "UnityEngine.GameObject")
             {
-                if (UnityEngine.GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
+                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
                 {
                     SelectedTransform = ((GameObject) value).transform;
                 }
             }
             else if (value.GetType().FullName == "UnityEngine.Transform")
             {
-                if (UnityEngine.GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
+                if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
                 {
                     SelectedTransform = ((Transform) value);
                 }
             }
             else
             {
-                UnityEngine.GUI.Label(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle);
+                GUI.Label(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle);
             }
         }
         else
         {
-            UnityEngine.GUI.Label(new Rect(20f, startY + 20f, 150f, 20f), "null", LabelStyle);
+            GUI.Label(new Rect(20f, startY + 20f, 150f, 20f), "null", LabelStyle);
         }
         return height;
     }
@@ -324,7 +324,7 @@ public class LiveInspector : MonoBehaviour
 
             if (t == null)
             {
-                UnityEngine.GUI.Label(new Rect(x, y, 250f - x, heightPer), "(removed)", labelStyle);
+                GUI.Label(new Rect(x, y, 250f - x, heightPer), "(removed)", labelStyle);
                 height += heightPer;
             }
             else
@@ -333,28 +333,28 @@ public class LiveInspector : MonoBehaviour
                 {
                     if (SelectedTransform == t)
                     {
-                        UnityEngine.GUI.Box(new Rect(-5f, y - 1f, 260f, heightPer + 1f), "");
+                        GUI.Box(new Rect(-5f, y - 1f, 260f, heightPer + 1f), "");
                     }
 
                     if (t.childCount > 0)
                     {
                         if (Expanded.Contains(t))
                         {
-                            if (UnityEngine.GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowDown))
+                            if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowDown))
                             {
                                 Expanded.Remove(t);
                             }
                         }
                         else
                         {
-                            if (UnityEngine.GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowRight))
+                            if (GUI.Button(new Rect(x - 18f, y + 1f, 16f, heightPer), "", arrowRight))
                             {
                                 Expanded.Add(t);
                             }
                         }
                     }
 
-                    if (UnityEngine.GUI.Button(new Rect(x, y, 250f - x, heightPer), t.name, labelStyle))
+                    if (GUI.Button(new Rect(x, y, 250f - x, heightPer), t.name, labelStyle))
                     {
                         SelectedTransform = t;
                         ScrollPosition2 = Vector2.zero;
