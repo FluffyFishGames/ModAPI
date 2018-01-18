@@ -950,6 +950,17 @@ namespace ModAPI.Data
                                 newMethod.Name = newMethod.Name + "__" + num;
                                 num += 1;
 
+                                // Route base method calls to the correct modded version (if present)
+                                foreach (var currInstruction in newMethod.Body.Instructions)
+                                {
+                                    if (currInstruction.OpCode.Code == Code.Call &&
+                                        currInstruction.Operand is MethodReference &&
+                                        ((MethodReference) currInstruction.Operand).FullName == originalMethodFullName)
+                                    {
+                                        currInstruction.Operand = lastMethod ?? originalMethod;
+                                    }
+                                }
+
                                 // Get the return variable (if it has a return type)
                                 VariableDefinition returnVariable = null;
                                 var isReturningValue = newMethod.ReturnType.FullName != "System.Void";
