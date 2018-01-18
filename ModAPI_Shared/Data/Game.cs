@@ -933,26 +933,12 @@ namespace ModAPI.Data
                                 }
                                 injectedMethods.Add(newMethod, originalMethod);
                             }
-                            /*else if (originalMethod.IsStatic)
-                            {
-                                continue;
-
-                                newMethod.Attributes = originalMethod.Attributes;
-                                newMethod.IsFamily = originalMethod.IsFamily;
-                                newMethod.IsPublic = originalMethod.IsPublic;
-                                newMethod.IsPrivate = originalMethod.IsPrivate;
-                                newMethod.IsVirtual = originalMethod.IsVirtual;
-                                newMethod.IsStatic = originalMethod.IsStatic;
-
-                                type.Methods.Remove(originalMethod);
-                                originalMethod = newMethod;
-
-                                type.Methods.Add(originalMethod);
-                                InjectedMethods.Add(originalMethod, originalMethod);
-                                NewMethods.Add(originalMethod, originalMethod);
-                            }*/
                             else
                             {
+                                // TODO: Remove debug output
+                                Debug.Log("Game: " + GameConfiguration.Id, "IL Code before:\r\n - " + string.Join("\r\n - ", newMethod.Body.Instructions.Select(o => o.OpCode + ": " + o.Operand)));
+
+                                // Apply same modifies and attributes as the original method to not break the game's code
                                 newMethod.Attributes = originalMethod.Attributes;
                                 newMethod.IsFamily = originalMethod.IsFamily;
                                 newMethod.IsPublic = originalMethod.IsPublic;
@@ -960,86 +946,108 @@ namespace ModAPI.Data
                                 newMethod.IsVirtual = originalMethod.IsVirtual;
                                 newMethod.IsStatic = originalMethod.IsStatic;
 
+                                // Rename new method's name
                                 newMethod.Name = newMethod.Name + "__" + num;
                                 num += 1;
 
-                                var isReturningValue = newMethod.ReturnType.FullName != "System.Void";
+                                // Get the return variable (if it has a return type)
                                 VariableDefinition returnVariable = null;
-
-                                foreach (var currInstruction in newMethod.Body.Instructions)
-                                {
-                                    if (currInstruction.OpCode.Code == Code.Call && (currInstruction.Operand is MethodReference) &&
-                                        ((MethodReference) currInstruction.Operand).FullName == originalMethodFullName)
-                                    {
-                                        currInstruction.Operand = lastMethod ?? originalMethod;
-                                    }
-                                }
-                                var returnInstruction = newMethod.Body.Instructions[newMethod.Body.Instructions.Count - 1];
-                                var lastInstruction = newMethod.Body.Instructions[newMethod.Body.Instructions.Count - (isReturningValue ? 2 : 1)];
-
-                                var tryStart = newMethod.Body.Instructions[0];
-
+                                var isReturningValue = newMethod.ReturnType.FullName != "System.Void";
                                 if (isReturningValue)
                                 {
+                                    // Likely static method, doesn't have variables it returns
                                     if (newMethod.Body.Variables.Count == 0)
                                     {
+                                        // TODO: Verify working
+                                        // Create a new return type variable
+                                        returnVariable = new VariableDefinition(newMethod.ReturnType);
+                                        newMethod.Body.Variables.Add(returnVariable);
+
+                                        // TODO: Remove debug output
                                         Debug.Log("Game: " + GameConfiguration.Id, "newMethod.Name = " + newMethod.Name);
                                         Debug.Log("Game: " + GameConfiguration.Id, "newMethod.FullName = " + newMethod.FullName);
                                         Debug.Log("Game: " + GameConfiguration.Id, "newMethod.Attributes = " + newMethod.Attributes);
                                         Debug.Log("Game: " + GameConfiguration.Id, "newMethod.ReturnType.FullName = " + newMethod.ReturnType.FullName);
-                                        Debug.Log("Game: " + GameConfiguration.Id, "injectInto.Method.Body.Variables.Count = " + injectInto.Method.Body.Variables.Count);
-                                        Debug.Log("Game: " + GameConfiguration.Id, "injectInto.Method.Body.Variables = " + injectInto.Method.Body.Variables);
-
-                                        //Assemblies[injectInto.AssemblyName].GetType(injectInto.TypeName).Module.Import(newMethod.ReturnType).Resolve();
-                                        //newMethod.Module.Import(newMethod.ReturnType).Resolve();
-                                        returnVariable = new VariableDefinition(newMethod.ReturnType);
+                                        Debug.Log("Game: " + GameConfiguration.Id, "injectInto.Method.Body.Variables.Count = " + newMethod.Body.Variables.Count);
+                                        Debug.Log("Game: " + GameConfiguration.Id,
+                                            "injectInto.Method.Body.Variables = " + string.Join(", ", newMethod.Body.Variables.Select(o => o.VariableType.FullName)));
                                     }
                                     else
                                     {
+                                        // Get the method's return type variable
                                         returnVariable = newMethod.Body.Variables[newMethod.Body.Variables.Count - 1];
                                     }
                                 }
-                                var exceptionVariable = new VariableDefinition(exception);
-                                newMethod.Body.Variables.Add(exceptionVariable);
 
-                                var ilProcessor = newMethod.Body.GetILProcessor();
-                                var handlerStart = ilProcessor.Create(OpCodes.Stloc, exceptionVariable);
-
-                                var tryEnd = ilProcessor.Create(OpCodes.Leave, lastInstruction);
-                                ilProcessor.InsertBefore(lastInstruction, tryEnd);
-                                ilProcessor.InsertBefore(lastInstruction, handlerStart);
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldstr, "Exception thrown: "));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldloc, exceptionVariable));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Callvirt, objectToString));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, stringConcat));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldstr, injectInto.Mod.Id));
-                                ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, logMethod));
-                                if (!originalMethod.IsStatic)
+                                // TODO: Fix for static methods with return values
+                                if (!originalMethod.IsStatic || !isReturningValue)
                                 {
-                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldarg_0));
+                                    #region Add Exception Handler
+
+                                    // Create the IL processor
+                                    var ilProcessor = newMethod.Body.GetILProcessor();
+
+                                    // Get the start and end of the method's instructions
+                                    var tryStart = newMethod.Body.Instructions[0];
+                                    var lastInstruction = newMethod.Body.Instructions[newMethod.Body.Instructions.Count - (isReturningValue ? 2 : 1)];
+
+                                    // Exception object
+                                    var exceptionVariable = new VariableDefinition(exception);
+                                    newMethod.Body.Variables.Add(exceptionVariable);
+
+                                    var handlerStart = ilProcessor.Create(OpCodes.Stloc, exceptionVariable);
+                                    var tryEnd = ilProcessor.Create(OpCodes.Leave, lastInstruction);
+
+                                    // Handle exception, log the complete exception
+                                    ilProcessor.InsertBefore(lastInstruction, tryEnd);
+                                    ilProcessor.InsertBefore(lastInstruction, handlerStart);
+                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldstr, "Exception thrown: "));
+                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldloc, exceptionVariable));
+                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Callvirt, objectToString));
+                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, stringConcat));
+                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldstr, injectInto.Mod.Id));
+                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Call, logMethod));
+
+                                    // Call the original method (this)
+                                    if (!originalMethod.IsStatic)
+                                    {
+                                        ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldarg_0));
+                                    }
+
+                                    // Add parameters of original method to the upcoming call
+                                    foreach (var param in originalMethod.Parameters)
+                                    {
+                                        ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldarg, param));
+                                    }
+
+                                    // Call the original method (method name)
+                                    ilProcessor.InsertBefore(lastInstruction, lastMethod != null ? ilProcessor.Create(OpCodes.Call, lastMethod) : ilProcessor.Create(OpCodes.Call, originalMethod));
+
+                                    // Add the return value
+                                    if (isReturningValue)
+                                    {
+                                        ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Stloc, returnVariable));
+                                    }
+
+                                    // End the exception block
+                                    var handlerEnd = ilProcessor.Create(OpCodes.Leave, lastInstruction);
+                                    ilProcessor.InsertBefore(lastInstruction, handlerEnd);
+
+                                    // Add the exception handler to the new method body
+                                    newMethod.Body.ExceptionHandlers.Add(new ExceptionHandler(ExceptionHandlerType.Catch)
+                                    {
+                                        TryStart = tryStart,
+                                        TryEnd = handlerStart,
+                                        HandlerStart = handlerStart,
+                                        HandlerEnd = lastInstruction,
+                                        CatchType = exception
+                                    });
+
+                                    #endregion
                                 }
 
-                                foreach (var param in originalMethod.Parameters)
-                                {
-                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Ldarg, param));
-                                }
-                                ilProcessor.InsertBefore(lastInstruction, lastMethod != null ? ilProcessor.Create(OpCodes.Call, lastMethod) : ilProcessor.Create(OpCodes.Call, originalMethod));
-                                if (isReturningValue)
-                                {
-                                    ilProcessor.InsertBefore(lastInstruction, ilProcessor.Create(OpCodes.Stloc, returnVariable));
-                                }
-                                var handlerEnd = ilProcessor.Create(OpCodes.Leave, lastInstruction);
-                                ilProcessor.InsertBefore(lastInstruction, handlerEnd);
-
-                                var exHandler = new ExceptionHandler(ExceptionHandlerType.Catch)
-                                {
-                                    TryStart = tryStart,
-                                    TryEnd = handlerStart,
-                                    HandlerStart = handlerStart,
-                                    HandlerEnd = lastInstruction,
-                                    CatchType = exception
-                                };
-                                newMethod.Body.ExceptionHandlers.Add(exHandler);
+                                // TODO: Remove debug output
+                                Debug.Log("Game: " + GameConfiguration.Id, "IL Code after:\r\n - " + string.Join("\r\n - ", newMethod.Body.Instructions.Select(o => o.OpCode + ": " + o.Operand)));
 
                                 lastMethod = newMethod;
                                 type.Methods.Add(newMethod);
@@ -1047,16 +1055,13 @@ namespace ModAPI.Data
                             }
                         }
                     }
-                    if ( /*!originalMethod.IsStatic &&*/ !originalMethod.IsConstructor)
+                    if (!originalMethod.IsConstructor)
                     {
                         lastMethod.Name = originalMethod.Name;
                         originalMethod.Name = "__" + method + "__Original";
                     }
 
-                    //if (!originalMethod.IsStatic)
-                    {
-                        newMethods.Add(originalMethod, lastMethod);
-                    }
+                    newMethods.Add(originalMethod, lastMethod);
                 }
                 SetProgress(handler, 50f, "Resolving");
 
@@ -1152,6 +1157,7 @@ namespace ModAPI.Data
                             i--;
                         }
                     }
+
                     foreach (var type in module.Types)
                     {
                         foreach (var subType in type.NestedTypes)
