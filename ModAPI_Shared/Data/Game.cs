@@ -920,23 +920,51 @@ namespace ModAPI.Data
                         foreach (var injectInto in kv.Value[prio])
                         {
                             var newMethod = MonoHelper.CopyMethod(injectInto.Method);
+
+                            // Handle constructor, append modified code after the original code
                             if (newMethod.IsConstructor)
                             {
-                                foreach (var currInstruction in newMethod.Body.Instructions)
+                                // Create a copy of the modded constructor instructions
+                                var instructions = newMethod.Body.Instructions.ToList();
+
+                                // Remove constructor call
+                                foreach (var instruction in newMethod.Body.Instructions)
                                 {
-                                    if (currInstruction.OpCode.Code != Code.Ret && !(currInstruction.OpCode.Code == Code.Call &&
-                                                                                     (((MethodReference) currInstruction.Operand).Name == ".ctor" ||
-                                                                                      ((MethodReference) currInstruction.Operand).Name == ".cctor")))
+                                    // Remove instructions
+                                    instructions.Remove(instruction);
+
+                                    // If the instruction is the call to the base constuctor then we are done
+                                    if (instruction.OpCode == OpCodes.Call &&
+                                        (((MethodReference) instruction.Operand).Name == ".ctor" ||
+                                         ((MethodReference) instruction.Operand).Name == ".ctor"))
                                     {
-                                        originalMethod.Body.GetILProcessor().Append(currInstruction);
+                                        break;
                                     }
                                 }
-                                injectedMethods.Add(newMethod, originalMethod);
+
+                                // Remove last statement (which is 'ret')
+                                instructions.RemoveAt(instructions.Count - 1);
+
+                                // If there are still instructions left - means actually added code and not a blank constructor - then add them to the constructor
+                                if (instructions.Count > 0)
+                                {
+                                    // Get the last instruction
+                                    var lastInstruction = originalMethod.Body.Instructions[originalMethod.Body.Instructions.Count - 1];
+
+                                    // Insert remaining instructions before the last instruction of the original constructor
+                                    foreach (var instruction in instructions)
+                                    {
+                                        // Inject modded instructions
+                                        originalMethod.Body.GetILProcessor().InsertBefore(lastInstruction, instruction);
+                                    }
+                                    
+                                    injectedMethods.Add(newMethod, originalMethod);
+                                }
                             }
                             else
                             {
                                 // TODO: Remove debug output
-                                Debug.Log("Game: " + GameConfiguration.Id, "IL Code before:\r\n - " + string.Join("\r\n - ", newMethod.Body.Instructions.Select(o => o.OpCode + ": " + o.Operand)));
+                                //Debug.Log("Game: " + GameConfiguration.Id, "IL Code before:\r\n - " + string.Join("\r\n - ", newMethod.Body.Instructions.Select(o => o.OpCode + ": " + o.Operand)));
 
                                 // Apply same modifies and attributes as the original method to not break the game's code
                                 newMethod.Attributes = originalMethod.Attributes;
@@ -969,19 +997,10 @@ namespace ModAPI.Data
                                     // Likely static method, doesn't have variables it returns
                                     if (newMethod.Body.Variables.Count == 0)
                                     {
-                                        // TODO: Verify working
+                                        // TODO: Part of the fix for methods with return values, modify or remove if needed!
                                         // Create a new return type variable
                                         returnVariable = new VariableDefinition(newMethod.ReturnType);
                                         newMethod.Body.Variables.Add(returnVariable);
-
-                                        // TODO: Remove debug output
-                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.Name = " + newMethod.Name);
-                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.FullName = " + newMethod.FullName);
-                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.Attributes = " + newMethod.Attributes);
-                                        Debug.Log("Game: " + GameConfiguration.Id, "newMethod.ReturnType.FullName = " + newMethod.ReturnType.FullName);
-                                        Debug.Log("Game: " + GameConfiguration.Id, "injectInto.Method.Body.Variables.Count = " + newMethod.Body.Variables.Count);
-                                        Debug.Log("Game: " + GameConfiguration.Id,
-                                            "injectInto.Method.Body.Variables = " + string.Join(", ", newMethod.Body.Variables.Select(o => o.VariableType.FullName)));
                                     }
                                     else
                                     {
@@ -990,8 +1009,11 @@ namespace ModAPI.Data
                                     }
                                 }
 
-                                // TODO: Fix for static methods with return values
-                                if (!originalMethod.IsStatic || !isReturningValue)
+                                // TODO: Fix for all methods with return values
+                                // TODO: Currently applying the exception handler on methods with return value will cause them to generate invalid IL code.
+                                // TODO: Store returned value from modded method in a variable outside of the exception handler and apply both the modded result and
+                                // TODO: the original result in the catch block in it and return it after the exception handler either way.
+                                if (!isReturningValue)
                                 {
                                     #region Add Exception Handler
 
@@ -1056,23 +1078,21 @@ namespace ModAPI.Data
 
                                     #endregion
                                 }
-
-                                // TODO: Remove debug output
-                                Debug.Log("Game: " + GameConfiguration.Id, "IL Code after:\r\n - " + string.Join("\r\n - ", newMethod.Body.Instructions.Select(o => o.OpCode + ": " + o.Operand)));
-
+                                
                                 lastMethod = newMethod;
                                 type.Methods.Add(newMethod);
                                 injectedMethods.Add(newMethod, newMethod);
                             }
                         }
                     }
+
+                    // Rename original method if it's not the constructor
                     if (!originalMethod.IsConstructor)
                     {
                         lastMethod.Name = originalMethod.Name;
                         originalMethod.Name = "__" + method + "__Original";
+                        newMethods.Add(originalMethod, lastMethod);
                     }
-
-                    newMethods.Add(originalMethod, lastMethod);
                 }
                 SetProgress(handler, 50f, "Resolving");
 
