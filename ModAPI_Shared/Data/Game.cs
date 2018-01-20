@@ -930,7 +930,7 @@ namespace ModAPI.Data
                                 // Remove constructor call
                                 foreach (var instruction in newMethod.Body.Instructions)
                                 {
-                                    // Remove instructions
+                                    // Remove instruction
                                     instructions.Remove(instruction);
 
                                     // If the instruction is the call to the base constuctor then we are done
@@ -961,11 +961,9 @@ namespace ModAPI.Data
                                     injectedMethods.Add(newMethod, originalMethod);
                                 }
                             }
+                            // Regular method (no constructor)
                             else
                             {
-                                // TODO: Remove debug output
-                                //Debug.Log("Game: " + GameConfiguration.Id, "IL Code before:\r\n - " + string.Join("\r\n - ", newMethod.Body.Instructions.Select(o => o.OpCode + ": " + o.Operand)));
-
                                 // Apply same modifies and attributes as the original method to not break the game's code
                                 newMethod.Attributes = originalMethod.Attributes;
                                 newMethod.IsFamily = originalMethod.IsFamily;
