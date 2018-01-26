@@ -942,7 +942,7 @@ namespace ModAPI.Data
                                     }
                                 }
 
-                                // Remove last statement (which is 'ret')
+                                // Remove last instruction (which is 'ret')
                                 instructions.RemoveAt(instructions.Count - 1);
 
                                 // If there are still instructions left - means actually added code and not a blank constructor - then add them to the constructor
