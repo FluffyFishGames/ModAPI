@@ -678,26 +678,24 @@ namespace ModAPI.Data.Models
 
                             if (method.IsVirtual || method.IsStatic || method.IsConstructor)
                             {
-                                foreach (var m in assemblyTypes[assemblyName][type.BaseType.FullName].Methods)
+                                foreach (var m in assemblyTypes[assemblyName][type.BaseType.FullName].Methods.Where(o => o.Name == method.Name))
                                 {
-                                    if (m.Name == method.Name)
+                                    // Only compare methods with same parameter count
+                                    if (method.Parameters.Count == m.Parameters.Count)
                                     {
-                                        if ((m.IsStatic && method.IsStatic) || (m.IsConstructor && method.IsConstructor))
-                                        {
-                                            if (method.Parameters.Count == m.Parameters.Count)
-                                            {
-                                                var ok = !m.Parameters.Where((param, pi) => param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName).Any();
-                                                if (ok)
-                                                {
-                                                    inject = true;
-                                                }
-                                            }
-                                        }
-                                        else if (!m.IsStatic && !method.IsStatic)
+                                        // No need to compare parameterless methods
+                                        if (method.Parameters.Count == 0)
                                         {
                                             inject = true;
+                                            break;
                                         }
-                                        break;
+                                        
+                                        // Comapare parameters
+                                        if (!m.Parameters.Where((param, pi) => param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName).Any())
+                                        {
+                                            inject = true;
+                                            break;
+                                        }
                                     }
                                 }
                             }
