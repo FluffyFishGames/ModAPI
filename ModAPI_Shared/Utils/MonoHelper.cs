@@ -196,6 +196,7 @@ namespace ModAPI.Utils
                 param.ParameterType = Resolve(hostModule, param.ParameterType, addedClasses, typesMap);
             }
             /* End of fix */
+            method.ReturnType = Resolve(hostModule, method.ReturnType, addedClasses, typesMap);
             foreach (var attr in method.CustomAttributes)
             {
                 if (attr.Constructor.Module != hostModule)
