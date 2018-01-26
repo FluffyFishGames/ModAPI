@@ -161,7 +161,7 @@ namespace ModAPI.Utils
             ModuleDefinition hostModule,
             FieldDefinition field,
             Dictionary<TypeReference, TypeDefinition> addedClasses,
-            Dictionary<TypeReference, TypeReference> typesMap)
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             field.FieldType = Resolve(hostModule, field.FieldType, addedClasses, typesMap);
         }
@@ -183,7 +183,7 @@ namespace ModAPI.Utils
             Dictionary<FieldReference, FieldDefinition> addedFields,
             Dictionary<MethodReference, MethodDefinition> addedMethods,
             Dictionary<MethodReference, MethodDefinition> injectedMethods,
-            Dictionary<TypeReference, TypeReference> typesMap)
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             /*
 	         * Fix from magomerdino
@@ -200,14 +200,14 @@ namespace ModAPI.Utils
             {
                 if (attr.Constructor.Module != hostModule)
                 {
-                    attr.Constructor = hostModule.Import(attr.Constructor);
+                    attr.Constructor = hostModule.ImportReference(attr.Constructor);
                 }
                 for (var i = 0; i < attr.ConstructorArguments.Count; i++)
                 {
                     var arg = attr.ConstructorArguments[i];
                     if (arg.Type.Module != hostModule)
                     {
-                        attr.ConstructorArguments[i] = new CustomAttributeArgument(hostModule.Import(arg.Type), arg.Value);
+                        attr.ConstructorArguments[i] = new CustomAttributeArgument(hostModule.ImportReference(arg.Type), arg.Value);
                     }
                 }
                 for (var i = 0; i < attr.Fields.Count; i++)
@@ -215,7 +215,7 @@ namespace ModAPI.Utils
                     var arg = attr.Fields[i];
                     if (arg.Argument.Type.Module != hostModule)
                     {
-                        attr.Fields[i] = new CustomAttributeNamedArgument(arg.Name, new CustomAttributeArgument(hostModule.Import(arg.Argument.Type), arg.Argument.Value));
+                        attr.Fields[i] = new CustomAttributeNamedArgument(arg.Name, new CustomAttributeArgument(hostModule.ImportReference(arg.Argument.Type), arg.Argument.Value));
                     }
                 }
             }
@@ -268,7 +268,7 @@ namespace ModAPI.Utils
             ModuleDefinition hostModule,
             TypeReference type,
             Dictionary<TypeReference, TypeDefinition> addedClasses,
-            Dictionary<TypeReference, TypeReference> typesMap)
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             if (type is GenericInstanceType)
             {
@@ -286,13 +286,13 @@ namespace ModAPI.Utils
             }
             if (typesMap.ContainsKey(type))
             {
-                return hostModule.Import(typesMap[type]);
+                return hostModule.ImportReference(typesMap[type]);
             }
             foreach (var addedType in addedClasses.Keys)
             {
                 if (addedType == type)
                 {
-                    return hostModule.Import(addedClasses[addedType]);
+                    return hostModule.ImportReference(addedClasses[addedType]);
                 }
             }
             if (type.Module != hostModule)
@@ -302,13 +302,9 @@ namespace ModAPI.Utils
                 {
                     return t;
                 }
-                if (hostModule == null || type == null)
-                {
-                    return type;
-                }
                 try
                 {
-                    return hostModule.Import(type);
+                    return hostModule.ImportReference(type);
                 }
                 catch (Exception e)
                 {
@@ -317,6 +313,7 @@ namespace ModAPI.Utils
                     throw e;
                 }
             }
+
             return type;
         }
 
@@ -334,7 +331,7 @@ namespace ModAPI.Utils
             FieldReference field,
             Dictionary<TypeReference, TypeDefinition> addedClasses,
             Dictionary<FieldReference, FieldDefinition> addedFields,
-            Dictionary<TypeReference, TypeReference> typesMap)
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             foreach (var addedField in addedFields.Keys)
             {
@@ -342,7 +339,7 @@ namespace ModAPI.Utils
                 {
                     if (addedFields[addedField].Module != hostModule)
                     {
-                        return hostModule.Import(addedFields[addedField]);
+                        return hostModule.ImportReference(addedFields[addedField]);
                     }
                     return addedFields[addedField]; //hostModule.Import(
                 }
@@ -360,7 +357,7 @@ namespace ModAPI.Utils
                         }
                     }
                 }
-                return hostModule.Import(field);
+                return hostModule.ImportReference(field);
             }
             return field;
         }
@@ -380,7 +377,7 @@ namespace ModAPI.Utils
             MethodReference method,
             Dictionary<TypeReference, TypeDefinition> addedClasses,
             Dictionary<MethodReference, MethodDefinition> addedMethods,
-            Dictionary<TypeReference, TypeReference> typesMap)
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             if (addedMethods.ContainsKey(method))
             {
@@ -429,7 +426,7 @@ namespace ModAPI.Utils
             GenericInstanceMethod method,
             Dictionary<TypeReference, TypeDefinition> addedClasses,
             Dictionary<MethodReference, MethodDefinition> addedMethods,
-            Dictionary<TypeReference, TypeReference> typesMap)
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             if (addedMethods.ContainsKey(method))
             {

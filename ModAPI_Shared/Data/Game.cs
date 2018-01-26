@@ -576,9 +576,9 @@ namespace ModAPI.Data
                 }
 
                 var resolveModAssembly = new MethodDefinition("ResolveModAssembly", MethodAttributes.HideBySig | MethodAttributes.Private | MethodAttributes.Static,
-                    Assemblies["UnityEngine"].Import(systemReflectionAssembly));
+                    Assemblies["UnityEngine"].ImportReference(systemReflectionAssembly));
                 resolveModAssembly.Parameters.Add(new ParameterDefinition("sender", ParameterAttributes.None, Assemblies["UnityEngine"].TypeSystem.Object));
-                resolveModAssembly.Parameters.Add(new ParameterDefinition("e", ParameterAttributes.None, Assemblies["UnityEngine"].Import(systemResolveEventArgs)));
+                resolveModAssembly.Parameters.Add(new ParameterDefinition("e", ParameterAttributes.None, Assemblies["UnityEngine"].ImportReference(systemResolveEventArgs)));
 
                 if (resolveModAssembly.Body == null)
                 {
@@ -587,28 +587,28 @@ namespace ModAPI.Data
 
                 resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].TypeSystem.String));
                 resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].TypeSystem.String));
-                resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].Import(systemReflectionAssembly)));
+                resolveModAssembly.Body.Variables.Add(new VariableDefinition(Assemblies["UnityEngine"].ImportReference(systemReflectionAssembly)));
 
                 var processor = resolveModAssembly.Body.GetILProcessor();
                 var _tryStart = processor.Create(OpCodes.Ldarg_1);
                 processor.Append(_tryStart);
-                processor.Append(processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].Import(systemResolveEventArgsGetName)));
-                processor.Append(processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].Import(systemReflectionAssemblyNameCtor)));
-                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemReflectionAssemblyNameGetName)));
+                processor.Append(processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].ImportReference(systemResolveEventArgsGetName)));
+                processor.Append(processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].ImportReference(systemReflectionAssemblyNameCtor)));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(systemReflectionAssemblyNameGetName)));
                 processor.Append(processor.Create(OpCodes.Stloc_0));
                 processor.Append(processor.Create(OpCodes.Call, unityEngineApplicationGetDataPath));
                 processor.Append(processor.Create(OpCodes.Ldstr, "/../Mods/{0}.dll"));
-                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemStringConcat)));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(systemStringConcat)));
                 processor.Append(processor.Create(OpCodes.Ldloc_0));
-                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemStringFormat)));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(systemStringFormat)));
                 processor.Append(processor.Create(OpCodes.Stloc_1));
 
                 processor.Append(processor.Create(OpCodes.Ldstr, "test.txt"));
                 processor.Append(processor.Create(OpCodes.Ldloc_1));
-                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemIoFileWriteAllText)));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(systemIoFileWriteAllText)));
 
                 processor.Append(processor.Create(OpCodes.Ldloc_1));
-                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemReflectionAssemblyLoadFrom)));
+                processor.Append(processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(systemReflectionAssemblyLoadFrom)));
                 processor.Append(processor.Create(OpCodes.Stloc_2));
 
                 var exitPoint = processor.Create(OpCodes.Ldloc_2);
@@ -628,7 +628,7 @@ namespace ModAPI.Data
                     TryEnd = _tryEnd,
                     HandlerStart = _tryEnd,
                     HandlerEnd = exitPoint,
-                    CatchType = Assemblies["UnityEngine"].Import(Assemblies["mscorlib"].GetType("System.Exception"))
+                    CatchType = Assemblies["UnityEngine"].ImportReference(Assemblies["mscorlib"].GetType("System.Exception"))
                 };
                 resolveModAssembly.Body.ExceptionHandlers.Add(exceptionHandler);
 
@@ -641,11 +641,11 @@ namespace ModAPI.Data
                 processor = ctorMethod.Body.GetILProcessor();
                 var last = processor.Create(OpCodes.Ret);
                 processor.Append(last);
-                processor.InsertBefore(last, processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(systemAppDomainGetCurrentDomain)));
+                processor.InsertBefore(last, processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(systemAppDomainGetCurrentDomain)));
                 processor.InsertBefore(last, processor.Create(OpCodes.Ldnull));
                 processor.InsertBefore(last, processor.Create(OpCodes.Ldftn, resolveModAssembly));
-                processor.InsertBefore(last, processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].Import(systemResolveEventHandlerCtor)));
-                processor.InsertBefore(last, processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].Import(systemAppDomainAddAssemblyResolve)));
+                processor.InsertBefore(last, processor.Create(OpCodes.Newobj, Assemblies["UnityEngine"].ImportReference(systemResolveEventHandlerCtor)));
+                processor.InsertBefore(last, processor.Create(OpCodes.Callvirt, Assemblies["UnityEngine"].ImportReference(systemAppDomainAddAssemblyResolve)));
 
                 unityEngineApplication.Methods.Add(ctorMethod);
 
@@ -657,7 +657,7 @@ namespace ModAPI.Data
                     {
                         processor = method.Body.GetILProcessor();
                         last = method.Body.Instructions[0];
-                        processor.InsertBefore(last, processor.Create(OpCodes.Call, Assemblies["UnityEngine"].Import(initializeMethod)));
+                        processor.InsertBefore(last, processor.Create(OpCodes.Call, Assemblies["UnityEngine"].ImportReference(initializeMethod)));
                     }
                 }
 
@@ -677,7 +677,7 @@ namespace ModAPI.Data
                 var addedMethods = new Dictionary<MethodReference, MethodDefinition>();
                 var injectedMethods = new Dictionary<MethodReference, MethodDefinition>();
                 var newMethods = new Dictionary<MethodReference, MethodDefinition>();
-                var typesMap = new Dictionary<TypeReference, TypeReference>();
+                var typesMap = new Dictionary<TypeReference, TypeDefinition>();
 
                 var addReferences = new Dictionary<string, AssemblyNameReference>();
 
@@ -906,10 +906,10 @@ namespace ModAPI.Data
                     var priorities = kv.Value.Keys.ToList();
                     priorities.Sort();
 
-                    var objectToString = Assemblies[parts[0]].Import(methodObjectToString);
-                    var stringConcat = Assemblies[parts[0]].Import(methodStringConcat);
-                    var exceptionConstructor = Assemblies[parts[0]].Import(methodExceptionConstructor);
-                    var exception = Assemblies[parts[0]].Import(typeException);
+                    var objectToString = Assemblies[parts[0]].ImportReference(methodObjectToString);
+                    var stringConcat = Assemblies[parts[0]].ImportReference(methodStringConcat);
+                    var exceptionConstructor = Assemblies[parts[0]].ImportReference(methodExceptionConstructor);
+                    var exception = Assemblies[parts[0]].ImportReference(typeException);
 
                     var constructorInstructions = new List<Instruction>();
                     var staticConstructorInstructions = new List<Instruction>();
@@ -1172,8 +1172,11 @@ namespace ModAPI.Data
                     true);
                 foreach (var p in GameConfiguration.IncludeAssemblies)
                 {
-                    var path = System.IO.Path.GetFullPath(Configuration.GetPath("ModdedGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
-                                                          System.IO.Path.DirectorySeparatorChar + ParsePath(p));
+                    var path = System.IO.Path.GetFullPath(
+                        Configuration.GetPath("ModdedGameFiles") +
+                        System.IO.Path.DirectorySeparatorChar +
+                        GameConfiguration.Id +
+                        System.IO.Path.DirectorySeparatorChar + ParsePath(p));
                     var folder = System.IO.Path.GetDirectoryName(path);
                     if (!Directory.Exists(folder))
                     {
