@@ -19,23 +19,12 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
-using System.Windows.Threading;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 namespace ModAPI.Components
 {
@@ -49,21 +38,25 @@ namespace ModAPI.Components
                 typeof(ComboBoxWidthFromItemsBehavior),
                 new UIPropertyMetadata(false, OnComboBoxWidthFromItemsPropertyChanged)
             );
+
         public static bool GetComboBoxWidthFromItems(DependencyObject obj)
         {
-            return (bool)obj.GetValue(ComboBoxWidthFromItemsProperty);
+            return (bool) obj.GetValue(ComboBoxWidthFromItemsProperty);
         }
+
         public static void SetComboBoxWidthFromItems(DependencyObject obj, bool value)
         {
             obj.SetValue(ComboBoxWidthFromItemsProperty, value);
         }
-        private static void OnComboBoxWidthFromItemsPropertyChanged(DependencyObject dpo,
-                                                                    DependencyPropertyChangedEventArgs e)
+
+        private static void OnComboBoxWidthFromItemsPropertyChanged(
+            DependencyObject dpo,
+            DependencyPropertyChangedEventArgs e)
         {
-            ComboBox comboBox = dpo as ComboBox;
+            var comboBox = dpo as ComboBox;
             if (comboBox != null)
             {
-                if ((bool)e.NewValue == true)
+                if ((bool) e.NewValue)
                 {
                     comboBox.Loaded += OnComboBoxLoaded;
                 }
@@ -73,9 +66,10 @@ namespace ModAPI.Components
                 }
             }
         }
+
         private static void OnComboBoxLoaded(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
+            var comboBox = sender as ComboBox;
             Action action = () => { comboBox.SetWidthFromItems(); };
             comboBox.Dispatcher.BeginInvoke(action, DispatcherPriority.ContextIdle);
         }
@@ -85,13 +79,13 @@ namespace ModAPI.Components
     {
         public static void SetWidthFromItems(this ComboBox comboBox)
         {
-            double comboBoxWidth = 19;// comboBox.DesiredSize.Width;
+            double comboBoxWidth = 19; // comboBox.DesiredSize.Width;
 
             // Create the peer and provider to expand the comboBox in code behind. 
-            ComboBoxAutomationPeer peer = new ComboBoxAutomationPeer(comboBox);
-            IExpandCollapseProvider provider = (IExpandCollapseProvider)peer.GetPattern(PatternInterface.ExpandCollapse);
+            var peer = new ComboBoxAutomationPeer(comboBox);
+            var provider = (IExpandCollapseProvider) peer.GetPattern(PatternInterface.ExpandCollapse);
             EventHandler eventHandler = null;
-            eventHandler = new EventHandler(delegate
+            eventHandler = delegate
             {
                 if (comboBox.IsDropDownOpen &&
                     comboBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
@@ -99,9 +93,9 @@ namespace ModAPI.Components
                     double width = 0;
                     foreach (var item in comboBox.Items)
                     {
-                        ComboBoxItem comboBoxItem = comboBox.ItemContainerGenerator.ContainerFromItem(item) as ComboBoxItem;
+                        var comboBoxItem = comboBox.ItemContainerGenerator.ContainerFromItem(item) as ComboBoxItem;
                         comboBoxItem.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                        
+
                         if (comboBoxItem.DesiredSize.Width > width)
                         {
                             width = comboBoxItem.DesiredSize.Width;
@@ -113,7 +107,7 @@ namespace ModAPI.Components
                     comboBox.DropDownOpened -= eventHandler;
                     provider.Collapse();
                 }
-            });
+            };
             comboBox.ItemContainerGenerator.StatusChanged += eventHandler;
             comboBox.DropDownOpened += eventHandler;
             // Expand the comboBox to generate all its ComboBoxItem's. 

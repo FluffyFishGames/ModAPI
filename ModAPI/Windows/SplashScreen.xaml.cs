@@ -19,21 +19,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using Mono.Cecil;
-using System.Threading;
 
 namespace ModAPI
 {
@@ -42,12 +32,12 @@ namespace ModAPI
     /// </summary>
     public partial class SplashScreen : Window
     {
-        private DispatcherTimer Timer;
-        public static float Progress = 0f;
-        public const float GUIDeltaTime = 1f / 60f; // 60 fps
-        private float ShownProgress = 0f;
-        private RectangleGeometry ClipRect;
-        private float Alpha = 1f;
+        private DispatcherTimer _timer;
+        public static float Progress;
+        public const float GuiDeltaTime = 1f / 60f; // 60 fps
+        private float _shownProgress;
+        private RectangleGeometry _clipRect;
+        private float _alpha = 1f;
 
         public SplashScreen()
         {
@@ -63,78 +53,74 @@ namespace ModAPI
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            ((FrameworkElement)this.FindName("ForegroundImage")).MouseLeftButtonDown += new MouseButtonEventHandler(MoveWindow);
-            ((FrameworkElement)this.FindName("BackgroundImage")).MouseLeftButtonDown += new MouseButtonEventHandler(MoveWindow);
-            
-            ClipRect = (RectangleGeometry)this.FindName("LoadingRect");
-            Timer = new DispatcherTimer();
-            Timer.Tick += new EventHandler(GUITick);
-            Timer.Interval = new TimeSpan((long) (GUIDeltaTime * 10000000));
-            Timer.Start();
+            ((FrameworkElement) FindName("ForegroundImage")).MouseLeftButtonDown += MoveWindow;
+            ((FrameworkElement) FindName("BackgroundImage")).MouseLeftButtonDown += MoveWindow;
+
+            _clipRect = (RectangleGeometry) FindName("LoadingRect");
+            _timer = new DispatcherTimer();
+            _timer.Tick += GuiTick;
+            _timer.Interval = new TimeSpan((long) (GuiDeltaTime * 10000000));
+            _timer.Start();
         }
 
-        protected bool loadingWindow = false;
-        protected bool windowLoaded = false;
-        protected MainWindow window;
-        protected ProgressHandler GUIProgress;
+        protected bool LoadingWindow;
+        protected bool windowLoaded;
+        protected MainWindow Window;
+        protected ProgressHandler GuiProgress;
         protected Thread MainWindowThread;
 
-        public void GUITick(object sender, EventArgs e)
+        public void GuiTick(object sender, EventArgs e)
         {
-            if (!loadingWindow && Progress >= 70f)
+            if (!LoadingWindow && Progress >= 70f)
             {
                 Debug.Log("SplashScreen", "Preparing and opening main window.");
-                GUIProgress = new ProgressHandler();
-                GUIProgress.OnChange += delegate
-                {
-                    Progress = 70f + (GUIProgress.Progress / 100f * 30f);
-                };
-                GUIProgress.OnComplete += delegate
-                {
-                    windowLoaded = true;
-                };
-                loadingWindow = true;
-                MainWindowThread = new Thread(new ThreadStart(ShowWindow));
+                GuiProgress = new ProgressHandler();
+                GuiProgress.OnChange += delegate { Progress = 70f + (GuiProgress.Progress / 100f * 30f); };
+                GuiProgress.OnComplete += delegate { windowLoaded = true; };
+                LoadingWindow = true;
+                MainWindowThread = new Thread(ShowWindow);
                 MainWindowThread.SetApartmentState(ApartmentState.STA);
                 //MainWindowThread.IsBackground = true;
                 MainWindowThread.Start();
             }
-            if (ShownProgress == 100f && Alpha > 0f)
+            if (_shownProgress == 100f && _alpha > 0f)
             {
                 if (windowLoaded)
                 {
                     MainWindow.BlendIn = true;
-                    Alpha -= 5f * GUIDeltaTime;
-                    if (Alpha <= 0f)
+                    _alpha -= 5f * GuiDeltaTime;
+                    if (_alpha <= 0f)
                     {
-                        Alpha = 0f;
+                        _alpha = 0f;
                         Hide();
                         //Close();
                     }
                 }
             }
-            Opacity = Alpha;
-            if (ShownProgress < Progress)
+            Opacity = _alpha;
+            if (_shownProgress < Progress)
             {
-                ShownProgress += 200f * GUIDeltaTime;
-                if (ShownProgress > Progress)
-                    ShownProgress = Progress;
+                _shownProgress += 200f * GuiDeltaTime;
+                if (_shownProgress > Progress)
+                {
+                    _shownProgress = Progress;
+                }
             }
-            ClipRect.Rect = new Rect(0, 0, (ShownProgress / 100f) * 620f, 180f);
+            _clipRect.Rect = new Rect(0, 0, (_shownProgress / 100f) * 620f, 180f);
         }
 
         void ShowWindow()
         {
             try
             {
-                window = new MainWindow();
-                window.Loaded += window_Loaded;
-                window.Show();
+                Window = new MainWindow();
+                Window.Loaded += window_Loaded;
+                Window.Show();
                 Dispatcher.Run();
             }
             catch (Exception e)
             {
-                Debug.Log("SplashScreen", "Unexpected exception occured while preparing main window: " + e.ToString(), Debug.Type.ERROR);
+                Debug.Log("SplashScreen", "Unexpected exception occured while preparing main window: " + e, Debug.Type.Error);
             }
         }
 
@@ -143,27 +129,23 @@ namespace ModAPI
             Debug.Log("SplashScreen", "Main window loaded. Warming up GUI.");
             try
             {
-                ((MainWindow)sender).Preload(GUIProgress);
+                ((MainWindow) sender).Preload(GuiProgress);
             }
             catch (Exception ex)
             {
-                Debug.Log("SplashScreen", "Unexpected exception occured while preparing main window: " + ex.ToString(), Debug.Type.ERROR);
+                Debug.Log("SplashScreen", "Unexpected exception occured while preparing main window: " + ex, Debug.Type.Error);
             }
         }
 
-
-
         private void WindowActivated(object sender, EventArgs e)
         {
-            this.Topmost = true;
+            Topmost = true;
         }
 
         private void WindowDeactivated(object sender, EventArgs e)
         {
-            this.Topmost = true;
-            this.Activate();
+            Topmost = true;
+            Activate();
         }
-
-
     }
 }

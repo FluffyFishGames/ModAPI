@@ -7,6 +7,9 @@
   <includeAssembly>%fileBase%_data/Managed/Assembly-CSharp.dll</includeAssembly>
   <includeAssembly>%fileBase%_data/Managed/Assembly-UnityScript-firstpass.dll</includeAssembly>
   <includeAssembly>%fileBase%_data/Managed/Assembly-UnityScript.dll</includeAssembly>
+  <includeAssembly>%fileBase%_data/Managed/bolt.dll</includeAssembly>
+  <includeAssembly>%fileBase%_data/Managed/bolt.user.dll</includeAssembly>
+  <includeAssembly>%fileBase%_data/Managed/SteamworksManaged.dll</includeAssembly>
   <copyAssembly>%fileBase%_data/Managed/Boo.Lang.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/Mono.Security.dll</copyAssembly>
   <copyAssembly>%fileBase%_data/Managed/UnityScript.Lang.dll</copyAssembly>

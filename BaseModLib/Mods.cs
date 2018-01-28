@@ -18,10 +18,7 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ModAPI
 {
@@ -31,12 +28,12 @@ namespace ModAPI
 
         public static void Add(Mod mod)
         {
-            LoadedMods.Add(mod.ID, mod);
+            LoadedMods.Add(mod.Id, mod);
         }
 
-        public static bool IsModLoaded(string ModID)
+        public static bool IsModLoaded(string modId)
         {
-            return LoadedMods.ContainsKey(ModID);
+            return LoadedMods.ContainsKey(modId);
         }
     }
 }

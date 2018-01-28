@@ -19,16 +19,13 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ModAPI.Attributes
 {
     /// <summary>
     /// This attribute marks a method to be executed when the application starts (e.g. the main menu). [static methods only]
     /// </summary>
-    [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class ExecuteOnApplicationStart : ConfigurationAttribute, IStaticAttribute, INoParametersAttribute
     {
     }

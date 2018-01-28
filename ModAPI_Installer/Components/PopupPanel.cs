@@ -18,26 +18,15 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Markup;
 
 namespace ModAPI.Components
 {
     /// <summary>
     /// Interaktionslogik für PopupPanel.xaml
     /// </summary>
-    public partial class PopupPanel : ContentControl
+    public class PopupPanel : ContentControl
     {
         /*
         public static readonly DependencyPropertyKey ChildrenProperty = DependencyProperty.RegisterReadOnly(
@@ -56,10 +45,9 @@ namespace ModAPI.Components
 
         public string Title
         {
-            get { return (string)base.GetValue(TitleProperty); }
-            set { base.SetValue(TitleProperty, value); }
+            get => (string) GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
         }
-
 
         public Grid InnerElement;
 

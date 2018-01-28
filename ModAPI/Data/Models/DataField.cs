@@ -19,10 +19,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModAPI.Data.Models
 {
@@ -35,35 +31,31 @@ namespace ModAPI.Data.Models
         public object DataObject;
 
         protected object _MaxValue;
-        public object MaxValue {
-            set 
+        public object MaxValue
+        {
+            set
             {
                 _MaxValue = value;
                 CheckMinMax();
             }
-            get 
-            {
-                return _MaxValue;
-            }
+            get => _MaxValue;
         }
 
         protected object _MinValue;
-        public object MinValue {
-            set 
+        public object MinValue
+        {
+            set
             {
                 _MinValue = value;
                 CheckMinMax();
             }
-            get 
-            {
-                return _MinValue;
-            }
+            get => _MinValue;
         }
 
         protected object _Value;
-        public object Value 
+        public object Value
         {
-            set 
+            set
             {
                 if (Field.FieldType != null)
                 {
@@ -73,7 +65,9 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToString(value);
                         }
-                        catch (Exception e) {}
+                        catch (Exception e)
+                        {
+                        }
                     }
                     if (Field.FieldType.FullName == "System.Single")
                     {
@@ -81,7 +75,9 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToSingle(value);
                         }
-                        catch (Exception e) {}
+                        catch (Exception e)
+                        {
+                        }
                     }
                     if (Field.FieldType.FullName == "System.Double")
                     {
@@ -89,7 +85,9 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToDouble(value);
                         }
-                        catch (Exception e) {}
+                        catch (Exception e)
+                        {
+                        }
                     }
                     if (Field.FieldType.FullName == "System.Int32")
                     {
@@ -97,7 +95,9 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToInt32(value);
                         }
-                        catch (Exception e) { }
+                        catch (Exception e)
+                        {
+                        }
                     }
                     if (Field.FieldType.FullName == "System.Boolean")
                     {
@@ -105,43 +105,48 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToBoolean(value);
                         }
-                        catch (Exception e) { }
+                        catch (Exception e)
+                        {
+                        }
                     }
-                } 
-                else 
+                }
+                else
                 {
                     _Value = value;
                 }
                 CheckMinMax();
             }
-            get 
-            {
-                return _Value;
-            }
+            get => _Value;
         }
 
-        void CheckMinMax() 
+        void CheckMinMax()
         {
-            if (Container != null && Container.CheckMinMax(this)) 
+            if (Container != null && Container.CheckMinMax(this))
             {
-                if (_MinValue != null) 
+                if (_MinValue != null)
                 {
                     try
                     {
                         if (_Value is double)
                         {
-                            if ((double)_Value < Convert.ToDouble(_MinValue))
+                            if ((double) _Value < Convert.ToDouble(_MinValue))
+                            {
                                 _Value = Convert.ToDouble(_MinValue);
+                            }
                         }
                         if (_Value is float)
                         {
-                            if ((float)_Value < Convert.ToSingle(_MinValue))
+                            if ((float) _Value < Convert.ToSingle(_MinValue))
+                            {
                                 _Value = Convert.ToSingle(_MinValue);
+                            }
                         }
                         if (_Value is int)
                         {
-                            if ((int)_Value < Convert.ToInt32(_MinValue))
+                            if ((int) _Value < Convert.ToInt32(_MinValue))
+                            {
                                 _Value = Convert.ToInt32(_MinValue);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -155,18 +160,24 @@ namespace ModAPI.Data.Models
                     {
                         if (_Value is double)
                         {
-                            if ((double)_Value > Convert.ToDouble(_MaxValue))
+                            if ((double) _Value > Convert.ToDouble(_MaxValue))
+                            {
                                 _Value = Convert.ToDouble(_MaxValue);
+                            }
                         }
                         if (_Value is float)
                         {
-                            if ((float)_Value > Convert.ToSingle(_MaxValue))
+                            if ((float) _Value > Convert.ToSingle(_MaxValue))
+                            {
                                 _Value = Convert.ToSingle(_MaxValue);
+                            }
                         }
                         if (_Value is int)
                         {
-                            if ((int)_Value > Convert.ToInt32(_MaxValue))
+                            if ((int) _Value > Convert.ToInt32(_MaxValue))
+                            {
                                 _Value = Convert.ToInt32(_MaxValue);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -174,59 +185,64 @@ namespace ModAPI.Data.Models
                         Value = 0;
                     }
                 }
-            }            
-        }
-
-        public bool Changed
-        {
-            get
-            {
-                return _Value != InitValue;
             }
         }
 
+        public bool Changed => _Value != InitValue;
+
         public void Save()
         {
-            DynamicTypes.Set(this.ContainerObject, Field.FieldName, this.Value);
+            DynamicTypes.Set(ContainerObject, Field.FieldName, Value);
         }
 
         public DataField(BaseData container, FieldDefinition field, object Object)
         {
-            this.Container = container;
-            this.ContainerObject = Object;
-            this.Field = field;
-            if (DynamicTypes.Types.ContainsKey(this.ContainerObject.GetType().FullName))
-                this.InitValue = DynamicTypes.Get(this.ContainerObject, field.FieldName);
+            Container = container;
+            ContainerObject = Object;
+            Field = field;
+            if (DynamicTypes.Types.ContainsKey(ContainerObject.GetType().FullName))
+            {
+                InitValue = DynamicTypes.Get(ContainerObject, field.FieldName);
+            }
             else
-                this.InitValue = this.ContainerObject.GetType().GetField(field.FieldName).GetValue(this.ContainerObject);
-            this._Value = this.InitValue;
+            {
+                InitValue = ContainerObject.GetType().GetField(field.FieldName).GetValue(ContainerObject);
+            }
+            _Value = InitValue;
             if (field.Extra.ContainsKey("max"))
-                this._MaxValue = (double)double.Parse(field.Extra["max"]);
+            {
+                _MaxValue = double.Parse(field.Extra["max"]);
+            }
             if (field.Extra.ContainsKey("min"))
-                this._MinValue = (double)double.Parse(field.Extra["min"]);
+            {
+                _MinValue = double.Parse(field.Extra["min"]);
+            }
 
             CheckMinMax();
         }
 
         public DataField(FieldDefinition field, object Object)
         {
-            this.ContainerObject = Object;
-            this.Field = field;
-            if (DynamicTypes.Types.ContainsKey(this.ContainerObject.GetType().FullName))
+            ContainerObject = Object;
+            Field = field;
+            if (DynamicTypes.Types.ContainsKey(ContainerObject.GetType().FullName))
             {
-                this.InitValue = DynamicTypes.Get(this.ContainerObject, field.FieldName);
-                Console.WriteLine(Object.GetType().FullName + "_" + field.FieldName + "_"+InitValue);
-                
+                InitValue = DynamicTypes.Get(ContainerObject, field.FieldName);
+                Console.WriteLine(Object.GetType().FullName + "_" + field.FieldName + "_" + InitValue);
             }
             else
             {
-                this.InitValue = this.ContainerObject.GetType().GetField(field.FieldName).GetValue(this.ContainerObject);
+                InitValue = ContainerObject.GetType().GetField(field.FieldName).GetValue(ContainerObject);
             }
-            this._Value = this.InitValue;
+            _Value = InitValue;
             if (field.Extra.ContainsKey("max"))
-                this._MaxValue = (double)double.Parse(field.Extra["max"]);
+            {
+                _MaxValue = double.Parse(field.Extra["max"]);
+            }
             if (field.Extra.ContainsKey("min"))
-                this._MinValue = (double)double.Parse(field.Extra["min"]);
+            {
+                _MinValue = double.Parse(field.Extra["min"]);
+            }
 
             CheckMinMax();
         }

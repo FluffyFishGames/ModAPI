@@ -19,15 +19,9 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
-using System.Net;
-using System.Threading;
-using System.Diagnostics;
 using System.Reflection;
+
 namespace Updater
 {
     static class Program
@@ -38,19 +32,20 @@ namespace Updater
             {
                 try
                 {
-                    string filename = new AssemblyName(e.Name).Name;
-                    string path = string.Format(@"libs\{0}.dll", filename);
-                    if (System.IO.File.Exists(path))
+                    var filename = new AssemblyName(e.Name).Name;
+                    var path = string.Format(@"libs\{0}.dll", filename);
+                    if (File.Exists(path))
+                    {
                         return Assembly.LoadFrom(path);
-                    else return null;
+                    }
+                    return null;
                 }
                 catch (Exception ex)
                 {
                     return null;
                 }
-            }; 
+            };
             Updater.Update();
         }
-
     }
 }

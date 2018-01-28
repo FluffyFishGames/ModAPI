@@ -19,106 +19,90 @@
  */
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using ModAPI;
 using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
 using ModAPI.Data;
-using ModAPI.Components;
+using Application = System.Windows.Application;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using ListViewItem = System.Windows.Controls.ListViewItem;
+using Orientation = System.Windows.Controls.Orientation;
+using TextBox = System.Windows.Controls.TextBox;
 
 public class ModViewModel : INotifyPropertyChanged
 {
-    public ObservableDictionary<int, Mod> versions = new ObservableDictionary<int,Mod>();
+    public ObservableDictionary<int, Mod> VersionsData = new ObservableDictionary<int, Mod>();
     protected ObservableCollection<ListViewItem> _Versions = new ObservableCollection<ListViewItem>();
     protected ObservableCollection<Grid> _Buttons = new ObservableCollection<Grid>();
 
-    public ObservableCollection<ListViewItem> Versions
-    {
-        get
-        {
-            return _Versions;
-        }
-    }
-
-    public ObservableCollection<Grid> Buttons
-    {
-        get
-        {
-            return _Buttons;
-        }
-    }
+    public ObservableCollection<ListViewItem> Versions => _Versions;
+    public ObservableCollection<Grid> Buttons => _Buttons;
 
     public void Update()
     {
         OnPropertyChanged("Name");
         OnPropertyChanged("Description");
-        foreach (Grid li in Buttons)
+        foreach (var li in Buttons)
         {
-            ModButtonViewModel mv = (ModButtonViewModel)li.DataContext;
+            var mv = (ModButtonViewModel) li.DataContext;
             mv.OnPropertyChanged("Name");
             mv.OnPropertyChanged("Description");
         }
     }
+
     public ModViewModel(Mod mod)
     {
-        versions.CollectionChanged += VersionsChanged;
-        this.versions.Add(Mod.Header.ParseModVersion(mod.header.GetVersion()), mod);
+        VersionsData.CollectionChanged += VersionsChanged;
+        VersionsData.Add(Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()), mod);
     }
 
-    protected bool _Initialized = false;
+    protected bool _Initialized;
+
     public void Initialized()
     {
         if (!_Initialized)
         {
             _Initialized = true;
             VersionsChanged(null, null);
-            Mod mod = this.versions[this.versions.Keys.First()];
-            _Selected = Configuration.GetString("Mods." + mod.Game.GameConfiguration.ID + "." + mod.ID + ".Selected") == "true";
+            var mod = VersionsData[VersionsData.Keys.First()];
+            _Selected = Configuration.GetString("Mods." + mod.Game.GameConfiguration.Id + "." + mod.Id + ".Selected") == "true";
         }
     }
 
     protected void VersionsChanged(object sender, EventArgs e)
     {
-        if (versions.Count == 0)
-            return;
-        for (int i = 0; i < _Versions.Count; i++)
+        if (VersionsData.Count == 0)
         {
-            ListViewItem item = _Versions[i];
-            Mod mod = ((ModVersionViewModel)item.DataContext).mod;
-            if (!versions.Values.Contains(mod))
+            return;
+        }
+        for (var i = 0; i < _Versions.Count; i++)
+        {
+            var item = _Versions[i];
+            var mod = ((ModVersionViewModel) item.DataContext).Mod;
+            if (!VersionsData.Values.Contains(mod))
             {
                 _Versions.RemoveAt(i);
                 i--;
             }
         }
 
-        List<int> versionKeys = versions.Keys.ToList();
+        var versionKeys = VersionsData.Keys.ToList();
         versionKeys.Sort();
         versionKeys.Reverse();
-        ListViewItem[] old = _Versions.ToArray();
+        var old = _Versions.ToArray();
         _Versions = new ObservableCollection<ListViewItem>();
 
-        
-        foreach (int n in versionKeys)
+        foreach (var n in versionKeys)
         {
-            Mod mod = versions[n];
-            bool add = true;
+            var mod = VersionsData[n];
+            var add = true;
             /*foreach (ListViewItem item in _Versions)
             {
                 if (item.DataContext == mod)
@@ -129,24 +113,28 @@ public class ModViewModel : INotifyPropertyChanged
             }*/
             if (add)
             {
-                ListViewItem newItem = new ListViewItem();
-                StackPanel panel = new StackPanel();
-                panel.Orientation = Orientation.Vertical;
+                var newItem = new ListViewItem();
+                var panel = new StackPanel
+                {
+                    Orientation = Orientation.Vertical
+                };
                 newItem.DataContext = new ModVersionViewModel(mod);
-                
-                TextBlock label = new TextBlock();
+
+                var label = new TextBlock();
                 label.SetBinding(TextBlock.TextProperty, "Version");
                 label.Style = (Style) Application.Current.FindResource("HeaderLabel");
-                
-                StackPanel panel2 = new StackPanel();
-                panel2.Orientation = Orientation.Horizontal;
-                TextBlock compatibleLabel = new TextBlock();
+
+                var panel2 = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal
+                };
+                var compatibleLabel = new TextBlock();
                 compatibleLabel.SetResourceReference(TextBlock.TextProperty, "Lang.Mods.Labels.Compatible");
                 compatibleLabel.FontSize = 14;
                 compatibleLabel.Style = (Style) Application.Current.FindResource("NormalLabel");
 
                 compatibleLabel.Margin = new Thickness(0, 0, 5, 0);
-                TextBlock label2 = new TextBlock();
+                var label2 = new TextBlock();
                 label2.SetBinding(TextBlock.TextProperty, "Compatible");
                 label2.FontSize = 14;
 
@@ -166,65 +154,72 @@ public class ModViewModel : INotifyPropertyChanged
         if (_Initialized)
         {
             DontSaveVersion = true;
-                int versionToPrefer = Configuration.GetInt("Mods." + versions[versions.Keys.ToArray()[0]].Game.GameConfiguration.ID + "." + versions[versions.Keys.ToArray()[0]].ID + ".Version");
-                bool found = false;
-                foreach (ListViewItem item in _Versions)
+            var versionToPrefer = Configuration.GetInt("Mods." + VersionsData[VersionsData.Keys.ToArray()[0]].Game.GameConfiguration.Id + "." + VersionsData[VersionsData.Keys.ToArray()[0]].Id +
+                                                       ".Version");
+            var found = false;
+            foreach (var item in _Versions)
+            {
+                var mod = ((ModVersionViewModel) item.DataContext).Mod;
+                var build = Mod.Header.ParseModVersion(mod.HeaderData.GetVersion());
+                if (build == versionToPrefer)
                 {
-                    Mod mod = ((ModVersionViewModel)item.DataContext).mod;
-                    int build = Mod.Header.ParseModVersion(mod.header.GetVersion());
-                    if (build == versionToPrefer)
-                    {
-                        SelectedVersion = item;
-                        found = true;
-                    }
+                    SelectedVersion = item;
+                    found = true;
                 }
-                if (!found)
-                {
-                    if (_Versions.Count > 0)
-                        SelectedVersion = _Versions[0];
-                    else
-                        SelectedVersion = null;
-                }
-                DontSaveVersion = false;
-                OnPropertyChanged("SelectedVersion");
-                OnPropertyChanged("Name");
-                OnPropertyChanged("Description");
-                OnPropertyChanged("Version");
             }
+            if (!found)
+            {
+                if (_Versions.Count > 0)
+                {
+                    SelectedVersion = _Versions[0];
+                }
+                else
+                {
+                    SelectedVersion = null;
+                }
+            }
+            DontSaveVersion = false;
+            OnPropertyChanged("SelectedVersion");
+            OnPropertyChanged("Name");
+            OnPropertyChanged("Description");
+            OnPropertyChanged("Version");
+        }
     }
 
-    protected bool DontSaveVersion = false;
+    protected bool DontSaveVersion;
 
-    protected bool _Selected = false;
+    protected bool _Selected;
     public bool Selected
     {
         set
         {
-            Mod mod = this.versions[this.versions.Keys.First()];
-            Configuration.SetString("Mods." + mod.Game.GameConfiguration.ID + "." + mod.ID + ".Selected", value?"true":"false", true);
+            var mod = VersionsData[VersionsData.Keys.First()];
+            Configuration.SetString("Mods." + mod.Game.GameConfiguration.Id + "." + mod.Id + ".Selected", value ? "true" : "false", true);
             Configuration.Save();
             _Selected = value;
         }
-        get
-        {
-            return _Selected;
-        }
+        get => _Selected;
     }
 
     public string Name
     {
         get
         {
-            if (SelectedVersion == null) return "";
-            ModVersionViewModel vm = ((ModVersionViewModel)SelectedVersion.DataContext);
+            if (SelectedVersion == null)
+            {
+                return "";
+            }
+            var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
             if (vm != null)
             {
-                Mod mod = vm.mod;
+                var mod = vm.Mod;
                 if (mod != null)
                 {
-                    string ret = mod.header.GetName().GetString(Configuration.CurrentLanguage.Key, "EN");
-                    if (ret == "" && mod.header.GetName().GetLanguages().Count > 0)
-                        ret = mod.header.GetName().GetString(mod.header.GetName().GetLanguages()[0]);
+                    var ret = mod.HeaderData.GetName().GetString(Configuration.CurrentLanguage.Key, "EN");
+                    if (ret == "" && mod.HeaderData.GetName().GetLanguages().Count > 0)
+                    {
+                        ret = mod.HeaderData.GetName().GetString(mod.HeaderData.GetName().GetLanguages()[0]);
+                    }
                     return ret;
                 }
             }
@@ -236,17 +231,22 @@ public class ModViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (SelectedVersion == null) return "";
-            ModVersionViewModel vm = ((ModVersionViewModel)SelectedVersion.DataContext);
+            if (SelectedVersion == null)
+            {
+                return "";
+            }
+            var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
 
             if (vm != null)
             {
-                Mod mod = vm.mod;
+                var mod = vm.Mod;
                 if (mod != null)
                 {
-                    string ret = mod.header.GetDescription().GetString(Configuration.CurrentLanguage.Key, "EN");
-                    if (ret == "" && mod.header.GetDescription().GetLanguages().Count > 0)
-                        ret = mod.header.GetDescription().GetString(mod.header.GetDescription().GetLanguages()[0]);
+                    var ret = mod.HeaderData.GetDescription().GetString(Configuration.CurrentLanguage.Key, "EN");
+                    if (ret == "" && mod.HeaderData.GetDescription().GetLanguages().Count > 0)
+                    {
+                        ret = mod.HeaderData.GetDescription().GetString(mod.HeaderData.GetDescription().GetLanguages()[0]);
+                    }
                     return ret;
                 }
             }
@@ -254,61 +254,62 @@ public class ModViewModel : INotifyPropertyChanged
         }
     }
 
-    public string ID
+    public string Id
     {
         get
         {
-            if (versions.Count == 0) return "";
-            Mod mod = versions[versions.Keys.First()];
+            if (VersionsData.Count == 0)
+            {
+                return "";
+            }
+            var mod = VersionsData[VersionsData.Keys.First()];
             if (mod != null)
             {
-                return mod.ID;
+                return mod.Id;
             }
             return "";
         }
     }
 
     protected ListViewItem _SelectedVersion;
-    
+
     public ListViewItem SelectedVersion
     {
-        get
-        {
-            return _SelectedVersion;
-        }
+        get => _SelectedVersion;
         set
         {
             _SelectedVersion = value;
             if (_SelectedVersion != null)
             {
-                ModVersionViewModel vm = ((ModVersionViewModel)SelectedVersion.DataContext);
+                var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
                 _Buttons = new ObservableCollection<Grid>();
                 if (vm != null)
                 {
-                    Mod mod = vm.mod;
+                    var mod = vm.Mod;
 
                     if (mod != null)
                     {
                         if (!DontSaveVersion)
                         {
-                            Configuration.SetInt("Mods." + mod.Game.GameConfiguration.ID + "." + mod.ID + ".Version", Mod.Header.ParseModVersion(mod.header.GetVersion()), true);
+                            Configuration.SetInt("Mods." + mod.Game.GameConfiguration.Id + "." + mod.Id + ".Version", Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()), true);
                             Configuration.Save();
                         }
 
-                        foreach (Mod.Header.Button button in mod.header.GetButtons())
+                        foreach (var button in mod.HeaderData.GetButtons())
                         {
-                            StackPanel panel = new StackPanel();
-                            TextBlock label = new TextBlock();
-
+                            var panel = new StackPanel();
+                            var label = new TextBlock();
                         }
 
-                        foreach (Mod.Header.Button button in mod.header.GetButtons())
+                        foreach (var button in mod.HeaderData.GetButtons())
                         {
-                            Grid panel = new Grid();
-                            panel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                            ColumnDefinition col1 = new ColumnDefinition();
-                            ColumnDefinition col2 = new ColumnDefinition();
-                            ColumnDefinition col3 = new ColumnDefinition();
+                            var panel = new Grid
+                            {
+                                HorizontalAlignment = HorizontalAlignment.Stretch
+                            };
+                            var col1 = new ColumnDefinition();
+                            var col2 = new ColumnDefinition();
+                            var col3 = new ColumnDefinition();
                             col1.Width = new GridLength(1, GridUnitType.Auto);
                             col1.SharedSizeGroup = "Buttons0";
                             col2.Width = new GridLength(1, GridUnitType.Auto);
@@ -318,27 +319,33 @@ public class ModViewModel : INotifyPropertyChanged
                             panel.ColumnDefinitions.Add(col2);
                             panel.ColumnDefinitions.Add(col3);
 
-                            ModButtonViewModel bvm = new ModButtonViewModel(button);
+                            var bvm = new ModButtonViewModel(button);
                             panel.DataContext = bvm;
 
-                            TextBlock label = new TextBlock();
-                            label.Style = Application.Current.FindResource("NormalLabel") as Style;
+                            var label = new TextBlock
+                            {
+                                Style = Application.Current.FindResource("NormalLabel") as Style
+                            };
                             label.SetBinding(TextBlock.TextProperty, "Name");
                             label.VerticalAlignment = VerticalAlignment.Center;
-                            label.Margin = new Thickness(0,0,10,0);
+                            label.Margin = new Thickness(0, 0, 10, 0);
                             Grid.SetColumn(label, 0);
 
-                            TextBlock label2 = new TextBlock();
-                            label2.Style = Application.Current.FindResource("NormalLabel") as Style;
+                            var label2 = new TextBlock
+                            {
+                                Style = Application.Current.FindResource("NormalLabel") as Style
+                            };
                             label2.SetBinding(TextBlock.TextProperty, "Description");
                             label2.VerticalAlignment = VerticalAlignment.Center;
                             label2.TextWrapping = TextWrapping.Wrap;
                             label2.Margin = new Thickness(10, 0, 0, 0);
-                            
-                            TextBox input = new TextBox();
-                            input.IsReadOnly = true;
-                            input.KeyUp += delegate(object o, KeyEventArgs e) {ChangeStandardKey(o, e, bvm);};
-                            input.KeyDown += delegate(object o, KeyEventArgs e) {StandardKeyDown(o, e, bvm);};
+
+                            var input = new TextBox
+                            {
+                                IsReadOnly = true
+                            };
+                            input.KeyUp += delegate(object o, KeyEventArgs e) { ChangeStandardKey(o, e, bvm); };
+                            input.KeyDown += delegate(object o, KeyEventArgs e) { StandardKeyDown(o, e, bvm); };
                             input.SetBinding(TextBox.TextProperty, "Key");
 
                             Grid.SetColumn(input, 1);
@@ -364,16 +371,78 @@ public class ModViewModel : INotifyPropertyChanged
 
     private void ChangeStandardKey(object sender, KeyEventArgs e, ModButtonViewModel button)
     {
-        TextBox t = (TextBox)sender;
+        var t = (TextBox) sender;
         t.Focus();
-        System.Windows.Forms.KeysConverter kc = new System.Windows.Forms.KeysConverter();
-        string a = "";
+        var kc = new KeysConverter();
+        var keys = new List<string>();
         PressedKeys.Sort();
         PressedKeys.Reverse();
-        foreach (Key k in PressedKeys)
+        foreach (var k in PressedKeys)
         {
-            if (a != "") a += "+";
-            a += kc.ConvertToString(k);
+            var keyString = kc.ConvertToString(k) ?? string.Empty;
+
+            switch (k)
+            {
+                case Key.NumPad0:
+                case Key.NumPad1:
+                case Key.NumPad2:
+                case Key.NumPad3:
+                case Key.NumPad4:
+                case Key.NumPad5:
+                case Key.NumPad6:
+                case Key.NumPad7:
+                case Key.NumPad8:
+                case Key.NumPad9:
+
+                    keyString = keyString.Replace("NumPad", "Keypad");
+                    break;
+
+                case Key.D0:
+                case Key.D1:
+                case Key.D2:
+                case Key.D3:
+                case Key.D4:
+                case Key.D5:
+                case Key.D6:
+                case Key.D7:
+                case Key.D8:
+                case Key.D9:
+
+                    keyString = keyString.Replace("D", "Alpha");
+                    break;
+
+                case Key.OemBackslash:
+                case Key.OemComma:
+                case Key.OemMinus:
+                case Key.OemPeriod:
+                case Key.OemPlus:
+                case Key.OemSemicolon:
+
+                    keyString = keyString.Replace("Oem", "");
+                    break;
+
+                case Key.OemQuestion:
+
+                    keyString = "Slash";
+                    break;
+
+                case Key.OemQuotes:
+
+                    keyString = "Quote";
+                    break;
+
+                case Key.OemOpenBrackets:
+
+                    keyString = "LeftBracket";
+                    break;
+
+                case Key.OemCloseBrackets:
+
+                    keyString = "RightBracket";
+                    break;
+            }
+
+            keys.Add(keyString);
         }
 
         if (e.Key == Key.RightAlt)
@@ -386,40 +455,49 @@ public class ModViewModel : INotifyPropertyChanged
         if (Ignore)
         {
             if (PressedKeys.Count == 0)
+            {
                 Ignore = false;
-            return;
+            }
         }
         else
         {
-            button.Key = a;
+            button.Key = string.Join("+", keys);
             if (PressedKeys.Count > 0)
+            {
                 Ignore = true;
+            }
         }
     }
 
-    protected bool Ignore = false;
+    protected bool Ignore;
 
     private void StandardKeyDown(object sender, KeyEventArgs e, ModButtonViewModel button)
     {
-        TextBox t = (TextBox)sender;
+        var t = (TextBox) sender;
         t.Focus();
         e.Handled = true;
         if (PressedKeys.Contains(e.Key))
+        {
             return;
+        }
         PressedKeys.Add(e.Key);
     }
+
     public string Version
     {
         get
         {
-            if (SelectedVersion == null) return "";
-            ModVersionViewModel vm = ((ModVersionViewModel)SelectedVersion.DataContext);
+            if (SelectedVersion == null)
+            {
+                return "";
+            }
+            var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
             if (vm != null)
             {
-                Mod mod = vm.mod;
+                var mod = vm.Mod;
                 if (mod != null)
                 {
-                    return mod.header.GetVersion();
+                    return mod.HeaderData.GetVersion();
                 }
             }
             return "";
@@ -430,8 +508,6 @@ public class ModViewModel : INotifyPropertyChanged
 
     protected internal void OnPropertyChanged(string propertyname)
     {
-        if (PropertyChanged != null)
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
-
 }

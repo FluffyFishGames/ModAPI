@@ -20,9 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ModAPI.Data.Models
@@ -31,48 +28,56 @@ namespace ModAPI.Data.Models
     {
         public string ClassName = "";
         public string FieldName = "";
-        public Dictionary<string, string> Extra = new Dictionary<string,string>();
+        public Dictionary<string, string> Extra = new Dictionary<string, string>();
         public Type FieldType;
         public XElement Configuration;
 
         public FieldDefinition()
         {
-
         }
 
-        public FieldDefinition(string FieldName, Type FieldType)
+        public FieldDefinition(string fieldName, Type fieldType)
         {
-            this.FieldType = FieldType;
-            this.FieldName = FieldName;
+            FieldType = fieldType;
+            FieldName = fieldName;
         }
+
         public string GetExtra(string key, string standard)
         {
             if (Extra.ContainsKey(key))
+            {
                 return Extra[key];
+            }
             return standard;
         }
 
         public void SetExtra(string key, string value)
         {
             if (Extra.ContainsKey(key))
+            {
                 Extra[key] = value;
+            }
             Extra.Add(key, value);
         }
 
         public void AddConfiguration(XElement element)
         {
-            if (this.Configuration != null)
+            if (Configuration != null)
             {
-                foreach (XAttribute attribute in element.Attributes())
+                foreach (var attribute in element.Attributes())
                 {
-                    string attributeName = attribute.Name.LocalName.ToLower();
+                    var attributeName = attribute.Name.LocalName.ToLower();
                     if (attributeName != "class" && attributeName != "field" && (element.Name.LocalName.ToLower() != "field" || attributeName != "name"))
                     {
                         Configuration.SetAttributeValue(attribute.Name, attribute.Value);
                         if (Extra.ContainsKey(attributeName))
+                        {
                             Extra[attributeName] = attribute.Value;
+                        }
                         else
+                        {
                             Extra.Add(attributeName, attribute.Value);
+                        }
                     }
                 }
             }
@@ -80,24 +85,34 @@ namespace ModAPI.Data.Models
 
         public void SetConfiguration(XElement element, ClassDefinition cl = null)
         {
-            this.Configuration = element;
-            Extra = new Dictionary<string,string>();
-            foreach (XAttribute attribute in element.Attributes()) 
+            Configuration = element;
+            Extra = new Dictionary<string, string>();
+            foreach (var attribute in element.Attributes())
             {
                 if (attribute.Name.LocalName.ToLower() == "class")
+                {
                     ClassName = attribute.Value;
+                }
                 else if (attribute.Name.LocalName.ToLower() == "field")
+                {
                     FieldName = attribute.Value;
-                else if (attribute.Name.LocalName.ToLower() == "name" && element.Name.LocalName.ToLower()=="field")
+                }
+                else if (attribute.Name.LocalName.ToLower() == "name" && element.Name.LocalName.ToLower() == "field")
+                {
                     FieldName = attribute.Value;
+                }
                 else
+                {
                     Extra.Add(attribute.Name.LocalName.ToLower(), attribute.Value);
+                }
             }
             if (cl != null)
-                ClassName = cl.Name;
-            if (ClassName == "" || FieldName == "") 
             {
-                Debug.Log("ModAPI.Data", "Invalid FieldDefinition: " + element.ToString(), Debug.Type.WARNING);
+                ClassName = cl.Name;
+            }
+            if (ClassName == "" || FieldName == "")
+            {
+                Debug.Log("ModAPI.Data", "Invalid FieldDefinition: " + element, Debug.Type.Warning);
             }
         }
     }

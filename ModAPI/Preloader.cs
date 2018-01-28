@@ -18,17 +18,7 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
-using System.Windows;
-using System.Windows.Markup;
-using System.IO;
-using UnityEngine;
 using ModAPI.Configurations;
 
 namespace ModAPI
@@ -36,27 +26,23 @@ namespace ModAPI
     public class Preloader
     {
         public static Thread LoaderThread;
-        
+
         public static void Load()
         {
             AssemblyResolver.Initialize();
-            LoaderThread = new Thread(new ThreadStart(Loader));
+            LoaderThread = new Thread(Loader);
             LoaderThread.Start();
         }
 
         public static void Loader()
         {
-            ProgressChain chain = new ProgressChain();
-            chain.OnChange += delegate()
-            {
-                SplashScreen.Progress = chain.Progress * 0.7f;
-            };
+            var chain = new ProgressChain();
+            chain.OnChange += delegate { SplashScreen.Progress = chain.Progress * 0.7f; };
 
-            chain.AddTask(delegate(ProgressHandler handler) 
+            chain.AddTask(delegate(ProgressHandler handler)
             {
                 if (Configuration.Load(handler) == Configuration.ResultCode.ERROR)
                 {
-
                 }
             }, 30f);
 
@@ -64,23 +50,22 @@ namespace ModAPI
             {
                 if (DynamicTypes.Load(handler) == DynamicTypes.ResultCode.ERROR)
                 {
-
                 }
             }, 10f);
-            
+
             chain.AddTask(delegate(ProgressHandler handler)
             {
-                if (GUIConfiguration.Load(handler) == GUIConfiguration.ResultCode.ERROR)
+                if (GuiConfiguration.Load(handler) == GuiConfiguration.ResultCode.ERROR)
                 {
                     handler.Progress = 100f;
                 }
             }, 30f);
 
             chain.Start();
-                /*if (DynamicTypes.Load() == DynamicTypes.ResultCode.OK)
-                {
-                    SplashScreen.Progress = 100;
-                }*/
+            /*if (DynamicTypes.Load() == DynamicTypes.ResultCode.OK)
+            {
+                SplashScreen.Progress = 100;
+            }*/
         }
     }
 }

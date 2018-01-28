@@ -19,10 +19,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModAPI
 {
@@ -35,33 +31,25 @@ namespace ModAPI
         //public Complete OnComplete;
         //public Change OnChange;
         protected string _Task;
-        public string Task 
+        public string Task
         {
-            get
-            {
-                return _Task;
-            }
+            get => _Task;
             set
             {
                 _Task = value;
-                if (OnChange != null)
-                    OnChange(this, new EventArgs());
+                OnChange?.Invoke(this, new EventArgs());
             }
         }
         protected float _Progress;
-        protected bool Completed = false;
+        protected bool Completed;
 
         public float Progress
         {
-            get
-            {
-                return _Progress;
-            }
+            get => _Progress;
             set
             {
                 _Progress = value;
-                if (OnChange != null)
-                    OnChange(this, new EventArgs());
+                OnChange?.Invoke(this, new EventArgs());
                 /*if (OnChange != null)
                     OnChange();*/
                 if (value == 100f)

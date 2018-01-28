@@ -19,56 +19,49 @@
  */
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using ModAPI;
 using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
 using ModAPI.Data;
-using System.Text.RegularExpressions;
-using System.Threading;
+using ModAPI.Utils;
+using Path = System.IO.Path;
 
 public class ModsViewModel : INotifyPropertyChanged
 {
     protected DispatcherTimer Timer;
-    protected bool _SelectNewestModVersions = false;
-    protected bool _FirstBatchLoaded = false;
+    protected bool _SelectNewestModVersions;
+    protected bool FirstBatchLoaded;
 
     public bool SelectNewestModVersions
     {
-        set 
+        set
         {
-            if (_FirstBatchLoaded)
+            if (FirstBatchLoaded)
+            {
                 SelectNewestVersions();
-            else 
+            }
+            else
+            {
                 _SelectNewestModVersions = value;
+            }
         }
-        get 
-        {
-            return _SelectNewestModVersions;
-        }
+        get => _SelectNewestModVersions;
     }
 
     public void Update()
     {
-        foreach (ListViewItem li in Mods)
+        foreach (var li in Mods)
         {
-            ModViewModel mv = (ModViewModel)li.DataContext;
+            var mv = (ModViewModel) li.DataContext;
             mv.Update();
         }
     }
@@ -79,42 +72,47 @@ public class ModsViewModel : INotifyPropertyChanged
         Configuration.OnLanguageChanged += Update;
 
         Timer = new DispatcherTimer();
-        Timer.Tick += new EventHandler(Tick);
-        Timer.Interval = new TimeSpan((long) (10000000)); // 1s
+        Timer.Tick += Tick;
+        Timer.Interval = new TimeSpan(10000000); // 1s
         Timer.Start();
 
         FindMods();
     }
 
     protected Dictionary<string, Mod> LoadedFiles = new Dictionary<string, Mod>();
-    protected Regex validation = new Regex("^([a-zA-Z0-9_]+)-([0-9\\.]+)-([0-9abcdef]{32})\\.mod$");
-    protected bool Loading = false;
+    protected Regex Validation = new Regex("^([a-zA-Z0-9_]+)-([0-9\\.]+)-([0-9abcdef]{32})\\.mod$");
+    protected bool Loading;
 
     protected void FindMods()
     {
         try
         {
-            if (Loading) return;
-            string path = System.IO.Path.GetFullPath(Configuration.GetPath("mods") + System.IO.Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID);
-            if (!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
-            
-            string[] Keys = LoadedFiles.Keys.ToArray();
-            for (int i = 0; i < Keys.Length; i++)
+            if (Loading)
             {
-                string file = Keys[i];
-                if (!System.IO.File.Exists(file))
+                return;
+            }
+            var path = Path.GetFullPath(Configuration.GetPath("mods") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            var keys = LoadedFiles.Keys.ToArray();
+            for (var i = 0; i < keys.Length; i++)
+            {
+                var file = keys[i];
+                if (!File.Exists(file))
                 {
-                    Mod mod = LoadedFiles[file];
-                    string id = LoadedFiles[file].ID + "-" + LoadedFiles[file].header.GetVersion();
+                    var mod = LoadedFiles[file];
+                    var id = LoadedFiles[file].Id + "-" + LoadedFiles[file].HeaderData.GetVersion();
                     Mod.Mods.Remove(id);
-                    for (int j = 0; j < _Mods.Count; j++)
+                    for (var j = 0; j < _Mods.Count; j++)
                     {
-                        ModViewModel vm = (ModViewModel)_Mods[j].DataContext;
-                        if (vm.versions.Values.Contains(mod))
+                        var vm = (ModViewModel) _Mods[j].DataContext;
+                        if (vm.VersionsData.Values.Contains(mod))
                         {
-                            vm.versions.Remove(Mod.Header.ParseModVersion(mod.header.GetVersion()));
-                            if (vm.versions.Count == 0)
+                            vm.VersionsData.Remove(Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()));
+                            if (vm.VersionsData.Count == 0)
                             {
                                 _Mods.RemoveAt(j);
                             }
@@ -125,90 +123,90 @@ public class ModsViewModel : INotifyPropertyChanged
                 }
             }
 
-            string[] files = System.IO.Directory.GetFiles(path);
-            List<string> ToLoad = new List<string>();
-            foreach (string file in files)
+            var files = Directory.GetFiles(path);
+            var toLoad = new List<string>();
+            foreach (var file in files)
             {
-                string fileName = System.IO.Path.GetFileName(file);
-                if (!LoadedFiles.ContainsKey(file) && validation.IsMatch(fileName)) 
+                var fileName = Path.GetFileName(file);
+                if (!LoadedFiles.ContainsKey(file) && Validation.IsMatch(fileName))
                 {
-                    ToLoad.Add(file);
+                    toLoad.Add(file);
                 }
             }
 
-            if (ToLoad.Count > 0)
+            if (toLoad.Count > 0)
             {
                 Loading = true;
-                ProgressHandler progressHandler = new ProgressHandler();
-                Thread t = new Thread(delegate() {
-                    LoadMods(ToLoad, progressHandler);
-                });
+                var progressHandler = new ProgressHandler();
+                var t = new Thread(delegate() { LoadMods(toLoad, progressHandler); });
                 progressHandler.Task = "LoadingMods";
-                progressHandler.OnComplete += (s, e) => MainWindow.Instance.Dispatcher.Invoke((Action)delegate() { UpdateMods(); });
-                ModAPI.Utils.Schedule.AddTask("GUI", "OperationPending", null, new object[] {"LoadingMods", progressHandler, null, true});
+                progressHandler.OnComplete += (s, e) => MainWindow.Instance.Dispatcher.Invoke(delegate { UpdateMods(); });
+                Schedule.AddTask("GUI", "OperationPending", null, new object[] { "LoadingMods", progressHandler, null, true });
                 t.Start();
             }
         }
         catch (Exception e)
         {
-            System.Console.WriteLine(e.ToString());
+            Console.WriteLine(e.ToString());
         }
     }
 
     protected void UpdateMods()
     {
-        foreach (KeyValuePair<string, Mod> kv in Mod.Mods)
+        foreach (var kv in Mod.Mods)
         {
-            bool add = true;
-            ModViewModel alreadyVM = null;
-            foreach (ListViewItem i in _Mods) 
+            var add = true;
+            ModViewModel alreadyVm = null;
+            foreach (var i in _Mods)
             {
-                ModViewModel vm = ((ModViewModel)i.DataContext);
-                if (vm.versions.Values.Contains(kv.Value)) 
+                var vm = ((ModViewModel) i.DataContext);
+                if (vm.VersionsData.Values.Contains(kv.Value))
                 {
                     add = false;
                 }
-                if (vm.ID == kv.Value.ID)
+                if (vm.Id == kv.Value.Id)
                 {
-                    alreadyVM = vm;
+                    alreadyVm = vm;
                 }
             }
             if (add)
             {
-                Mod mod = kv.Value;
-                if (alreadyVM != null)
+                var mod = kv.Value;
+                if (alreadyVm != null)
                 {
-                    alreadyVM.versions.Add(Mod.Header.ParseModVersion(mod.header.GetVersion()), mod);
-                    alreadyVM.OnPropertyChanged("Version");
-                    alreadyVM.OnPropertyChanged("Name");
+                    alreadyVm.VersionsData.Add(Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()), mod);
+                    alreadyVm.OnPropertyChanged("Version");
+                    alreadyVm.OnPropertyChanged("Name");
                 }
                 else
                 {
-                    ListViewItem item = new ListViewItem();
+                    var item = new ListViewItem();
 
-                    StackPanel outerPanel = new StackPanel();
-                    outerPanel.Orientation = Orientation.Horizontal;
-                    outerPanel.Margin = new Thickness(-5, 0, 0, 0);
-                    CheckBox checkBox = new CheckBox();
+                    var outerPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Margin = new Thickness(-5, 0, 0, 0)
+                    };
+                    var checkBox = new CheckBox();
                     checkBox.SetBinding(CheckBox.IsCheckedProperty, "Selected");
                     outerPanel.Children.Add(checkBox);
 
-                    StackPanel panel = new StackPanel();
+                    var panel = new StackPanel();
 
-                    TextBlock textBlock = new TextBlock();
+                    var textBlock = new TextBlock();
                     textBlock.SetBinding(TextBlock.TextProperty, "Name");
-                    textBlock.Style = (Style)Application.Current.FindResource("HeaderLabel");
-                
+                    textBlock.Style = (Style) Application.Current.FindResource("HeaderLabel");
+
                     panel.Children.Add(textBlock);
 
-                    TextBlock textBlock2 = new TextBlock();
+                    var textBlock2 = new TextBlock();
                     textBlock2.SetBinding(TextBlock.TextProperty, "Version");
                     textBlock2.FontSize = 12;
-                    textBlock2.Style = (Style)Application.Current.FindResource("NormalLabel");
+                    textBlock2.Style = (Style) Application.Current.FindResource("NormalLabel");
                     panel.Children.Add(textBlock2);
                     outerPanel.Children.Add(panel);
 
-                    ModViewModel mvm = new ModViewModel(mod);
+                    var mvm = new ModViewModel(mod);
                     item.DataContext = mvm;
                     item.Content = outerPanel;
                     _Mods.Add(item);
@@ -216,28 +214,30 @@ public class ModsViewModel : INotifyPropertyChanged
             }
         }
 
-        foreach (ListViewItem item in _Mods)
+        foreach (var item in _Mods)
         {
-            ModViewModel vm = (ModViewModel)item.DataContext;
+            var vm = (ModViewModel) item.DataContext;
             vm.Initialized();
         }
-        _FirstBatchLoaded = true;
+        FirstBatchLoaded = true;
         if (_SelectNewestModVersions)
+        {
             SelectNewestVersions();
+        }
     }
 
-    public void SelectNewestVersions() 
+    public void SelectNewestVersions()
     {
-        foreach (ListViewItem item in _Mods)
+        foreach (var item in _Mods)
         {
-            ModViewModel vm = (ModViewModel)item.DataContext;
-            List<int> v = vm.versions.Keys.ToList();
+            var vm = (ModViewModel) item.DataContext;
+            var v = vm.VersionsData.Keys.ToList();
             v.Sort();
             v.Reverse();
-            foreach (ListViewItem li in vm.Versions) 
+            foreach (var li in vm.Versions)
             {
-                ModVersionViewModel versionModel = (ModVersionViewModel) li.DataContext;
-                if (Mod.Header.ParseModVersion(versionModel.mod.header.GetVersion()) == v[0]) 
+                var versionModel = (ModVersionViewModel) li.DataContext;
+                if (Mod.Header.ParseModVersion(versionModel.Mod.HeaderData.GetVersion()) == v[0])
                 {
                     vm.SelectedVersion = li;
                     break;
@@ -247,24 +247,25 @@ public class ModsViewModel : INotifyPropertyChanged
         _SelectNewestModVersions = false;
     }
 
-
-    protected void LoadMods(List<string> ToLoad, ProgressHandler progressHandler)
+    protected void LoadMods(List<string> toLoad, ProgressHandler progressHandler)
     {
-        for (int i = 0; i < ToLoad.Count; i++)
+        for (var i = 0; i < toLoad.Count; i++)
         {
-            string fileName = ToLoad[i];
-            Match collection = validation.Match(System.IO.Path.GetFileName(fileName));
+            var fileName = toLoad[i];
+            var collection = Validation.Match(Path.GetFileName(fileName));
 
-            string id = collection.Groups[1].Captures[0].Value + "-" + collection.Groups[2].Captures[0].Value;
-            
-            Mod mod = new Mod(App.Game, fileName);
+            var id = collection.Groups[1].Captures[0].Value + "-" + collection.Groups[2].Captures[0].Value;
+
+            var mod = new Mod(App.Game, fileName);
             if (Mod.Mods.ContainsKey(id) || mod.Load())
             {
                 LoadedFiles.Add(fileName, mod);
                 if (!Mod.Mods.ContainsKey(id))
+                {
                     Mod.Mods.Add(id, mod);
+                }
             }
-            progressHandler.Progress = ((float)i / (float)ToLoad.Count) * 100f;
+            progressHandler.Progress = (i / (float) toLoad.Count) * 100f;
         }
         progressHandler.Progress = 100f;
         Loading = false;
@@ -279,34 +280,24 @@ public class ModsViewModel : INotifyPropertyChanged
 
     protected internal void OnPropertyChanged(string propertyname)
     {
-        if (PropertyChanged != null)
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
-
 
     protected ObservableCollection<ListViewItem> _Mods = new ObservableCollection<ListViewItem>();
-    
-    public ObservableCollection<ListViewItem> Mods
-    {
-        get
-        {
-            return _Mods;
-        }
-    }
 
+    public ObservableCollection<ListViewItem> Mods => _Mods;
     protected int _SelectedMod = -1;
 
     public int SelectedMod
     {
-        get
-        {
-            return _SelectedMod;
-        }
+        get => _SelectedMod;
         set
         {
             _SelectedMod = value;
             if (_SelectedMod >= 0)
-                MainWindow.Instance.SetMod(((ModViewModel)_Mods[_SelectedMod].DataContext));
+            {
+                MainWindow.Instance.SetMod(((ModViewModel) _Mods[_SelectedMod].DataContext));
+            }
         }
     }
 }

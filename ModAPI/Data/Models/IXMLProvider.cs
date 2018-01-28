@@ -18,18 +18,13 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ModAPI.Data.Models
 {
-    public interface IXMLProvider
+    public interface IXmlProvider
     {
-        XElement GetXML();
-        void SetXML(XElement elements);
+        XElement GetXml();
+        void SetXml(XElement elements);
     }
 }

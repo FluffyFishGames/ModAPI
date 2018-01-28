@@ -18,20 +18,12 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace ModAPI.Components
 {
@@ -47,7 +39,7 @@ namespace ModAPI.Components
 
         private void RemoveButton(object sender, RoutedEventArgs e)
         {
-            ModProjectButtonViewModel viewModel = ((ModProjectButtonViewModel) DataContext);
+            var viewModel = ((ModProjectButtonViewModel) DataContext);
             viewModel.ProjectViewModel.RemoveButton(viewModel.Button);
         }
 
@@ -55,13 +47,16 @@ namespace ModAPI.Components
 
         private void ChangeStandardKey(object sender, KeyEventArgs e)
         {
-            System.Windows.Forms.KeysConverter kc = new System.Windows.Forms.KeysConverter();
-            string a = "";
+            var kc = new KeysConverter();
+            var a = "";
             PressedKeys.Sort();
             PressedKeys.Reverse();
-            foreach (Key k in PressedKeys)
+            foreach (var k in PressedKeys)
             {
-                if (a != "") a += "+";
+                if (a != "")
+                {
+                    a += "+";
+                }
                 a += kc.ConvertToString(k);
             }
 
@@ -70,31 +65,36 @@ namespace ModAPI.Components
                 PressedKeys.Remove(Key.LeftCtrl);
             }
             PressedKeys.Remove(e.Key);
-            StandardKeyInput.Focus(); 
+            StandardKeyInput.Focus();
             e.Handled = true;
 
             if (Ignore)
             {
                 if (PressedKeys.Count == 0)
+                {
                     Ignore = false;
-                return;
+                }
             }
             else
             {
-                ((ModProjectButtonViewModel)DataContext).StandardKey = a;
-                if (PressedKeys.Count > 0) 
+                ((ModProjectButtonViewModel) DataContext).StandardKey = a;
+                if (PressedKeys.Count > 0)
+                {
                     Ignore = true;
+                }
             }
         }
 
-        protected bool Ignore = false;
+        protected bool Ignore;
 
         private void StandardKeyDown(object sender, KeyEventArgs e)
         {
             StandardKeyInput.Focus();
-            e.Handled = true; 
+            e.Handled = true;
             if (PressedKeys.Contains(e.Key))
+            {
                 return;
+            }
             PressedKeys.Add(e.Key);
         }
     }

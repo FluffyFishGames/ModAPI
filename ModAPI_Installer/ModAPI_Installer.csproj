@@ -36,6 +36,15 @@
   <PropertyGroup>
     <StartupObject>ModAPI_Installer.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Publish|AnyCPU'">
+    <OutputPath>bin\Publish\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -146,9 +155,6 @@
     <None Include="resources\textures\NewGUI\TextField.psd" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Ionic.Zip.License.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="resources\Configuration.xml" />
     <Resource Include="resources\fonts\Icon_Download.png" />
     <Resource Include="resources\langs\Language.DE.png" />

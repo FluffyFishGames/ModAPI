@@ -19,27 +19,18 @@
  */
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using ModAPI;
 using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
 using ModAPI.Data;
+using ModAPI.Data.Models;
 
 public class ModProjectsViewModel : INotifyPropertyChanged
 {
@@ -49,18 +40,18 @@ public class ModProjectsViewModel : INotifyPropertyChanged
     public ModProjectsViewModel()
     {
         _Projects = new ObservableCollection<ListViewItem>();
-        
+
         Timer = new DispatcherTimer();
-        Timer.Tick += new EventHandler(Tick);
-        Timer.Interval = new TimeSpan((long) (10000000)); // 1s
+        Timer.Tick += Tick;
+        Timer.Interval = new TimeSpan(10000000); // 1s
         Timer.Start();
 
         FindProjects();
     }
 
-    public void CreateProject(string ID)
+    public void CreateProject(string id)
     {
-        ModProjects.Add(new ModProject(App.Game, ID));
+        ModProjects.Add(new ModProject(App.Game, id));
         FindProjects();
         _SelectedProject = ModProjects.Count;
         OnPropertyChanged("SelectedProject");
@@ -68,9 +59,9 @@ public class ModProjectsViewModel : INotifyPropertyChanged
 
     public void Remove(ModProject project)
     {
-        for (int i = 0; i < _Projects.Count; i++)
+        for (var i = 0; i < _Projects.Count; i++)
         {
-            ModProjectViewModel vm = (ModProjectViewModel) (_Projects[i].DataContext);
+            var vm = (ModProjectViewModel) (_Projects[i].DataContext);
             if (vm.Project == project)
             {
                 _Projects.RemoveAt(i);
@@ -79,44 +70,47 @@ public class ModProjectsViewModel : INotifyPropertyChanged
         }
         ModProjects.Remove(project);
         project.Remove();
-        
     }
 
     protected void FindProjects()
     {
         try
         {
-            string path = System.IO.Path.GetFullPath(Configuration.GetPath("projects") + System.IO.Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID);
-            if (!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
-            string[] files = System.IO.Directory.GetDirectories(path);
-            foreach (string file in files)
+            var path = Path.GetFullPath(Configuration.GetPath("projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id);
+            if (!Directory.Exists(path))
             {
-                System.IO.FileAttributes attr = System.IO.File.GetAttributes(@file);
-                if ((attr & System.IO.FileAttributes.Directory) == System.IO.FileAttributes.Directory)
+                Directory.CreateDirectory(path);
+            }
+            var files = Directory.GetDirectories(path);
+            foreach (var file in files)
+            {
+                var attr = File.GetAttributes(file);
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                 {
-                    string id = System.IO.Path.GetFileName(file);
-                    bool add = true;
-                    foreach (ModProject project in ModProjects)
+                    var id = Path.GetFileName(file);
+                    var add = true;
+                    foreach (var project in ModProjects)
                     {
-                        if (project.ID == id)
+                        if (project.Id == id)
                         {
                             add = false;
                             break;
                         }
                     }
-                    if (add && ModAPI.Data.Mod.Header.VerifyModID(id))
+                    if (add && Mod.Header.VerifyModId(id))
+                    {
                         ModProjects.Add(new ModProject(App.Game, id));
+                    }
                 }
             }
 
             /** Add new projects **/
-            foreach (ModProject project in ModProjects)
+            foreach (var project in ModProjects)
             {
-                bool add = true;
-                foreach (ListViewItem item in _Projects)
+                var add = true;
+                foreach (var item in _Projects)
                 {
-                    if (((ModProjectViewModel)item.DataContext).Project == project)
+                    if (((ModProjectViewModel) item.DataContext).Project == project)
                     {
                         add = false;
                         break;
@@ -124,12 +118,16 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                 }
                 if (add)
                 {
-                    ListViewItem newItem = new ListViewItem();
-                    newItem.DataContext = new ModProjectViewModel(project);
-                    Grid panel = new Grid();
-                    Image image = new Image();
-                    image.Height = 20;
-                    BitmapImage source = new BitmapImage();
+                    var newItem = new ListViewItem
+                    {
+                        DataContext = new ModProjectViewModel(project)
+                    };
+                    var panel = new Grid();
+                    var image = new Image
+                    {
+                        Height = 20
+                    };
+                    var source = new BitmapImage();
                     source.BeginInit();
                     source.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Icon_Warning.png");
                     source.EndInit();
@@ -138,10 +136,11 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                     //image.Margin = new Thickness(0, 0, 5, 0);
                     image.SetBinding(Image.VisibilityProperty, "Error");
 
-
-                    Image image2 = new Image();
-                    image2.Height = 20;
-                    BitmapImage source2 = new BitmapImage();
+                    var image2 = new Image
+                    {
+                        Height = 20
+                    };
+                    var source2 = new BitmapImage();
                     source2.BeginInit();
                     source2.UriSource = new Uri("pack://application:,,,/ModAPI;component/resources/textures/Icons/Icon_Error.png");
                     source2.EndInit();
@@ -150,34 +149,33 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                     image.Margin = new Thickness(5, 0, 0, 0);
                     image2.SetBinding(Image.VisibilityProperty, "SaveError");
 
-
-                    TextBlock label = new TextBlock();
-                    label.SetBinding(TextBlock.TextProperty, "ID");
+                    var label = new TextBlock();
+                    label.SetBinding(TextBlock.TextProperty, "Id");
 
                     panel.Children.Add(label);
                     panel.Children.Add(image);
                     panel.Children.Add(image2);
-                    
+
                     newItem.Content = panel;
                     _Projects.Add(newItem);
                 }
             }
 
-            for (int i = 0; i < ModProjects.Count; i++)
+            for (var i = 0; i < ModProjects.Count; i++)
             {
-                ModProject p = ModProjects[i];
-                string checkPath = Configuration.GetPath("projects") + System.IO.Path.DirectorySeparatorChar + App.Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + p.ID;
-                if (!System.IO.Directory.Exists(checkPath))
+                var p = ModProjects[i];
+                var checkPath = Configuration.GetPath("projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id + Path.DirectorySeparatorChar + p.Id;
+                if (!Directory.Exists(checkPath))
                 {
                     ModProjects.RemoveAt(i);
                     i--;
                 }
             }
             /** Remove deleted projects **/
-            for (int i = 0; i < _Projects.Count; i++)
+            for (var i = 0; i < _Projects.Count; i++)
             {
-                ListViewItem item = _Projects[i];
-                ModProject check = ((ModProjectViewModel)item.DataContext).Project;
+                var item = _Projects[i];
+                var check = ((ModProjectViewModel) item.DataContext).Project;
                 if (!ModProjects.Contains(check))
                 {
                     _Projects.RemoveAt(i);
@@ -200,33 +198,24 @@ public class ModProjectsViewModel : INotifyPropertyChanged
 
     protected internal void OnPropertyChanged(string propertyname)
     {
-        if (PropertyChanged != null)
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
 
     protected ObservableCollection<ListViewItem> _Projects;
-    
-    public ObservableCollection<ListViewItem> Projects
-    {
-        get
-        {
-            return _Projects;
-        }
-    }
 
+    public ObservableCollection<ListViewItem> Projects => _Projects;
     protected int _SelectedProject = -1;
 
     public int SelectedProject
     {
-        get
-        {
-            return _SelectedProject;
-        }
+        get => _SelectedProject;
         set
         {
             _SelectedProject = value;
             if (_SelectedProject >= 0)
-                MainWindow.Instance.SetProject(((ModProjectViewModel)_Projects[_SelectedProject].DataContext));
+            {
+                MainWindow.Instance.SetProject(((ModProjectViewModel) _Projects[_SelectedProject].DataContext));
+            }
         }
     }
 }

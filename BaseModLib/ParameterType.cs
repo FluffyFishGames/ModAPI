@@ -18,15 +18,13 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace ModAPI
 {
     public enum ParameterType
     {
-        TEXT = 1, ITEM = 2, OBJECT = 4, ENTITY = 8
+        Text = 1,
+        Item = 2,
+        Object = 4,
+        Entity = 8
     }
 }

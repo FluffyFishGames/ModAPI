@@ -18,20 +18,6 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
 namespace ModAPI.Windows.SubWindows
 {
     /// <summary>
@@ -42,10 +28,9 @@ namespace ModAPI.Windows.SubWindows
         public object Data;
 
         public RemoveModProject(string removeList, object data)
-            : base()
         {
             InitializeComponent();
-            this.Data = data;
+            Data = data;
             Init(removeList);
         }
 
@@ -53,26 +38,23 @@ namespace ModAPI.Windows.SubWindows
             : base(langKey)
         {
             InitializeComponent();
-            this.Data = data;
+            Data = data;
             Init(removeList);
         }
 
         protected void Init(string removeList)
         {
-            this.RemoveList.Text = removeList;
-            this.ConfirmButton.Click += (a, b) =>
+            RemoveList.Text = removeList;
+            ConfirmButton.Click += (a, b) =>
             {
-                if (Confirm != null)
-                    Confirm(Data);
+                Confirm?.Invoke(Data);
                 Close();
             };
-            this.CancelButton.Click += (a, b) =>
-            {
-                Close();
-            };
+            CancelButton.Click += (a, b) => { Close(); };
         }
 
         public delegate void OnConfirm(object data);
+
         public OnConfirm Confirm;
     }
 }

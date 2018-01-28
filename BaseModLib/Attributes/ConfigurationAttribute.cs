@@ -19,16 +19,13 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ModAPI.Attributes
 {
     /// <summary>
     /// Base class for attributes which are written in the RuntimeConfiguration. Should not be used!
     /// </summary>
-    public class ConfigurationAttribute : System.Attribute
+    public class ConfigurationAttribute : Attribute
     {
     }
 }

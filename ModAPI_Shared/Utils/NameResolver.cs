@@ -19,78 +19,79 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModAPI.Utils
 {
     public class NameResolver
     {
-        public static void Parse(string input, ref string Namespace, ref string Type)
+        public static void Parse(string input, ref string Namespace, ref string type)
         {
-            string[] parts = input.Split(new string[] { "." }, System.StringSplitOptions.None);
+            var parts = input.Split(new[] { "." }, StringSplitOptions.None);
             Namespace = "";
-            for (int i = 0; i < parts.Length; i++)
+            for (var i = 0; i < parts.Length; i++)
             {
                 if (i == parts.Length - 1)
                 {
-                    Type = parts[i];
+                    type = parts[i];
                 }
                 else
                 {
                     if (i != 0)
+                    {
                         Namespace += ".";
+                    }
                     Namespace += parts[i];
                 }
             }
         }
 
-        public static void Parse(string input, ref string Namespace, ref string Type, ref string FieldName, ref string FieldType)
+        public static void Parse(string input, ref string Namespace, ref string type, ref string fieldName, ref string fieldType)
         {
-            string[] parts = input.Split(new string[] { " " }, System.StringSplitOptions.None);
-            string[] parts2 = parts[1].Split(new string[] { "::" }, System.StringSplitOptions.None);
-            string[] parts3 = parts2[0].Split(new string[] { "." }, System.StringSplitOptions.None);
+            var parts = input.Split(new[] { " " }, StringSplitOptions.None);
+            var parts2 = parts[1].Split(new[] { "::" }, StringSplitOptions.None);
+            var parts3 = parts2[0].Split(new[] { "." }, StringSplitOptions.None);
             Namespace = "";
-            FieldName = parts2[1];
-            FieldType = parts[0];
-            for (int i = 0; i < parts3.Length; i++)
+            fieldName = parts2[1];
+            fieldType = parts[0];
+            for (var i = 0; i < parts3.Length; i++)
             {
                 if (i == parts3.Length - 1)
                 {
-                    Type = parts3[i];
+                    type = parts3[i];
                 }
                 else
                 {
                     if (i != 0)
+                    {
                         Namespace += ".";
+                    }
                     Namespace += parts3[i];
                 }
             }
         }
 
-        public static void Parse(string input, ref string Namespace, ref string Type, ref string Method, ref string ReturnType, ref string[] Arguments)
+        public static void Parse(string input, ref string Namespace, ref string type, ref string method, ref string returnType, ref string[] arguments)
         {
-            string[] parts = new string[2];
-            int k = input.IndexOf(" ");
+            var parts = new string[2];
+            var k = input.IndexOf(" ");
             parts[0] = input.Substring(0, k);
             parts[1] = input.Substring(k + 1);
-            ReturnType = parts[0];
+            returnType = parts[0];
             Namespace = "";
 
-            string[] parts2 = new string[2];
-            int ind = parts[1].IndexOf("::");
+            var parts2 = new string[2];
+            var ind = parts[1].IndexOf("::");
             parts2[0] = parts[1].Substring(0, ind);
             parts2[1] = parts[1].Substring(ind + 2);
-            string[] parts3 = parts2[0].Split(new string[] { "." }, System.StringSplitOptions.RemoveEmptyEntries);
+            var parts3 = parts2[0].Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
-            int index = parts2[1].IndexOf("(");
-            Method = parts2[1].Substring(0, index);
+            var index = parts2[1].IndexOf("(");
+            method = parts2[1].Substring(0, index);
 
-            string args = parts2[1].Substring(index + 1, parts2[1].Length - (index + 2));
-            List<string> Args = args.Split(new string[] { "," }, System.StringSplitOptions.None).ToList();
-            for (int j = 0; j < Args.Count; j++)
+            var args = parts2[1].Substring(index + 1, parts2[1].Length - (index + 2));
+            var Args = args.Split(new[] { "," }, StringSplitOptions.None).ToList();
+            for (var j = 0; j < Args.Count; j++)
             {
                 Args[j] = Args[j].Trim();
                 if (Args[j] == "")
@@ -100,18 +101,20 @@ namespace ModAPI.Utils
                 }
             }
 
-            Arguments = Args.ToArray();
-            
-            for (int i = 0; i < parts3.Length; i++)
+            arguments = Args.ToArray();
+
+            for (var i = 0; i < parts3.Length; i++)
             {
                 if (i == parts3.Length - 1)
                 {
-                    Type = parts3[i];
+                    type = parts3[i];
                 }
                 else
                 {
                     if (i != 0)
+                    {
                         Namespace += ".";
+                    }
                     Namespace += parts3[i];
                 }
             }

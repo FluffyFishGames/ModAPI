@@ -20,30 +20,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Management;
-using System.Security.Cryptography;
+using System.IO;
 using System.Net;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading;
 using System.Web;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
-using System.Media;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Controls;
+using ModAPI.Configurations;
 
 namespace ModAPI.Utils
 {
     public class WebService
     {
         public delegate void _OnDoLogin();
+
         public delegate void _OnLogin(User user);
+
         public delegate void _OnLogout();
+
         public delegate void _OnLoginError(int errorNum, string errorText);
 
         public static _OnLoginError OnLoginError;
@@ -52,8 +47,8 @@ namespace ModAPI.Utils
         public static _OnLogout OnLogout;
         public static User CurrentUser;
 
-        protected static string CurrentSessionID = "";
-        protected static int UserID = 0;
+        protected static string CurrentSessionId = "";
+        protected static int UserId;
         protected static string Hash = "";
 
         /// <summary>
@@ -63,17 +58,15 @@ namespace ModAPI.Utils
         {
             try
             {
-                UserID = int.Parse(ModAPI.Configurations.Configuration.GetString("Login.User"));
-                Hash = ModAPI.Configurations.Configuration.GetString("Login.Hash");
-            } 
+                UserId = int.Parse(Configuration.GetString("Login.User"));
+                Hash = Configuration.GetString("Login.Hash");
+            }
             catch (Exception e)
             {
-
             }
-            if (UserID > 0 && Hash != null && Hash != "")
+            if (UserId > 0 && Hash != null && Hash != "")
             {
-                if (OnDoLogin != null)
-                    OnDoLogin();
+                OnDoLogin?.Invoke();
                 GetUserInformation();
                 /*new Request()
                 {
@@ -110,31 +103,30 @@ namespace ModAPI.Utils
 
         public static void Login(string username, string password)
         {
-            if (OnDoLogin != null)
-                OnDoLogin();
-            new Request()
+            OnDoLogin?.Invoke();
+            new Request
             {
                 Path = "Login",
                 Method = "POST",
                 ResponseType = typeof(LoginResponse),
-                Parameters = new string[] { "username=" + username, "password=" + password }
+                Parameters = new[] { "username=" + username, "password=" + password }
             }.Send(delegate(Response _response)
             {
                 if (_response != null)
                 {
-                    LoginResponse response = (LoginResponse)_response;
+                    var response = (LoginResponse) _response;
                     if (response.Header.Status == "OK")
                     {
-                        if (response.Header.UserID != null)
+                        if (response.Header.UserId != null)
                         {
-                            UserID = int.Parse(response.Header.UserID);
+                            UserId = int.Parse(response.Header.UserId);
                             Hash = response.Body.Hash;
-                            System.Console.WriteLine(UserID);
-                            System.Console.WriteLine(Hash);
+                            Console.WriteLine(UserId);
+                            Console.WriteLine(Hash);
 
-                            ModAPI.Configurations.Configuration.SetString("Login.User", response.Header.UserID, true);
-                            ModAPI.Configurations.Configuration.SetString("Login.Hash", response.Body.Hash, true);
-                            ModAPI.Configurations.Configuration.Save();
+                            Configuration.SetString("Login.User", response.Header.UserId, true);
+                            Configuration.SetString("Login.Hash", response.Body.Hash, true);
+                            Configuration.Save();
                             GetUserInformation();
                         }
                     }
@@ -148,32 +140,36 @@ namespace ModAPI.Utils
 
         protected static void GetUserInformation()
         {
-            if (UserID > 0)
+            if (UserId > 0)
             {
-                System.Console.WriteLine(CurrentSessionID);
-                        
-                new Request()
+                Console.WriteLine(CurrentSessionId);
+
+                new Request
                 {
                     Path = "User/Info",
                     Method = "GET",
                     ResponseType = typeof(UserDataResponse),
-                    Parameters = new string[] { "id=" + UserID }
+                    Parameters = new[] { "id=" + UserId }
                 }.Send(delegate(Response _response)
                 {
                     if (_response != null)
                     {
-                        UserDataResponse response = (UserDataResponse)_response;
+                        var response = (UserDataResponse) _response;
 
                         if (response.Header.Status == "OK")
                         {
                             CurrentUser = new User(response);
                             if (OnLogin != null)
+                            {
                                 OnLogin.Invoke(CurrentUser);
+                            }
                         }
                         else
                         {
                             if (OnLogout != null)
+                            {
                                 OnLogout.Invoke();
+                            }
                         }
                     }
                 });
@@ -182,64 +178,63 @@ namespace ModAPI.Utils
 
         public static void Logout()
         {
-            new Request()
+            new Request
             {
                 Path = "Logout",
                 Method = "POST",
                 ResponseType = typeof(LogoutResponse),
                 Parameters = new string[] { }
-            }.Send(delegate(Response response)
-            {
-            });
+            }.Send(delegate { });
             Hash = "";
-            UserID = 0;
-            ModAPI.Configurations.Configuration.SetString("Login.User", "", true);
-            ModAPI.Configurations.Configuration.SetString("Login.Hash", "", true);
-            ModAPI.Configurations.Configuration.Save();
-            if (OnLogout != null)
-                OnLogout();
+            UserId = 0;
+            Configuration.SetString("Login.User", "", true);
+            Configuration.SetString("Login.Hash", "", true);
+            Configuration.Save();
+            OnLogout?.Invoke();
         }
 
         public class User
         {
-            public string ID;
+            public string Id;
             public string Username;
-            public string AvatarURL;
+            public string AvatarUrl;
             public string Usergroup;
 
             public MemoryStream Avatar;
 
             public delegate void AvatarChange();
+
             public AvatarChange OnAvatarChange;
 
             public User(UserDataResponse responseData)
             {
-                this.ID = responseData.Body.UserID;
-                this.Username = responseData.Body.Username;
-                this.AvatarURL = responseData.Body.AvatarURL;
-                this.Usergroup = responseData.Body.Group;
+                Id = responseData.Body.UserId;
+                Username = responseData.Body.Username;
+                AvatarUrl = responseData.Body.AvatarUrl;
+                Usergroup = responseData.Body.Group;
             }
 
             public void LoadAvatar()
             {
-                Thread t = new Thread(
-                    delegate() {
-                        if (AvatarURL.EndsWith(".jpg"))
+                var t = new Thread(
+                    delegate()
+                    {
+                        if (AvatarUrl.EndsWith(".jpg"))
                         {
-                            byte[] buffer = new byte[1024];
+                            var buffer = new byte[1024];
 
-                            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(AvatarURL);
+                            var httpRequest = (HttpWebRequest) WebRequest.Create(AvatarUrl);
                             httpRequest.Timeout = 30000;
                             httpRequest.Method = "GET";
                             httpRequest.UserAgent = "ModAPI";
                             httpRequest.Accept = "image/jpeg";
                             httpRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
-                            System.Console.WriteLine(AvatarURL);
-                            using (HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse())
+                            Console.WriteLine(AvatarUrl);
+                            using (var httpResponse = (HttpWebResponse) httpRequest.GetResponse())
                             {
-                                using (Stream responseStream = httpResponse.GetResponseStream())
+                                using (var responseStream = httpResponse.GetResponseStream())
                                 {
-                                    MemoryStream memStream = new MemoryStream();
+                                    var memStream = new MemoryStream();
                                     int bytesRead;
                                     while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
                                     {
@@ -250,14 +245,12 @@ namespace ModAPI.Utils
                                 }
                             }
                         }
-                        if (OnAvatarChange != null)
-                            OnAvatarChange();
+                        OnAvatarChange?.Invoke();
                     });
                 t.Start();
             }
         }
 
-        
         [DataContract]
         public class Response
         {
@@ -279,7 +272,6 @@ namespace ModAPI.Utils
             }
         }
 
-
         [DataContract]
         public class UserDataResponse : Response
         {
@@ -290,13 +282,13 @@ namespace ModAPI.Utils
             public class UserDataResponseBody
             {
                 [DataMember]
-                public string UserID;
+                public string UserId;
                 [DataMember]
                 public string Username;
                 [DataMember]
                 public string Group;
                 [DataMember]
-                public string AvatarURL;
+                public string AvatarUrl;
             }
         }
 
@@ -318,9 +310,9 @@ namespace ModAPI.Utils
             [DataMember]
             public string Status;
             [DataMember]
-            public string SessionID;
+            public string SessionId;
             [DataMember]
-            public string UserID;
+            public string UserId;
             [DataMember]
             public ResponseError Error = new ResponseError();
         }
@@ -336,21 +328,26 @@ namespace ModAPI.Utils
 
         public class Request
         {
-            protected const string BACKEND_URL = "https://www.modapi.de/external.php/";
+            protected const string BackendUrl = "https://www.modapi.cc/external.php/";
             public string Path;
             public string Method;
             public Type ResponseType;
             public string[] Parameters;
+
             public delegate void OnResponse(Response response);
+
             protected static List<Request> RequestChain = new List<Request>();
             protected OnResponse ResponseHandler;
-            protected static bool ServingRequest = false;
+            protected static bool ServingRequest;
 
             public void Send(OnResponse responseHandler)
             {
-                if (responseHandler == null) return;
+                if (responseHandler == null)
+                {
+                    return;
+                }
                 ResponseHandler = responseHandler;
-                Request.RequestChain.Add(this);
+                RequestChain.Add(this);
                 ExecuteChain();
             }
 
@@ -375,27 +372,29 @@ namespace ModAPI.Utils
 
             protected void Execute()
             {
-                Thread requestThread = new Thread(delegate()
+                var requestThread = new Thread(delegate()
                 {
                     try
                     {
-                        string url = BACKEND_URL + Path + "?s=" + WebService.CurrentSessionID;
-                        string data = "";
-                        foreach (string i in Parameters)
+                        var url = BackendUrl + Path + "?s=" + CurrentSessionId;
+                        var data = "";
+                        foreach (var i in Parameters)
                         {
-                            string[] p = i.Split(new string[] { "=" }, StringSplitOptions.None);
+                            var p = i.Split(new[] { "=" }, StringSplitOptions.None);
                             if (p.Length == 2)
+                            {
                                 data += "&" + HttpUtility.UrlEncode(p[0]) + "=" + HttpUtility.UrlEncode(p[1]);
+                            }
                         }
                         if (Method == "GET")
                         {
                             url += data;
                         }
-                        HttpWebRequest request = (HttpWebRequest) HttpWebRequest.Create(url);
+                        var request = (HttpWebRequest) HttpWebRequest.Create(url);
                         request.CookieContainer = new CookieContainer(3);
-                        request.CookieContainer.Add(new Cookie("wcf_cookieHash", WebService.CurrentSessionID, "/", ".www.modapi.de"));
-                        request.CookieContainer.Add(new Cookie("wcf_userID", WebService.UserID + "", "/", ".www.modapi.de"));
-                        request.CookieContainer.Add(new Cookie("wcf_password", WebService.Hash, "/", ".www.modapi.de"));
+                        request.CookieContainer.Add(new Cookie("wcf_cookieHash", CurrentSessionId, "/", ".www.modapi.cc"));
+                        request.CookieContainer.Add(new Cookie("wcf_userID", UserId + "", "/", ".www.modapi.cc"));
+                        request.CookieContainer.Add(new Cookie("wcf_password", Hash, "/", ".www.modapi.cc"));
                         request.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
                         request.UserAgent = "ModAPI";
                         if (Method == "POST")
@@ -404,24 +403,24 @@ namespace ModAPI.Utils
                             request.ContentType = "application/x-www-form-urlencoded";
                             if (data.Length > 1)
                             {
-                                string postData = data.Substring(1);
-                                byte[] postBytes = Encoding.UTF8.GetBytes(postData);
+                                var postData = data.Substring(1);
+                                var postBytes = Encoding.UTF8.GetBytes(postData);
                                 request.ContentLength = postBytes.Length;
-                                Stream dataStream = request.GetRequestStream();
+                                var dataStream = request.GetRequestStream();
                                 dataStream.Write(postBytes, 0, postBytes.Length);
                                 dataStream.Close();
                             }
                         }
 
-                        HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-                        Stream responseStream = response.GetResponseStream();
+                        var response = (HttpWebResponse) request.GetResponse();
+                        var responseStream = response.GetResponseStream();
 
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(ResponseType);
-                        Response obj = (Response) serializer.ReadObject(responseStream);
-                        
-                        if (obj.Header != null && obj.Header.SessionID != null)
+                        var serializer = new DataContractJsonSerializer(ResponseType);
+                        var obj = (Response) serializer.ReadObject(responseStream);
+
+                        if (obj.Header != null && obj.Header.SessionId != null)
                         {
-                            WebService.CurrentSessionID = obj.Header.SessionID;
+                            CurrentSessionId = obj.Header.SessionId;
                             if (obj.Header.Status != null)
                             {
                                 ResponseHandler.Invoke(obj);
@@ -432,7 +431,7 @@ namespace ModAPI.Utils
                     }
                     catch (Exception e)
                     {
-                        System.Console.WriteLine(e.ToString());
+                        Console.WriteLine(e.ToString());
                     }
                     ResponseHandler.Invoke(null);
                     RequestCompleted();

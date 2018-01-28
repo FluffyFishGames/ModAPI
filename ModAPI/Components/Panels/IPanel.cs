@@ -18,11 +18,6 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using ModAPI.Configurations;
 
@@ -31,7 +26,7 @@ namespace ModAPI.Components.Panels
     public interface IPanel
     {
         void SetConfiguration(XDocument configurationm);
-        void SetTab(GUIConfiguration.Tab tab);
+        void SetTab(GuiConfiguration.Tab tab);
         string GetLangRoot();
 
         void Preload(ProgressHandler handler);

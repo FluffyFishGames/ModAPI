@@ -18,38 +18,37 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace ModAPI
 {
     public class Mod
     {
-        public string ID;
-        public string UniqueID;
+        public string Id;
+        public string UniqueId;
         public string Version;
         public Assembly Assembly;
-        public bool HasResources = false;
+        public bool HasResources;
 
         public Dictionary<string, string> Buttons;
-        
-        public Mod(XElement Configuration)
+
+        public Mod(XElement configuration)
         {
-            ID = Configuration.Attribute("ID").Value.ToString();
-            UniqueID = Configuration.Attribute("UniqueID").Value.ToString();
-            Version = Configuration.Attribute("Version").Value.ToString();
-            XAttribute hasResoucresAttribute = Configuration.Attribute("HasResources");
+            Id = configuration.Attribute("ID").Value;
+            UniqueId = configuration.Attribute("UniqueID").Value;
+            Version = configuration.Attribute("Version").Value;
+            var hasResoucresAttribute = configuration.Attribute("HasResources");
             if (hasResoucresAttribute != null)
-                this.HasResources = hasResoucresAttribute.Value.ToString().ToLower() == "true";
+            {
+                HasResources = hasResoucresAttribute.Value.ToLower() == "true";
+            }
 
             Buttons = new Dictionary<string, string>();
-            foreach (XElement button in Configuration.Elements("Button"))
+            foreach (var button in configuration.Elements("Button"))
             {
-                Buttons.Add(button.Attribute("ID").Value.ToString(), button.Value.ToString());
+                Buttons.Add(button.Attribute("ID").Value, button.Value);
             }
         }
     }

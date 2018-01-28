@@ -19,15 +19,20 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace ModAPI
 {
-    public class GUI
+    [Obsolete("Use ModAPI.Interface instead!")]
+    public class Gui
     {
+        [Obsolete("Use ModAPI.Interface.Skin instead!")]
         public static GUISkin Skin;
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public class Interface
+    {
+        public static GUISkin Skin => Gui.Skin;
     }
 }

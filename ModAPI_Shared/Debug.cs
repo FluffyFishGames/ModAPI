@@ -19,11 +19,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using ModAPI.Configurations;
 
 namespace ModAPI
@@ -33,73 +30,97 @@ namespace ModAPI
         public static string Environment = "global";
         public static bool Verbose = false;
 
-        protected static string lastEnvironment = "";
-        protected static FileStream logStream;
-        protected static StreamWriter logWriter;
-        public enum Type { NOTICE, WARNING, ERROR };
+        protected static string LastEnvironment = "";
+        protected static FileStream LogStream;
+        protected static StreamWriter LogWriter;
 
-        public static void Log(string type, string message, Type logType = Type.NOTICE)
+        public enum Type
         {
-            string logFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment+".log";
-            if (logFileName.StartsWith(""+Path.DirectorySeparatorChar))
-                logFileName = logFileName.Substring(1);
-            if (Environment != lastEnvironment || logStream == null || !logStream.CanWrite)
+            Notice,
+            Warning,
+            Error
+        }
+
+        public static void Log(string type, string message, Type logType = Type.Notice)
+        {
+            var logFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment + ".log";
+            if (logFileName.StartsWith("" + Path.DirectorySeparatorChar))
             {
-                if (logStream != null)
+                logFileName = logFileName.Substring(1);
+            }
+            if (Environment != LastEnvironment || LogStream == null || !LogStream.CanWrite)
+            {
+                if (LogStream != null)
                 {
                     try
                     {
-                        logStream.Close();
+                        LogStream.Close();
                     }
-                    catch (Exception ex) {}
+                    catch (Exception ex)
+                    {
+                    }
                 }
-                if (System.IO.File.Exists(logFileName))
+                if (File.Exists(logFileName))
                 {
-                    string directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
+                    var directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
                     if (Path.GetFileName(logFileName) != logFileName)
+                    {
                         directory = Path.GetDirectoryName(logFileName) + Path.DirectorySeparatorChar;
-                    List<string> oldLogs = (Directory.GetFiles(directory, Environment + ".*.log")).ToList();
+                    }
+                    var oldLogs = (Directory.GetFiles(directory, Environment + ".*.log")).ToList();
                     oldLogs.Sort();
                     oldLogs.Reverse();
-                    foreach (string oldLog in oldLogs)
+                    foreach (var oldLog in oldLogs)
                     {
                         try
                         {
-                            string fileName = Path.GetFileNameWithoutExtension(oldLog);
-                            int num = int.Parse(fileName.Substring(Environment.Length + 1));
+                            var fileName = Path.GetFileNameWithoutExtension(oldLog);
+                            var num = int.Parse(fileName.Substring(Environment.Length + 1));
                             if (num < 5)
+                            {
                                 File.Move(oldLog, Path.GetDirectoryName(oldLog) + Path.DirectorySeparatorChar + Environment + "." + (num + 1) + ".log");
+                            }
                             else
+                            {
                                 File.Delete(oldLog);
+                            }
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex)
+                        {
+                        }
                     }
 
                     File.Move(logFileName, directory + Environment + ".0.log");
                 }
-                
-                logStream = new FileStream(logFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-                logWriter = new StreamWriter(logStream);
-                lastEnvironment = Environment;
+
+                LogStream = new FileStream(logFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
+                LogWriter = new StreamWriter(LogStream);
+                LastEnvironment = Environment;
             }
 
-            if (logWriter != null)
+            if (LogWriter != null)
             {
-                string prefix = "";
-                if (logType == Type.WARNING)
+                var prefix = "";
+                if (logType == Type.Warning)
+                {
                     prefix = "WARNING: ";
-                if (logType == Type.ERROR)
+                }
+                if (logType == Type.Error)
+                {
                     prefix = "ERROR: ";
-                string msg = "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] (" + type + "): " + prefix + message;
+                }
+                var msg = "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] (" + type + "): " + prefix + message;
                 if (Verbose)
-                    System.Console.WriteLine(msg);
-                logWriter.WriteLine(msg);
-                logWriter.Flush();
-                logStream.Flush();
+                {
+                    Console.WriteLine(msg);
+                }
+                LogWriter.WriteLine(msg);
+                LogWriter.Flush();
+                LogStream.Flush();
             }
         }
 
-        public static void Log(string type, object message, Type logType = Type.NOTICE)
+        public static void Log(string type, object message, Type logType = Type.Notice)
         {
             Log(type, message.ToString());
         }

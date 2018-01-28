@@ -20,27 +20,10 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using ModAPI;
-using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
 using ModAPI.Data;
-using ModAPI.Components;
+using ModAPI.Data.Models;
 
 public class ModProjectButtonViewModel : INotifyPropertyChanged
 {
@@ -49,10 +32,10 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
 
     public ModProjectButtonViewModel(ModProjectViewModel projectViewModel, ModProject.Button button)
     {
-        this.ProjectViewModel = projectViewModel;
-        this.Button = button;
-        this.Button.Name.OnChange += NameChanged;
-        this.Button.Description.OnChange += DescriptionChanged;
+        ProjectViewModel = projectViewModel;
+        Button = button;
+        Button.Name.OnChange += NameChanged;
+        Button.Description.OnChange += DescriptionChanged;
 
         CheckForErrors();
     }
@@ -69,83 +52,63 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         CheckForErrors();
     }
 
-    protected Visibility _IDError = Visibility.Collapsed;
+    protected Visibility _IdError = Visibility.Collapsed;
     protected Visibility _NameError = Visibility.Collapsed;
     protected Visibility _Error = Visibility.Collapsed;
 
-    public Visibility NameError
-    {
-        get
-        {
-            return _NameError;
-        }
-    }
-
-    public Visibility Error
-    {
-        get
-        {
-            return _Error;
-        }
-    }
-
-    public Visibility IDError
-    {
-        get
-        {
-            return _IDError;
-        }
-    }
+    public Visibility NameError => _NameError;
+    public Visibility Error => _Error;
+    public Visibility IdError => _IdError;
 
     public void CheckForErrors()
     {
         _NameError = Visibility.Collapsed;
 
-        foreach (string LangCode in ProjectViewModel.Project.Languages)
+        foreach (var langCode in ProjectViewModel.Project.Languages)
         {
-            if (Button.Name.GetString(LangCode).Trim() == "")
+            if (Button.Name.GetString(langCode).Trim() == "")
+            {
                 _NameError = Visibility.Visible;
+            }
         }
 
-        _IDError = Visibility.Collapsed;
+        _IdError = Visibility.Collapsed;
 
-        foreach (ModProject.Button button in ProjectViewModel.Project.Buttons)
-        {   
-            if (button != Button && button.ID == Button.ID)
-                _IDError = Visibility.Visible;
+        foreach (var button in ProjectViewModel.Project.Buttons)
+        {
+            if (button != Button && button.Id == Button.Id)
+            {
+                _IdError = Visibility.Visible;
+            }
         }
-        if (Button.ID == "")
-            _IDError = Visibility.Visible;
+        if (Button.Id == "")
+        {
+            _IdError = Visibility.Visible;
+        }
 
-        _Error = _IDError == Visibility.Visible || _NameError == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
+        _Error = IdError == Visibility.Visible || _NameError == Visibility.Visible ? Visibility.Visible : Visibility.Collapsed;
 
         OnPropertyChanged("NameError");
-        OnPropertyChanged("IDError");
+        OnPropertyChanged("IdError");
         OnPropertyChanged("Error");
         ProjectViewModel.CheckForErrors();
     }
 
-    public string ID
+    public string Id
     {
-        get
-        {
-            return Button.ID;
-        }
+        get => Button.Id;
         set
         {
-            Button.ID = value;
+            Button.Id = value;
             ProjectViewModel.Project.SaveConfiguration();
-            OnPropertyChanged("ID");
+            OnPropertyChanged("Id");
             CheckForErrors();
         }
     }
 
     public string StandardKey
     {
-        get
-        {
-            return Button.StandardKey;
-        }
+        get => Button.StandardKey;
         set
         {
             Button.StandardKey = value;
@@ -155,36 +118,14 @@ public class ModProjectButtonViewModel : INotifyPropertyChanged
         }
     }
 
-
-    public MultilingualValue Name
-    {
-        get
-        {
-            return Button.Name;
-        }
-    }
-
-    public MultilingualValue Description
-    {
-        get
-        {
-            return Button.Description;
-        }
-    }
-
+    public MultilingualValue Name => Button.Name;
+    public MultilingualValue Description => Button.Description;
     public event PropertyChangedEventHandler PropertyChanged;
 
     protected internal void OnPropertyChanged(string propertyname)
     {
-        if (PropertyChanged != null)
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
 
-    public ObservableCollection<string> Languages
-    {
-        get
-        {
-            return ProjectViewModel.Languages;
-        }
-    }
+    public ObservableCollection<string> Languages => ProjectViewModel.Languages;
 }

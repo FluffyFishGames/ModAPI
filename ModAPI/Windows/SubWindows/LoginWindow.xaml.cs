@@ -18,24 +18,8 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Threading;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using Ionic.Zip;
+using ModAPI.Utils;
 
 namespace ModAPI.Windows.SubWindows
 {
@@ -44,9 +28,7 @@ namespace ModAPI.Windows.SubWindows
     /// </summary>
     public partial class LoginWindow : BaseSubWindow
     {
-        
         public LoginWindow()
-            : base()
         {
             InitializeComponent();
         }
@@ -56,19 +38,20 @@ namespace ModAPI.Windows.SubWindows
         {
             InitializeComponent();
             if (showError)
-                Error.Visibility = System.Windows.Visibility.Visible;
+            {
+                Error.Visibility = Visibility.Visible;
+            }
         }
-
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            ModAPI.Utils.WebService.Login(this.Username.Text, this.Password.Password);
-            this.Close();
+            WebService.Login(Username.Text, Password.Password);
+            Close();
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

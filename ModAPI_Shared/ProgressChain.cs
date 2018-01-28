@@ -18,91 +18,85 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModAPI
 {
     public class ProgressChain
     {
         public delegate void TaskMethod(ProgressHandler handler);
+
         public delegate void Complete();
+
         public delegate void Change();
 
-        public float Progress = 0f;
+        public float Progress;
         public Complete OnComplete;
         public Change OnChange;
         protected List<Task> Tasks = new List<Task>();
-        protected int currentTask = 0;
-        protected float overallWeight = 0f;
+        protected int CurrentTask;
+        protected float OverallWeight;
 
         public void AddTask(TaskMethod task, float weight)
         {
             Tasks.Add(new Task(this, weight, task));
-            overallWeight += weight;
+            OverallWeight += weight;
         }
 
         protected void ProgressChanged()
         {
-            float progress = 0f;
-            foreach (Task t in Tasks)
+            var progress = 0f;
+            foreach (var t in Tasks)
             {
-                progress += (t.Progress.Progress) * (t.Weight / overallWeight);
+                progress += (t.Progress.Progress) * (t.Weight / OverallWeight);
             }
             Progress = progress;
-            if (OnChange != null)
-                OnChange();
+            OnChange?.Invoke();
             if (Progress == 100f && OnComplete != null)
+            {
                 OnComplete();
+            }
         }
 
         public void Start()
         {
             Progress = 0;
-            currentTask = -1;
+            CurrentTask = -1;
             Next();
         }
 
         protected void Next()
         {
-            currentTask += 1;
-            if (Tasks.Count <= currentTask)
+            CurrentTask += 1;
+            if (Tasks.Count <= CurrentTask)
             {
-                if (OnComplete != null)
-                    OnComplete();
+                OnComplete?.Invoke();
             }
             else
-                Tasks[currentTask].Start();
+            {
+                Tasks[CurrentTask].Start();
+            }
         }
 
         public class Task
         {
             public ProgressHandler Progress;
-            public ProgressChain.TaskMethod Method;
-            public float Weight = 0f;
-            protected ProgressChain chain;
+            public TaskMethod Method;
+            public float Weight;
+            protected ProgressChain Chain;
 
             public void Start()
             {
-                this.Method(this.Progress);
+                Method(Progress);
             }
 
-            public Task(ProgressChain chain, float weight, ProgressChain.TaskMethod method)
+            public Task(ProgressChain chain, float weight, TaskMethod method)
             {
-                this.Weight = weight;
-                this.chain = chain;
+                Weight = weight;
+                Chain = chain;
                 Progress = new ProgressHandler();
-                Progress.OnChange += (s, e) => 
-                {
-                    chain.ProgressChanged();
-                };
-                Progress.OnComplete += (s, e) =>
-                {
-                    chain.Next();
-                };
+                Progress.OnChange += (s, e) => { chain.ProgressChanged(); };
+                Progress.OnComplete += (s, e) => { chain.Next(); };
                 Method = method;
             }
         }

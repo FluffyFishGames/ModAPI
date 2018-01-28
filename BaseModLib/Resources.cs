@@ -18,37 +18,39 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using ModAPI.Attributes;
 using UnityEngine;
 
 namespace ModAPI
 {
     public class Resources
     {
-        [ModAPI.Attributes.AddModname]
+        [AddModname]
         public static Texture2D GetTexture(string resourceIdentifier)
         {
             return null;
         }
 
-        public static Texture2D GetTexture(string resourceIdentifier, string ModID)
+        public static Texture2D GetTexture(string resourceIdentifier, string modId)
         {
-            string key = ModID + "::" + resourceIdentifier.ToLower();
+            var key = modId + "::" + resourceIdentifier.ToLower();
             if (TextureResources.ContainsKey(key))
+            {
                 return TextureResources[key];
+            }
             return null;
         }
 
-        protected static Dictionary<string, Texture2D> TextureResources = new Dictionary<string,Texture2D>();
+        protected static Dictionary<string, Texture2D> TextureResources = new Dictionary<string, Texture2D>();
 
         internal static void Add(Mod mod, string path, Texture2D texture)
         {
-            string key = mod.ID + "::" + path.ToLower();
+            var key = mod.Id + "::" + path.ToLower();
             if (!TextureResources.ContainsKey(key))
+            {
                 TextureResources.Add(key, texture);
+            }
         }
     }
 }

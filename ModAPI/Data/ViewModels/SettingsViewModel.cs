@@ -18,36 +18,12 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using ModAPI;
+using System.Linq;
 using ModAPI.Configurations;
-using System.Xml.Linq;
-using ModAPI.Data.Models;
-using ModAPI.Data;
-using ModAPI.Components;
 
 public class SettingsViewModel : INotifyPropertyChanged
 {
-    public SettingsViewModel()
-    {
-    }
-
     public void Changed()
     {
         OnPropertyChanged("Language");
@@ -58,10 +34,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public int Language
     {
-        get
-        {
-            return Configuration.Languages.Keys.ToList().IndexOf(Configuration.CurrentLanguage.Key.ToLower());
-        }
+        get => Configuration.Languages.Keys.ToList().IndexOf(Configuration.CurrentLanguage.Key.ToLower());
         set
         {
             Configuration.ChangeLanguage(Configuration.Languages.Keys.ToList()[value]);
@@ -72,23 +45,17 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public bool UpdateVersionsTable
     {
-        get
-        {
-            return Configuration.GetString("UpdateVersions") == "true";
-        }
+        get => Configuration.GetString("UpdateVersions") == "true";
         set
         {
-            Configuration.SetString("UpdateVersions", value?"true":"false", true);
+            Configuration.SetString("UpdateVersions", value ? "true" : "false", true);
             Configuration.Save();
         }
     }
 
     public bool AutoUpdate
     {
-        get
-        {
-            return Configuration.GetString("AutoUpdate") == "true";
-        }
+        get => Configuration.GetString("AutoUpdate") == "true";
         set
         {
             Configuration.SetString("AutoUpdate", value ? "true" : "false", true);
@@ -97,13 +64,10 @@ public class SettingsViewModel : INotifyPropertyChanged
     }
     public bool UseSteam
     {
-        get
-        {
-            return Configuration.GetString("UseSteam") == "true";
-        }
+        get => Configuration.GetString("UseSteam") == "true";
         set
         {
-            Configuration.SetString("UseSteam", value?"true":"false", true);
+            Configuration.SetString("UseSteam", value ? "true" : "false", true);
             Configuration.Save();
         }
     }
@@ -112,8 +76,6 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     protected internal void OnPropertyChanged(string propertyname)
     {
-        if (PropertyChanged != null)
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
     }
-
 }

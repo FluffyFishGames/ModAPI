@@ -18,24 +18,21 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using ModAPI.Attributes;
 
 namespace ModAPI
 {
     public class CurrentMod
     {
-        [ModAPI.Attributes.AddModname]
+        [AddModname]
         public string GetName()
         {
             return "";
         }
 
-        protected string GetID(string ModID)
+        protected string GetId(string modId)
         {
-            return ModID;
+            return modId;
         }
     }
 }

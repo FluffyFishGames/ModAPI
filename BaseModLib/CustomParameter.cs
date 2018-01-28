@@ -18,10 +18,8 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ModAPI
 {
@@ -33,43 +31,51 @@ namespace ModAPI
 
         public CustomParameter(ParameterType type)
         {
-            this.ParameterType = type;
+            ParameterType = type;
         }
 
-        public CustomParameter(List<string> Possible)
+        public CustomParameter(List<string> possible)
         {
-            for (int i = 0; i < Possible.Count; i++)
-                Possible[i] = Possible[i].ToLower();
-            this.Possible = Possible;
+            for (var i = 0; i < possible.Count; i++)
+            {
+                possible[i] = possible[i].ToLower();
+            }
+            Possible = possible;
         }
 
-        public CustomParameter(string[] Possible)
+        public CustomParameter(string[] possible)
         {
-            for (int i = 0; i < Possible.Length; i++)
-                Possible[i] = Possible[i].ToLower();
-            this.Possible = Possible.ToList();
+            for (var i = 0; i < possible.Length; i++)
+            {
+                possible[i] = possible[i].ToLower();
+            }
+            Possible = possible.ToList();
         }
 
-        public CustomParameter(ParameterType type, bool Required)
+        public CustomParameter(ParameterType type, bool required)
         {
-            this.ParameterType = type;
-            this.Required = Required;
+            ParameterType = type;
+            Required = required;
         }
 
-        public CustomParameter(List<string> Possible, bool Required)
+        public CustomParameter(List<string> possible, bool required)
         {
-            for (int i = 0; i < Possible.Count; i++)
-                Possible[i] = Possible[i].ToLower();
-            this.Possible = Possible;
-            this.Required = Required;
+            for (var i = 0; i < possible.Count; i++)
+            {
+                possible[i] = possible[i].ToLower();
+            }
+            Possible = possible;
+            Required = required;
         }
 
-        public CustomParameter(string[] Possible, bool Required)
+        public CustomParameter(string[] possible, bool required)
         {
-            for (int i = 0; i < Possible.Length; i++)
-                Possible[i] = Possible[i].ToLower();
-            this.Possible = Possible.ToList();
-            this.Required = Required;
+            for (var i = 0; i < possible.Length; i++)
+            {
+                possible[i] = possible[i].ToLower();
+            }
+            Possible = possible.ToList();
+            Required = required;
         }
     }
 }

@@ -19,54 +19,51 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Diagnostics;
 
 namespace Updater
 {
     class Updater
     {
-
-        public static string rootPath;
-        public static string updatePath;
+        public static string RootPath;
+        public static string UpdatePath;
 
         public static void Update()
         {
-
-            rootPath = Path.GetFullPath(".");
-            updatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
-            int c = 100;
+            RootPath = Path.GetFullPath(".");
+            UpdatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
+            var c = 100;
             while (c > 0)
             {
                 Thread.Sleep(500);
-                Process[] ps = Process.GetProcesses();
-                bool breakit = true;
-                foreach (Process p in ps)
+                var ps = Process.GetProcesses();
+                var breakit = true;
+                foreach (var p in ps)
                 {
                     try
                     {
                         if (p.ProcessName == "ModAPI")
+                        {
                             breakit = false;
+                        }
                     }
                     catch (Exception e)
                     {
-
                     }
                 }
                 if (breakit)
+                {
                     break;
+                }
                 c--;
             }
 
-            if (c > 0 && Directory.Exists(updatePath))
+            if (c > 0 && Directory.Exists(UpdatePath))
             {
-                CopyFiles(updatePath);
-                Process p = new Process();
+                CopyFiles(UpdatePath);
+                var p = new Process();
                 p.StartInfo.FileName = "ModAPI.exe";
                 p.StartInfo.Verb = "runas";
                 p.Start();
@@ -75,12 +72,12 @@ namespace Updater
 
         static void CopyFiles(string directory, string b = "")
         {
-            string[] files = Directory.GetFiles(directory);
-            foreach (string file in files)
+            var files = Directory.GetFiles(directory);
+            foreach (var file in files)
             {
                 try
                 {
-                    File.Copy(file, rootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
+                    File.Copy(file, RootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
                     File.Delete(file);
                 }
                 catch (Exception e)
@@ -88,8 +85,8 @@ namespace Updater
                     //System.Console.WriteLine(e);
                 }
             }
-            string[] directories = Directory.GetDirectories(directory);
-            foreach (string dir in directories)
+            var directories = Directory.GetDirectories(directory);
+            foreach (var dir in directories)
             {
                 CopyFiles(directory + Path.DirectorySeparatorChar + Path.GetFileName(dir), b + Path.DirectorySeparatorChar + Path.GetFileName(dir) + Path.DirectorySeparatorChar);
                 Directory.Delete(dir);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<versions>
+<VersionsData>
   <files>
     <file>%fileBase%_data/Managed/Assembly-CSharp-firstpass.dll</file>
     <file>%fileBase%_data/Managed/Assembly-CSharp.dll</file>
@@ -72,4 +72,4 @@
   <version id="0.26d">
     <checksum>1A79A08133CAFCEBBDB692D8B287C3B4C4FB64D57A01E3F0BE57690403624DA2B83F3B08A82E64260D0C8684344D6784F7BC1431A46A8EF7A3DC73AC01484769</checksum>
   </version>
-</versions>
+</VersionsData>

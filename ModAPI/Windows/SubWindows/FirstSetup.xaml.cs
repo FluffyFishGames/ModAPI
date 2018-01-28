@@ -19,18 +19,8 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ModAPI.Configurations;
 
 namespace ModAPI.Windows.SubWindows
 {
@@ -40,7 +30,6 @@ namespace ModAPI.Windows.SubWindows
     public partial class FirstSetup : BaseSubWindow
     {
         public FirstSetup()
-            : base()
         {
             InitializeComponent();
             Check();
@@ -59,16 +48,16 @@ namespace ModAPI.Windows.SubWindows
         {
         }
 
-        protected bool Completed = false;
+        protected bool Completed;
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             Completed = true;
-            Configurations.Configuration.SetString("UseSteam", (bool)this.UseSteam.IsChecked?"true":"false", true);
-            Configurations.Configuration.SetString("AutoUpdate", (bool)this.AutoUpdate.IsChecked ? "true" : "false", true);
-            Configurations.Configuration.SetString("UpdateVersions", (bool)this.UseAutoUpdateVersions.IsChecked ? "true" : "false", true);
-            Configurations.Configuration.SetString("SetupDone", "true", true);
-            Configurations.Configuration.Save();
+            Configuration.SetString("UseSteam", (bool) UseSteam.IsChecked ? "true" : "false", true);
+            Configuration.SetString("AutoUpdate", (bool) AutoUpdate.IsChecked ? "true" : "false", true);
+            Configuration.SetString("UpdateVersions", (bool) UseAutoUpdateVersions.IsChecked ? "true" : "false", true);
+            Configuration.SetString("SetupDone", "true", true);
+            Configuration.Save();
             Close();
             MainWindow.Instance.FirstSetupDone();
         }
@@ -77,7 +66,9 @@ namespace ModAPI.Windows.SubWindows
         {
             base.OnClosed(e);
             if (!Completed)
+            {
                 Environment.Exit(0);
+            }
         }
     }
 }

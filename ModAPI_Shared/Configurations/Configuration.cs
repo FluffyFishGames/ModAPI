@@ -20,58 +20,73 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Xml.Linq;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Markup;
-using System.Threading;
 using System.Diagnostics;
-using System.Reflection;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Xaml;
+using System.Xml;
+using System.Xml.Linq;
+using ModAPI.Utils;
+using Path = System.IO.Path;
+using XamlReader = System.Windows.Markup.XamlReader;
 
 namespace ModAPI.Configurations
 {
     public class Configuration
     {
         public static string ConfigurationFile = "resources" + Path.DirectorySeparatorChar + "Configuration.xml";
-        public enum ResultCode { OK, ERROR };
-        public enum ErrorCode { CONFIGURATION_NOT_FOUND, MALFORMED_CONFIGURATION };
-        
+
+        public enum ResultCode
+        {
+            Ok,
+            ERROR
+        }
+
+        public enum ErrorCode
+        {
+            ConfigurationNotFound,
+            MalformedConfiguration
+        }
+
         public static string ErrorString = "";
         public static ErrorCode Error;
         public static string RootPath = "";
+
         public delegate void LanguageChanged();
+
         public static LanguageChanged OnLanguageChanged;
         public static Dictionary<string, Language> Languages = new Dictionary<string, Language>();
         public static Dictionary<string, GameConfiguration> Games = new Dictionary<string, GameConfiguration>();
         public static string CurrentGame = "";
         public static Language CurrentLanguage;
 
-        protected static Dictionary<string, string> paths = new Dictionary<string, string>();
-        protected static Dictionary<string, string> userPaths = new Dictionary<string, string>();
-        protected static ProgressHandler progressHandler;
-        protected static Dictionary<string, ConfigData> configData = new Dictionary<string, ConfigData>();
-        protected static Dictionary<string, ConfigData> userConfigData = new Dictionary<string, ConfigData>();
-        
+        protected static Dictionary<string, string> Paths = new Dictionary<string, string>();
+        protected static Dictionary<string, string> UserPaths = new Dictionary<string, string>();
+        protected static ProgressHandler ProgressHandler;
+        protected static Dictionary<string, ConfigData> ConfigDataInst = new Dictionary<string, ConfigData>();
+        protected static Dictionary<string, ConfigData> UserConfigData = new Dictionary<string, ConfigData>();
+
         static void ChangeProgress(float progress)
         {
-            if (progressHandler != null)
-                progressHandler.Progress = progress;
+            if (ProgressHandler != null)
+            {
+                ProgressHandler.Progress = progress;
+            }
         }
 
         public static string GetString(string key)
         {
             key = key.ToLower();
-            if (userConfigData.ContainsKey(key))
+            if (UserConfigData.ContainsKey(key))
             {
-                return userConfigData[key].StringValue;
-            } 
-            if (configData.ContainsKey(key))
+                return UserConfigData[key].StringValue;
+            }
+            if (ConfigDataInst.ContainsKey(key))
             {
-                return configData[key].StringValue;
+                return ConfigDataInst[key].StringValue;
             }
             Debug.Log("Configuration", "Configuration key \"" + key + "\" does not exist..");
             return "";
@@ -80,13 +95,13 @@ namespace ModAPI.Configurations
         public static int GetInt(string key)
         {
             key = key.ToLower();
-            if (userConfigData.ContainsKey(key))
+            if (UserConfigData.ContainsKey(key))
             {
-                return userConfigData[key].IntValue;
+                return UserConfigData[key].IntValue;
             }
-            if (configData.ContainsKey(key))
+            if (ConfigDataInst.ContainsKey(key))
             {
-                return configData[key].IntValue;
+                return ConfigDataInst[key].IntValue;
             }
             Debug.Log("Configuration", "Configuration key \"" + key + "\" does not exist..");
             return 0;
@@ -97,28 +112,32 @@ namespace ModAPI.Configurations
             key = key.ToLower();
             if (userConfig)
             {
-                if (userConfigData.ContainsKey(key))
+                if (UserConfigData.ContainsKey(key))
                 {
-                    userConfigData[key].StringValue = value;
+                    UserConfigData[key].StringValue = value;
                 }
                 else
                 {
-                    ConfigData dat = new ConfigData();
-                    dat.StringValue = value;
-                    userConfigData.Add(key, dat);
+                    var dat = new ConfigData
+                    {
+                        StringValue = value
+                    };
+                    UserConfigData.Add(key, dat);
                 }
             }
             else
             {
-                if (configData.ContainsKey(key))
+                if (ConfigDataInst.ContainsKey(key))
                 {
-                    configData[key].StringValue = value;
+                    ConfigDataInst[key].StringValue = value;
                 }
                 else
                 {
-                    ConfigData dat = new ConfigData();
-                    dat.StringValue = value;
-                    configData.Add(key, dat);
+                    var dat = new ConfigData
+                    {
+                        StringValue = value
+                    };
+                    ConfigDataInst.Add(key, dat);
                 }
             }
         }
@@ -128,45 +147,50 @@ namespace ModAPI.Configurations
             key = key.ToLower();
             if (userConfig)
             {
-                if (userConfigData.ContainsKey(key))
+                if (UserConfigData.ContainsKey(key))
                 {
-                    userConfigData[key].IntValue = value;
+                    UserConfigData[key].IntValue = value;
                 }
                 else
                 {
-                    ConfigData dat = new ConfigData();
-                    dat.IntValue = value;
-                    userConfigData.Add(key, dat);
+                    var dat = new ConfigData
+                    {
+                        IntValue = value
+                    };
+                    UserConfigData.Add(key, dat);
                 }
             }
             else
             {
-                if (configData.ContainsKey(key))
+                if (ConfigDataInst.ContainsKey(key))
                 {
-                    configData[key].IntValue = value;
+                    ConfigDataInst[key].IntValue = value;
                 }
                 else
                 {
-                    ConfigData dat = new ConfigData();
-                    dat.IntValue = value;
-                    configData.Add(key, dat);
+                    var dat = new ConfigData
+                    {
+                        IntValue = value
+                    };
+                    ConfigDataInst.Add(key, dat);
                 }
             }
         }
 
         public static void Save()
         {
-            XDocument newDocument = new XDocument();
-            XElement rootElement = new XElement("UserConfiguration");
+            var newDocument = new XDocument();
+            var rootElement = new XElement("UserConfiguration");
             newDocument.Add(rootElement);
-            foreach (KeyValuePair<string, ConfigData> kv in userConfigData)
+            foreach (var kv in UserConfigData)
             {
-                XElement element = rootElement;
-                string[] parts = kv.Key.Split(new string[] { "." }, StringSplitOptions.None);
-                for (int i = 0; i < parts.Length; i++)
+                var element = rootElement;
+                var parts = kv.Key.Split(new[] { "." }, StringSplitOptions.None);
+                for (var i = 0; i < parts.Length; i++)
                 {
-                    XElement child = element.Element(parts[i]);
-                    if (child == null) {
+                    var child = element.Element(parts[i]);
+                    if (child == null)
+                    {
                         child = new XElement(parts[i]);
                         element.Add(child);
                     }
@@ -175,14 +199,14 @@ namespace ModAPI.Configurations
                 element.Value = kv.Value.StringValue;
             }
 
-            XElement pathsElement = new XElement("Paths");
-            foreach (KeyValuePair<string, string> kv in userPaths)
+            var pathsElement = new XElement("Paths");
+            foreach (var kv in UserPaths)
             {
-                XElement element = pathsElement;
-                string[] parts = kv.Key.Split(new string[] { "." }, StringSplitOptions.None);
-                for (int i = 0; i < parts.Length; i++)
+                var element = pathsElement;
+                var parts = kv.Key.Split(new[] { "." }, StringSplitOptions.None);
+                for (var i = 0; i < parts.Length; i++)
                 {
-                    XElement child = element.Element(parts[i]);
+                    var child = element.Element(parts[i]);
                     if (child == null)
                     {
                         child = new XElement(parts[i]);
@@ -195,141 +219,143 @@ namespace ModAPI.Configurations
 
             rootElement.Add(pathsElement);
 
-            string configPath = GetPath("Configurations");
-            string userConfigFile = Path.GetFullPath(configPath + Path.DirectorySeparatorChar + "UserConfiguration.xml");
+            var configPath = GetPath("Configurations");
+            var userConfigFile = Path.GetFullPath(configPath + Path.DirectorySeparatorChar + "UserConfiguration.xml");
             newDocument.Save(userConfigFile);
         }
 
         public static ResultCode Load(ProgressHandler progressHandler = null)
         {
-            Configuration.progressHandler = progressHandler;
-            
-            string ConfigurationFileName = FindConfiguration(System.IO.Directory.GetCurrentDirectory());
-            if (ConfigurationFileName != "" && File.Exists(ConfigurationFileName))
+            ProgressHandler = progressHandler;
+
+            var configurationFileName = FindConfiguration(Directory.GetCurrentDirectory());
+            if (configurationFileName != "" && File.Exists(configurationFileName))
             {
                 try
                 {
-                    XDocument configXML = XDocument.Load(ConfigurationFileName);
-                    if (ParseGeneric(configXML) != ResultCode.OK)
+                    var configXml = XDocument.Load(configurationFileName);
+                    if (ParseGeneric(configXml) != ResultCode.Ok)
                     {
-                        Debug.Log("Configuration", "Failed parsing generic configuration file \"" + ConfigurationFileName + "\".", Debug.Type.ERROR);
+                        Debug.Log("Configuration", "Failed parsing generic configuration file \"" + configurationFileName + "\".", Debug.Type.Error);
                         return ResultCode.ERROR;
                     }
 
-                    Debug.Log("Configuration", "Generic configuration file \"" + ConfigurationFileName + "\" parsed successfully.");
+                    Debug.Log("Configuration", "Generic configuration file \"" + configurationFileName + "\" parsed successfully.");
                     ChangeProgress(15f);
 
-                    string gameConfigPath = GetPath("GameConfigurations");
+                    var gameConfigPath = GetPath("GameConfigurations");
                     if (gameConfigPath == "")
                     {
-                        Error = ErrorCode.MALFORMED_CONFIGURATION;
+                        Error = ErrorCode.MalformedConfiguration;
                         ErrorString = "GameConfigurations Path is not set.";
-                        Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
+                        Debug.Log("Configuration", ErrorString, Debug.Type.Error);
                         return ResultCode.ERROR;
                     }
                     if (GetString("Game") == "")
                     {
-                        Error = ErrorCode.MALFORMED_CONFIGURATION;
+                        Error = ErrorCode.MalformedConfiguration;
                         ErrorString = "No game defined in configuration.";
-                        Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
+                        Debug.Log("Configuration", ErrorString, Debug.Type.Error);
                         return ResultCode.ERROR;
                     }
 
-                    string[] gameConfigFiles = Directory.GetFiles(gameConfigPath, "*.xml");
-                    foreach (string gameConfigFile in gameConfigFiles)
+                    var gameConfigFiles = Directory.GetFiles(gameConfigPath, "*.xml");
+                    foreach (var gameConfigFile in gameConfigFiles)
                     {
                         try
                         {
-                            XDocument gameConfig = XDocument.Load(gameConfigFile);
-                            GameConfiguration gameConfiguration = new GameConfiguration(gameConfig);
-                            Games.Add(gameConfiguration.ID, gameConfiguration);
-                            Debug.Log("Configuration", "Game configuration file for \"" + gameConfiguration.ID + "\" parsed successfully.");
-                    
+                            var gameConfig = XDocument.Load(gameConfigFile);
+                            var gameConfiguration = new GameConfiguration(gameConfig);
+                            Games.Add(gameConfiguration.Id, gameConfiguration);
+                            Debug.Log("Configuration", "Game configuration file for \"" + gameConfiguration.Id + "\" parsed successfully.");
                         }
-                        catch (System.Xml.XmlException e)
+                        catch (XmlException e)
                         {
-                            Debug.Log("Configuration", "The file \"" + gameConfigFile + "\" could not be parsed. Exception: " + e.ToString(), Debug.Type.WARNING);
+                            Debug.Log("Configuration", "The file \"" + gameConfigFile + "\" could not be parsed. Exception: " + e, Debug.Type.Warning);
                         }
                         catch (Exception e)
                         {
-                            Debug.Log("Configuration", "The file \"" + gameConfigFile + "\" could not be parsed. Unexpected exception: " + e.ToString(), Debug.Type.WARNING);
+                            Debug.Log("Configuration", "The file \"" + gameConfigFile + "\" could not be parsed. Unexpected exception: " + e, Debug.Type.Warning);
                         }
                     }
                     ChangeProgress(30f);
 
                     if (!Games.ContainsKey(GetString("Game")))
                     {
-                        Error = ErrorCode.MALFORMED_CONFIGURATION;
+                        Error = ErrorCode.MalformedConfiguration;
                         ErrorString = "The game configuration for \"" + GetString("Game") + "\" couldn't be found.";
-                        Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
+                        Debug.Log("Configuration", ErrorString, Debug.Type.Error);
                         return ResultCode.ERROR;
                     }
 
                     CurrentGame = GetString("Game");
                     Debug.Log("Configuration", "Selected the Game \"" + GetString("Game") + "\" successfully.");
 
-                    string configPath = GetPath("Configurations");
+                    var configPath = GetPath("Configurations");
                     if (configPath == "")
                     {
-                        Debug.Log("Configuration", "Can't load the UserConfiguration.xml because the Configuration Path is missing.", Debug.Type.WARNING);
+                        Debug.Log("Configuration", "Can't load the UserConfiguration.xml because the Configuration Path is missing.", Debug.Type.Warning);
                     }
                     else
                     {
-                        string userConfigFile = Path.GetFullPath(configPath + Path.DirectorySeparatorChar + "UserConfiguration.xml");
+                        var userConfigFile = Path.GetFullPath(configPath + Path.DirectorySeparatorChar + "UserConfiguration.xml");
                         if (File.Exists(userConfigFile))
                         {
                             try
                             {
-                                XDocument userConfigXML = XDocument.Load(userConfigFile);
-                                if (ParseGeneric(userConfigXML, true) != ResultCode.OK)
-                                    Debug.Log("Configuration", "Couldn't load the UserConfiguration.xml.", Debug.Type.WARNING);
+                                var userConfigXml = XDocument.Load(userConfigFile);
+                                if (ParseGeneric(userConfigXml, true) != ResultCode.Ok)
+                                {
+                                    Debug.Log("Configuration", "Couldn't load the UserConfiguration.xml.", Debug.Type.Warning);
+                                }
                                 else
+                                {
                                     Debug.Log("Configuration", "Generic configuration file \"" + userConfigFile + "\" parsed successfully.");
+                                }
                             }
-                            catch (System.Xml.XmlException e)
+                            catch (XmlException e)
                             {
-                                Debug.Log("Configuration", "The file \"" + userConfigFile + "\" could not be parsed. Exception: " + e.ToString(), Debug.Type.WARNING);
+                                Debug.Log("Configuration", "The file \"" + userConfigFile + "\" could not be parsed. Exception: " + e, Debug.Type.Warning);
                             }
                             catch (Exception e)
                             {
-                                Debug.Log("Configuration", "The file \"" + userConfigFile + "\" could not be parsed. Unexpected exception: " + e.ToString(), Debug.Type.WARNING);
+                                Debug.Log("Configuration", "The file \"" + userConfigFile + "\" could not be parsed. Unexpected exception: " + e, Debug.Type.Warning);
                             }
                         }
                         else
                         {
-                            Debug.Log("Configuration", "Couldn't load the UserConfiguration.xml because it's missing.", Debug.Type.WARNING);
+                            Debug.Log("Configuration", "Couldn't load the UserConfiguration.xml because it's missing.", Debug.Type.Warning);
                         }
                     }
                     ChangeProgress(50f);
 
-                    if (ParseLanguages() != ResultCode.OK)
+                    if (ParseLanguages() != ResultCode.Ok)
+                    {
                         return ResultCode.ERROR;
-                    
+                    }
+
                     ChangeProgress(100f);
-                    return ResultCode.OK;
+                    return ResultCode.Ok;
                 }
-                catch (System.Xml.XmlException ex)
+                catch (XmlException ex)
                 {
-                    Error = ErrorCode.MALFORMED_CONFIGURATION;
-                    ErrorString = "The file \"" + ConfigurationFile + "\" could not be parsed. Exception: "+ex.ToString();
-                    Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
+                    Error = ErrorCode.MalformedConfiguration;
+                    ErrorString = "The file \"" + ConfigurationFile + "\" could not be parsed. Exception: " + ex;
+                    Debug.Log("Configuration", ErrorString, Debug.Type.Error);
                     return ResultCode.ERROR;
                 }
                 catch (Exception ex)
                 {
-                    Error = ErrorCode.MALFORMED_CONFIGURATION;
-                    ErrorString = "The file \"" + ConfigurationFile + "\" could not be parsed. Unexpected exception: " + ex.ToString();
-                    Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
+                    Error = ErrorCode.MalformedConfiguration;
+                    ErrorString = "The file \"" + ConfigurationFile + "\" could not be parsed. Unexpected exception: " + ex;
+                    Debug.Log("Configuration", ErrorString, Debug.Type.Error);
                     return ResultCode.ERROR;
                 }
             }
-            else
-            {
-                Error = ErrorCode.CONFIGURATION_NOT_FOUND;
-                ErrorString = "Could not find \"" + ConfigurationFile + "\".";
-                Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
-                return ResultCode.ERROR;
-            }
+            Error = ErrorCode.ConfigurationNotFound;
+            ErrorString = "Could not find \"" + ConfigurationFile + "\".";
+            Debug.Log("Configuration", ErrorString, Debug.Type.Error);
+            return ResultCode.ERROR;
         }
 
         public static void ChangeLanguage(string langCode)
@@ -340,105 +366,120 @@ namespace ModAPI.Configurations
                 CurrentLanguage = Languages[langCode];
                 Debug.Log("Configuration", "Language changed to " + CurrentLanguage.Key);
                 Thread.CurrentThread.CurrentCulture = new CultureInfo(Languages[langCode].Get("Locale"));
-                if (OnLanguageChanged != null)
-                    OnLanguageChanged();
-
+                OnLanguageChanged?.Invoke();
             }
         }
 
         static ResultCode ParseGeneric(XDocument document, bool userConfig = false)
         {
-            if (document.Root == null) return ResultCode.OK;
-            XElement paths = document.Root.Element("Paths");
+            if (document.Root == null)
+            {
+                return ResultCode.Ok;
+            }
+            var paths = document.Root.Element("Paths");
             if (paths != null)
             {
-                foreach (XElement path in paths.Elements())
+                foreach (var path in paths.Elements())
                 {
                     ParsePath(path, userConfig);
                 }
             }
 
-            foreach (XElement element in document.Root.Elements())
+            foreach (var element in document.Root.Elements())
             {
                 if (element.Name.LocalName.ToLower() != "paths")
                 {
                     if (!element.HasElements)
+                    {
                         SetString(element.Name.LocalName, element.Value.Trim(), userConfig);
+                    }
                     ParseSub(element, element.Name.LocalName + ".", userConfig);
                 }
             }
-            return ResultCode.OK;
+            return ResultCode.Ok;
         }
 
         static void ParseSub(XElement parent, string prefix, bool userConfig = false)
         {
-            foreach (XElement element in parent.Elements())
+            foreach (var element in parent.Elements())
             {
                 if (!element.HasElements)
+                {
                     SetString(prefix + element.Name.LocalName, element.Value.Trim(), userConfig);
+                }
                 ParseSub(element, prefix + element.Name.LocalName + ".", userConfig);
             }
         }
 
         static void ParsePath(XElement element, bool userConfig = false, string pre = "")
         {
-            string pathName = pre + element.Name.LocalName.ToLower();
+            var pathName = pre + element.Name.LocalName.ToLower();
             if (element.HasElements)
             {
-                foreach (XElement sub in element.Elements())
+                foreach (var sub in element.Elements())
                 {
                     ParsePath(sub, userConfig, pathName + ".");
                 }
-            } 
-            else 
+            }
+            else
             {
-                string path = element.Value.ToString();
+                var path = element.Value;
                 if (userConfig)
                 {
-                    if (!userPaths.ContainsKey(pathName))
-                        userPaths.Add(pathName, path);
+                    if (!UserPaths.ContainsKey(pathName))
+                    {
+                        UserPaths.Add(pathName, path);
+                    }
                     else
-                        userPaths[pathName] = path;
+                    {
+                        UserPaths[pathName] = path;
+                    }
                 }
                 else
                 {
-                    if (!paths.ContainsKey(pathName))
-                        paths.Add(pathName, path);
+                    if (!Paths.ContainsKey(pathName))
+                    {
+                        Paths.Add(pathName, path);
+                    }
                     else
-                        paths[pathName] = path;
+                    {
+                        Paths[pathName] = path;
+                    }
                 }
 
                 if (!userConfig)
+                {
                     Directory.CreateDirectory(RootPath + Path.DirectorySeparatorChar + path);
+                }
             }
         }
 
         static ResultCode ParseLanguages()
         {
-            string languagePath = GetPath("Languages");
+            var languagePath = GetPath("Languages");
 
             if (languagePath != "" && Directory.Exists(languagePath))
             {
-                string[] langFiles = Directory.GetFiles(languagePath, "*.xaml");
+                var langFiles = Directory.GetFiles(languagePath, "*.xaml");
                 float count = langFiles.Length;
-                float done = 0f;
+                var done = 0f;
 
-                foreach (string langFile in langFiles)
+                foreach (var langFile in langFiles)
                 {
-                    string imageFile = Path.GetFullPath(languagePath + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(langFile) + ".png");
+                    var imageFile = Path.GetFullPath(languagePath + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(langFile) + ".png");
                     try
                     {
-                        FileStream fs = new FileStream(langFile, FileMode.Open);
-                        ResourceDictionary dlc = (ResourceDictionary)XamlReader.Load(fs);
+                        var fs = new FileStream(langFile, FileMode.Open);
+                        var dlc = (ResourceDictionary) XamlReader.Load(fs);
 
-                        Language language = new Language(dlc, imageFile);
+                        var language = new Language(dlc, imageFile);
                         if (language.Key == "")
                         {
-                            Debug.Log("Configuration", "The language file \"" + langFile + "\" could not be parsed. The LangCode Key is missing.", Debug.Type.WARNING);
+                            Debug.Log("Configuration", "The language file \"" + langFile + "\" could not be parsed. The LangCode Key is missing.", Debug.Type.Warning);
                         }
                         else
                         {
-                            string langKey = language.Key.ToLower();
+                            var langKey = language.Key.ToLower();
                             if (!Languages.ContainsKey(langKey))
                             {
                                 Languages.Add(langKey, language);
@@ -446,17 +487,17 @@ namespace ModAPI.Configurations
                             }
                             else
                             {
-                                Debug.Log("Configuration", "The language \"" + language.Key + "\" exists more than once.", Debug.Type.WARNING);
+                                Debug.Log("Configuration", "The language \"" + language.Key + "\" exists more than once.", Debug.Type.Warning);
                             }
                         }
                     }
-                    catch (System.Xaml.XamlException e)
+                    catch (XamlException e)
                     {
-                        Debug.Log("Configuration", "The language file \"" + langFile + "\" could not be parsed. Exception: " + e.ToString(), Debug.Type.WARNING);
+                        Debug.Log("Configuration", "The language file \"" + langFile + "\" could not be parsed. Exception: " + e, Debug.Type.Warning);
                     }
                     catch (Exception e)
                     {
-                        Debug.Log("Configuration", "The language file \"" + langFile + "\" could not be parsed. Unexpected exception: " + e.ToString(), Debug.Type.WARNING);
+                        Debug.Log("Configuration", "The language file \"" + langFile + "\" could not be parsed. Unexpected exception: " + e, Debug.Type.Warning);
                     }
                     done += 1f;
                     ChangeProgress(50f + (done / count) * 40f);
@@ -464,110 +505,116 @@ namespace ModAPI.Configurations
             }
             else
             {
-                Error = ErrorCode.MALFORMED_CONFIGURATION;
+                Error = ErrorCode.MalformedConfiguration;
                 ErrorString = "Could not find the languages path.";
-                Debug.Log("Configuration", ErrorString, Debug.Type.ERROR);
+                Debug.Log("Configuration", ErrorString, Debug.Type.Error);
                 return ResultCode.ERROR;
             }
 
             Debug.Log("Configuration", Languages.Count + " languages parsed successfully.");
-            CultureInfo ci = CultureInfo.InstalledUICulture;
-            string systemLangKey = ci.TwoLetterISOLanguageName.ToLower();
+            var ci = CultureInfo.InstalledUICulture;
+            var systemLangKey = ci.TwoLetterISOLanguageName.ToLower();
             if (GetString("Language") != "" && Languages.ContainsKey(GetString("Language")))
+            {
                 ChangeLanguage(GetString("Language"));
+            }
             else if (Languages.ContainsKey(systemLangKey))
+            {
                 ChangeLanguage(systemLangKey);
+            }
             else if (Languages.ContainsKey("en"))
+            {
                 ChangeLanguage("en");
+            }
             else if (Languages.Count > 0)
+            {
                 ChangeLanguage(Languages.Keys.ToArray()[0]);
+            }
             else
-                Debug.Log("Configuration", "No suitable language found.", Debug.Type.WARNING);
+            {
+                Debug.Log("Configuration", "No suitable language found.", Debug.Type.Warning);
+            }
 
-            return ResultCode.OK;
+            return ResultCode.Ok;
         }
 
         public static void SetPath(string name, string path, bool userConfig = false)
         {
-            string key = name.ToLower();
+            var key = name.ToLower();
             if (userConfig)
             {
-                if (userPaths.ContainsKey(key))
+                if (UserPaths.ContainsKey(key))
                 {
-                    userPaths[key] = path;
+                    UserPaths[key] = path;
                 }
                 else
                 {
-                    userPaths.Add(key, path);
+                    UserPaths.Add(key, path);
                 }
             }
             else
             {
-                if (paths.ContainsKey(key))
+                if (Paths.ContainsKey(key))
                 {
-                    paths[key] = path;
+                    Paths[key] = path;
                 }
                 else
                 {
-                    paths.Add(key, path);
+                    Paths.Add(key, path);
                 }
             }
         }
 
         public static string GetPath(string name)
         {
-            string key = name.ToLower();
-            if (userPaths.ContainsKey(key))
+            var key = name.ToLower();
+            if (UserPaths.ContainsKey(key))
             {
-                if (Path.IsPathRooted(userPaths[key]))
-                    return userPaths[key];
-                else
-                    return Path.GetFullPath(RootPath + Path.DirectorySeparatorChar + userPaths[key]);
+                if (Path.IsPathRooted(UserPaths[key]))
+                {
+                    return UserPaths[key];
+                }
+                return Path.GetFullPath(RootPath + Path.DirectorySeparatorChar + UserPaths[key]);
             }
 
-            if (paths.ContainsKey(key))
+            if (Paths.ContainsKey(key))
             {
-                if (Path.IsPathRooted(paths[key]))
-                    return paths[key];
-                else
-                    return Path.GetFullPath(RootPath + Path.DirectorySeparatorChar + paths[key]);
+                if (Path.IsPathRooted(Paths[key]))
+                {
+                    return Paths[key];
+                }
+                return Path.GetFullPath(RootPath + Path.DirectorySeparatorChar + Paths[key]);
             }
 
-            StackTrace stackTrace = new StackTrace();
-            MethodBase method = stackTrace.GetFrame(1).GetMethod();
-            Debug.Log("Configuration", "Path \"" + name + "\" is not present. (called by: " + method.DeclaringType.FullName + "::"+ method.Name + ")", Debug.Type.WARNING);
+            var stackTrace = new StackTrace();
+            var method = stackTrace.GetFrame(1).GetMethod();
+            Debug.Log("Configuration", "Path \"" + name + "\" is not present. (called by: " + method.DeclaringType.FullName + "::" + method.Name + ")", Debug.Type.Warning);
             return "";
         }
 
         static string FindConfiguration(string path)
         {
             path = Path.GetFullPath(path);
-            if (System.IO.File.Exists(path + Path.DirectorySeparatorChar + ConfigurationFile))
+            if (File.Exists(path + Path.DirectorySeparatorChar + ConfigurationFile))
             {
                 RootPath = path;
-                paths.Add("root", path);
+                Paths.Add("root", path);
                 return path + Path.DirectorySeparatorChar + ConfigurationFile;
             }
-            else
+            try
             {
-                try
+                var newPath = Directory.GetParent(path).FullName;
+                if (newPath != path)
                 {
-                    string newPath = Directory.GetParent(path).FullName;
-                    if (newPath != path)
-                    {
-                        return FindConfiguration(newPath);
-                    }
-                    else
-                    {
-                        Debug.Log("Configuration", "Couldn't find configuration.");
-                        return "";
-                    }
+                    return FindConfiguration(newPath);
                 }
-                catch (Exception ex)
-                {
-                    Debug.Log("Configuration", "Unexpected exception while searching for configuration: " + ex.ToString());
-                    return "";
-                }
+                Debug.Log("Configuration", "Couldn't find configuration.");
+                return "";
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("Configuration", "Unexpected exception while searching for configuration: " + ex);
+                return "";
             }
         }
 
@@ -578,21 +625,17 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    int ret = 0;
-                    try 
+                    var ret = 0;
+                    try
                     {
                         ret = int.Parse(StringValue);
                     }
                     catch (Exception e)
                     {
-
                     }
                     return ret;
                 }
-                set
-                {
-                    StringValue = value + "";
-                }
+                set => StringValue = value + "";
             }
         }
 
@@ -604,16 +647,16 @@ namespace ModAPI.Configurations
 
             public string Get(string key)
             {
-                if (this.Resource.Contains(key))
+                if (Resource.Contains(key))
                 {
-                    return this.Resource[key] as String;
+                    return Resource[key] as String;
                 }
                 return "";
             }
 
             public Language(ResourceDictionary resource, string imageFile)
             {
-                this.Resource = resource;
+                Resource = resource;
 
                 Key = Get("LangCode");
                 if (Key != "")
@@ -623,31 +666,30 @@ namespace ModAPI.Configurations
                         try
                         {
                             ImageStream = new MemoryStream();
-                            FileStream stream = new FileStream(imageFile, FileMode.Open);
+                            var stream = new FileStream(imageFile, FileMode.Open);
                             ImageStream.SetLength(stream.Length);
-                            stream.Read(ImageStream.GetBuffer(), 0, (int)stream.Length);
+                            stream.Read(ImageStream.GetBuffer(), 0, (int) stream.Length);
                             ImageStream.Flush();
                             stream.Close();
                             Debug.Log("Language", "Image file \"" + imageFile + "\" loaded for language \"" + Key + "\".");
                         }
                         catch (Exception e)
                         {
-                            Debug.Log("Language", "Could not read image file \"" + imageFile + "\" for language \"" + Key + "\".", Debug.Type.WARNING);
+                            Debug.Log("Language", "Could not read image file \"" + imageFile + "\" for language \"" + Key + "\".", Debug.Type.Warning);
                         }
                     }
                     else
                     {
-                        Debug.Log("Language", "No image defined for language \"" + Get("langcode") + "\".", Debug.Type.WARNING);
+                        Debug.Log("Language", "No image defined for language \"" + Get("langcode") + "\".", Debug.Type.Warning);
                     }
                 }
             }
         }
 
-        
         public class GameConfiguration
         {
-            public string ID;
-            public string SteamAppID;
+            public string Id;
+            public string SteamAppId;
             public bool Selectable = true;
             protected string _AssemblyPath = "";
 
@@ -655,9 +697,9 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    if (_Extends != "" && Configuration.Games.ContainsKey(_Extends))
+                    if (Extends != "" && Games.ContainsKey(Extends))
                     {
-                        return Configuration.Games[_Extends];
+                        return Games[Extends];
                     }
                     return null;
                 }
@@ -667,23 +709,18 @@ namespace ModAPI.Configurations
                 get
                 {
                     if (Extended != null && _SelectFile == "")
+                    {
                         return Extended.SelectFile;
+                    }
                     return _SelectFile;
                 }
             }
-            public string Name
-            {
-                get
-                {
-                    return _Name;
-                }
-            }
-
+            public string Name => _Name;
             public string AssemblyPath
             {
                 get
                 {
-                    string ret = _AssemblyPath.Trim();
+                    var ret = _AssemblyPath.Trim();
                     if (ret == "" && Extended != null)
                     {
                         ret = Extended.AssemblyPath;
@@ -692,20 +729,23 @@ namespace ModAPI.Configurations
                 }
             }
 
-
             public List<string> IncludeAssemblies
             {
                 get
                 {
-                    List<string> ret = new List<string>();
+                    var ret = new List<string>();
                     if (Extended != null)
                     {
-                        List<string> _include = Extended.IncludeAssemblies;
-                        for (int i = 0; i < _include.Count; i++)
-                            ret.Add(_include[i]);
+                        var include = Extended.IncludeAssemblies;
+                        for (var i = 0; i < include.Count; i++)
+                        {
+                            ret.Add(include[i]);
+                        }
                     }
-                    for (int i = 0; i < _IncludeAssemblies.Count; i++)
+                    for (var i = 0; i < _IncludeAssemblies.Count; i++)
+                    {
                         ret.Add(_IncludeAssemblies[i]);
+                    }
                     return ret;
                 }
             }
@@ -714,15 +754,19 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    List<string> ret = new List<string>();
+                    var ret = new List<string>();
                     if (Extended != null)
                     {
-                        List<string> _include = Extended.SearchPaths;
-                        for (int i = 0; i < _include.Count; i++)
-                            ret.Add(_include[i]);
+                        var include = Extended.SearchPaths;
+                        for (var i = 0; i < include.Count; i++)
+                        {
+                            ret.Add(include[i]);
+                        }
                     }
-                    for (int i = 0; i < _SearchPaths.Count; i++)
+                    for (var i = 0; i < _SearchPaths.Count; i++)
+                    {
                         ret.Add(_SearchPaths[i]);
+                    }
                     return ret;
                 }
             }
@@ -731,15 +775,19 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    List<string> ret = new List<string>();
+                    var ret = new List<string>();
                     if (Extended != null)
                     {
-                        List<string> _include = Extended.CopyAssemblies;
-                        for (int i = 0; i < _include.Count; i++)
-                            ret.Add(_include[i]);
+                        var include = Extended.CopyAssemblies;
+                        for (var i = 0; i < include.Count; i++)
+                        {
+                            ret.Add(include[i]);
+                        }
                     }
-                    for (int i = 0; i < _CopyAssemblies.Count; i++)
+                    for (var i = 0; i < _CopyAssemblies.Count; i++)
+                    {
                         ret.Add(_CopyAssemblies[i]);
+                    }
                     return ret;
                 }
             }
@@ -748,15 +796,19 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    List<string> ret = new List<string>();
+                    var ret = new List<string>();
                     if (Extended != null)
                     {
-                        List<string> _exclude = Extended.ExcludeNamespaces;
-                        for (int i = 0; i < _exclude.Count; i++)
-                            ret.Add(_exclude[i]);
+                        var exclude = Extended.ExcludeNamespaces;
+                        for (var i = 0; i < exclude.Count; i++)
+                        {
+                            ret.Add(exclude[i]);
+                        }
                     }
-                    for (int i = 0; i < _ExcludeNamespaces.Count; i++)
+                    for (var i = 0; i < _ExcludeNamespaces.Count; i++)
+                    {
                         ret.Add(_ExcludeNamespaces[i]);
+                    }
                     return ret;
                 }
             }
@@ -765,15 +817,19 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    List<string> ret = new List<string>();
+                    var ret = new List<string>();
                     if (Extended != null)
                     {
-                        List<string> _exclude = Extended.ExcludeTypes;
-                        for (int i = 0; i < _exclude.Count; i++)
-                            ret.Add(_exclude[i]);
+                        var exclude = Extended.ExcludeTypes;
+                        for (var i = 0; i < exclude.Count; i++)
+                        {
+                            ret.Add(exclude[i]);
+                        }
                     }
-                    for (int i = 0; i < _ExcludeTypes.Count; i++)
+                    for (var i = 0; i < _ExcludeTypes.Count; i++)
+                    {
                         ret.Add(_ExcludeTypes[i]);
+                    }
                     return ret;
                 }
             }
@@ -782,22 +838,26 @@ namespace ModAPI.Configurations
             {
                 get
                 {
-                    List<string> ret = new List<string>();
+                    var ret = new List<string>();
                     if (Extended != null)
                     {
-                        List<string> _exclude = Extended.NoFamily;
-                        for (int i = 0; i < _exclude.Count; i++)
-                            ret.Add(_exclude[i]);
+                        var exclude = Extended.NoFamily;
+                        for (var i = 0; i < exclude.Count; i++)
+                        {
+                            ret.Add(exclude[i]);
+                        }
                     }
-                    for (int i = 0; i < _NoFamily.Count; i++)
+                    for (var i = 0; i < _NoFamily.Count; i++)
+                    {
                         ret.Add(_NoFamily[i]);
+                    }
                     return ret;
                 }
             }
 
             protected string _SelectFile = "";
             protected string _Name = "";
-            protected string _Extends = "";
+            protected string Extends = "";
             protected List<string> _SearchPaths = new List<string>();
             protected List<string> _IncludeAssemblies = new List<string>();
             protected List<string> _CopyAssemblies = new List<string>();
@@ -807,45 +867,59 @@ namespace ModAPI.Configurations
 
             public GameConfiguration(XDocument document)
             {
-                XAttribute id = document.Root.Attribute("id");
-                ID = id.Value;
+                var id = document.Root.Attribute("id");
+                Id = id.Value;
 
-                SteamAppID = Utils.XMLHelper.GetXMLElementAsString(document.Root, "steamAppID", "");
-                XAttribute extends = document.Root.Attribute("extends");
-                if (extends != null) _Extends = extends.Value;
-                XAttribute selectable = document.Root.Attribute("selectable");
-                if (selectable != null && selectable.Value == "false") Selectable = false;
-                
-                XElement selectFile = document.Root.Element("selectFile");
-                if (selectFile != null) _SelectFile = selectFile.Value;
-                XElement name = document.Root.Element("name");
-                if (name != null) _Name = name.Value;
+                SteamAppId = XmlHelper.GetXmlElementAsString(document.Root, "steamAppID");
+                var extends = document.Root.Attribute("extends");
+                if (extends != null)
+                {
+                    Extends = extends.Value;
+                }
+                var selectable = document.Root.Attribute("selectable");
+                if (selectable != null && selectable.Value == "false")
+                {
+                    Selectable = false;
+                }
 
-                XElement assPath = document.Root.Element("assemblyPath");
+                var selectFile = document.Root.Element("selectFile");
+                if (selectFile != null)
+                {
+                    _SelectFile = selectFile.Value;
+                }
+                var name = document.Root.Element("name");
+                if (name != null)
+                {
+                    _Name = name.Value;
+                }
+
+                var assPath = document.Root.Element("assemblyPath");
                 if (assPath != null)
-                    _AssemblyPath = assPath.Value.ToString();
+                {
+                    _AssemblyPath = assPath.Value;
+                }
 
-                foreach (XElement el in document.Root.Elements("copyAssembly"))
+                foreach (var el in document.Root.Elements("copyAssembly"))
                 {
                     _CopyAssemblies.Add(el.Value);
                 }
-                foreach (XElement el in document.Root.Elements("searchPath"))
+                foreach (var el in document.Root.Elements("searchPath"))
                 {
                     _SearchPaths.Add(el.Value);
-                } 
-                foreach (XElement el in document.Root.Elements("includeAssembly"))
+                }
+                foreach (var el in document.Root.Elements("includeAssembly"))
                 {
                     _IncludeAssemblies.Add(el.Value);
                 }
-                foreach (XElement el in document.Root.Elements("excludeNamespace"))
+                foreach (var el in document.Root.Elements("excludeNamespace"))
                 {
                     _ExcludeNamespaces.Add(el.Value);
                 }
-                foreach (XElement el in document.Root.Elements("excludeType"))
+                foreach (var el in document.Root.Elements("excludeType"))
                 {
                     _ExcludeTypes.Add(el.Value);
                 }
-                foreach (XElement el in document.Root.Elements("noFamily"))
+                foreach (var el in document.Root.Elements("noFamily"))
                 {
                     _NoFamily.Add(el.Value);
                 }

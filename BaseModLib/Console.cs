@@ -21,57 +21,66 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using ModAPI.Attributes;
 using UnityEngine;
 
 namespace ModAPI
 {
     public class Console
     {
-        const int MAX_LINES = 200;
+        const int MaxLines = 200;
         public static List<string> Lines = new List<string>();
-        public delegate void CommandCallback(string param);
-        public delegate void ComplexCommandCallback(string[] param);
-        protected static Dictionary<string, Command> Commands = new Dictionary<string, Command>();
-        public delegate void CloseCallback();
-        public static CloseCallback OnClose;
-        protected static ConsoleComponent consoleComponent;
 
-        [ModAPI.Attributes.AddModname]
-        public static void Write(string Message)
+        public delegate void CommandCallback(string param);
+
+        public delegate void ComplexCommandCallback(string[] param);
+
+        protected static Dictionary<string, Command> Commands = new Dictionary<string, Command>();
+
+        public delegate void CloseCallback();
+
+        public static CloseCallback OnClose;
+        protected static ConsoleComponent ConsoleComponent;
+
+        [AddModname]
+        public static void Write(string message)
         {
         }
 
-        public static Command GetCommand(string Command)
+        public static Command GetCommand(string command)
         {
-            Command = Command.ToLower();
-            if (Commands.ContainsKey(Command))
+            command = command.ToLower();
+            if (Commands.ContainsKey(command))
             {
-                return Commands[Command];
+                return Commands[command];
             }
             return null;
         }
-        public static void Write(string Message, string ModName) {
-            Lines.Add("["+ModName+"]: "+Message);
-            if (Lines.Count > MAX_LINES)
+
+        public static void Write(string message, string modName)
+        {
+            Lines.Add("[" + modName + "]: " + message);
+            if (Lines.Count > MaxLines)
+            {
                 Lines.RemoveAt(0);
+            }
         }
 
         public static ConsoleComponent GetConsoleComponent()
         {
-            return consoleComponent;
+            return ConsoleComponent;
         }
 
-        public static List<string> GetPossibleValues(string Input)
+        public static List<string> GetPossibleValues(string input)
         {
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
             try
             {
-                foreach (Command command in Commands.Values)
+                foreach (var command in Commands.Values)
                 {
-                    if (command.IsMatch(Input))
+                    if (command.IsMatch(input))
                     {
-                        return command.GetAutoCompletion(Input);
+                        return command.GetAutoCompletion(input);
                     }
                 }
             }
@@ -82,50 +91,52 @@ namespace ModAPI
             return ret;
         }
 
-        public static void ParseInput(string Input)
+        public static void ParseInput(string input)
         {
             try
             {
-                Input = Input.Trim();
-                foreach (Command command in Commands.Values)
+                input = input.Trim();
+                foreach (var command in Commands.Values)
                 {
-                    if (command.IsMatch(Input))
+                    if (command.IsMatch(input))
                     {
-                        string ErrorText = command.GetErrorText(Input);
-                        if (ErrorText != "")
+                        var errorText = command.GetErrorText(input);
+                        if (errorText != "")
                         {
-                            Write(ErrorText, command.CommandName);
+                            Write(errorText, command.CommandName);
                             return;
                         }
-                        else
+                        var param = command.GetParameters(input);
+                        try
                         {
-                            object[] param = command.GetParameters(Input);
-                            try
-                            {
-                                command.OnSubmit(param);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.Write("An error occured while executing the command:\r\n"+ex.ToString(), "Core");
-                            }
-                            return;
+                            command.OnSubmit(param);
                         }
+                        catch (Exception ex)
+                        {
+                            Write("An error occured while executing the command:\r\n" + ex, "Core");
+                        }
+                        return;
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.Write(e.ToString(), "Core");
+                Write(e.ToString(), "Core");
             }
         }
 
         public static void Switch()
         {
-            if (GetConsoleComponent().opened)
+            if (GetConsoleComponent().Opened)
+            {
                 Close();
+            }
             else
+            {
                 Open();
+            }
         }
+
         public static void Open()
         {
             GetConsoleComponent().Open();
@@ -134,20 +145,21 @@ namespace ModAPI
         public static void Close()
         {
             GetConsoleComponent().Close();
-            if (OnClose != null)
-                OnClose();
+            OnClose?.Invoke();
         }
 
         public static void RegisterCommand(Command command)
         {
-            string name = command.CommandName;
+            var name = command.CommandName;
             if (!Commands.ContainsKey(name.ToLower()))
             {
                 if (command.IsValid())
                 {
                     Commands.Add(name.ToLower(), command);
                     if (name != "help")
+                    {
                         CommandList.Add(name);
+                    }
                 }
                 else
                 {
@@ -160,7 +172,7 @@ namespace ModAPI
             }
         }
 
-        protected static bool initialized = false;
+        protected static bool Initialized;
         protected static List<string> CommandList = new List<string>();
 
         protected static void Help(object[] param)
@@ -171,16 +183,19 @@ namespace ModAPI
             }
             else
             {
-                if (CommandList.Contains((string)param[0]))
+                if (CommandList.Contains((string) param[0]))
                 {
-                    Command com = Commands[(string)param[0]];
-                    string help = "Help for command \"" + Commands[(string)param[0]].CommandName + "\":\r\n"+Commands[(string)param[0]].HelpText+"\r\nUsage: "+Commands[(string)param[0]].CommandName;
-                    bool optional = false;
-                    foreach (IConsoleParameter param2 in com.Parameters) 
+                    var com = Commands[(string) param[0]];
+                    var help = "Help for command \"" + Commands[(string) param[0]].CommandName + "\":\r\n" + Commands[(string) param[0]].HelpText + "\r\nUsage: " +
+                               Commands[(string) param[0]].CommandName;
+                    var optional = false;
+                    foreach (var param2 in com.Parameters)
                     {
                         help += " ";
                         if (param2.IsOptional && !optional)
+                        {
                             help += "[";
+                        }
                         help += param2.Name;
                     }
                     Write(help, "Help");
@@ -192,40 +207,44 @@ namespace ModAPI
             }
         }
 
-        protected static Command helpCommand;
+        protected static Command HelpCommand;
 
-        public static void Initialize(GameObject SystemObject)
+        public static void Initialize(GameObject systemObject)
         {
-            if (!initialized)
+            if (!Initialized)
             {
-                helpCommand = new Command();
-                helpCommand.OnSubmit = Help;
-                helpCommand.CommandName = "help";
-                BaseConsoleParameter param = new BaseConsoleParameter();
-                param.Name = "Command";
-                param.IsOptional = true;
-                param.ListValueRequired = true;
-                param.TooltipText = "The command to show help for";
-                param.UseAutoComplete = true;
-                helpCommand.Parameters.Add(param);
-                
-                RegisterCommand(helpCommand);
+                HelpCommand = new Command
+                {
+                    OnSubmit = Help,
+                    CommandName = "help"
+                };
+                var param = new BaseConsoleParameter
+                {
+                    Name = "Command",
+                    IsOptional = true,
+                    ListValueRequired = true,
+                    TooltipText = "The command to show help for",
+                    UseAutoComplete = true
+                };
+                HelpCommand.Parameters.Add(param);
 
-                RegisterCommand(new Command()
+                RegisterCommand(HelpCommand);
+
+                RegisterCommand(new Command
                 {
                     CommandName = "test",
                     HelpText = "This is a test method",
-                    OnSubmit = delegate(object[] objs) { },
-                    Parameters = new List<IConsoleParameter>()
+                    OnSubmit = delegate { },
+                    Parameters = new List<IConsoleParameter>
                     {
-                        new ModAPI.Console.BaseConsoleParameter() 
+                        new BaseConsoleParameter
                         {
                             Name = "Testparam",
                             IsOptional = true,
                             TooltipText = "testtooltip",
                             ListValueRequired = true,
                             UseAutoComplete = true,
-                            Values = new List<string>() 
+                            Values = new List<string>
                             {
                                 "test1a",
                                 "best1",
@@ -236,14 +255,14 @@ namespace ModAPI
                         }
                     }
                 });
-                initialized = true;
+                Initialized = true;
             }
 
-            if (SystemObject.transform.FindChild("__ModAPIConsole__") == null)
+            if (systemObject.transform.FindChild("__ModAPIConsole__") == null)
             {
-                GameObject console = new GameObject("__ModAPIConsole__");
-                consoleComponent = console.AddComponent<ConsoleComponent>();
-                console.transform.parent = SystemObject.transform;
+                var console = new GameObject("__ModAPIConsole__");
+                ConsoleComponent = console.AddComponent<ConsoleComponent>();
+                console.transform.parent = systemObject.transform;
             }
         }
 
@@ -252,27 +271,32 @@ namespace ModAPI
             public string CommandName = "";
             public string HelpText = "";
             public List<IConsoleParameter> Parameters = new List<IConsoleParameter>();
+
             public delegate void Callback(object[] objects);
-            public Callback OnSubmit = null;
 
-            public Command() 
-            {
-
-            }
+            public Callback OnSubmit;
 
             internal bool IsValid()
             {
-                bool optional = false;
+                var optional = false;
                 if (CommandName.Trim() == "")
+                {
                     return false;
+                }
                 if (OnSubmit == null)
+                {
                     return false;
-                foreach (IConsoleParameter param in Parameters)
+                }
+                foreach (var param in Parameters)
                 {
                     if (param.IsOptional)
+                    {
                         optional = true;
+                    }
                     if (!param.IsOptional && optional)
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
@@ -284,98 +308,120 @@ namespace ModAPI
 
             internal List<string> GetAutoCompletion(string command)
             {
-                List<string> ret = new List<string>();
-                string[] param = GetParametersAsString(command);
-                int num = param.Length - 1;
+                var ret = new List<string>();
+                var param = GetParametersAsString(command);
+                var num = param.Length - 1;
                 if (command.Substring(command.Length - 1) == " ")
-                    num += 1;
-                if (num >= 0 && num < Parameters.Count)
-                    ret = Parameters[num].GetAllValues().ToArray().ToList();
-                
-                for (int i = 0; i < ret.Count; i++)
                 {
-                    string el = ret[i];
+                    num += 1;
+                }
+                if (num >= 0 && num < Parameters.Count)
+                {
+                    ret = Parameters[num].GetAllValues().ToArray().ToList();
+                }
+
+                for (var i = 0; i < ret.Count; i++)
+                {
+                    var el = ret[i];
                     if (param.Length > num && !el.ToLower().StartsWith(param[num].ToLower()))
                     {
                         ret.RemoveAt(i);
                         i--;
                     }
                 }
-                
+
                 return ret;
             }
 
             internal string GetErrorText(string command)
             {
-                string ErrorText = "";
-                string[] param = GetParametersAsString(command);
-                
-                for (int i = 0; i < Parameters.Count; i++)
+                var errorText = "";
+                var param = GetParametersAsString(command);
+
+                for (var i = 0; i < Parameters.Count; i++)
                 {
                     if (param.Length <= i && !Parameters[i].IsOptional)
                     {
-                        ErrorText += "Required parameter " + (i + 1) + " is missing. ";
+                        errorText += "Required parameter " + (i + 1) + " is missing. ";
                     }
                     if (param.Length > i && !Parameters[i].Verify(param[i]))
                     {
-                        ErrorText += "Parameter " + (i + 1) + " is invalid. ";
+                        errorText += "Parameter " + (i + 1) + " is invalid. ";
                     }
                 }
                 if (param.Length > Parameters.Count)
-                    ErrorText += "Too many paramters. Only "+Parameters.Count+" are required. ";
-                
-                return ErrorText;
+                {
+                    errorText += "Too many paramters. Only " + Parameters.Count + " are required. ";
+                }
+
+                return errorText;
             }
+
             internal bool IsValid(string command)
             {
-                string[] param = GetParametersAsString(command);
+                var param = GetParametersAsString(command);
                 if (param.Length > Parameters.Count)
+                {
                     return false;
-                for (int i = 0; i < Parameters.Count; i++)
+                }
+                for (var i = 0; i < Parameters.Count; i++)
                 {
                     if (i >= param.Length - 1 && !Parameters[i].IsOptional)
+                    {
                         return false;
+                    }
                     if (!Parameters[i].Verify(param[i]))
+                    {
                         return false;
+                    }
                 }
                 return true;
             }
+
             internal object[] GetParameters(string command)
             {
-                string[] param = GetParametersAsString(command);
+                var param = GetParametersAsString(command);
                 if (param.Length > Parameters.Count)
-                    return new object[0];
-                object[] objs = new object[param.Length];
-                for (int i = 0; i < param.Length; i++)
                 {
-                    objs[i] = this.Parameters[i].ParseValue(param[i]);
+                    return new object[0];
+                }
+                var objs = new object[param.Length];
+                for (var i = 0; i < param.Length; i++)
+                {
+                    objs[i] = Parameters[i].ParseValue(param[i]);
                 }
                 return objs;
             }
-            internal string[] GetParametersAsString(string command) 
+
+            internal string[] GetParametersAsString(string command)
             {
                 command = command.Trim();
 
-                List<string> parameters = new List<string>();
-                int index = CommandName.Length;
-                bool inBrackets = false;
-                int c = 0;
+                var parameters = new List<string>();
+                var index = CommandName.Length;
+                var inBrackets = false;
+                var c = 0;
                 if (command.Length < index)
+                {
                     return new string[0];
+                }
                 while (c < 100)
                 {
-                    if (index >= command.Length) break;
-                    int whitespaceIndex = command.IndexOf(" ", index);
-                    int bracketIndex = command.IndexOf("\"", index);
+                    if (index >= command.Length)
+                    {
+                        break;
+                    }
+                    var whitespaceIndex = command.IndexOf(" ", index);
+                    var bracketIndex = command.IndexOf("\"", index);
                     if (bracketIndex != -1 && (bracketIndex < whitespaceIndex || inBrackets))
                     {
-                        if (inBrackets) 
+                        if (inBrackets)
                         {
-                            string param = command.Substring(index, bracketIndex - index);
+                            var param = command.Substring(index, bracketIndex - index);
                             parameters.Add(param);
                             index = bracketIndex + 2;
                         }
-                        else 
+                        else
                         {
                             index = bracketIndex + 1;
                         }
@@ -383,7 +429,7 @@ namespace ModAPI
                     }
                     else if (whitespaceIndex != -1)
                     {
-                        string param = command.Substring(index, whitespaceIndex - index);
+                        var param = command.Substring(index, whitespaceIndex - index);
                         if (param.Trim() != "")
                         {
                             parameters.Add(param);
@@ -397,9 +443,9 @@ namespace ModAPI
                     c++;
                 }
 
-                if (command.Length >= index) 
+                if (command.Length >= index)
                 {
-                    string param = command.Substring(index).Trim();
+                    var param = command.Substring(index).Trim();
                     if (param != "")
                     {
                         parameters.Add(command.Substring(index).Trim());
@@ -412,18 +458,10 @@ namespace ModAPI
 
         public interface IConsoleParameter
         {
-            bool UseAutoComplete {
-                get;
-            }
-            bool IsOptional {
-                get;
-            }
-            string TooltipText {
-                get;
-            }
-            string Name{
-                get;
-            }
+            bool UseAutoComplete { get; }
+            bool IsOptional { get; }
+            string TooltipText { get; }
+            string Name { get; }
 
             bool Verify(string value);
             List<string> GetAllValues();
@@ -434,62 +472,35 @@ namespace ModAPI
         {
             protected string _TooltipText;
             public string _Name = "";
-            public bool _UseAutoComplete = false;
-            public bool _IsOptional = false;
-            public bool _ListValueRequired = false;
-            
-            public bool UseAutoComplete {
-                get 
-                {
-                    return _UseAutoComplete;
-                }
-                set 
-                {
-                    _UseAutoComplete = value;
-                }
+            public bool _UseAutoComplete;
+            public bool _IsOptional;
+            public bool _ListValueRequired;
+
+            public bool UseAutoComplete
+            {
+                get => _UseAutoComplete;
+                set => _UseAutoComplete = value;
             }
-            public bool IsOptional {
-                get
-                {
-                    return _IsOptional;
-                }
-                set
-                {
-                    _IsOptional = value;
-                }
+            public bool IsOptional
+            {
+                get => _IsOptional;
+                set => _IsOptional = value;
             }
             public bool ListValueRequired
             {
-                get 
-                {
-                    return _ListValueRequired;
-                }
-                set 
-                {
-                    _ListValueRequired = value;
-                }
+                get => _ListValueRequired;
+                set => _ListValueRequired = value;
             }
-            
-            public string TooltipText {
-                get 
-                {
-                    return _TooltipText;
-                }
-                set 
-                {
-                    _TooltipText = value;
-                }
-            }
-            public string Name 
+
+            public string TooltipText
             {
-                get 
-                {
-                    return _Name;
-                }
-                set 
-                {
-                    _Name = value;
-                }
+                get => _TooltipText;
+                set => _TooltipText = value;
+            }
+            public string Name
+            {
+                get => _Name;
+                set => _Name = value;
             }
             public List<string> Values;
 
@@ -497,10 +508,12 @@ namespace ModAPI
             {
                 if (ListValueRequired)
                 {
-                    foreach (string val in Values)
+                    foreach (var val in Values)
                     {
                         if (val.ToLower() == value.ToLower())
+                        {
                             return true;
+                        }
                     }
                     return false;
                 }

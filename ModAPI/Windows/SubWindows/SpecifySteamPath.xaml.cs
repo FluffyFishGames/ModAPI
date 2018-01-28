@@ -19,20 +19,13 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Win32;
-
+using ModAPI.Configurations;
+using ModAPI.Utils;
+using Path = System.IO.Path;
 
 namespace ModAPI.Windows.SubWindows
 {
@@ -41,42 +34,42 @@ namespace ModAPI.Windows.SubWindows
     /// </summary>
     public partial class SpecifySteamPath : BaseSubWindow
     {
-        protected bool Completed = false;
-        protected Utils.Schedule.Task Task;
-        public SpecifySteamPath(Utils.Schedule.Task Task)
-            : base()
+        protected bool Completed;
+        protected Schedule.Task Task;
+
+        public SpecifySteamPath(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = Task;
-            this.SteamPath.Text = Configurations.Configuration.GetPath("Steam");
+            Task = task;
+            SteamPath.Text = Configuration.GetPath("Steam");
             Check();
             SetCloseable(false);
         }
 
-        public SpecifySteamPath(string langKey, Utils.Schedule.Task Task)
+        public SpecifySteamPath(string langKey, Schedule.Task task)
             : base(langKey)
         {
             InitializeComponent();
-            this.Task = Task;
-            this.SteamPath.Text = Configurations.Configuration.GetPath("Steam");
+            Task = task;
+            SteamPath.Text = Configuration.GetPath("Steam");
             Check();
             SetCloseable(false);
         }
 
         protected void Check()
         {
-            Configurations.Configuration.SetPath("Steam", this.SteamPath.Text);
-            if (this.Task.Check())
+            Configuration.SetPath("Steam", SteamPath.Text);
+            if (Task.Check())
             {
-                AcceptIcon.Visibility = System.Windows.Visibility.Visible;
-                DeclineIcon.Visibility = System.Windows.Visibility.Hidden;
+                AcceptIcon.Visibility = Visibility.Visible;
+                DeclineIcon.Visibility = Visibility.Hidden;
                 ConfirmButton.Opacity = 1f;
                 ConfirmButton.IsEnabled = true;
             }
             else
             {
-                AcceptIcon.Visibility = System.Windows.Visibility.Hidden;
-                DeclineIcon.Visibility = System.Windows.Visibility.Visible;
+                AcceptIcon.Visibility = Visibility.Hidden;
+                DeclineIcon.Visibility = Visibility.Visible;
                 ConfirmButton.Opacity = 0.5f;
                 ConfirmButton.IsEnabled = false;
             }
@@ -84,12 +77,12 @@ namespace ModAPI.Windows.SubWindows
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            Configurations.Configuration.SetPath("Steam", this.SteamPath.Text, true);
+            Configuration.SetPath("Steam", SteamPath.Text, true);
             if (Task.Check())
             {
                 Completed = true;
                 Task.Complete();
-                this.Close();
+                Close();
             }
         }
 
@@ -105,22 +98,23 @@ namespace ModAPI.Windows.SubWindows
 
         private void OnClickBrowse(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-            openFileDialog1.Filter = "Steam.exe|Steam.exe";
-
+            var openFileDialog1 = new OpenFileDialog
+            {
+                Filter = "Steam.exe|Steam.exe"
+            };
             if (openFileDialog1.ShowDialog() == true)
             {
-                this.SteamPath.Text = System.IO.Path.GetDirectoryName(openFileDialog1.FileName);
+                SteamPath.Text = Path.GetDirectoryName(openFileDialog1.FileName);
             }
-
         }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
             if (!Completed)
-            Environment.Exit(0);
+            {
+                Environment.Exit(0);
+            }
         }
     }
 }

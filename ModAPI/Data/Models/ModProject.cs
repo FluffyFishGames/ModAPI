@@ -19,63 +19,60 @@
  */
 
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Markup;
-using ModAPI;
-using ModAPI.Configurations;
 using System.Xml.Linq;
+using Ionic.Zip;
+using ModAPI.Configurations;
+using ModAPI.Utils;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using System.IO;
-using Ionic.Zip;
+using Path = System.IO.Path;
 
 namespace ModAPI.Data.Models
 {
     public class ModProject
     {
-        public string ID;
-        protected string PreviousID;
+        public string Id;
+        protected string PreviousId;
         public Game Game;
         public MultilingualValue Name = new MultilingualValue();
         public MultilingualValue Description = new MultilingualValue();
         public string Version = "1.0.0.0";
 
-        public List<string> Languages = new List<string>() { "EN" };
+        public List<string> Languages = new List<string> { "EN" };
         public List<Button> Buttons = new List<Button>();
 
         public class Button
         {
-            public ModProject project;
-            public string ID;
+            public ModProject Project;
+            public string Id;
             public string StandardKey;
             public MultilingualValue Name = new MultilingualValue();
             public MultilingualValue Description = new MultilingualValue();
-            public XElement GetXML()
-            {
-                XElement buttonElement = new XElement("Button");
-                if (this.StandardKey != "")
-                    buttonElement.SetAttributeValue("Standard", this.StandardKey);
-                buttonElement.SetAttributeValue("ID", this.ID);
 
-                XElement nameElement = new XElement("Name");
-                foreach (string langKey in project.Languages)
+            public XElement GetXml()
+            {
+                var buttonElement = new XElement("Button");
+                if (StandardKey != "")
                 {
-                    XElement langElement = new XElement(langKey, this.Name.GetString(langKey));
+                    buttonElement.SetAttributeValue("Standard", StandardKey);
+                }
+                buttonElement.SetAttributeValue("ID", Id);
+
+                var nameElement = new XElement("Name");
+                foreach (var langKey in Project.Languages)
+                {
+                    var langElement = new XElement(langKey, Name.GetString(langKey));
                     nameElement.Add(langElement);
                 }
                 buttonElement.Add(nameElement);
 
-                XElement descriptionElement = new XElement("Description");
-                foreach (string langKey in project.Languages)
+                var descriptionElement = new XElement("Description");
+                foreach (var langKey in Project.Languages)
                 {
-                    XElement langElement = new XElement(langKey, this.Description.GetString(langKey));
+                    var langElement = new XElement(langKey, Description.GetString(langKey));
                     descriptionElement.Add(langElement);
                 }
                 buttonElement.Add(descriptionElement);
@@ -84,113 +81,135 @@ namespace ModAPI.Data.Models
             }
         }
 
-        public bool Valid = false;
+        public bool Valid;
 
         public void Verify()
         {
             Valid = false;
-            if (!Mod.Header.VerifyModVersion(this.Version) || !Mod.Header.VerifyModID(this.ID))
-                return;
-
-            foreach (string langKey in Languages)
-                if (this.Name.GetString(langKey).Trim() == "")
-                    return;
-
-            List<string> ButtonIDs = new List<string>();
-            foreach (Button b in Buttons)
+            if (!Mod.Header.VerifyModVersion(Version) || !Mod.Header.VerifyModId(Id))
             {
-                if (ButtonIDs.Contains(b.ID))
+                return;
+            }
+
+            foreach (var langKey in Languages)
+            {
+                if (Name.GetString(langKey).Trim() == "")
+                {
                     return;
-                foreach (string langKey in Languages)
+                }
+            }
+
+            var buttonIDs = new List<string>();
+            foreach (var b in Buttons)
+            {
+                if (buttonIDs.Contains(b.Id))
+                {
+                    return;
+                }
+                foreach (var langKey in Languages)
+                {
                     if (b.Name.GetString(langKey).Trim() == "")
+                    {
                         return;
-                ButtonIDs.Add(b.ID);
+                    }
+                }
+                buttonIDs.Add(b.Id);
             }
 
             Valid = true;
         }
 
-        public bool SaveFailed = false;
+        public bool SaveFailed;
 
         public void Remove()
         {
-            string path = GetFolderPath();
-            System.IO.Directory.Delete(path, true);
+            var path = GetFolderPath();
+            Directory.Delete(path, true);
         }
 
         public void SaveConfiguration()
         {
             SaveFailed = false;
-            if (ID == "" && PreviousID != "")
-                ID = PreviousID;
+            if (Id == "" && PreviousId != "")
+            {
+                Id = PreviousId;
+            }
             Verify();
             if (!Valid)
             {
-                string checkPath = GetFolderPath();
-                if (!Mod.Header.VerifyModID(this.ID) || (PreviousID != ID && PreviousID != "" && System.IO.Directory.Exists(checkPath)))
-                    ID = PreviousID;
-            }
-            if (PreviousID != ID && PreviousID != "")
-            {
-                string checkPath = GetFolderPath();
-                if (checkPath == "" || System.IO.Directory.Exists(checkPath))
+                var checkPath = GetFolderPath();
+                if (!Mod.Header.VerifyModId(Id) || (PreviousId != Id && PreviousId != "" && Directory.Exists(checkPath)))
                 {
-                    ID = PreviousID;
+                    Id = PreviousId;
+                }
+            }
+            if (PreviousId != Id && PreviousId != "")
+            {
+                var checkPath = GetFolderPath();
+                if (checkPath == "" || Directory.Exists(checkPath))
+                {
+                    Id = PreviousId;
                 }
                 else
                 {
-                    string previousPath = GetFolderPath(PreviousID);
-                    string newPath = GetFolderPath(ID);
-                    string previousProjectPath = newPath + System.IO.Path.DirectorySeparatorChar + PreviousID + ".csproj";
-                    string newProjectPath = newPath + System.IO.Path.DirectorySeparatorChar + ID + ".csproj";
-                    string previousSolutionPath = newPath + System.IO.Path.DirectorySeparatorChar + PreviousID + ".sln";
-                    string newSolutionPath = newPath + System.IO.Path.DirectorySeparatorChar + ID + ".sln";
-                    string previousSolutionUserOptionsPath = newPath + System.IO.Path.DirectorySeparatorChar + PreviousID + ".suo";
-                    string newSolutionUserOptionsPath = newPath + System.IO.Path.DirectorySeparatorChar + ID + ".suo";
+                    var previousPath = GetFolderPath(PreviousId);
+                    var newPath = GetFolderPath(Id);
+                    var previousProjectPath = newPath + Path.DirectorySeparatorChar + PreviousId + ".csproj";
+                    var newProjectPath = newPath + Path.DirectorySeparatorChar + Id + ".csproj";
+                    var previousSolutionPath = newPath + Path.DirectorySeparatorChar + PreviousId + ".sln";
+                    var newSolutionPath = newPath + Path.DirectorySeparatorChar + Id + ".sln";
+                    var previousSolutionUserOptionsPath = newPath + Path.DirectorySeparatorChar + PreviousId + ".suo";
+                    var newSolutionUserOptionsPath = newPath + Path.DirectorySeparatorChar + Id + ".suo";
                     try
                     {
-                        System.IO.Directory.Move(previousPath, newPath); 
-                        if (System.IO.File.Exists(previousProjectPath))
-                            System.IO.File.Move(previousProjectPath, newProjectPath);
-                        if (System.IO.File.Exists(previousSolutionPath))
-                            System.IO.File.Move(previousSolutionPath, newSolutionPath);
-                        if (System.IO.File.Exists(previousSolutionUserOptionsPath))
-                            System.IO.File.Move(previousSolutionUserOptionsPath, newSolutionUserOptionsPath);
+                        Directory.Move(previousPath, newPath);
+                        if (File.Exists(previousProjectPath))
+                        {
+                            File.Move(previousProjectPath, newProjectPath);
+                        }
+                        if (File.Exists(previousSolutionPath))
+                        {
+                            File.Move(previousSolutionPath, newSolutionPath);
+                        }
+                        if (File.Exists(previousSolutionUserOptionsPath))
+                        {
+                            File.Move(previousSolutionUserOptionsPath, newSolutionUserOptionsPath);
+                        }
                     }
                     catch (Exception e)
                     {
                         SaveFailed = true;
-                        ID = PreviousID;
+                        Id = PreviousId;
                         return;
                     }
-                    PreviousID = ID;
+                    PreviousId = Id;
                 }
             }
 
-            XDocument configuration = new XDocument();
-            XElement rootElement = new XElement("Mod");
-            rootElement.SetAttributeValue("ID", this.ID);
+            var configuration = new XDocument();
+            var rootElement = new XElement("Mod");
+            rootElement.SetAttributeValue("ID", Id);
 
-            rootElement.Add(new XElement("Compatible", this.Game.ModLibrary.GameVersion));
+            rootElement.Add(new XElement("Compatible", Game.ModLibrary.GameVersion));
 
-            XElement nameElement = new XElement("Name");
-            foreach (string langKey in Languages)
+            var nameElement = new XElement("Name");
+            foreach (var langKey in Languages)
             {
-                XElement langElement = new XElement(langKey, this.Name.GetString(langKey));
+                var langElement = new XElement(langKey, Name.GetString(langKey));
                 nameElement.Add(langElement);
             }
 
-            XElement descriptionElement = new XElement("Description");
-            foreach (string langKey in Languages)
+            var descriptionElement = new XElement("Description");
+            foreach (var langKey in Languages)
             {
-                XElement langElement = new XElement(langKey, this.Description.GetString(langKey));
+                var langElement = new XElement(langKey, Description.GetString(langKey));
                 descriptionElement.Add(langElement);
             }
-            XElement versionElement = new XElement("Version", this.Version);
+            var versionElement = new XElement("Version", Version);
 
-            foreach (Button button in Buttons)
+            foreach (var button in Buttons)
             {
-                XElement buttonElement = button.GetXML();
+                var buttonElement = button.GetXml();
                 rootElement.Add(buttonElement);
             }
 
@@ -199,10 +218,10 @@ namespace ModAPI.Data.Models
             rootElement.Add(versionElement);
 
             configuration.Add(rootElement);
-            string path = GetFolderPath() + "ModInfo.xml";
+            var path = GetFolderPath() + "ModInfo.xml";
             try
             {
-                System.IO.File.WriteAllText(path, configuration.ToString());
+                File.WriteAllText(path, configuration.ToString());
             }
             catch (Exception e)
             {
@@ -210,26 +229,26 @@ namespace ModAPI.Data.Models
                 return;
             }
 
-            string projectPath = GetFolderPath() + System.IO.Path.DirectorySeparatorChar + ID + ".csproj";
-            string solutionPath = GetFolderPath() + System.IO.Path.DirectorySeparatorChar + ID + ".sln";
+            var projectPath = GetFolderPath() + Path.DirectorySeparatorChar + Id + ".csproj";
+            var solutionPath = GetFolderPath() + Path.DirectorySeparatorChar + Id + ".sln";
 
-            List<XElement> Compile = new List<XElement>();
-            List<XElement> EmbeddedResources = new List<XElement>();
-            List<Uri> ModLibrary = new List<Uri>();
+            var Compile = new List<XElement>();
+            var embeddedResources = new List<XElement>();
+            var modLibrary = new List<Uri>();
 
-            if (System.IO.File.Exists(projectPath)) 
+            if (File.Exists(projectPath))
             {
-                XDocument projectFile = XDocument.Load(projectPath);
+                var projectFile = XDocument.Load(projectPath);
 
-                foreach (XElement element in projectFile.Root.Elements())
+                foreach (var element in projectFile.Root.Elements())
                 {
                     if (element.Name.LocalName == "ItemGroup")
                     {
-                        foreach (XElement subElement in element.Elements())
+                        foreach (var subElement in element.Elements())
                         {
                             if (subElement.Name.LocalName == "EmbeddedResource")
                             {
-                                EmbeddedResources.Add(subElement);
+                                embeddedResources.Add(subElement);
                             }
                             if (subElement.Name.LocalName == "Compile")
                             {
@@ -240,100 +259,99 @@ namespace ModAPI.Data.Models
                 }
             }
 
-            ModLibrary.Add(new Uri(System.IO.Path.GetFullPath(Configuration.GetPath("Libraries") + System.IO.Path.DirectorySeparatorChar + "BaseModLib.dll")));
-            foreach (string assemblyPath in Game.GameConfiguration.IncludeAssemblies)
+            modLibrary.Add(new Uri(Path.GetFullPath(Configuration.GetPath("Libraries") + Path.DirectorySeparatorChar + "BaseModLib.dll")));
+            foreach (var assemblyPath in Game.GameConfiguration.IncludeAssemblies)
             {
-                ModLibrary.Add(new Uri(System.IO.Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
+                modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
             }
-            foreach (string assemblyPath in Game.GameConfiguration.CopyAssemblies)
+            foreach (var assemblyPath in Game.GameConfiguration.CopyAssemblies)
             {
-                ModLibrary.Add(new Uri(System.IO.Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
-            }
-
-            Uri projectUri = new Uri(GetFolderPath());
-            string references = "";
-            string resources = "";
-            string compiles = "";
-            foreach (Uri uri in ModLibrary)
-            {
-                string filePath = projectUri.MakeRelativeUri(uri).ToString();
-                references += "<Reference Include=\""+System.IO.Path.GetFileNameWithoutExtension(filePath)+"\">\r\n"+
-"      <HintPath>"+filePath+"</HintPath>\r\n"+
-"      <Private>False</Private>\r\n"+
-"    </Reference>\r\n";
-            }
-            foreach (XElement resource in EmbeddedResources)
-            {
-                resources += resource.ToString().Replace("xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"","") + "\r\n";
-            }
-            foreach (XElement compile in Compile)
-            {
-                compiles += compile.ToString().Replace("xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"","") + "\r\n";
+                modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
             }
 
-            string projectText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
-"<Project ToolsVersion=\"4.0\" DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n" +
-"  <Import Project=\"$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props\" Condition=\"Exists('$(MSBuildExtensionsPath\\)\\$(MSBuildToolsVersion)\\Microsoft.Common.props')\" />\r\n" +
-"  <PropertyGroup>\r\n" +
-"    <Configuration Condition=\" '$(Configuration)' == '' \">Release</Configuration>\r\n" +
-"    <Platform Condition=\" '$(Platform)' == '' \">x86</Platform>\r\n" +
-"    <ProjectGuid>{53821041-E269-4717-BAED-3C9C6836E83F}</ProjectGuid>\r\n" +
-"    <OutputType>Library</OutputType>\r\n" +
-"    <AppDesignerFolder>Properties</AppDesignerFolder>\r\n" +
-"    <RootNamespace>"+ID+"</RootNamespace>\r\n" +
-"    <AssemblyName>"+ID+"</AssemblyName>\r\n" +
-"    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>\r\n" +
-"    <FileAlignment>512</FileAlignment>\r\n" +
-"    <TargetFrameworkProfile />\r\n" +
-"  </PropertyGroup>\r\n" +
-"  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|x86' \">\r\n" +
-"    <DebugType>pdbonly</DebugType>\r\n" +
-"    <Optimize>true</Optimize>\r\n" +
-"    <OutputPath>Mod\\</OutputPath>\r\n" +
-"    <DefineConstants>TRACE</DefineConstants>\r\n" +
-"    <ErrorReport>prompt</ErrorReport>\r\n" +
-"    <WarningLevel>4</WarningLevel>\r\n" +
-"  </PropertyGroup>\r\n" +
-"  <ItemGroup>\r\n" +
-"    "+resources+"\r\n" +
-"  </ItemGroup>\r\n" +
-"  <ItemGroup>\r\n" +
-"    "+references+"\r\n" +
-"  </ItemGroup>\r\n" +
-"  <ItemGroup>\r\n" +
-"    "+compiles+"\r\n" +
-"  </ItemGroup>\r\n" +
-"  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />\r\n" +
-"</Project>";
+            var projectUri = new Uri(GetFolderPath());
+            var references = "";
+            var resources = "";
+            var compiles = "";
+            foreach (var uri in modLibrary)
+            {
+                var filePath = projectUri.MakeRelativeUri(uri).ToString();
+                references += "<Reference Include=\"" + Path.GetFileNameWithoutExtension(filePath) + "\">\r\n" +
+                              "      <HintPath>" + filePath + "</HintPath>\r\n" +
+                              "      <Private>False</Private>\r\n" +
+                              "    </Reference>\r\n";
+            }
+            foreach (var resource in embeddedResources)
+            {
+                resources += resource.ToString().Replace("xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"", "") + "\r\n";
+            }
+            foreach (var compile in Compile)
+            {
+                compiles += compile.ToString().Replace("xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\"", "") + "\r\n";
+            }
 
-            string solutionText = "Microsoft Visual Studio Solution File, Format Version 12.00\r\n"+
-"# Visual Studio 2013\r\n"+
-"VisualStudioVersion = 12.0.21005.1\r\n"+
-"MinimumVisualStudioVersion = 10.0.40219.1\r\n"+
-"Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \""+ID+"\", \""+ID+".csproj\", \"{53821041-E269-4717-BAED-3C9C6836E83F}\"\r\n"+
-"EndProject\r\n"+
-"Global\r\n"+
-"	GlobalSection(SolutionConfigurationPlatforms) = preSolution\r\n"+
-"		Release|x86 = Release|x86\r\n"+
-"	EndGlobalSection\r\n"+
-"	GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n"+
-"		{53821041-E269-4717-BAED-3C9C6836E83F}.Release|x86.ActiveCfg = Release|x86\r\n"+
-"		{53821041-E269-4717-BAED-3C9C6836E83F}.Release|x86.Build.0 = Release|x86\r\n"+
-"	EndGlobalSection\r\n"+
-"	GlobalSection(SolutionProperties) = preSolution\r\n"+
-"		HideSolutionNode = FALSE\r\n"+
-"	EndGlobalSection\r\n"+
-"EndGlobal";
+            var projectText = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Project ToolsVersion=\"4.0\" DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n" +
+                              "  <Import Project=\"$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props\" Condition=\"Exists('$(MSBuildExtensionsPath\\)\\$(MSBuildToolsVersion)\\Microsoft.Common.props')\" />\r\n" +
+                              "  <PropertyGroup>\r\n" +
+                              "    <Configuration Condition=\" '$(Configuration)' == '' \">Release</Configuration>\r\n" +
+                              "    <Platform Condition=\" '$(Platform)' == '' \">x86</Platform>\r\n" +
+                              "    <ProjectGuid>{53821041-E269-4717-BAED-3C9C6836E83F}</ProjectGuid>\r\n" +
+                              "    <OutputType>Library</OutputType>\r\n" +
+                              "    <AppDesignerFolder>Properties</AppDesignerFolder>\r\n" +
+                              "    <RootNamespace>" + Id + "</RootNamespace>\r\n" +
+                              "    <AssemblyName>" + Id + "</AssemblyName>\r\n" +
+                              "    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>\r\n" +
+                              "    <FileAlignment>512</FileAlignment>\r\n" +
+                              "    <TargetFrameworkProfile />\r\n" +
+                              "  </PropertyGroup>\r\n" +
+                              "  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|x86' \">\r\n" +
+                              "    <DebugType>pdbonly</DebugType>\r\n" +
+                              "    <Optimize>true</Optimize>\r\n" +
+                              "    <OutputPath>Mod\\</OutputPath>\r\n" +
+                              "    <DefineConstants>TRACE</DefineConstants>\r\n" +
+                              "    <ErrorReport>prompt</ErrorReport>\r\n" +
+                              "    <WarningLevel>4</WarningLevel>\r\n" +
+                              "  </PropertyGroup>\r\n" +
+                              "  <ItemGroup>\r\n" +
+                              "    " + resources + "\r\n" +
+                              "  </ItemGroup>\r\n" +
+                              "  <ItemGroup>\r\n" +
+                              "    " + references + "\r\n" +
+                              "  </ItemGroup>\r\n" +
+                              "  <ItemGroup>\r\n" +
+                              "    " + compiles + "\r\n" +
+                              "  </ItemGroup>\r\n" +
+                              "  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />\r\n" +
+                              "</Project>";
+
+            var solutionText = "Microsoft Visual Studio Solution File, Format Version 12.00\r\n" +
+                               "# Visual Studio 15\r\n" +
+                               "VisualStudioVersion = 15.0.26403.7\r\n" +
+                               "MinimumVisualStudioVersion = 10.0.40219.1\r\n" +
+                               "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"" + Id + "\", \"" + Id + ".csproj\", \"{53821041-E269-4717-BAED-3C9C6836E83F}\"\r\n" +
+                               "EndProject\r\n" +
+                               "Global\r\n" +
+                               "	GlobalSection(SolutionConfigurationPlatforms) = preSolution\r\n" +
+                               "		Release|x86 = Release|x86\r\n" +
+                               "	EndGlobalSection\r\n" +
+                               "	GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n" +
+                               "		{53821041-E269-4717-BAED-3C9C6836E83F}.Release|x86.ActiveCfg = Release|x86\r\n" +
+                               "		{53821041-E269-4717-BAED-3C9C6836E83F}.Release|x86.Build.0 = Release|x86\r\n" +
+                               "	EndGlobalSection\r\n" +
+                               "	GlobalSection(SolutionProperties) = preSolution\r\n" +
+                               "		HideSolutionNode = FALSE\r\n" +
+                               "	EndGlobalSection\r\n" +
+                               "EndGlobal\r\n";
 
             try
             {
-                System.IO.File.WriteAllText(projectPath, projectText);
-                System.IO.File.WriteAllText(solutionPath, solutionText);
+                File.WriteAllText(projectPath, projectText);
+                File.WriteAllText(solutionPath, solutionText);
             }
             catch (Exception e)
             {
                 SaveFailed = true;
-                return;
             }
         }
 
@@ -341,64 +359,81 @@ namespace ModAPI.Data.Models
         {
             try
             {
-                string path = GetFolderPath() + "ModInfo.xml";
-                this.Languages = new List<string>();
-                if (System.IO.File.Exists(path))
+                var path = GetFolderPath() + "ModInfo.xml";
+                Languages = new List<string>();
+                if (File.Exists(path))
                 {
-                    XDocument configuration = XDocument.Load(path);
-                    this.ID = configuration.Root.Attribute("ID").Value;
-                    this.Name = new MultilingualValue();
-                    this.Name.SetXML(configuration.Root.Element("Name"));
-                    this.Description = new MultilingualValue();
-                    this.Description.SetXML(configuration.Root.Element("Description"));
-                    this.Version = configuration.Root.Element("Version").Value;
-                    this.Buttons = new List<Button>();
+                    var configuration = XDocument.Load(path);
+                    Id = configuration.Root.Attribute("ID").Value;
+                    Name = new MultilingualValue();
+                    Name.SetXml(configuration.Root.Element("Name"));
+                    Description = new MultilingualValue();
+                    Description.SetXml(configuration.Root.Element("Description"));
+                    Version = configuration.Root.Element("Version").Value;
+                    Buttons = new List<Button>();
 
-                    foreach (string k in this.Description.GetLanguages())
-                        if (!Languages.Contains(k))
-                            Languages.Add(k);
-                    foreach (string k in this.Name.GetLanguages())
-                        if (!Languages.Contains(k))
-                            Languages.Add(k);
-                    foreach (XElement button in configuration.Root.Elements("Button"))
+                    foreach (var k in Description.GetLanguages())
                     {
-                        Button b = new Button();
-                        b.project = this;
-                        b.ID = Utils.XMLHelper.GetXMLAttributeAsString(button, "ID", "");
-                        b.StandardKey = Utils.XMLHelper.GetXMLAttributeAsString(button, "Standard", "");
-                        b.Name = new MultilingualValue();
-                        b.Name.SetXML(button.Element("Name"));
+                        if (!Languages.Contains(k))
+                        {
+                            Languages.Add(k);
+                        }
+                    }
+                    foreach (var k in Name.GetLanguages())
+                    {
+                        if (!Languages.Contains(k))
+                        {
+                            Languages.Add(k);
+                        }
+                    }
+                    foreach (var button in configuration.Root.Elements("Button"))
+                    {
+                        var b = new Button
+                        {
+                            Project = this,
+                            Id = XmlHelper.GetXmlAttributeAsString(button, "ID"),
+                            StandardKey = XmlHelper.GetXmlAttributeAsString(button, "Standard"),
+                            Name = new MultilingualValue()
+                        };
+                        b.Name.SetXml(button.Element("Name"));
                         b.Description = new MultilingualValue();
-                        b.Description.SetXML(button.Element("Description"));
+                        b.Description.SetXml(button.Element("Description"));
 
-                        foreach (string k in b.Description.GetLanguages())
+                        foreach (var k in b.Description.GetLanguages())
+                        {
                             if (!Languages.Contains(k))
+                            {
                                 Languages.Add(k);
-                        foreach (string k in b.Name.GetLanguages())
+                            }
+                        }
+                        foreach (var k in b.Name.GetLanguages())
+                        {
                             if (!Languages.Contains(k))
+                            {
                                 Languages.Add(k);
+                            }
+                        }
 
                         Buttons.Add(b);
                     }
                 }
-            } 
+            }
             catch (Exception e)
             {
-
             }
         }
 
-        public ModProject(Game game, string ID)
+        public ModProject(Game game, string id)
         {
-            this.Game = game;
-            this.ID = ID;
-            PreviousID = ID;
-            if (this.ID != "")
+            Game = game;
+            Id = id;
+            PreviousId = id;
+            if (Id != "")
             {
-                string path = GetFolderPath();
-                if (!System.IO.Directory.Exists(path))
+                var path = GetFolderPath();
+                if (!Directory.Exists(path))
                 {
-                    System.IO.Directory.CreateDirectory(path);
+                    Directory.CreateDirectory(path);
                 }
                 else
                 {
@@ -407,12 +442,16 @@ namespace ModAPI.Data.Models
             }
         }
 
-        protected string GetFolderPath(string ID = "")
+        protected string GetFolderPath(string id = "")
         {
-            if (ID == "") ID = this.ID;
+            if (id == "")
+            {
+                id = Id;
+            }
             try
             {
-                return System.IO.Path.GetFullPath(Configurations.Configuration.GetPath("Projects") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar + ID + System.IO.Path.DirectorySeparatorChar);
+                return Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id +
+                                        Path.DirectorySeparatorChar + id + Path.DirectorySeparatorChar);
             }
             catch (Exception e)
             {
@@ -420,103 +459,111 @@ namespace ModAPI.Data.Models
             }
         }
 
-        
         protected void SetProgress(ProgressHandler progress, float percentage, string newTask = "")
         {
             if (progress == null)
+            {
                 return;
+            }
             if (newTask != "")
+            {
                 progress.Task = newTask;
+            }
             progress.Progress = percentage;
         }
 
         protected void SetProgress(ProgressHandler progress, string newTask)
         {
             if (progress == null)
+            {
                 return;
+            }
             progress.Task = newTask;
         }
 
-
         public void Create(ProgressHandler progress)
         {
-            string modFilePath = GetFolderPath() + System.IO.Path.DirectorySeparatorChar + "Mod" + System.IO.Path.DirectorySeparatorChar + this.ID + ".dll";
-            if (!System.IO.File.Exists(modFilePath))
+            var modFilePath = GetFolderPath() + Path.DirectorySeparatorChar + "Mod" + Path.DirectorySeparatorChar + Id + ".dll";
+            if (!File.Exists(modFilePath))
             {
-                Debug.Log("Mod: "+ID, "Couldn't find the compiled mod dll at \""+modFilePath+"\".", Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't find the compiled mod dll at \"" + modFilePath + "\".", Debug.Type.Error);
                 SetProgress(progress, "Error.FileNotFound");
                 return;
             }
 
-            string modInfoPath = GetFolderPath() + System.IO.Path.DirectorySeparatorChar + "ModInfo.xml";
-            if (!System.IO.File.Exists(modInfoPath))
+            var modInfoPath = GetFolderPath() + Path.DirectorySeparatorChar + "ModInfo.xml";
+            if (!File.Exists(modInfoPath))
             {
-                Debug.Log("Mod: "+ID, "Couldn't find the mod configuration at \""+modInfoPath+"\".", Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't find the mod configuration at \"" + modInfoPath + "\".", Debug.Type.Error);
                 SetProgress(progress, "Error.FileNotFound");
                 return;
             }
 
-            string libraryFolder = Game.ModLibrary.GetLibraryFolder();
-            string baseModLibPath = libraryFolder + System.IO.Path.DirectorySeparatorChar + "BaseModLib.dll";
+            var libraryFolder = Game.ModLibrary.GetLibraryFolder();
+            var baseModLibPath = libraryFolder + Path.DirectorySeparatorChar + "BaseModLib.dll";
 
-            if (!System.IO.File.Exists(baseModLibPath))
+            if (!File.Exists(baseModLibPath))
             {
-                Debug.Log("Mod: "+ID, "Couldn't find BaseModLib.dll at \""+baseModLibPath+"\".", Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "Couldn't find BaseModLib.dll at \"" + baseModLibPath + "\".", Debug.Type.Error);
                 SetProgress(progress, "Error.FileNotFound");
                 return;
             }
 
             ModuleDefinition modModule;
             ModuleDefinition baseModLib;
-            try 
+            try
             {
                 SetProgress(progress, 0f, "Preparing");
                 baseModLib = ModuleDefinition.ReadModule(baseModLibPath);
                 SetProgress(progress, 5f);
-                Utils.CustomAssemblyResolver assemblyResolver = new Utils.CustomAssemblyResolver();
-                assemblyResolver.AddPath(ModAPI.Configurations.Configuration.GetPath("ModLib") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID + System.IO.Path.DirectorySeparatorChar);
-                modModule = ModuleDefinition.ReadModule(modFilePath, new ReaderParameters() {
+                var assemblyResolver = new CustomAssemblyResolver();
+                assemblyResolver.AddPath(Configuration.GetPath("ModLib") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id +
+                                         Path.DirectorySeparatorChar);
+                modModule = ModuleDefinition.ReadModule(modFilePath, new ReaderParameters
+                {
                     AssemblyResolver = assemblyResolver
                 });
                 SetProgress(progress, 10f);
-            } 
-            catch (Exception e) 
+            }
+            catch (Exception e)
             {
-                Debug.Log("Mod: "+ID, "One of the assemblies is corrupted: "+e.ToString(), Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "One of the assemblies is corrupted: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.CorruptAssembly");
                 return;
             }
 
-            Mod mod = new Mod(this.Game, "");
-            mod.header = new Mod.Header(mod, System.IO.File.ReadAllText(modInfoPath));
-            mod.module = modModule;
-            MemoryStream stream = new MemoryStream();
+            var mod = new Mod(Game, "");
+            mod.HeaderData = new Mod.Header(mod, File.ReadAllText(modInfoPath));
+            mod.Module = modModule;
+            var stream = new MemoryStream();
 
-            mod.module.Write(stream);
+            mod.Module.Write(stream);
             stream.Position = 0;
-            mod.originalModule = ModuleDefinition.ReadModule(stream);
-            
+            mod.OriginalModule = ModuleDefinition.ReadModule(stream);
+
             SetProgress(progress, 15f);
 
-            try 
+            try
             {
-                Dictionary<MethodReference, MethodReference> baseModLibRemap = new Dictionary<MethodReference, MethodReference>();
-                foreach (TypeDefinition baseModLibType in baseModLib.Types)
+                var baseModLibRemap = new Dictionary<MethodReference, MethodReference>();
+                foreach (var baseModLibType in baseModLib.Types)
                 {
-                    foreach (MethodDefinition method in baseModLibType.Methods)
+                    foreach (var method in baseModLibType.Methods)
                     {
                         if (method.HasCustomAttributes && method.CustomAttributes[0].AttributeType.Name == "AddModname")
                         {
-                            foreach (MethodDefinition method2 in baseModLibType.Methods)
+                            foreach (var method2 in baseModLibType.Methods)
                             {
                                 if (!method2.HasCustomAttributes && method2.Name == method.Name && method2.Parameters.Count > method.Parameters.Count)
                                 {
-                                    bool add = true;
-                                    for (int i = 0; i < method.Parameters.Count; i++)
+                                    var add = true;
+                                    for (var i = 0; i < method.Parameters.Count; i++)
                                     {
-                                        ParameterDefinition param = method.Parameters[i];
+                                        var param = method.Parameters[i];
                                         if (param.ParameterType.FullName != method2.Parameters[i].ParameterType.FullName)
+                                        {
                                             add = false;
+                                        }
                                     }
                                     if (add)
                                     {
@@ -529,18 +576,19 @@ namespace ModAPI.Data.Models
                 }
                 SetProgress(progress, 20f, "FetchingTypes");
 
-                Dictionary<string, string> injectableClasses = new Dictionary<string, string>();
-                Dictionary<string, Dictionary<string, TypeDefinition>> assemblyTypes = new Dictionary<string, Dictionary<string, TypeDefinition>>();
-            
-                for (int i = 0; i < Game.GameConfiguration.IncludeAssemblies.Count; i++)
+                var injectableClasses = new Dictionary<string, string>();
+                var assemblyTypes = new Dictionary<string, Dictionary<string, TypeDefinition>>();
+
+                for (var i = 0; i < Game.GameConfiguration.IncludeAssemblies.Count; i++)
                 {
-                    string assembly = libraryFolder + System.IO.Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
-                    ModuleDefinition module = ModuleDefinition.ReadModule(assembly);
-                    string key = System.IO.Path.GetFileNameWithoutExtension(assembly);
+                    var assembly = libraryFolder + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
+                    var module = ModuleDefinition.ReadModule(assembly);
+                    var key = Path.GetFileNameWithoutExtension(assembly);
                     assemblyTypes.Add(key, new Dictionary<string, TypeDefinition>());
-                    foreach (TypeDefinition type in module.Types)
+                    foreach (var type in module.Types)
                     {
-                        if (!ModLib.CheckName(type.Namespace, Game.GameConfiguration.ExcludeNamespaces) && !ModLib.CheckName(type.FullName, Game.GameConfiguration.ExcludeTypes) && !ModLib.CheckName(type.FullName, Game.GameConfiguration.NoFamily))
+                        if (!ModLib.CheckName(type.Namespace, Game.GameConfiguration.ExcludeNamespaces) && !ModLib.CheckName(type.FullName, Game.GameConfiguration.ExcludeTypes) &&
+                            !ModLib.CheckName(type.FullName, Game.GameConfiguration.NoFamily))
                         {
                             assemblyTypes[key].Add(type.FullName, type);
                             if (!injectableClasses.ContainsKey(type.FullName))
@@ -549,131 +597,134 @@ namespace ModAPI.Data.Models
                             }
                         }
                     }
-                    SetProgress(progress, 20f + ((float)i / (float)Game.GameConfiguration.IncludeAssemblies.Count) * 30f);
+                    SetProgress(progress, 20f + (i / (float) Game.GameConfiguration.IncludeAssemblies.Count) * 30f);
                 }
 
                 SetProgress(progress, 50f, "ConvertingClasses");
-                Dictionary<string, TypeDefinition> newClasses = new Dictionary<string, TypeDefinition>();
-                for (int i = 0; i < modModule.Types.Count; i++)
+                var newClasses = new Dictionary<string, TypeDefinition>();
+                for (var i = 0; i < modModule.Types.Count; i++)
                 {
-                    TypeDefinition type = modModule.Types[i];
+                    var type = modModule.Types[i];
                     if (type.FullName == "<Module>")
-                        continue;
-                
-                    foreach (MethodDefinition method in type.Methods)
                     {
-                        if (method != null && method.Body != null)
-                        {
-                            for (int j = 0; j < method.Body.Instructions.Count; j++)
-                            {
-                                ILProcessor methodIL = method.Body.GetILProcessor();
+                        continue;
+                    }
 
-                                Instruction instruction = method.Body.Instructions[j];
+                    foreach (var method in type.Methods)
+                    {
+                        if (method?.Body != null)
+                        {
+                            for (var j = 0; j < method.Body.Instructions.Count; j++)
+                            {
+                                var methodIl = method.Body.GetILProcessor();
+
+                                var instruction = method.Body.Instructions[j];
                                 if (instruction.OpCode == OpCodes.Call && instruction.Operand != null)
                                 {
-                                    foreach (KeyValuePair<MethodReference, MethodReference> map in baseModLibRemap)
+                                    foreach (var map in baseModLibRemap)
                                     {
-                                        if (((MethodReference)instruction.Operand).FullName == map.Key.FullName)
+                                        if (((MethodReference) instruction.Operand).FullName == map.Key.FullName)
                                         {
                                             instruction.Operand = type.Module.Import(map.Value);
-                                            Instruction newInstruction = methodIL.Create(OpCodes.Ldstr, ID);
-                                            methodIL.InsertBefore(instruction, newInstruction);
+                                            var newInstruction = methodIl.Create(OpCodes.Ldstr, Id);
+                                            methodIl.InsertBefore(instruction, newInstruction);
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    string assemblyName = "";
+                    var assemblyName = "";
                     if (type.BaseType != null && injectableClasses.ContainsKey(type.BaseType.FullName))
+                    {
                         assemblyName = injectableClasses[type.BaseType.FullName];
+                    }
                     if (assemblyName == "" || !assemblyTypes[assemblyName].ContainsKey(type.BaseType.FullName))
                     {
-                        Mod.Header.AddClass addClass = new Mod.Header.AddClass(mod);
-                        addClass.Type = type;
-                        mod.header.AddAddClass(addClass);
+                        var addClass = new Mod.Header.AddClass(mod) { Type = type };
+                        mod.HeaderData.AddAddClass(addClass);
                     }
                     else
                     {
-                        foreach (Mono.Cecil.FieldDefinition field in type.Fields)
+                        foreach (var field in type.Fields)
                         {
-                            Mod.Header.AddField addField = new Mod.Header.AddField(mod);
-                            addField.Field = field;
-                            addField.AssemblyName = assemblyName;
-                            mod.header.AddAddField(addField);
+                            var addField = new Mod.Header.AddField(mod)
+                            {
+                                Field = field,
+                                AssemblyName = assemblyName
+                            };
+                            mod.HeaderData.AddAddField(addField);
                         }
-                        foreach (MethodDefinition method in type.Methods)
+                        foreach (var method in type.Methods)
                         {
-                            if (method == null) continue;
-                            int priority = int.MaxValue;
+                            if (method == null)
+                            {
+                                continue;
+                            }
+                            var priority = int.MaxValue;
 
                             if (method.CustomAttributes != null)
                             {
-                                foreach (CustomAttribute attribute in method.CustomAttributes)
+                                foreach (var attribute in method.CustomAttributes)
                                 {
                                     if (attribute.AttributeType.Name == "Priority")
                                     {
-                                        priority = (int)attribute.ConstructorArguments[0].Value;
+                                        priority = (int) attribute.ConstructorArguments[0].Value;
                                     }
                                 }
                             }
 
-                            bool inject = false;
-                            
-                            if (method.IsVirtual || method.IsStatic || method.IsConstructor) 
+                            var inject = false;
+
+                            if (method.IsVirtual || method.IsStatic || method.IsConstructor)
                             {
-                                foreach (MethodDefinition _m in assemblyTypes[assemblyName][type.BaseType.FullName].Methods)
-                                {                
-                                    if (_m.Name == method.Name)
+                                foreach (var m in assemblyTypes[assemblyName][type.BaseType.FullName].Methods.Where(o => o.Name == method.Name))
+                                {
+                                    // Only compare methods with same parameter count
+                                    if (method.Parameters.Count == m.Parameters.Count)
                                     {
-                                        if ((_m.IsStatic && method.IsStatic) || (_m.IsConstructor && method.IsConstructor))
+                                        // No need to compare parameterless methods
+                                        if (method.Parameters.Count == 0)
                                         {
-                                            if (method.Parameters.Count == _m.Parameters.Count)
-                                            {
-                                                bool ok = true;
-                                                for (int pi = 0; pi < _m.Parameters.Count; pi++)
-                                                {
-                                                    ParameterDefinition param = _m.Parameters[pi];
-                                                    if (param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName)
-                                                    {
-                                                        ok = false;
-                                                        break;
-                                                    }
-                                                }
-                                                if (ok)
-                                                {
-                                                    inject = true;
-                                                }
-                                            }
-                                        }
-                                        else if (!_m.IsStatic && !method.IsStatic) 
                                             inject = true;
-                                        break;
+                                            break;
+                                        }
+                                        
+                                        // Comapare parameters
+                                        if (!m.Parameters.Where((param, pi) => param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName).Any())
+                                        {
+                                            inject = true;
+                                            break;
+                                        }
                                     }
                                 }
                             }
 
-                            if (inject) 
+                            if (inject)
                             {
-                                Mod.Header.InjectInto injectInto = new Mod.Header.InjectInto(mod);
-                                injectInto.Method = method;
-                                injectInto.Priority = priority;
-                                injectInto.AssemblyName = assemblyName;
-                                mod.header.AddInjectInto(injectInto);
-                            } 
-                            else 
+                                var injectInto = new Mod.Header.InjectInto(mod)
+                                {
+                                    Method = method,
+                                    Priority = priority,
+                                    AssemblyName = assemblyName
+                                };
+                                mod.HeaderData.AddInjectInto(injectInto);
+                            }
+                            else
                             {
-                                Mod.Header.AddMethod addMethod = new Mod.Header.AddMethod(mod);
-                                addMethod.Method = method;
-                                addMethod.AssemblyName = assemblyName;
-                                mod.header.AddAddMethod(addMethod);
+                                var addMethod = new Mod.Header.AddMethod(mod)
+                                {
+                                    Method = method,
+                                    AssemblyName = assemblyName
+                                };
+                                mod.HeaderData.AddAddMethod(addMethod);
                             }
                         }
                     }
-                    SetProgress(progress, 50f + ((float)i / (float)modModule.Types.Count) * 30f);
+                    SetProgress(progress, 50f + (i / (float) modModule.Types.Count) * 30f);
                 }
 
-                foreach (AssemblyNameReference aref in modModule.AssemblyReferences)
+                foreach (var aref in modModule.AssemblyReferences)
                 {
                     if (aref.Name == "mscorlib" || aref.Name == "System")
                     {
@@ -691,67 +742,67 @@ namespace ModAPI.Data.Models
                         aref.PublicKeyToken = new byte[] { 0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89 };
                     }
                 }
-            } 
-            catch (Exception e) 
+            }
+            catch (Exception e)
             {
-                Debug.Log("Mod: "+ID, "An unexpected error occured while parsing the assembly: "+e.ToString(), Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "An unexpected error occured while parsing the assembly: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.UnexpectedError");
                 return;
             }
 
-            
-            string modResourcesPath = GetFolderPath() + System.IO.Path.DirectorySeparatorChar + "Resources/";
-            if (!System.IO.Directory.Exists(modResourcesPath))
+            var modResourcesPath = GetFolderPath() + Path.DirectorySeparatorChar + "Resources/";
+            if (!Directory.Exists(modResourcesPath))
             {
-                System.IO.Directory.CreateDirectory(modResourcesPath);
+                Directory.CreateDirectory(modResourcesPath);
             }
-            if (System.IO.Directory.GetFiles(modResourcesPath).Length > 0 || System.IO.Directory.GetDirectories(modResourcesPath).Length > 0)
+            if (Directory.GetFiles(modResourcesPath).Length > 0 || Directory.GetDirectories(modResourcesPath).Length > 0)
             {
-                ZipFile newZipFile = new ZipFile();
-                newZipFile.AddDirectory(modResourcesPath); 
+                var newZipFile = new ZipFile();
+                newZipFile.AddDirectory(modResourcesPath);
                 newZipFile.Comment = "Automaticlly created resources zip file.";
                 mod.Resources = newZipFile;
             }
-            
-            
-            try 
+
+            try
             {
                 SetProgress(progress, 90f, "SavingMod");
 
-                
-                string modFolder = System.IO.Path.GetFullPath(Configuration.GetPath("mods") + System.IO.Path.DirectorySeparatorChar + Game.GameConfiguration.ID);
+                var modFolder = Path.GetFullPath(Configuration.GetPath("mods") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id);
 
-                if (!System.IO.Directory.Exists(modFolder))
-                    System.IO.Directory.CreateDirectory(modFolder);
-
-                mod.FileName = System.IO.Path.GetFullPath(modFolder + System.IO.Path.DirectorySeparatorChar + mod.UniqueID + ".mod");
-                if (mod.Save()) 
+                if (!Directory.Exists(modFolder))
                 {
-                    string key = mod.ID + "-" + mod.header.GetVersion();
-                    if (Mod.Mods.ContainsKey(key)) 
+                    Directory.CreateDirectory(modFolder);
+                }
+
+                mod.FileName = Path.GetFullPath(modFolder + Path.DirectorySeparatorChar + mod.UniqueId + ".mod");
+                if (mod.Save())
+                {
+                    var key = mod.Id + "-" + mod.HeaderData.GetVersion();
+                    if (Mod.Mods.ContainsKey(key))
                     {
                         if (Mod.Mods[key].FileName != mod.FileName)
+                        {
                             Mod.Mods[key].Remove();
+                        }
                         //Mod.Mods[key] = mod;
-                    } 
+                    }
                     /*else 
                     {
                         Mod.Mods.Add(key, mod);
                     }*/
                     SetProgress(progress, 100f, "Finish");
-                } 
-                else 
+                }
+                else
                 {
-                    Debug.Log("Mod: "+ID, "Could not save the mod.", Debug.Type.ERROR);
+                    Debug.Log("Mod: " + Id, "Could not save the mod.", Debug.Type.Error);
                     SetProgress(progress, "Error.Save");
                 }
-            } 
-            catch (Exception e) 
+            }
+            catch (Exception e)
             {
-                Debug.Log("Mod: "+ID, "An error occured while saving the mod: "+e.ToString(), Debug.Type.ERROR);
+                Debug.Log("Mod: " + Id, "An error occured while saving the mod: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.Save");
             }
         }
-
     }
 }

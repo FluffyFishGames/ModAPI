@@ -44,7 +44,7 @@
                Cursor="Hand" 
                Stretch="Fill">
             <Image.Clip>
-                <RectangleGeometry Rect="0,0,0,180" x:Name="LoadingRect"></RectangleGeometry>
+                <RectangleGeometry Rect="0,0,0,180" x:Name="LoadingRect" />
             </Image.Clip>
         </Image>
     </Grid>

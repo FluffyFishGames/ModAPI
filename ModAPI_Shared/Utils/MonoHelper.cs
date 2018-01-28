@@ -24,10 +24,8 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ModAPI.Data;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -39,7 +37,6 @@ namespace ModAPI.Utils
     /// </summary>
     public class MonoHelper
     {
-
         /// <summary>
         /// CopyField copies a field definition into a new copy which can be added
         /// to another module.
@@ -48,11 +45,10 @@ namespace ModAPI.Utils
         /// <returns>A copy of the FieldDefinition</returns>
         public static FieldDefinition CopyField(FieldDefinition field)
         {
-            FieldDefinition newField = new FieldDefinition(field.Name, field.Attributes, field.FieldType);
-            newField.HasDefault = field.HasDefault;
+            var newField = new FieldDefinition(field.Name, field.Attributes, field.FieldType) { HasDefault = field.HasDefault };
             if (field.InitialValue != null)
             {
-                byte[] arr = new byte[field.InitialValue.Length];
+                var arr = new byte[field.InitialValue.Length];
                 field.InitialValue.CopyTo(arr, 0);
                 newField.InitialValue = arr;
             }
@@ -65,55 +61,59 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="method">The MethodDefinition to copy</param>
         /// <returns>A copy of the MethodDefinition</returns>
-        public static MethodDefinition CopyMethod(MethodDefinition method) 
+        public static MethodDefinition CopyMethod(MethodDefinition method)
         {
-            MethodDefinition newMethod = new MethodDefinition(method.Name, method.Attributes, method.ReturnType);
-            foreach (ParameterDefinition param in method.Parameters) 
+            var newMethod = new MethodDefinition(method.Name, method.Attributes, method.ReturnType);
+            foreach (var param in method.Parameters)
             {
-                ParameterDefinition newParam = new ParameterDefinition(param.Name, param.Attributes, param.ParameterType);
+                var newParam = new ParameterDefinition(param.Name, param.Attributes, param.ParameterType);
                 newMethod.Parameters.Add(newParam);
             }
 
-            foreach (CustomAttribute attr in method.CustomAttributes)
+            foreach (var attr in method.CustomAttributes)
             {
-                CustomAttribute newAttr = new CustomAttribute(attr.Constructor);
-                foreach (CustomAttributeArgument arg in attr.ConstructorArguments)
+                var newAttr = new CustomAttribute(attr.Constructor);
+                foreach (var arg in attr.ConstructorArguments)
                 {
-                    CustomAttributeArgument newArg = new CustomAttributeArgument(arg.Type, arg.Value);
+                    var newArg = new CustomAttributeArgument(arg.Type, arg.Value);
                     newAttr.ConstructorArguments.Add(newArg);
                 }
-                foreach (CustomAttributeNamedArgument arg in attr.Fields)
+                foreach (var arg in attr.Fields)
                 {
-                    CustomAttributeNamedArgument newArg = new CustomAttributeNamedArgument(arg.Name, new CustomAttributeArgument(arg.Argument.Type, arg.Argument.Value));
+                    var newArg = new CustomAttributeNamedArgument(arg.Name, new CustomAttributeArgument(arg.Argument.Type, arg.Argument.Value));
                     newAttr.Fields.Add(newArg);
                 }
                 newMethod.CustomAttributes.Add(newAttr);
             }
 
-            if (method.Body != null) 
+            if (method.Body != null)
             {
                 if (newMethod.Body == null)
+                {
                     newMethod.Body = new MethodBody(newMethod);
-                foreach (Instruction inst in method.Body.Instructions) 
+                }
+                foreach (var inst in method.Body.Instructions)
                 {
                     newMethod.Body.Instructions.Add(inst);
                 }
 
-                foreach (VariableDefinition var in method.Body.Variables) 
+                foreach (var var in method.Body.Variables)
                 {
-                    VariableDefinition newVar = new VariableDefinition(var.Name, var.VariableType);
+                    var newVar = new VariableDefinition(var.VariableType);
                     newMethod.Body.Variables.Add(newVar);
                 }
 
-                foreach (ExceptionHandler handler in method.Body.ExceptionHandlers)
+                foreach (var handler in method.Body.ExceptionHandlers)
                 {
-                    ExceptionHandler newHandler = new ExceptionHandler(handler.HandlerType);
-                    newHandler.HandlerStart = handler.HandlerStart;
-                    newHandler.HandlerEnd = handler.HandlerEnd;
-                    newHandler.TryStart = handler.TryStart;
-                    newHandler.TryEnd = handler.TryEnd;
-                    newHandler.FilterStart = handler.FilterStart;
-                    newHandler.CatchType = handler.CatchType;
+                    var newHandler = new ExceptionHandler(handler.HandlerType)
+                    {
+                        HandlerStart = handler.HandlerStart,
+                        HandlerEnd = handler.HandlerEnd,
+                        TryStart = handler.TryStart,
+                        TryEnd = handler.TryEnd,
+                        FilterStart = handler.FilterStart,
+                        CatchType = handler.CatchType
+                    };
                     newMethod.Body.ExceptionHandlers.Add(newHandler);
                 }
 
@@ -128,21 +128,23 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="method">The method in which the references should be remapped.</param>
-        /// <param name="NewMethods">A dictionary which describes which method references should be remapped to which new method definitions.</param>
+        /// <param name="newMethods">A dictionary which describes which method references should be remapped to which new method definitions.</param>
         public static void Remap(
             ModuleDefinition hostModule,
             MethodDefinition method,
-            Dictionary<MethodReference, MethodDefinition> NewMethods)
+            Dictionary<MethodReference, MethodDefinition> newMethods)
         {
             if (method.Body != null)
             {
-                foreach (Instruction instruction in method.Body.Instructions)
+                foreach (var instruction in method.Body.Instructions)
                 {
                     if (instruction.Operand is MethodReference)
                     {
-                        MethodReference methodReference = (MethodReference)instruction.Operand;
-                        if (NewMethods.ContainsKey(methodReference))
-                            instruction.Operand = (MethodReference)NewMethods[methodReference]; //hostModule.Import(
+                        var methodReference = (MethodReference) instruction.Operand;
+                        if (newMethods.ContainsKey(methodReference))
+                        {
+                            instruction.Operand = newMethods[methodReference]; //hostModule.Import(
+                        }
                     }
                 }
             }
@@ -153,15 +155,15 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="field">The field definition to resolve.</param>
-        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
-        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <param name="addedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="typesMap">A map of types to lookup while resolving.</param>
         public static void Resolve(
             ModuleDefinition hostModule,
             FieldDefinition field,
-            Dictionary<TypeReference, TypeDefinition> AddedClasses,
-            Dictionary<TypeReference, TypeReference> TypesMap)
+            Dictionary<TypeReference, TypeDefinition> addedClasses,
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
-            field.FieldType = Resolve(hostModule, field.FieldType, AddedClasses, TypesMap);
+            field.FieldType = Resolve(hostModule, field.FieldType, addedClasses, typesMap);
         }
 
         /// <summary>
@@ -169,85 +171,87 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="method">The method to resolve.</param>
-        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
-        /// <param name="AddedFields">Newly added fields to lookup while resolving.</param>
-        /// <param name="AddedMethods">Newly added methods to lookup while resolving.</param>
-        /// <param name="InjectedMethods">Injected methods to lookup while resolving.</param>
-        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <param name="addedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="addedFields">Newly added fields to lookup while resolving.</param>
+        /// <param name="addedMethods">Newly added methods to lookup while resolving.</param>
+        /// <param name="injectedMethods">Injected methods to lookup while resolving.</param>
+        /// <param name="typesMap">A map of types to lookup while resolving.</param>
         public static void Resolve(
             ModuleDefinition hostModule,
             MethodDefinition method,
-            Dictionary<TypeReference, TypeDefinition> AddedClasses,
-            Dictionary<FieldReference, FieldDefinition> AddedFields,
-            Dictionary<MethodReference, MethodDefinition> AddedMethods,
-            Dictionary<MethodReference, MethodDefinition> InjectedMethods,
-            Dictionary<TypeReference, TypeReference> TypesMap)
+            Dictionary<TypeReference, TypeDefinition> addedClasses,
+            Dictionary<FieldReference, FieldDefinition> addedFields,
+            Dictionary<MethodReference, MethodDefinition> addedMethods,
+            Dictionary<MethodReference, MethodDefinition> injectedMethods,
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             /*
 	         * Fix from magomerdino
-	         * http://www.modapi.de/index.php/User/314-magomerdino/
-	         * http://www.modapi.de/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
+	         * http://www.modapi.cc/index.php/User/314-magomerdino/
+	         * http://www.modapi.cc/index.php/Thread/89-Little-Fix-New-mods/?postID=525#post525
 	         * Posted on 08/23/2015
 	         */
-            foreach (ParameterDefinition param in method.Parameters)
+            foreach (var param in method.Parameters)
             {
-                param.ParameterType = Resolve(hostModule, param.ParameterType, AddedClasses, TypesMap);
+                param.ParameterType = Resolve(hostModule, param.ParameterType, addedClasses, typesMap);
             }
             /* End of fix */
-            foreach (CustomAttribute attr in method.CustomAttributes)
+            method.ReturnType = Resolve(hostModule, method.ReturnType, addedClasses, typesMap);
+            foreach (var attr in method.CustomAttributes)
             {
                 if (attr.Constructor.Module != hostModule)
-                    attr.Constructor = hostModule.Import(attr.Constructor);
-                for (int i = 0; i < attr.ConstructorArguments.Count; i++)
                 {
-                    CustomAttributeArgument arg = attr.ConstructorArguments[i];
+                    attr.Constructor = hostModule.ImportReference(attr.Constructor);
+                }
+                for (var i = 0; i < attr.ConstructorArguments.Count; i++)
+                {
+                    var arg = attr.ConstructorArguments[i];
                     if (arg.Type.Module != hostModule)
                     {
-                        attr.ConstructorArguments[i] = new CustomAttributeArgument(hostModule.Import(arg.Type), arg.Value);
+                        attr.ConstructorArguments[i] = new CustomAttributeArgument(hostModule.ImportReference(arg.Type), arg.Value);
                     }
-                } 
-                for (int i = 0; i < attr.Fields.Count; i++)
+                }
+                for (var i = 0; i < attr.Fields.Count; i++)
                 {
-                    CustomAttributeNamedArgument arg = attr.Fields[i];
+                    var arg = attr.Fields[i];
                     if (arg.Argument.Type.Module != hostModule)
                     {
-                        attr.Fields[i] = new CustomAttributeNamedArgument(arg.Name, new CustomAttributeArgument(hostModule.Import(arg.Argument.Type), arg.Argument.Value));
+                        attr.Fields[i] = new CustomAttributeNamedArgument(arg.Name, new CustomAttributeArgument(hostModule.ImportReference(arg.Argument.Type), arg.Argument.Value));
                     }
                 }
             }
             if (method.Body != null)
             {
-                foreach (ExceptionHandler handler in method.Body.ExceptionHandlers)
+                foreach (var handler in method.Body.ExceptionHandlers)
                 {
-                    handler.CatchType = Resolve(hostModule, handler.CatchType, AddedClasses, TypesMap);
+                    handler.CatchType = Resolve(hostModule, handler.CatchType, addedClasses, typesMap);
                 }
-                foreach (VariableDefinition variable in method.Body.Variables)
+                foreach (var variable in method.Body.Variables)
                 {
-                    variable.VariableType = Resolve(hostModule, variable.VariableType, AddedClasses, TypesMap);
+                    variable.VariableType = Resolve(hostModule, variable.VariableType, addedClasses, typesMap);
                 }
-                foreach (Instruction instruction in method.Body.Instructions)
+                foreach (var instruction in method.Body.Instructions)
                 {
                     if (instruction.Operand is GenericInstanceMethod)
                     {
-                        GenericInstanceMethod genericInstance = (GenericInstanceMethod)instruction.Operand;
-                        instruction.Operand = Resolve(hostModule, genericInstance, AddedClasses, AddedMethods, TypesMap);
+                        var genericInstance = (GenericInstanceMethod) instruction.Operand;
+                        instruction.Operand = Resolve(hostModule, genericInstance, addedClasses, addedMethods, typesMap);
                     }
                     else if (instruction.Operand is MethodReference)
                     {
-                        MethodReference methodReference = (MethodReference)instruction.Operand;
-                        instruction.Operand = Resolve(hostModule, methodReference, AddedClasses, AddedMethods, TypesMap);
+                        var methodReference = (MethodReference) instruction.Operand;
+                        instruction.Operand = Resolve(hostModule, methodReference, addedClasses, addedMethods, typesMap);
                     }
                     else if (instruction.Operand is TypeReference)
                     {
-                        TypeReference typeReference = (TypeReference)instruction.Operand;
-                        instruction.Operand = Resolve(hostModule, typeReference, AddedClasses, TypesMap);
+                        var typeReference = (TypeReference) instruction.Operand;
+                        instruction.Operand = Resolve(hostModule, typeReference, addedClasses, typesMap);
                     }
                     else if (instruction.Operand is FieldReference)
                     {
-                        FieldReference fieldReference = (FieldReference)instruction.Operand;
-                        instruction.Operand = Resolve(hostModule, fieldReference, AddedClasses, AddedFields, TypesMap);
+                        var fieldReference = (FieldReference) instruction.Operand;
+                        instruction.Operand = Resolve(hostModule, fieldReference, addedClasses, addedFields, typesMap);
                     }
-                    
                 }
             }
         }
@@ -258,62 +262,60 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="type">The type to resolve.</param>
-        /// <param name="AddedClasses">Newly added classes to lookup while resolving.</param>
-        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <param name="addedClasses">Newly added classes to lookup while resolving.</param>
+        /// <param name="typesMap">A map of types to lookup while resolving.</param>
         /// <returns></returns>
         protected static TypeReference Resolve(
             ModuleDefinition hostModule,
             TypeReference type,
-            Dictionary<TypeReference, TypeDefinition> AddedClasses,
-            Dictionary<TypeReference, TypeReference> TypesMap)
+            Dictionary<TypeReference, TypeDefinition> addedClasses,
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
             if (type is GenericInstanceType)
             {
-                GenericInstanceType gType = (GenericInstanceType)type;
-                GenericInstanceType nType = new GenericInstanceType(Resolve(hostModule, gType.ElementType, AddedClasses, TypesMap));
-                foreach (TypeReference t in gType.GenericArguments)
+                var gType = (GenericInstanceType) type;
+                var nType = new GenericInstanceType(Resolve(hostModule, gType.ElementType, addedClasses, typesMap));
+                foreach (var t in gType.GenericArguments)
                 {
-                    nType.GenericArguments.Add(Resolve(hostModule, t, AddedClasses, TypesMap));
+                    nType.GenericArguments.Add(Resolve(hostModule, t, addedClasses, typesMap));
                 }
                 return nType;
             }
             if (type == null || type is GenericParameter || (type.IsArray && type.GetElementType() is GenericParameter))
+            {
                 return type;
-            if (TypesMap.ContainsKey(type))
-                return hostModule.Import(TypesMap[type]);
-            foreach (TypeReference addedType in AddedClasses.Keys)
+            }
+            if (typesMap.ContainsKey(type))
+            {
+                return hostModule.ImportReference(typesMap[type]);
+            }
+            foreach (var addedType in addedClasses.Keys)
             {
                 if (addedType == type)
                 {
-                    return hostModule.Import(AddedClasses[addedType]);
+                    return hostModule.ImportReference(addedClasses[addedType]);
                 }
             }
             if (type.Module != hostModule)
             {
-                TypeDefinition t = hostModule.GetType(type.FullName);
+                var t = hostModule.GetType(type.FullName);
                 if (t != null)
                 {
-                    return (TypeReference)t;
+                    return t;
                 }
-                if (hostModule == null || type == null)
-                    return type;
-                else
+                try
                 {
-                    try
-                    {
-                        return hostModule.Import(type);
-                    }
-                    catch (Exception e)
-                    {
-                        System.Console.WriteLine(type.GetElementType());
-                        System.Console.WriteLine(type.GetType().FullName);
-                        throw e;
-                    }
+                    return hostModule.ImportReference(type);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(type.GetElementType());
+                    Console.WriteLine(type.GetType().FullName);
+                    throw e;
                 }
             }
-            else
-                return type;
-                
+
+            return type;
         }
 
         /// <summary>
@@ -321,46 +323,44 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="field">The field reference to resolve.</param>
-        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
-        /// <param name="AddedFields">Newly added fields to lookup while resolving.</param>
-        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <param name="addedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="addedFields">Newly added fields to lookup while resolving.</param>
+        /// <param name="typesMap">A map of types to lookup while resolving.</param>
         /// <returns>The resolved FieldReference</returns>
         protected static FieldReference Resolve(
             ModuleDefinition hostModule,
             FieldReference field,
-            Dictionary<TypeReference, TypeDefinition> AddedClasses,
-            Dictionary<FieldReference, FieldDefinition> AddedFields,
-            Dictionary<TypeReference, TypeReference> TypesMap)
+            Dictionary<TypeReference, TypeDefinition> addedClasses,
+            Dictionary<FieldReference, FieldDefinition> addedFields,
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
-            foreach (FieldReference addedField in AddedFields.Keys)
+            foreach (var addedField in addedFields.Keys)
             {
                 if (addedField.FullName == field.FullName || addedField == field)
                 {
-                    if (AddedFields[addedField].Module != hostModule)
-                        return hostModule.Import(AddedFields[addedField]);
-                    else 
-                        return AddedFields[addedField]; //hostModule.Import(
+                    if (addedFields[addedField].Module != hostModule)
+                    {
+                        return hostModule.ImportReference(addedFields[addedField]);
+                    }
+                    return addedFields[addedField]; //hostModule.Import(
                 }
             }
             if (field.Module != hostModule)
             {
-                TypeDefinition t = hostModule.GetType(field.DeclaringType.FullName);
+                var t = hostModule.GetType(field.DeclaringType.FullName);
                 if (t != null)
                 {
-                    foreach (FieldDefinition f in t.Fields)
+                    foreach (var f in t.Fields)
                     {
                         if (f.FullName == field.FullName)
                         {
-                            return (FieldReference)f;
+                            return f;
                         }
                     }
                 }
-                return hostModule.Import(field);
+                return hostModule.ImportReference(field);
             }
-            else
-            {
-                return field;
-            }
+            return field;
         }
 
         /// <summary>
@@ -369,36 +369,44 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="method">The method reference to resolve.</param>
-        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
-        /// <param name="AddedMethods">Newly added methods to lookup while resolving.</param>
-        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <param name="addedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="addedMethods">Newly added methods to lookup while resolving.</param>
+        /// <param name="typesMap">A map of types to lookup while resolving.</param>
         /// <returns>The resolved method reference.</returns>
         protected static MethodReference Resolve(
             ModuleDefinition hostModule,
             MethodReference method,
-            Dictionary<TypeReference, TypeDefinition> AddedClasses,
-            Dictionary<MethodReference, MethodDefinition> AddedMethods,
-            Dictionary<TypeReference, TypeReference> TypesMap)
+            Dictionary<TypeReference, TypeDefinition> addedClasses,
+            Dictionary<MethodReference, MethodDefinition> addedMethods,
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
-            if (AddedMethods.ContainsKey(method))
-                return AddedMethods[method]; //hostModule.Import(
-            MethodReference newReference = new MethodReference(method.Name, Resolve(hostModule, method.ReturnType, AddedClasses, TypesMap), Resolve(hostModule, method.DeclaringType, AddedClasses, TypesMap));
-            
-            foreach (GenericParameter generic in method.GenericParameters)
+            if (addedMethods.ContainsKey(method))
             {
-                GenericParameter newGeneric = new GenericParameter(generic.Name, newReference);
-                newGeneric.Attributes = generic.Attributes;
+                return addedMethods[method]; //hostModule.Import(
+            }
+            var newReference = new MethodReference(method.Name, Resolve(hostModule, method.ReturnType, addedClasses, typesMap),
+                Resolve(hostModule, method.DeclaringType, addedClasses, typesMap));
 
+            foreach (var generic in method.GenericParameters)
+            {
+                var newGeneric = new GenericParameter(generic.Name, newReference)
+                {
+                    Attributes = generic.Attributes
+                };
                 newReference.GenericParameters.Add(newGeneric);
             }
             if (method.ReturnType is GenericParameter)
             {
-                GenericParameter g = (GenericParameter)method.ReturnType;
+                var g = (GenericParameter) method.ReturnType;
                 if (newReference.GenericParameters.Count > g.Position)
+                {
                     newReference.ReturnType = newReference.GenericParameters[g.Position];
+                }
             }
-            foreach (ParameterDefinition parameter in method.Parameters)
-                newReference.Parameters.Add(new ParameterDefinition(parameter.Name, parameter.Attributes, Resolve(hostModule, parameter.ParameterType, AddedClasses, TypesMap)));
+            foreach (var parameter in method.Parameters)
+            {
+                newReference.Parameters.Add(new ParameterDefinition(parameter.Name, parameter.Attributes, Resolve(hostModule, parameter.ParameterType, addedClasses, typesMap)));
+            }
             newReference.CallingConvention = method.CallingConvention;
             newReference.MethodReturnType.Attributes = method.MethodReturnType.Attributes;
             newReference.HasThis = method.HasThis;
@@ -410,29 +418,31 @@ namespace ModAPI.Utils
         /// </summary>
         /// <param name="hostModule">The module in which the changes are made.</param>
         /// <param name="method">The generic instance method to resolve.</param>
-        /// <param name="AddedClasses">Newly added types to lookup while resolving.</param>
-        /// <param name="AddedMethods">Newly added methods to lookup while resolving.</param>
-        /// <param name="TypesMap">A map of types to lookup while resolving.</param>
+        /// <param name="addedClasses">Newly added types to lookup while resolving.</param>
+        /// <param name="addedMethods">Newly added methods to lookup while resolving.</param>
+        /// <param name="typesMap">A map of types to lookup while resolving.</param>
         /// <returns>The resolved generic instance method.</returns>
         protected static GenericInstanceMethod Resolve(
             ModuleDefinition hostModule,
             GenericInstanceMethod method,
-            Dictionary<TypeReference, TypeDefinition> AddedClasses,
-            Dictionary<MethodReference, MethodDefinition> AddedMethods,
-            Dictionary<TypeReference, TypeReference> TypesMap)
+            Dictionary<TypeReference, TypeDefinition> addedClasses,
+            Dictionary<MethodReference, MethodDefinition> addedMethods,
+            Dictionary<TypeReference, TypeDefinition> typesMap)
         {
-            if (AddedMethods.ContainsKey(method))
-                return (GenericInstanceMethod)((MethodReference)AddedMethods[method]); //hostModule.Import(
-            MethodReference elementMethod = Resolve(hostModule, method.ElementMethod, AddedClasses, AddedMethods, TypesMap);
-            GenericInstanceMethod newReference = new GenericInstanceMethod(elementMethod);
-            foreach (TypeReference type in method.GenericArguments)
+            if (addedMethods.ContainsKey(method))
             {
-                TypeReference newType = Resolve(hostModule, type, AddedClasses, TypesMap);
+                return (GenericInstanceMethod) ((MethodReference) addedMethods[method]); //hostModule.Import(
+            }
+            var elementMethod = Resolve(hostModule, method.ElementMethod, addedClasses, addedMethods, typesMap);
+            var newReference = new GenericInstanceMethod(elementMethod);
+            foreach (var type in method.GenericArguments)
+            {
+                var newType = Resolve(hostModule, type, addedClasses, typesMap);
                 newReference.GenericArguments.Add(newType);
             }
             if (method.ReturnType is GenericParameter)
             {
-                GenericParameter g = (GenericParameter)method.ReturnType;
+                var g = (GenericParameter) method.ReturnType;
 
                 newReference.ReturnType = elementMethod.GenericParameters[g.Position];
             }
@@ -452,55 +462,61 @@ namespace ModAPI.Utils
         /// <param name="mod">The mod currently parsed.</param>
         /// <param name="configuration">The configuration file where the attributes are saved for quicker lookup while in-game.</param>
         /// <param name="method">The method to parse</param>
-        /// <param name="ConfigurationAttributes">A dictionary filled with the attributes to look for.</param>
-        public static void ParseCustomAttributes(ModAPI.Data.Mod mod, XDocument configuration, MethodDefinition method, Dictionary<string, TypeDefinition> ConfigurationAttributes)
+        /// <param name="configurationAttributes">A dictionary filled with the attributes to look for.</param>
+        public static void ParseCustomAttributes(Mod mod, XDocument configuration, MethodDefinition method, Dictionary<string, TypeDefinition> configurationAttributes)
         {
-            for (int k = 0; k < method.CustomAttributes.Count; k++)
+            for (var k = 0; k < method.CustomAttributes.Count; k++)
             {
-                CustomAttribute attribute = method.CustomAttributes[k];
-                string attrKey = attribute.AttributeType.FullName;
-                if (ConfigurationAttributes.ContainsKey(attrKey))
+                var attribute = method.CustomAttributes[k];
+                var attrKey = attribute.AttributeType.FullName;
+                if (configurationAttributes.ContainsKey(attrKey))
                 {
-                    TypeDefinition attributeType = ConfigurationAttributes[attrKey];
-                    bool valid = true;
-                    foreach (TypeReference interfc in attributeType.Interfaces) 
+                    var attributeType = configurationAttributes[attrKey];
+                    var valid = true;
+                    foreach (var interfc in attributeType.Interfaces)
                     {
-                        if (interfc.Name == "IStaticAttribute" && !method.IsStatic)
+                        if (interfc.InterfaceType.Name == "IStaticAttribute" && !method.IsStatic)
                         {
-                            Debug.Log("Modloader: "+mod.Game.GameConfiguration.ID, "Method \"" + method.FullName + "\" is using attribute \"" + method.CustomAttributes[k].AttributeType.FullName + "\" which is only suitable for static methods but isn't marked as static.", Debug.Type.WARNING);
+                            Debug.Log("Modloader: " + mod.Game.GameConfiguration.Id,
+                                "Method \"" + method.FullName + "\" is using attribute \"" + method.CustomAttributes[k].AttributeType.FullName +
+                                "\" which is only suitable for static methods but isn't marked as static.", Debug.Type.Warning);
                             valid = false;
                         }
-                        if (interfc.Name == "INoParametersAttribute" && method.Parameters.Count > 0)
+                        if (interfc.InterfaceType.Name == "INoParametersAttribute" && method.Parameters.Count > 0)
                         {
-                            Debug.Log("Modloader: " + mod.Game.GameConfiguration.ID, "Method \"" + method.FullName + "\" is using attribute \"" + method.CustomAttributes[k].AttributeType.FullName + "\" which is only suitable for methods without parameters but has parameters.", Debug.Type.WARNING);
+                            Debug.Log("Modloader: " + mod.Game.GameConfiguration.Id,
+                                "Method \"" + method.FullName + "\" is using attribute \"" + method.CustomAttributes[k].AttributeType.FullName +
+                                "\" which is only suitable for methods without parameters but has parameters.", Debug.Type.Warning);
                             valid = false;
                         }
                     }
                     if (!valid)
+                    {
                         continue;
-                    List<string> Names = new List<string>();
+                    }
+                    var names = new List<string>();
                     if (attribute.ConstructorArguments.Count > 0)
                     {
-                        foreach (MethodDefinition m in attributeType.Methods)
+                        foreach (var m in attributeType.Methods)
                         {
                             if (m.IsConstructor)
                             {
-                                foreach (ParameterDefinition p in m.Parameters)
+                                foreach (var p in m.Parameters)
                                 {
-                                    Names.Add(p.Name);
+                                    names.Add(p.Name);
                                 }
                                 break;
                             }
                         }
                     }
-                    XElement newElement = new XElement(attributeType.Name);
-                    for (int i = 0; i < attribute.ConstructorArguments.Count; i++)
+                    var newElement = new XElement(attributeType.Name);
+                    for (var i = 0; i < attribute.ConstructorArguments.Count; i++)
                     {
-                        CustomAttributeArgument arg = attribute.ConstructorArguments[i];
-                        newElement.SetAttributeValue(Names[i], arg.Value);
+                        var arg = attribute.ConstructorArguments[i];
+                        newElement.SetAttributeValue(names[i], arg.Value);
                     }
                     newElement.Value = method.FullName;
-                    newElement.SetAttributeValue("ModID", mod.ID);
+                    newElement.SetAttributeValue("ModID", mod.Id);
                     configuration.Root.Add(newElement);
 
                     method.CustomAttributes.RemoveAt(k);

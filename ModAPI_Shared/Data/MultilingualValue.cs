@@ -22,23 +22,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ModAPI.Data
 {
     public class MultilingualValue
     {
-        protected Dictionary<string, string> Langs = new Dictionary<string,string>();
+        protected Dictionary<string, string> Langs = new Dictionary<string, string>();
         public event EventHandler<EventArgs> OnChange;
 
         public byte[] GetHashBytes()
         {
-            List<byte> hashBytes = new List<byte>();
-            foreach (KeyValuePair<string, string> kv in Langs)
+            var hashBytes = new List<byte>();
+            foreach (var kv in Langs)
             {
-                hashBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(kv.Key));
-                hashBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(kv.Value));
+                hashBytes.AddRange(Encoding.UTF8.GetBytes(kv.Key));
+                hashBytes.AddRange(Encoding.UTF8.GetBytes(kv.Value));
             }
             return hashBytes.ToArray();
         }
@@ -51,43 +50,56 @@ namespace ModAPI.Data
         public void SetString(string langKey, string value)
         {
             if (Langs.ContainsKey(langKey))
+            {
                 Langs[langKey] = value;
+            }
             else
+            {
                 Langs.Add(langKey, value);
-            if (OnChange != null)
-                OnChange(this, new EventArgs());
+            }
+            OnChange?.Invoke(this, new EventArgs());
         }
 
         public string GetString(string langKey, string standardLanguage = "")
         {
             if (Langs.ContainsKey(langKey))
+            {
                 return Langs[langKey];
-            else if (standardLanguage != "" && Langs.ContainsKey(standardLanguage))
+            }
+            if (standardLanguage != "" && Langs.ContainsKey(standardLanguage))
+            {
                 return Langs[standardLanguage];
-            else
-                return "";
+            }
+            return "";
         }
 
-        public void SetXML(XElement element)
+        public void SetXml(XElement element)
         {
-            if (element == null) return;
-            this.Langs = new Dictionary<string,string>();
-            foreach (XElement el in element.Elements())
+            if (element == null)
             {
-                string key = el.Name.LocalName.ToUpper();
-                string value = el.Value;
-                if (!this.Langs.ContainsKey(key))
-                    this.Langs.Add(key, value);
+                return;
+            }
+            Langs = new Dictionary<string, string>();
+            foreach (var el in element.Elements())
+            {
+                var key = el.Name.LocalName.ToUpper();
+                var value = el.Value;
+                if (!Langs.ContainsKey(key))
+                {
+                    Langs.Add(key, value);
+                }
             }
         }
 
-        public XElement GetXML()
+        public XElement GetXml()
         {
-            XElement element = new XElement("LangItem");
-            foreach (KeyValuePair<string, string> kv in Langs)
+            var element = new XElement("LangItem");
+            foreach (var kv in Langs)
             {
-                XElement subElement = new XElement(kv.Key.ToUpper());
-                subElement.Value = kv.Value;
+                var subElement = new XElement(kv.Key.ToUpper())
+                {
+                    Value = kv.Value
+                };
                 element.Add(subElement);
             }
             return element;

@@ -18,19 +18,9 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ModAPI.Utils;
 
 namespace ModAPI.Windows.SubWindows
 {
@@ -40,92 +30,102 @@ namespace ModAPI.Windows.SubWindows
     public partial class OperationPending : BaseSubWindow
     {
         protected bool Cancelable = false;
-        protected Utils.Schedule.Task Task;
-        protected ProgressHandler progressHandler;
+        protected Schedule.Task Task;
+        protected ProgressHandler ProgressHandler;
         protected string TaskName;
+
         public delegate void Cancel();
+
         protected Cancel CancelCallback;
         protected string LangKey;
-        public bool Completed = false;
-        protected bool AutoClose = false;
+        public bool Completed;
+        protected bool AutoClose;
 
-        public OperationPending(Utils.Schedule.Task Task)
-            : base()
+        public OperationPending(Schedule.Task task)
         {
             InitializeComponent();
-            this.Task = Task;
+            Task = task;
             Init();
         }
 
-        public OperationPending(string langKey, Utils.Schedule.Task Task)
+        public OperationPending(string langKey, Schedule.Task task)
             : base(langKey)
         {
             InitializeComponent();
-            this.LangKey = langKey;
-            this.Task = Task;
+            LangKey = langKey;
+            Task = task;
             Init();
         }
 
-        public OperationPending(string langKey, string TaskName, ProgressHandler progressHandler, Cancel cancelCallback = null, bool AutoClose = false)
+        public OperationPending(string langKey, string taskName, ProgressHandler progressHandler, Cancel cancelCallback = null, bool autoClose = false)
             : base(langKey)
         {
             InitializeComponent();
-            this.progressHandler = progressHandler;
-            this.TaskName = TaskName;
-            this.CancelCallback = cancelCallback;
-            this.AutoClose = AutoClose;
+            ProgressHandler = progressHandler;
+            TaskName = taskName;
+            CancelCallback = cancelCallback;
+            AutoClose = autoClose;
 
-            this.LangKey = langKey;
+            LangKey = langKey;
             Init();
         }
 
         private void Init()
         {
-            if (this.Task != null)
+            if (Task != null)
             {
-                this.TaskName = (string)this.Task.Parameters[0];
-                this.progressHandler = (ProgressHandler)this.Task.Parameters[1];
-                this.CancelCallback = ((Cancel)this.Task.Parameters[2]);
-                this.AutoClose = ((bool)this.Task.Parameters[3]);
+                TaskName = (string) Task.Parameters[0];
+                ProgressHandler = (ProgressHandler) Task.Parameters[1];
+                CancelCallback = ((Cancel) Task.Parameters[2]);
+                AutoClose = ((bool) Task.Parameters[3]);
             }
 
-            this.progressHandler.OnChange += (s, e) => Dispatcher.Invoke((Action)delegate() { ChangeProgress(); });
-            this.progressHandler.OnComplete += (s, e) => Dispatcher.Invoke((Action)delegate() { OperationComplete(); });
-            if (this.CancelCallback == null)
-                this.CancelButton.Visibility = System.Windows.Visibility.Collapsed;
-            if (this.AutoClose)
-                this.ConfirmButton.Visibility = System.Windows.Visibility.Collapsed;
+            ProgressHandler.OnChange += (s, e) => Dispatcher.Invoke(delegate { ChangeProgress(); });
+            ProgressHandler.OnComplete += (s, e) => Dispatcher.Invoke(delegate { OperationComplete(); });
+            if (CancelCallback == null)
+            {
+                CancelButton.Visibility = Visibility.Collapsed;
+            }
+            if (AutoClose)
+            {
+                ConfirmButton.Visibility = Visibility.Collapsed;
+            }
             SetCloseable(false);
-            this.ChangeProgress();
+            ChangeProgress();
 
-            if (progressHandler.Progress == 100f)
-                this.OperationComplete();
+            if (ProgressHandler.Progress == 100f)
+            {
+                OperationComplete();
+            }
         }
 
         private void OperationComplete()
         {
-            this.Completed = true;
-            if (this.AutoClose)
+            Completed = true;
+            if (AutoClose)
             {
-                if (Task != null) Task.Complete();
-                this.Close();
+                if (Task != null)
+                {
+                    Task.Complete();
+                }
+                Close();
             }
             else
             {
-                this.ConfirmButton.Opacity = 1.0;
-                this.ConfirmButton.IsEnabled = true;
+                ConfirmButton.Opacity = 1.0;
+                ConfirmButton.IsEnabled = true;
             }
         }
 
         private void ChangeProgress()
         {
-            this.ProgressBar.Value = this.progressHandler.Progress;
-            Utils.Language.SetKey(this.CurrentTask, "Tasks." + this.TaskName + "." + this.progressHandler.Task);
-            if (this.progressHandler.Task != null && this.progressHandler.Task.StartsWith("Error."))
+            ProgressBar.Value = ProgressHandler.Progress;
+            Utils.Language.SetKey(CurrentTask, "Tasks." + TaskName + "." + ProgressHandler.Task);
+            if (ProgressHandler.Task != null && ProgressHandler.Task.StartsWith("Error."))
             {
-                this.ConfirmButton.Visibility = System.Windows.Visibility.Visible;
-                this.ConfirmButton.Opacity = 1.0;
-                this.ConfirmButton.IsEnabled = true;
+                ConfirmButton.Visibility = Visibility.Visible;
+                ConfirmButton.Opacity = 1.0;
+                ConfirmButton.IsEnabled = true;
                 Completed = true;
             }
         }
@@ -134,28 +134,40 @@ namespace ModAPI.Windows.SubWindows
         {
             if (Completed)
             {
-                if (Task != null) Task.Complete();
-                this.Close();
+                if (Task != null)
+                {
+                    Task.Complete();
+                }
+                Close();
             }
         }
+
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            this.CancelCallback();
-            if (Task != null) Task.Complete();
-            this.Close();
+            CancelCallback();
+            if (Task != null)
+            {
+                Task.Complete();
+            }
+            Close();
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (this.CancelCallback == null && !Completed)
+            if (CancelCallback == null && !Completed)
             {
                 e.Cancel = true;
             }
             else
             {
                 if (!Completed)
-                    this.CancelCallback();
-                if (Task != null) Task.Complete();
+                {
+                    CancelCallback();
+                }
+                if (Task != null)
+                {
+                    Task.Complete();
+                }
             }
         }
     }

@@ -20,31 +20,34 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Win32;
+using ModAPI.Configurations;
 
 namespace ModAPI.Utils
 {
     public class Path
     {
-        protected static IPathParser[] parsers = new IPathParser[] { new RegistryParser(), new ConfigurationPathParser() };
-        protected static Dictionary<string, string> globalVariables = new Dictionary<string,string>();
+        protected static IPathParser[] Parsers = { new RegistryParser(), new ConfigurationPathParser() };
+        protected static Dictionary<string, string> GlobalVariables = new Dictionary<string, string>();
 
         public static void SetGlobalVariable(string name, string path)
         {
-            if (globalVariables.ContainsKey(name))
-                globalVariables[name] = path;
+            if (GlobalVariables.ContainsKey(name))
+            {
+                GlobalVariables[name] = path;
+            }
             else
-                globalVariables.Add(name, path);
+            {
+                GlobalVariables.Add(name, path);
+            }
         }
 
         public static string Parse(string path, string[] variables)
         {
-            Dictionary<string, string> varDict = new Dictionary<string, string>();
-            foreach (string var in variables)
+            var varDict = new Dictionary<string, string>();
+            foreach (var var in variables)
             {
-                string[] parts = var.Split(new string[] { ":" }, StringSplitOptions.None);
+                var parts = var.Split(new[] { ":" }, StringSplitOptions.None);
                 if (parts.Length == 2 && !varDict.ContainsKey(parts[0]))
                 {
                     varDict.Add(parts[0], parts[1]);
@@ -55,29 +58,31 @@ namespace ModAPI.Utils
 
         public static string Parse(string path, Dictionary<string, string> variables)
         {
-            foreach (IPathParser parser in parsers)
+            foreach (var parser in Parsers)
             {
-                string identifier = parser.GetIdentifier();
-                int index = -1;
-                while ((index = path.IndexOf("%$"+identifier)) >= 0) 
+                var identifier = parser.GetIdentifier();
+                var index = -1;
+                while ((index = path.IndexOf("%$" + identifier)) >= 0)
                 {
-                    int index1 = index + 2 + identifier.Length + 1;
-                    int index2 = path.IndexOf("%", index + 1);
-                    string newPath = "";
+                    var index1 = index + 2 + identifier.Length + 1;
+                    var index2 = path.IndexOf("%", index + 1);
+                    var newPath = "";
                     if (index > 0)
+                    {
                         newPath = path.Substring(0, index);
+                    }
                     newPath += parser.Parse(path.Substring(index1, index2 - index1));
                     newPath += path.Substring(index2 + 1);
                     path = newPath;
                 }
             }
-            foreach (KeyValuePair<string, string> kv in variables)
+            foreach (var kv in variables)
             {
                 path = path.Replace("%" + kv.Key + "%", kv.Value);
             }
-            foreach (KeyValuePair<string, string> kv in globalVariables)
+            foreach (var kv in GlobalVariables)
             {
-                path = path.Replace("%"+kv.Key+"%", kv.Value);
+                path = path.Replace("%" + kv.Key + "%", kv.Value);
             }
             return path;
         }
@@ -97,8 +102,8 @@ namespace ModAPI.Utils
 
             public string Parse(string path)
             {
-                int index = path.LastIndexOf("\\");
-                return (string) Microsoft.Win32.Registry.GetValue(path.Substring(0, index), path.Substring(index + 1), "");
+                var index = path.LastIndexOf("\\");
+                return (string) Registry.GetValue(path.Substring(0, index), path.Substring(index + 1), "");
             }
         }
 
@@ -111,7 +116,7 @@ namespace ModAPI.Utils
 
             public string Parse(string path)
             {
-                return ModAPI.Configurations.Configuration.GetPath(path);
+                return Configuration.GetPath(path);
             }
         }
     }

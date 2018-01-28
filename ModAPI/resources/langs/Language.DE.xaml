@@ -16,7 +16,7 @@
     <s:String x:Key="Lang.UserGroup.User">Benutzer</s:String>
     
     <s:String x:Key="Lang.Windows.Login.Title">Einloggen</s:String>
-    <s:String x:Key="Lang.Windows.Login.Text">Gib bitte deine Logindaten von www.modapi.de ein um dich einzuloggen.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">Gib bitte deine Logindaten von www.modapi.cc ein um dich einzuloggen.</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Login">Einloggen</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">Abbrechen</s:String>
     <s:String x:Key="Lang.Windows.Login.Labels.Username">Benutzername:</s:String>
@@ -183,7 +183,7 @@
     <s:String x:Key="Lang.Mods.Welcome.Text0">Um Mods auf dein Spiel anzuwenden, musst du die Mods zunächst aktivieren. Um dies zu tun, klickst du einfach auf den runden Knopf neben den Mod in der linken Liste. Um Änderungen an z.B. der Tastenbelegung der einzelnen Mods vorzunehmen, kannst du einen Mod aus der Liste auswählen und die Werte anpassen.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">Damit die Mods auf das Spiel angewendet werden, musst du nur unten rechts auf die Schaltfläche &quot;Spiel starten&quot; drücken.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">Fehler?</s:String>
-    <s:String x:Key="Lang.Mods.Welcome.Text2">Sollten Fehler auftreten wende dich hilfesuchend an das Forum unter www.modapi.de</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2">Sollten Fehler auftreten wende dich hilfesuchend an das Forum unter www.modapi.cc</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text3">Denke daran die Logdatei &quot;ModAPI.log&quot; im Unterordner &quot;Logs&quot; mitzusenden. Diese Datei enthält wichtige Informationen zur Fehlerfindung.</s:String>
 
     <s:String x:Key="Lang.Savegames.Tab">Spielstände</s:String>
