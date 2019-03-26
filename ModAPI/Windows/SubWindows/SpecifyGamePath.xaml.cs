@@ -71,7 +71,7 @@ namespace ModAPI.Windows.SubWindows
                 AcceptIcon.Visibility = Visibility.Hidden;
                 DeclineIcon.Visibility = Visibility.Visible;
                 ConfirmButton.Opacity = 0.5f;
-                ConfirmButton.IsEnabled = false;
+                ConfirmButton.IsEnabled = true;// false; //Game path error no confirm work around.
             }
         }
 

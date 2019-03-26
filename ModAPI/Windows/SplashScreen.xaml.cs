@@ -18,12 +18,15 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
+using IWshRuntimeLibrary;
 using System;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using File = System.IO.File;
 
 namespace ModAPI
 {
@@ -43,8 +46,82 @@ namespace ModAPI
         {
             AssemblyResolver.Initialize();
             InitializeComponent();
-            Preloader.Load();
+            CheckDir();
         }
+
+        #region Check loading paths & move files by: SiXxKilLuR 03/25/2019 01:15PM      
+        //Check of ran from tmp directories and move to a working directory
+        private static string Apath;
+        private static string Mpath;
+        private static string FPath;
+        private static void CheckDir()
+        {
+            Apath = (System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName));
+            Mpath = (Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)));
+            FPath = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)) + "ModAPI";
+
+            if (Apath.Contains(Mpath))
+
+            {
+                MsgBoxMain();
+
+            }
+            else
+            {
+                Preloader.Load();
+            }
+
+        }
+        private static void MoveApp()
+        {
+            //Now Create all of the directories
+            foreach (string dirPath in Directory.GetDirectories(Apath, "*",
+                SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(Apath, FPath));
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(Apath, "*.*",
+                SearchOption.AllDirectories))
+                File.Copy(newPath, newPath.Replace(Apath, FPath), true);
+        }
+
+        private static void CDSK()
+        {
+            WshShell wsh = new WshShell();
+            IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\ModAPI.lnk") as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.Arguments = "";
+            shortcut.TargetPath = FPath + "\\ModAPI.exe"; //"c:\\app\\myftp.exe";
+            // not sure about what this is for
+            shortcut.WindowStyle = 1;
+            shortcut.Description = "ModAPI Unity Games Modding Platform";
+            shortcut.WorkingDirectory = FPath; //"c:\\app";
+            shortcut.IconLocation = FPath + "\\ModAPI.exe"; //"specify icon location";
+            shortcut.Save();
+        }
+        private static void MsgBoxMain()
+        {
+            MessageBoxResult result = MessageBox.Show("You have attempted to run app from" + Environment.NewLine + "an archive file or a temp directory" + Environment.NewLine + "Do you want to copy these files to a working location?", "PEBKAC ", MessageBoxButton.YesNoCancel);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    MessageBox.Show("Attempting to move files to specifed directory" + Environment.NewLine + "Moving files to root of OS drive" + Environment.NewLine + "Usually Local Disk C:\\" + Environment.NewLine + "Will create a shortcut on Desktop", "Placing files & creating shortcut.");
+                    MoveApp();
+                    CDSK();
+                    Application.Current.Shutdown();
+                    break;
+                case MessageBoxResult.No:
+                    MessageBox.Show("Not moving these files" + Environment.NewLine + "Will result in issues with" + Environment.NewLine + "This application", "Notice(Important)");
+                    Application.Current.Shutdown();
+                    break;
+                case MessageBoxResult.Cancel:
+                    MessageBox.Show("You have chosen not to" + Environment.NewLine + "take any actions to resolve the issues" + Environment.NewLine + "Good luck!", "Warning(Last Chance)");
+                    break;
+            }
+        }
+
+        #endregion
+
 
         private void MoveWindow(object sender, MouseButtonEventArgs args)
         {

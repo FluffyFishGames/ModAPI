@@ -95,8 +95,7 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\gamefiles\original\TheForest\TheForest_data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
+      </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\AddModname.cs" />

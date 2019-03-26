@@ -165,7 +165,7 @@ namespace ModAPI
                 }
                 var spaceIndex = Input.IndexOf(" ");
                 var editor = (TextEditor) GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
-                if (spaceIndex > 0 && editor.pos == Input.Length && editor.pos == editor.selectPos)
+                if (spaceIndex > 0 && editor.cursorIndex == Input.Length && editor.cursorIndex == editor.selectIndex)
                 {
                     var command = Input.Substring(0, spaceIndex);
                     var c = Console.GetCommand(command);
@@ -240,8 +240,8 @@ namespace ModAPI
                                     Input = newInput;
                                     AddParam = false;
 
-                                    editor.pos = Input.Length;
-                                    editor.selectPos = Input.Length;
+                                    editor.cursorIndex = Input.Length;
+                                    editor.selectIndex = Input.Length;
                                 }
                             }
                         }
