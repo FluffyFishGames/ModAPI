@@ -300,6 +300,8 @@ namespace ModAPI
             }
             InitializeComponent();
             Instance = this;
+            CheckDir();
+            
 
             /* TODO: Disabled Login components due to php backend not functioning on modapi.cc
             WebService.OnDoLogin = ShowLoginLoader;
@@ -414,6 +416,39 @@ namespace ModAPI
             LanguageChanged();
             SettingsVm.Changed();
         }
+
+        #region Check loading paths & move files by: SiXxKilLuR 03/25/2019 01:15PM      
+        //Check if ran from tmp directories and move to a working directory
+        private static string Apath;
+        private static string Mpath;
+
+        private static void CheckDir()
+        {
+            Apath = (System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName));
+            Mpath = (Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)));
+
+            if (Apath.Contains(Mpath))
+
+            {
+                TDialog();
+            }
+            else
+            {
+                
+            }
+
+        }
+
+        public static void TDialog()
+        {
+            var win = new DirectoryCheck("Lang.Windows.DirectoryCheck");
+            win.ShowSubWindow();
+            win.Show();
+
+        }
+
+        #endregion
+
 
         protected DispatcherTimer Timer;
 

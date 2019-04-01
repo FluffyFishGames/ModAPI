@@ -38,7 +38,7 @@ namespace ModAPI.Data
     {
         public static readonly string[] VersionUpdateDomains =
         {
-            "http://modapi.cc/app/configs/games/{0}/Versions.xml",
+            //"http://modapi.cc/app/configs/games/{0}/Versions.xml", Outdated URL
             "http://modapi.survivetheforest.net/app/configs/games/{0}/Versions.xml"
         };
 
@@ -77,6 +77,7 @@ namespace ModAPI.Data
 
         public void Verify()
         {
+            Debug.Log("Game: " + this.GameConfiguration.Id, "Modified by: SiXxKilLuR ", Debug.Type.Notice);
             Valid = true;
 
             /** Some files are missing. We need to schedule a task to specify a new path before we can continue. **/
@@ -103,6 +104,7 @@ namespace ModAPI.Data
 
             GameVersion = VersionsData.GetVersion(CheckSumGame);
             BackupVersion = VersionsData.GetVersion(CheckSumBackup);
+                Debug.Log("Game: " + this.GameConfiguration.Id, "Checksum: " + this.CheckSumGame, Debug.Type.Notice);
 
             if (((GameVersion.IsValid && !BackupVersion.IsValid) || (GameVersion.IsValid && BackupVersion.IsValid && GameVersion.Id != BackupVersion.Id)))
             {
