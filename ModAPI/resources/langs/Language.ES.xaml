@@ -9,6 +9,12 @@
     <s:String x:Key="Locale">es-Es</s:String>
     <s:String x:Key="LangName">Spanish</s:String>
 
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">¡Error!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">Ha intentado ejecutar ModAPI desde un archivo o un directorio temporal. Esto conducirá a (problemas). ¿Desea copiar estos archivos en una ubicación de trabajo?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">Arreglalo</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">No</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+
     <s:String x:Key="Lang.Window.Version">Versión:</s:String>
     <s:String x:Key="Lang.Window.Copyright">Creado por FluffyFish</s:String>
     <s:String x:Key="Lang.Logout">Cerrar sesión</s:String>

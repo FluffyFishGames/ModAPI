@@ -31,7 +31,7 @@
         MinHeight="500"
         Width="1420"
         Height="600"
-        Title="MainWindow" Loaded="WindowLoaded" LayoutUpdated="Window_LayoutUpdated" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Activated="Window_Activated" Closed="Window_Closed">
+        Title="MainWindow" Loaded="WindowLoaded" LayoutUpdated="Window_LayoutUpdated" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Activated="Window_Activated" Closed="Window_Closed" WindowStartupLocation="CenterScreen">
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

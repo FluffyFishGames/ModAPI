@@ -1,10 +1,19 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+
+
     <s:String x:Key="LangCode">EN</s:String>
     <s:String x:Key="Locale">en-GB</s:String>
     <s:String x:Key="LangName">English</s:String>
 
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">Error!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">You have attempted to run ModAPI from an archive file or a temporary directory. This will lead to (issues).Do you want to copy these files to a working location?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">Fix It</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">No</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+    
     <s:String x:Key="Lang.Window.Version">Version:</s:String>
     <s:String x:Key="Lang.Window.Copyright">Created by FluffyFish</s:String>
     <s:String x:Key="Lang.Logout">Logout</s:String>

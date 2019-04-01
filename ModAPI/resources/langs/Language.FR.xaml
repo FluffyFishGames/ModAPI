@@ -5,6 +5,12 @@
     <s:String x:Key="Locale">fr-FR</s:String>
     <s:String x:Key="LangName">Français</s:String>
 
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">Erreur!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">Vous avez tenté d'exécuter ModAPI à partir d'un fichier d'archive ou d'un répertoire temporaire. Cela conduira à (problèmes). Voulez-vous copier ces fichiers dans un emplacement de travail?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">Répare le</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">Non</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+
     <s:String x:Key="Lang.Window.Version">Version:</s:String>
     <s:String x:Key="Lang.Window.Copyright">Crée par FluffyFish</s:String>
     <s:String x:Key="Lang.Logout">Se déconnecter</s:String>

@@ -5,6 +5,12 @@
     <s:String x:Key="Locale">ko-KR</s:String>
     <s:String x:Key="LangName">Korean</s:String>
 
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">오류!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">ModAPI를 아카이브 파일 또는 임시 디렉토리에서 실행하려고했습니다. 이것은 (문제)로 이어질 것입니다.이 파일을 작업 위치에 복사 하시겠습니까?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">고침</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">아니</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+
     <s:String x:Key="Lang.Window.Version">버전:</s:String>
     <s:String x:Key="Lang.Window.Copyright">만든이 FluffyFish</s:String>
     <s:String x:Key="Lang.Logout">로그아웃</s:String>

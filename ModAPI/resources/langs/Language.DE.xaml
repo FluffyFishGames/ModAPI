@@ -5,7 +5,13 @@
     <s:String x:Key="Locale">de-DE</s:String>
 	<s:String x:Key="LangName">Deutsch</s:String>
 
-	<s:String x:Key="Lang.Window.Version">Version:</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">Fout!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text" xml:space="preserve">U hebt geprobeerd ModAPI vanuit een archiefbestand uit te voerenof een tijdelijke map. Dit zal leiden tot (problemen). Wilt u deze bestanden naar een werklocatie kopiëren?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">Maak het</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">Nee</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+
+    <s:String x:Key="Lang.Window.Version">Version:</s:String>
     <s:String x:Key="Lang.Window.Copyright">Erstellt von FluffyFish</s:String>
     <s:String x:Key="Lang.Logout">Ausloggen</s:String>
     <s:String x:Key="Lang.Loading">Lädt...</s:String>
