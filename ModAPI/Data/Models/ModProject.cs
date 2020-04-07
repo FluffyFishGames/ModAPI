@@ -127,6 +127,47 @@ namespace ModAPI.Data.Models
             Directory.Delete(path, true);
         }
 
+        /// <summary>Checks if character is alphanumeric.</summary>
+        /// <param name="c">The character to test.</param>
+        /// <returns>Returns true if character is alphanumeric, false otherwise.</returns>
+        public bool IsAlphaNum(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+
+        /// <summary>Removes all special characters from given string (keeps only alphanumeric characters).</summary>
+        /// <param name="str">The string we want to remove special characters from.</param>
+        /// <returns>Returns a string composed of alphanumeric characters only.</returns>
+        public string ToAlphaNum(string str)
+        {
+            string alphaNumStr = "";
+            if (!string.IsNullOrEmpty(str))
+                for (int i = 0; i < str.Length; i++)
+                    if (IsAlphaNum(str[i]))
+                        alphaNumStr += str[i];
+            return alphaNumStr;
+        }
+
+        /// <summary>Generates a unique alias for given library name (removes all special characters and makes sure it has not already been attributed).</summary>
+        /// <param name="existingAliases">The list of already DLL attributed aliases.</param>
+        /// <param name="libName">The library name we want an alias for.</param>
+        /// <returns>Returns a unique alias (in case <paramref name="libName"/> is null, empty or does not contains any alphanumeric character, returns the string "lib").</returns>
+        public string GetUniqueAliasForLib(ref List<string> existingAliases, string libName)
+        {
+            libName = ToAlphaNum(libName);
+            if (string.IsNullOrEmpty(libName))
+                libName = "lib";
+            if (existingAliases != null)
+            {
+                if (existingAliases.Contains(libName))
+                {
+                    int i = 1;
+                    while (existingAliases.Contains(libName + i.ToString()))
+                        i++;
+                    libName += i.ToString();
+                }
+                existingAliases.Add(libName);
+            }
+            return libName;
+        }
+
         public void SaveConfiguration()
         {
             SaveFailed = false;
@@ -273,11 +314,14 @@ namespace ModAPI.Data.Models
             var references = "";
             var resources = "";
             var compiles = "";
+            var uniqueAliases = new List<string>();
             foreach (var uri in modLibrary)
             {
                 var filePath = projectUri.MakeRelativeUri(uri).ToString();
-                references += "<Reference Include=\"" + Path.GetFileNameWithoutExtension(filePath) + "\">\r\n" +
+                var libName = Path.GetFileNameWithoutExtension(filePath);
+                references += "<Reference Include=\"" + libName + "\">\r\n" +
                               "      <HintPath>" + filePath + "</HintPath>\r\n" +
+                              "      <Aliases>global," + GetUniqueAliasForLib(ref uniqueAliases, libName) + "</Aliases>\r\n" + // Allows to avoid compilation errors when a class has same namespace defined in two different DLLs.
                               "      <Private>False</Private>\r\n" +
                               "    </Reference>\r\n";
             }
