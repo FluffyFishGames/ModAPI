@@ -390,8 +390,10 @@ namespace ModAPI.Data.Models
 
             try
             {
-                File.WriteAllText(projectPath, projectText);
-                File.WriteAllText(solutionPath, solutionText);
+                if (!File.Exists(projectPath))
+                    File.WriteAllText(projectPath, projectText);
+                if (!File.Exists(solutionPath))
+                    File.WriteAllText(solutionPath, solutionText);
             }
             catch (Exception e)
             {
