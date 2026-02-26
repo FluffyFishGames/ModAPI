@@ -1,0 +1,287 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+
+
+    <s:String x:Key="LangCode">JA</s:String>
+    <s:String x:Key="Locale">ja-JP</s:String>
+    <s:String x:Key="LangName">日本語</s:String>
+
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">エラー!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">アーカイブファイルまたは一時ディレクトリからModAPIを実行しようとしています。問題が発生する可能性があります。ファイルを作業フォルダにコピーしますか?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">修正する</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">いいえ</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+    
+    <s:String x:Key="Lang.Window.Version">バージョン:</s:String>
+    <s:String x:Key="Lang.Window.Copyright">Created by FluffyFish</s:String>
+    <s:String x:Key="Lang.Logout">ログアウト</s:String>
+    <s:String x:Key="Lang.Loading">読み込み中...</s:String>
+    <s:String x:Key="Lang.Login">ログイン</s:String>
+    <s:String x:Key="Lang.UserGroup.Administrator">管理者</s:String>
+    <s:String x:Key="Lang.UserGroup.Press">プレス</s:String>
+    <s:String x:Key="Lang.UserGroup.Moderator">モデレーター</s:String>
+    <s:String x:Key="Lang.UserGroup.User">ユーザー</s:String>
+    
+    <s:String x:Key="Lang.Windows.Login.Title">ログイン</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">modapi.survivetheforest.net のユーザー名とパスワードを入力してログインしてください。</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Login">ログイン</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">キャンセル</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Username">ユーザー名:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Password">パスワード:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Errors.WrongLogin">ユーザー名またはパスワードが間違っています。</s:String>
+    
+    <s:String x:Key="Lang.Windows.OperationPending.Title">処理中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Continue">続行</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Cancel">キャンセル</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.BackupGameFiles.CreatingBackup">ゲームファイルをバックアップ中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.RemovingOldFiles">古いファイルを削除中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CreatingModToolkit">Modユーティリティを作成中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.ModifyingAssemblies">ゲームライブラリを変更中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CopyingAssemblies">ゲームライブラリをコピー中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Finish">Modライブラリの作成が完了しました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.BaseModLibNotFound">エラー!: BaseModLibが見つかりません。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyFileNotFound">エラー!: ゲームライブラリが見つかりません。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.CopyAssemblyFileNotFound">エラー!: ゲームライブラリが見つかりません。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyException">エラー!: ゲームライブラリの変更中に予期しないエラーが発生しました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Finish">Modの作成が完了しました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.SavingMod">Modファイルを作成中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.FetchingTypes">すべての型を取得中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.ConvertingClasses">型を変換中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Preparing">Mod作成を準備中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.Save">エラー!: Modを保存できませんでした。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.UnexpectedError">エラー!: 予期しないエラーが発生しました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.FileNotFound">エラー!: ファイルが見つかりません。プロジェクトがコンパイルされていない可能性があります。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.CorruptedAssembly">エラー!: アセンブリの一つが破損しているようです。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Preparing">Mod環境を準備中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.FetchingInjections">ファイルを取得中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Injecting">ゲームファイルを操作中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Resolving">MSILコードを解決中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Saving">ファイルを保存中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Error.Unexpected">エラー!: Modの適用中にエラーが発生しました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Restore">ファイルを復元中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.Cancelled">エラー!: 復元がユーザーによってキャンセルされました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.NoConnection">エラー!: Steamがインターネットに接続できませんでした。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">エラー!: Steamが終了しました。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">アップデートをダウンロード中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">アップデートを展開中...</s:String>
+
+    <s:String x:Key="Lang.Windows.CreateModProject.Title">Modプロジェクトを作成</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Text">新しいプロジェクトのIDを入力してください。IDは一意で、英数字と「_」のみ使用できます。</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Errors.ID">このIDのプロジェクトは既に存在します。</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Cancel">キャンセル</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Add">追加</s:String>
+
+    <s:String x:Key="Lang.Windows.RemoveModProject.Title">プロジェクトを削除</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPre">このプロジェクトを本当に削除しますか?</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPost">この操作は元に戻せません。すべてのプロジェクトファイルが完全に削除されます。</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">キャンセル</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">削除</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">ゲームパスを入力</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">ゲームが自動的に見つかりませんでした。ゲームパスを手動で入力してください。</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">参照</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">続行</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">Steamパスを入力</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Text">Steamが自動的に見つかりませんでした。Steamのパスを手動で入力してください。</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Browse">参照</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Continue">続行</s:String>
+
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Title">ゲームバージョンを検出できません</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoVersionUpdate">ゲームバージョンを検出できませんでした。新しいバージョンを検出するにはバージョンテーブルの更新を有効にしてください。ゲームファイルが破損しているか、ModAPI以外で変更された可能性もあります。</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.VersionNotFound">ゲームバージョンを検出できませんでした。ゲームデータがModAPI以外で変更されたようです。</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoSteamText">Steam接続が無効になっているため、ModAPIはゲームファイルを復元できません。ゲームファイルを元の状態に復元してから再確認してください。Steam接続を有効にするとModAPIが自動復元できます。</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.SteamText">Steamを使ってファイルを復元しますか?</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateVersionUpdate">バージョンテーブル更新を有効化</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateSteam">Steam接続を有効化</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Restore">ファイルを復元</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Recheck">再確認</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Close">終了</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Yes">はい</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">いいえ</s:String>
+
+    <s:String x:Key="Lang.Windows.FirstSetup.Title">ようこそ!</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">ModAPIの初回起動です。開始する前に以下のオプションを確認してください:</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">自動アップデート</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">自動アップデートを有効にすると、ModAPIの新しいバージョンが利用可能になったときに通知されます。ワンクリックで新しいアップデートを適用できます。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Steam接続</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Steam接続を有効にするとゲーム内でSteam機能(例:Steamオーバーレイ)を使用できます。ゲームファイルが破損または変更された場合、ModAPIが自動復元することもできます。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">バージョンテーブルを更新</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">バージョンテーブルの更新を有効にすると、起動時にModAPIがバージョンテーブルをダウンロードします。これにより手動更新なしでゲームの新しいアップデートが自動認識されます。新しいバージョンがテーブルに追加されるまで最大24時間かかる場合があります。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">続行</s:String>
+
+
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Title">アップデートがあります!</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Text">ModAPIの新しいバージョンがあります。今すぐアップデートしますか?</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">今すぐアップデート</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">後でアップデート</s:String>
+
+
+    <s:String x:Key="Lang.Languages.EN">英語</s:String>
+    <s:String x:Key="Lang.Languages.DE">ドイツ語</s:String>
+    <s:String x:Key="Lang.Languages.FR">フランス語</s:String>
+    <s:String x:Key="Lang.Languages.ES">スペイン語</s:String>
+    <s:String x:Key="Lang.Languages.RU">ロシア語</s:String>
+    <s:String x:Key="Lang.Languages.HI">ヒンディー語</s:String>
+    <s:String x:Key="Lang.Languages.AR">アラビア語</s:String>
+    <s:String x:Key="Lang.Languages.TR">トルコ語</s:String>
+    <s:String x:Key="Lang.Languages.IT">イタリア語</s:String>
+    <s:String x:Key="Lang.Languages.VI">ベトナム語</s:String>
+    <s:String x:Key="Lang.Languages.ZH">中国語</s:String>
+    <s:String x:Key="Lang.Languages.ZH-TW">中国語(繁体)</s:String>
+    <s:String x:Key="Lang.Languages.JA">日本語</s:String>
+    <s:String x:Key="Lang.Languages.KO">韓国語</s:String>
+    <s:String x:Key="Lang.Languages.BN">ベンガル語</s:String>
+    <s:String x:Key="Lang.Languages.PT">ポルトガル語</s:String>
+
+    <s:String x:Key="Lang.Development.Tab">開発</s:String>
+    <s:String x:Key="Lang.Development.Settings.Tab">設定</s:String>
+    <s:String x:Key="Lang.Development.Keys.Tab">割り当てキー</s:String>
+    <s:String x:Key="Lang.Development.Projects">プロジェクト</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Name">名前:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Description">説明:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.StandardKey">標準キー:</s:String>
+    <s:String x:Key="Lang.Development.Languages.Tab">言語</s:String>
+    <s:String x:Key="Lang.Development.Languages.AddLanguage">言語を追加</s:String>
+    <s:String x:Key="Lang.Development.Languages.SelectedLanguages">選択された言語</s:String>
+    <s:String x:Key="Lang.Development.Languages.Buttons.AddLanguage">追加</s:String>
+
+    <s:String x:Key="Lang.Development.NoProjectSelected">プロジェクト未選択</s:String>
+    <s:String x:Key="Lang.Development.SelectedProject">選択中のプロジェクト</s:String>
+    <s:String x:Key="Lang.Development.Errors.Save">プロジェクトの保存中にエラーが発生しました。プロジェクトが閉じていて他のアプリケーションがアクセスしていないことを確認してください。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidID">IDには英数字と「_」のみ使用可能です。IDは必須で一意でなければなりません。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidButtonID">IDは一意でなければなりません。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidVersion">バージョンは0〜99の4つの数字をドットで区切った形式のみ使用できます。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidName">選択されたすべての言語に名前が必要です。</s:String>
+    <s:String x:Key="Lang.Development.Errors.NoLanguageSelected">少なくとも1つの言語を選択する必要があります。</s:String>
+
+    <s:String x:Key="Lang.Development.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Labels.StandardKey">標準キー:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Version">バージョン:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Name">名前:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Description">説明:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary">Modライブラリ</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.CreationTime">作成日時:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.GameVersion">ゲームバージョン:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.ModAPIVersion">ModAPIバージョン:</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateModLibrary">Modライブラリを再作成</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateProject">新規プロジェクト作成</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveProject">プロジェクトを削除</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateMod">Modを作成</s:String>
+    <s:String x:Key="Lang.Development.Buttons.AddButton">キーを追加</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveButton">キーを削除</s:String>
+
+    <s:String x:Key="Lang.Mods.Tab">Mod</s:String>
+    <s:String x:Key="Lang.Mods.Title">利用可能なMod</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.StartGame">ゲーム開始</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.SelectVersion">バージョン選択</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Informations">情報</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Settings">設定</s:String>
+    <s:String x:Key="Lang.Mods.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Version">選択バージョン:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.AvailableVersions">利用可能なバージョン:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Name">名前:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Description">説明:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Buttons">キー割り当て</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Compatible">対応バージョン:</s:String>
+
+    <s:String x:Key="Lang.Mods.Welcome.Title0">ようこそ!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text0">ゲームにModを適用するには、まずModを有効にする必要があります。Mod名の左にある丸いボタンをクリックしてください。キー割り当てを変更するにはリストからModを選択して「設定」タブに切り替えてください。</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text1">Modを適用してゲームを開始するには右下の「ゲーム開始」ボタンをクリックするだけです。</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Title1">エラーが出たら?</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2a">エラーが発生した場合はフォーラムで助けを求めてください (</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2Link">modapi</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2b">)。</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text3">logsフォルダにあるログファイル「ModAPI.log」を添付するのを忘れないでください。このファイルにはトラブルシューティングに重要な情報が含まれています。</s:String>
+
+    <s:String x:Key="Lang.Savegames.Tab">セーブデータ</s:String>
+    <s:String x:Key="Lang.Savegames.Title">セーブデータ</s:String>
+    <s:String x:Key="Lang.Savegames.MainSavegame">メインセーブ</s:String>
+
+    <s:String x:Key="Lang.Savegames.SelectedSavegame">選択中のセーブ:</s:String>
+    <s:String x:Key="Lang.Savegames.Options">オプション:</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Save">保存</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.SaveAs">名前を付けて保存...</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Delete">削除</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.CreateBackup">バックアップ作成</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.RemoveAllBackups">すべてのバックアップを削除</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.LoadBackup">バックアップを読み込み</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.DeleteBackup">バックアップを削除</s:String>
+
+    <s:String x:Key="Lang.Downloads.Tab">ダウンロード</s:String>
+    <s:String x:Key="Lang.Downloads.Title">Modをダウンロード</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Refresh">更新</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Download">ダウンロード</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Name">名前</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Author">作者</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Category">カテゴリ</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Game">ゲーム</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Downloads">ダウンロード数</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Ready">ダウンロードするModを選択してください。</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">Modリストを読み込み中...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Downloading">ダウンロード中...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Complete">ダウンロード完了!</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Error">ダウンロード中にエラーが発生しました。</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Version">バージョン</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Compatible">互換性</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Date">日付</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Size">サイズ</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Select">MODを選択してバージョンを表示</s:String>
+    <s:String x:Key="Lang.Downloads.Game.All">すべて</s:String>
+    <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
+    <s:String x:Key="Lang.Downloads.Game.DedicatedServer">専用サーバー</s:String>
+    <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Category.All">すべて</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Bugfixes">バグ修正</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Balancing">バランス</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Cheats">チート</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Buildings">建築</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Graphical">グラフィック</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Changes">変更</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Items">アイテム</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Enemies">敵</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Multiplayer">マルチプレイヤー</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Worldchanges">ワールド変更</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Other">その他</s:String>
+    <s:String x:Key="Lang.Downloads.Search.Placeholder">Mod検索...</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Info">情報</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Title">インターネット接続なし</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Text">Modサーバーに接続できません。以下のサイトから手動でダウンロードできます:</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">ダウンロード後、.modファイルをModAPIフォルダの「mods/TheForest」フォルダに配置してください。</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Retry">再接続</s:String>
+
+    <s:String x:Key="Lang.Options.Tab">設定</s:String>
+    <s:String x:Key="Lang.Options.Labels.Language">言語:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">バージョンテーブルを最新に保つ:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AutoUpdate">アップデートを確認:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteam">Steam接続:</s:String>
+
+    <s:String x:Key="Lang.Options.Labels.Theme">テーマ:</s:String>
+    <s:String x:Key="Lang.Options.Theme.Classic">クラシックテーマ</s:String>
+    <s:String x:Key="Lang.Options.Theme.Light">ライトテーマ</s:String>
+    <s:String x:Key="Lang.Options.Theme.Dark">ダークテーマ</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartTitle">テーマ変更</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartText">テーマを適用するにはアプリケーションを再起動してください。</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Title">テーマ変更</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Text">テーマを適用するにはアプリケーションを再起動してください。</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Buttons.OK">OK</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Title">テーマ変更</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Text">テーマを適用しますか?</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.Yes">はい</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.No">いいえ</s:String>
+
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Text">プロジェクトが見つかりません。先にプロジェクトを作成してください。</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.Delete">Modを削除</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Modを削除</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Mod &quot;{0}&quot; の全バージョンを削除しますか？ ゲームフォルダの.dllファイルも削除されます。</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">はい</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">いいえ</s:String>
+</ResourceDictionary>

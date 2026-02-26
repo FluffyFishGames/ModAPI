@@ -34,12 +34,16 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public int Language
     {
-        get => Configuration.Languages.Keys.ToList().IndexOf(Configuration.CurrentLanguage.Key.ToLower());
+        get => ModAPI.MainWindow.LanguageOrder.IndexOf(Configuration.CurrentLanguage.Key.ToLower());
         set
         {
-            Configuration.ChangeLanguage(Configuration.Languages.Keys.ToList()[value]);
-            Configuration.SetString("Language", Configuration.Languages.Keys.ToList()[value], true);
-            Configuration.Save();
+            if (value >= 0 && value < ModAPI.MainWindow.LanguageOrder.Count)
+            {
+                var langKey = ModAPI.MainWindow.LanguageOrder[value];
+                Configuration.ChangeLanguage(langKey);
+                Configuration.SetString("Language", langKey, true);
+                Configuration.Save();
+            }
         }
     }
 

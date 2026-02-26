@@ -80,6 +80,17 @@ namespace ModAPI.Data
             Debug.Log("Game: " + this.GameConfiguration.Id, "Modified by: SiXxKilLuR ", Debug.Type.Notice);
             Valid = true;
 
+            // Developer mode bypass: skip game path validation when --dev argument is passed
+            var args = System.Environment.GetCommandLineArgs();
+            foreach (var arg in args)
+            {
+                if (arg.Equals("--dev", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    Debug.Log("Game: " + this.GameConfiguration.Id, "Developer mode active - skipping game path validation.", Debug.Type.Notice);
+                    return;
+                }
+            }
+
             /** Some files are missing. We need to schedule a task to specify a new path before we can continue. **/
             if (!CheckGamePath())
             {
@@ -104,7 +115,7 @@ namespace ModAPI.Data
 
             GameVersion = VersionsData.GetVersion(CheckSumGame);
             BackupVersion = VersionsData.GetVersion(CheckSumBackup);
-                Debug.Log("Game: " + this.GameConfiguration.Id, "Checksum: " + this.CheckSumGame, Debug.Type.Notice);
+            Debug.Log("Game: " + this.GameConfiguration.Id, "Checksum: " + this.CheckSumGame, Debug.Type.Notice);
 
             if (((GameVersion.IsValid && !BackupVersion.IsValid) || (GameVersion.IsValid && BackupVersion.IsValid && GameVersion.Id != BackupVersion.Id)))
             {
@@ -158,7 +169,7 @@ namespace ModAPI.Data
         {
             var progressHandler = new ProgressHandler();
             Schedule.AddTask("GUI", "OperationPending", null, new object[] { "CreatingModLibrary", progressHandler, null, autoClose });
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
                 ModLibrary.Create(progressHandler);
                 OnModlibUpdate?.Invoke(this, new EventArgs());
@@ -203,7 +214,7 @@ namespace ModAPI.Data
             };
             Schedule.AddTask("GUI", "OperationPending", null, new object[] { "BackupGameFiles", progressHandler, null, true });
 
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
                 var gameFolder = GetGameFolder();
                 foreach (var n in GameConfiguration.IncludeAssemblies)
@@ -796,7 +807,7 @@ namespace ModAPI.Data
                         addClasses[key].Add(addClass);
                     }*/
                     c++;
-                    SetProgress(handler, 10f + (c / (float) mods.Count) * 20f, "FetchingInjections");
+                    SetProgress(handler, 10f + (c / (float)mods.Count) * 20f, "FetchingInjections");
                 }
 
                 SetProgress(handler, 30f, "Injecting");
@@ -937,8 +948,8 @@ namespace ModAPI.Data
 
                                     // If the instruction is the call to the base constuctor then we are done
                                     if (instruction.OpCode.Code == Code.Call &&
-                                        (((MethodReference) instruction.Operand).Name == ".ctor" ||
-                                         ((MethodReference) instruction.Operand).Name == ".cctor"))
+                                        (((MethodReference)instruction.Operand).Name == ".ctor" ||
+                                         ((MethodReference)instruction.Operand).Name == ".cctor"))
                                     {
                                         break;
                                     }
@@ -983,7 +994,7 @@ namespace ModAPI.Data
                                 {
                                     if (instruction.OpCode.Code == Code.Call &&
                                         instruction.Operand is MethodReference &&
-                                        ((MethodReference) instruction.Operand).FullName == originalMethodFullName)
+                                        ((MethodReference)instruction.Operand).FullName == originalMethodFullName)
                                     {
                                         instruction.Operand = lastMethod ?? originalMethod;
                                     }
@@ -1541,7 +1552,7 @@ namespace ModAPI.Data
                     {
                         return false;
                     }
-                    return obj is Version && Equals((Version) obj);
+                    return obj is Version && Equals((Version)obj);
                 }
 
                 public override int GetHashCode()

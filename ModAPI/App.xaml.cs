@@ -30,7 +30,8 @@ namespace ModAPI
     /// </summary>
     public partial class App : Application
     {
-        public static string Version = "0.1.9";
+        public static string Version = "2.0.0";
+        public static bool DevMode;
 
         public ResourceDictionary LanguageDictionary;
         public static App Instance;
@@ -62,11 +63,23 @@ namespace ModAPI
             }
         }
 
+        public static string ThemeFile = "theme.cfg";
+
         public App()
         {
             AssemblyResolver.Initialize();
             RootPath = Path.GetFullPath(".");
             UpdatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
+            DevMode = false;
+            var args = Environment.GetCommandLineArgs();
+            foreach (var arg in args)
+            {
+                if (arg.Equals("--dev", StringComparison.OrdinalIgnoreCase))
+                {
+                    DevMode = true;
+                    break;
+                }
+            }
 
             if (Directory.Exists(UpdatePath))
             {
@@ -78,6 +91,62 @@ namespace ModAPI
 
             Instance = this;
             InitializeComponent();
+
+            ApplyTheme();
+        }
+
+        private void ApplyTheme()
+        {
+            var theme = GetCurrentTheme();
+            if (theme == "dark") return; // FluentStyles.xaml already loaded via App.xaml
+
+            ResourceDictionary toRemove = null;
+            foreach (var dict in Resources.MergedDictionaries)
+            {
+                if (dict.Source != null && dict.Source.ToString().Contains("FluentStyles"))
+                {
+                    toRemove = dict;
+                    break;
+                }
+            }
+            if (toRemove != null)
+            {
+                Resources.MergedDictionaries.Remove(toRemove);
+            }
+
+            if (theme == "light")
+            {
+                var lightTheme = new ResourceDictionary
+                {
+                    Source = new Uri("pack://application:,,,/ModAPI;component/FluentStylesLight.xaml")
+                };
+                Resources.MergedDictionaries.Add(lightTheme);
+            }
+            // classic: Dictionary.xaml only (original ModAPI design) + fallback resources
+        }
+
+        public static string GetCurrentTheme()
+        {
+            try
+            {
+                var path = Path.Combine(RootPath, ThemeFile);
+                if (File.Exists(path))
+                {
+                    return File.ReadAllText(path).Trim().ToLower();
+                }
+            }
+            catch { }
+            return "dark";
+        }
+
+        public static void SaveTheme(string theme)
+        {
+            try
+            {
+                var path = Path.Combine(RootPath, ThemeFile);
+                File.WriteAllText(path, theme);
+            }
+            catch { }
         }
     }
 }

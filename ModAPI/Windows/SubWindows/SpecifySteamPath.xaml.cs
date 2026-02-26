@@ -43,7 +43,6 @@ namespace ModAPI.Windows.SubWindows
             Task = task;
             SteamPath.Text = Configuration.GetPath("Steam");
             Check();
-            SetCloseable(false);
         }
 
         public SpecifySteamPath(string langKey, Schedule.Task task)
@@ -53,7 +52,6 @@ namespace ModAPI.Windows.SubWindows
             Task = task;
             SteamPath.Text = Configuration.GetPath("Steam");
             Check();
-            SetCloseable(false);
         }
 
         protected void Check()

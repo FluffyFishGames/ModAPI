@@ -28,6 +28,48 @@
     <FontFamily x:Key="BigFont">/resources/Fonts/#Sansation Bold</FontFamily>
     <FontFamily x:Key="NormalFont">/resources/Fonts/#Sansation Regular™</FontFamily>
 
+    <!-- Fluent fallback resources (overridden by FluentStyles.xaml when dark theme is active) -->
+    <SolidColorBrush x:Key="FluentBgBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="FluentTabBarBrush" Color="#40000000" />
+    <SolidColorBrush x:Key="FluentBorderBrush" Color="#40000000" />
+    <SolidColorBrush x:Key="FluentTextTertiaryBrush" Color="#999999" />
+    <SolidColorBrush x:Key="FluentTextPrimaryBrush" Color="White" />
+    <SolidColorBrush x:Key="FluentTextSecondaryBrush" Color="#CCCCCC" />
+    <SolidColorBrush x:Key="FluentLinkBrush" Color="#FFD700" />
+    <SolidColorBrush x:Key="FluentWarningBrush" Color="#FF8C00" />
+    <SolidColorBrush x:Key="FluentDangerBrush" Color="#E81123" />
+    <SolidColorBrush x:Key="FluentSuccessBrush" Color="#107C10" />
+    <SolidColorBrush x:Key="FluentAccentBrush" Color="#0078D4" />
+    <SolidColorBrush x:Key="FluentCardBrush" Color="#20FFFFFF" />
+    <SolidColorBrush x:Key="FluentBgTertiaryBrush" Color="#30FFFFFF" />
+    <FontFamily x:Key="FluentIconFont">Segoe UI Symbol</FontFamily>
+    <Style x:Key="FluentCloseButton" TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Image Width="16" Height="16" Source="/resources/textures/Icons/Close.png" />
+                        <Image x:Name="Hover" Width="16" Opacity="0" Source="/resources/textures/Icons/Close_Hover.png" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="States">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.2" From="MouseOver" To="Normal" />
+                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type TreeViewItem}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="FontSize" Value="10" />
@@ -318,52 +360,70 @@
     </Style>
 
     <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="13" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
-                        <Components:Scale9 x:Name="Scale9Control"
-                                       NormalSource="/resources/textures/NewGUI/Toggle_Normal.png" 
-                                       HoverSource="/resources/textures/NewGUI/Toggle_Hover.png" 
-                                       ActiveSource="/resources/textures/NewGUI/Toggle_Active.png" 
-                                       SelectedNormalSource="/resources/textures/NewGUI/ToggleOn_Normal.png" 
-                                       SelectedHoverSource="/resources/textures/NewGUI/ToggleOn_Hover.png" 
-                                       SelectedActiveSource="/resources/textures/NewGUI/ToggleOn_Active.png" 
-                                       Selected="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type CheckBox}}, Path=IsChecked}"
-                                       Border="0"
-                                       HorizontalAlignment="Left"
-                                       BlendNormal="True"
-                                       Overflow="0, 0, 0, 0"
-                                       TextColor="#222222"
-                                       InnerPadding="0"
-                                       Width="24"
-                                       Height="24"
-                                       ContentOffset="0, 0" />
-                        <ContentPresenter VerticalAlignment="Center" Margin="36, 0, 0, 0" />
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="States">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Normal" />
-                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Pressed" To="Hover" />
-                                    <VisualTransition GeneratedDuration="0:0:0.2" From="Hover" To="Normal" />
-                                    <VisualTransition GeneratedDuration="0:0:0" From="Normal" To="MouseOver" />
-                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
-                                </VisualStateGroup.Transitions>
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="MouseOver">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="HoverOpacity" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0" From="0" To="1" Storyboard.TargetName="Scale9Control" Storyboard.TargetProperty="ActiveOpacity" />
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                    <Grid x:Name="Root" HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="Track" Grid.Column="0" Width="40" Height="20" 
+                                CornerRadius="10" Background="#50FFFFFF" BorderBrush="#70FFFFFF" 
+                                BorderThickness="1" VerticalAlignment="Center">
+                            <Border x:Name="Thumb" Width="14" Height="14" CornerRadius="7" 
+                                    Background="#CCCCCC" HorizontalAlignment="Left" Margin="2,0,0,0" />
+                        </Border>
+                        <ContentPresenter Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0" />
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Track" Property="Background" Value="#FFD700" />
+                            <Setter TargetName="Track" Property="BorderBrush" Value="#FFD700" />
+                            <Setter TargetName="Thumb" Property="Background" Value="White" />
+                            <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right" />
+                            <Setter TargetName="Thumb" Property="Margin" Value="0,0,2,0" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Track" Property="BorderBrush" Value="#FFFFFF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- RadioButton fallback style for all themes -->
+    <Style TargetType="{x:Type RadioButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Grid Width="16" Height="16" Margin="0,0,5,0" VerticalAlignment="Center">
+                            <Ellipse x:Name="OuterCircle" Width="16" Height="16" 
+                                     Stroke="#999999" StrokeThickness="1.5" Fill="Transparent" />
+                            <Ellipse x:Name="InnerDot" Width="8" Height="8" 
+                                     Fill="#FFD700" Visibility="Collapsed" />
+                        </Grid>
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="OuterCircle" Property="Stroke" Value="#FFD700" />
+                            <Setter TargetName="InnerDot" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="OuterCircle" Property="Stroke" Value="#CCCCCC" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -1282,6 +1342,10 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- AccentButton fallback (overridden by FluentStyles.xaml when active) -->
+    <Style x:Key="AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource NormalButton}" />
+
     <Style x:Key="TopTabs" TargetType="{x:Type Components:TabControlEx}">
         
         <Setter Property="Template">
@@ -2965,6 +3029,92 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ===== ListView / GridView Support for Downloads Tab (Classic fallback) ===== -->
+    <Style TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="#20FFFFFF" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="#40FFFFFF" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" 
+                            BorderBrush="#30FFFFFF" BorderThickness="0,0,0,0.5"
+                            Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                        <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#1AFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#0078D4" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="Background" Value="#30FFFFFF" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="#40FFFFFF" />
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="Padding" Value="6,4" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                    <Grid>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Border>
+                        <Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0"
+                               Width="18" Background="Transparent">
+                            <Thumb.Template>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                    <Border Background="Transparent">
+                                        <Rectangle Width="1" HorizontalAlignment="Center" Fill="#40FFFFFF" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Thumb.Template>
+                        </Thumb>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#2AFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#005A9E" />
+                        </Trigger>
+                        <Trigger Property="Role" Value="Padding">
+                            <Setter TargetName="Bd" Property="Background" Value="#30FFFFFF" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

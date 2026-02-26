@@ -25,10 +25,11 @@
         xmlns:Utils="clr-namespace:ModAPI.Utils" 
         x:Name="Window"
         Style="{StaticResource SubWindow}"
-        Height="300" Width="350">
+        SizeToContent="Height"
+        Width="500">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="300" MaxWidth="{Binding ElementName=Window,Path=ActualWidth}" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -42,21 +43,21 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="SteamPath" Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Center" TextInput="SteamPath_TextInput" TextChanged="SteamPath_TextChanged" />
-                <Button x:Name="BrowseButton" Grid.Column="1" Margin="0, -2, 0, 0" Height="28" Style="{StaticResource NormalButton}" Click="OnClickBrowse">
+                <TextBox x:Name="SteamPath" Grid.Column="0" MinWidth="150" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Center" TextInput="SteamPath_TextInput" TextChanged="SteamPath_TextChanged" />
+                <Button x:Name="BrowseButton" Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource NormalButton}" Click="OnClickBrowse">
                     <StackPanel Orientation="Horizontal">
-                        <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Browse.png" />
+                        <TextBlock Margin="0,0,5,0" Text="&#xED25;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Text="Browse" FontSize="16" Utils:Language.Key="Buttons.Browse" />
                     </StackPanel>
                 </Button>
-                <Image Visibility="Hidden" x:Name="AcceptIcon" Grid.Column="2" Source="/ModAPI;component/resources/textures/Icons/Icon_Accept.png" Width="24" Height="24" />
-                <Image Visibility="Hidden" x:Name="DeclineIcon" Grid.Column="2" Source="/ModAPI;component/resources/textures/Icons/Icon_Decline.png" Width="24" Height="24" />
+                <TextBlock Visibility="Hidden" x:Name="AcceptIcon" Grid.Column="2" Text="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="{DynamicResource FluentSuccessBrush}" VerticalAlignment="Center" />
+                <TextBlock Visibility="Hidden" x:Name="DeclineIcon" Grid.Column="2" Text="&#xEA39;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="{DynamicResource FluentDangerBrush}" VerticalAlignment="Center" />
             </Grid>
         </StackPanel>
         <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button IsEnabled="False" x:Name="ConfirmButton" Margin="0" Style="{StaticResource NormalButton}" Click="ConfirmButton_Click">
                 <StackPanel Orientation="Horizontal">
-                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Accept.png" />
+                    <TextBlock Margin="0,0,5,0" Text="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
                     <TextBlock Utils:Language.Key="Buttons.Continue" />
                 </StackPanel>
             </Button>

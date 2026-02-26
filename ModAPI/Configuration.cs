@@ -32,6 +32,12 @@ using ModAPI;
 
 /*namespace ModAPI
 {*/
+/// <summary>
+/// Legacy configuration class - no longer used.
+/// Replaced by ModAPI.Configurations.Configuration in ModAPI_Shared.
+/// Contains dead references to souldrinker.de and modapi.cc backends.
+/// </summary>
+[System.Obsolete("Legacy code - not used anywhere in the application")]
 public class OldConfiguration
 {
     public static Dictionary<string, Language> Languages = new Dictionary<string, Language>();
@@ -202,8 +208,8 @@ public class OldConfiguration
 
         public bool LoadHashesFromNet()
         {
-            var request = (HttpWebRequest) WebRequest.Create("http://www.souldrinker.de/modapi/theforest/VersionsData.txt");
-            var response = (HttpWebResponse) request.GetResponse();
+            var request = (HttpWebRequest)WebRequest.Create("http://www.souldrinker.de/modapi/theforest/VersionsData.txt");
+            var response = (HttpWebResponse)request.GetResponse();
             if (response.StatusCode == HttpStatusCode.Found)
             {
                 var s = response.GetResponseStream();
@@ -301,7 +307,7 @@ public class OldConfiguration
                     var ms = new MemoryStream();
                     var stream = new FileStream(fileName, FileMode.Open);
                     ms.SetLength(stream.Length);
-                    stream.Read(ms.GetBuffer(), 0, (int) stream.Length);
+                    stream.Read(ms.GetBuffer(), 0, (int)stream.Length);
                     ms.Flush();
                     stream.Close();
 

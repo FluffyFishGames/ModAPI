@@ -1,0 +1,287 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+
+
+    <s:String x:Key="LangCode">ZH-TW</s:String>
+    <s:String x:Key="Locale">zh-TW</s:String>
+    <s:String x:Key="LangName">繁體中文</s:String>
+
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">錯誤!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">你嘗試從壓縮檔或臨時目錄執行ModAPI，這將導致問題。是否將檔案複製到工作目錄?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">修復</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">否</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+    
+    <s:String x:Key="Lang.Window.Version">版本:</s:String>
+    <s:String x:Key="Lang.Window.Copyright">Created by FluffyFish</s:String>
+    <s:String x:Key="Lang.Logout">登出</s:String>
+    <s:String x:Key="Lang.Loading">載入中...</s:String>
+    <s:String x:Key="Lang.Login">登入</s:String>
+    <s:String x:Key="Lang.UserGroup.Administrator">管理員</s:String>
+    <s:String x:Key="Lang.UserGroup.Press">媒體</s:String>
+    <s:String x:Key="Lang.UserGroup.Moderator">版主</s:String>
+    <s:String x:Key="Lang.UserGroup.User">使用者</s:String>
+    
+    <s:String x:Key="Lang.Windows.Login.Title">登入</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">輸入你在 modapi.survivetheforest.net 的使用者名稱和密碼來登入。</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Login">登入</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">取消</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Username">使用者名稱:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Password">密碼:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Errors.WrongLogin">使用者名稱和/或密碼不正確。</s:String>
+    
+    <s:String x:Key="Lang.Windows.OperationPending.Title">操作進行中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Continue">繼續</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Cancel">取消</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.BackupGameFiles.CreatingBackup">正在備份遊戲檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.RemovingOldFiles">正在刪除舊檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CreatingModToolkit">正在建立Mod工具...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.ModifyingAssemblies">正在修改遊戲程式庫...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CopyingAssemblies">正在複製遊戲程式庫...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Finish">Mod程式庫建立成功。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.BaseModLibNotFound">錯誤!: 找不到BaseModLib。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyFileNotFound">錯誤!: 找不到遊戲程式庫。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.CopyAssemblyFileNotFound">錯誤!: 找不到遊戲程式庫。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyException">錯誤!: 修改遊戲程式庫時發生意外錯誤。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Finish">Mod建立成功。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.SavingMod">正在建立Mod檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.FetchingTypes">正在取得所有類型...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.ConvertingClasses">正在轉換類型...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Preparing">正在準備建立Mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.Save">錯誤!: 無法儲存Mod。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.UnexpectedError">錯誤!: 發生意外錯誤。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.FileNotFound">錯誤!: 找不到檔案。可能專案尚未編譯。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.CorruptedAssembly">錯誤!: 某個組件似乎已損壞。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Preparing">正在準備Mod環境...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.FetchingInjections">正在取得檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Injecting">正在操作遊戲檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Resolving">正在解析MSIL程式碼...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Saving">正在儲存檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Error.Unexpected">錯誤!: 套用Mod時發生錯誤。</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Restore">正在還原檔案...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.Cancelled">錯誤!: 還原被使用者取消!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.NoConnection">錯誤!: Steam無法連線到網路!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">錯誤!: Steam已關閉!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">正在下載更新...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">正在解壓更新...</s:String>
+
+    <s:String x:Key="Lang.Windows.CreateModProject.Title">建立Mod專案</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Text">輸入新專案的ID。ID必須唯一，只能包含英數字和「_」。</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Errors.ID">已存在相同ID的專案。</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Cancel">取消</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Add">新增</s:String>
+
+    <s:String x:Key="Lang.Windows.RemoveModProject.Title">刪除專案</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPre">確定要刪除這個專案嗎?</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPost">此操作無法復原。所有專案檔案將被永久刪除。</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">取消</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">刪除</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">輸入遊戲路徑</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">無法自動找到遊戲，請手動輸入遊戲路徑。</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">瀏覽</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">繼續</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">輸入Steam路徑</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Text">無法自動找到Steam，請手動輸入Steam路徑。</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Browse">瀏覽</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Continue">繼續</s:String>
+
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Title">無法偵測遊戲版本</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoVersionUpdate">無法偵測遊戲版本。要偵測新版本請啟用版本表更新。也可能是遊戲檔案損壞或被ModAPI以外的程式修改。</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.VersionNotFound">無法偵測遊戲版本。遊戲資料似乎已被ModAPI以外的程式修改。</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoSteamText">由於Steam連線已停用，ModAPI無法還原遊戲檔案。請手動還原遊戲檔案原始狀態後重新檢查。也可以啟用Steam連線讓ModAPI自動還原。</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.SteamText">是否透過Steam還原檔案?</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateVersionUpdate">啟用版本表更新</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateSteam">啟用Steam連線</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Restore">還原檔案</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Recheck">重新檢查</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Close">結束</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Yes">是</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">否</s:String>
+
+    <s:String x:Key="Lang.Windows.FirstSetup.Title">歡迎!</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">這是ModAPI的首次執行。在開始之前請檢查以下選項:</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">自動更新</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">啟用自動更新後，當有新版本ModAPI時會通知你。你可以一鍵套用更新。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Steam連線</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Steam連線允許在遊戲中使用Steam功能(如Steam覆疊層)。如果遊戲檔案損壞或被修改，ModAPI也可以自動還原。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">更新版本表</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">啟用版本表更新後，ModAPI會在啟動時下載版本表。遊戲新版本將被自動識別。新版本加入表中可能需要最長24小時。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">繼續</s:String>
+
+
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Title">有可用更新!</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Text">有新版本的ModAPI。是否立即更新?</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">立即更新</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">稍後更新</s:String>
+
+
+    <s:String x:Key="Lang.Languages.EN">英語</s:String>
+    <s:String x:Key="Lang.Languages.DE">德語</s:String>
+    <s:String x:Key="Lang.Languages.FR">法語</s:String>
+    <s:String x:Key="Lang.Languages.ES">西班牙語</s:String>
+    <s:String x:Key="Lang.Languages.RU">俄語</s:String>
+    <s:String x:Key="Lang.Languages.HI">印地語</s:String>
+    <s:String x:Key="Lang.Languages.AR">阿拉伯語</s:String>
+    <s:String x:Key="Lang.Languages.TR">土耳其語</s:String>
+    <s:String x:Key="Lang.Languages.IT">義大利語</s:String>
+    <s:String x:Key="Lang.Languages.VI">越南語</s:String>
+    <s:String x:Key="Lang.Languages.ZH">簡體中文</s:String>
+    <s:String x:Key="Lang.Languages.ZH-TW">繁體中文</s:String>
+    <s:String x:Key="Lang.Languages.JA">日語</s:String>
+    <s:String x:Key="Lang.Languages.KO">韓語</s:String>
+    <s:String x:Key="Lang.Languages.BN">孟加拉語</s:String>
+    <s:String x:Key="Lang.Languages.PT">葡萄牙語</s:String>
+
+    <s:String x:Key="Lang.Development.Tab">開發</s:String>
+    <s:String x:Key="Lang.Development.Settings.Tab">設定</s:String>
+    <s:String x:Key="Lang.Development.Keys.Tab">可指定按鍵</s:String>
+    <s:String x:Key="Lang.Development.Projects">專案</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Name">名稱:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Description">描述:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.StandardKey">預設鍵:</s:String>
+    <s:String x:Key="Lang.Development.Languages.Tab">語言</s:String>
+    <s:String x:Key="Lang.Development.Languages.AddLanguage">新增語言</s:String>
+    <s:String x:Key="Lang.Development.Languages.SelectedLanguages">已選語言</s:String>
+    <s:String x:Key="Lang.Development.Languages.Buttons.AddLanguage">新增</s:String>
+
+    <s:String x:Key="Lang.Development.NoProjectSelected">未選擇專案</s:String>
+    <s:String x:Key="Lang.Development.SelectedProject">已選專案</s:String>
+    <s:String x:Key="Lang.Development.Errors.Save">儲存專案時發生錯誤。請確保專案已關閉且沒有其他應用程式正在存取。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidID">ID只能包含英數字和「_」。ID是必需的且必須唯一。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidButtonID">ID必須唯一。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidVersion">版本號只能包含4個0-99之間的數字，用點分隔。</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidName">每種已選語言都需要名稱。</s:String>
+    <s:String x:Key="Lang.Development.Errors.NoLanguageSelected">至少需要選擇一種語言。</s:String>
+
+    <s:String x:Key="Lang.Development.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Labels.StandardKey">預設鍵:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Version">版本:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Name">名稱:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Description">描述:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary">Mod程式庫</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.CreationTime">建立時間:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.GameVersion">遊戲版本:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.ModAPIVersion">ModAPI版本:</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateModLibrary">重建Mod程式庫</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateProject">建立新專案</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveProject">刪除專案</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateMod">建立Mod</s:String>
+    <s:String x:Key="Lang.Development.Buttons.AddButton">新增按鍵</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveButton">刪除按鍵</s:String>
+
+    <s:String x:Key="Lang.Mods.Tab">Mod</s:String>
+    <s:String x:Key="Lang.Mods.Title">可用Mod</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.StartGame">開始遊戲</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.SelectVersion">選擇版本</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Informations">資訊</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Settings">設定</s:String>
+    <s:String x:Key="Lang.Mods.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Version">已選版本:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.AvailableVersions">可用版本:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Name">名稱:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Description">描述:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Buttons">按鍵綁定</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Compatible">相容版本:</s:String>
+
+    <s:String x:Key="Lang.Mods.Welcome.Title0">歡迎!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text0">要將Mod套用到遊戲，需要先啟用Mod。點擊Mod名稱左邊的圓形按鈕即可。要更改按鍵綁定，在清單中選擇一個Mod然後切換到「設定」標籤。</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text1">要啟動帶Mod的遊戲，只需點擊右下角的「開始遊戲」按鈕。</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Title1">遇到錯誤?</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2a">如果遇到任何錯誤，請在論壇尋求幫助 (</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2Link">modapi</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2b">)。</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text3">請不要忘記附上logs資料夾中的日誌檔案「ModAPI.log」。該檔案包含排錯所需的重要資訊。</s:String>
+
+    <s:String x:Key="Lang.Savegames.Tab">存檔</s:String>
+    <s:String x:Key="Lang.Savegames.Title">你的存檔</s:String>
+    <s:String x:Key="Lang.Savegames.MainSavegame">主存檔</s:String>
+
+    <s:String x:Key="Lang.Savegames.SelectedSavegame">目前選擇:</s:String>
+    <s:String x:Key="Lang.Savegames.Options">選項:</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Save">儲存</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.SaveAs">另存新檔...</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Delete">刪除</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.CreateBackup">建立備份</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.RemoveAllBackups">刪除所有備份</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.LoadBackup">載入備份</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.DeleteBackup">刪除備份</s:String>
+
+    <s:String x:Key="Lang.Downloads.Tab">下載</s:String>
+    <s:String x:Key="Lang.Downloads.Title">下載Mod</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Refresh">重新整理</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Download">下載</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Name">名稱</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Author">作者</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Category">分類</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Game">遊戲</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Downloads">下載次數</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Ready">選擇要下載的Mod。</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">正在載入Mod清單...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Downloading">下載中...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Complete">下載完成!</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Error">下載時發生錯誤。</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Version">版本</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Compatible">相容</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Date">日期</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Size">大小</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Select">選擇模組查看版本</s:String>
+    <s:String x:Key="Lang.Downloads.Game.All">全部</s:String>
+    <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
+    <s:String x:Key="Lang.Downloads.Game.DedicatedServer">專用伺服器</s:String>
+    <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Category.All">全部</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Bugfixes">漏洞修復</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Balancing">平衡</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Cheats">作弊</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Buildings">建築</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Graphical">圖形</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Changes">更改</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Items">物品</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Enemies">敵人</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Multiplayer">多人遊戲</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Worldchanges">世界變更</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Other">其他</s:String>
+    <s:String x:Key="Lang.Downloads.Search.Placeholder">搜尋模組...</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Info">資訊</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Title">無網路連線</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Text">無法連線到Mod伺服器。你可以從網站手動下載:</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">下載後將.mod檔案放入ModAPI目錄下的「mods/TheForest」資料夾。</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Retry">重試連線</s:String>
+
+    <s:String x:Key="Lang.Options.Tab">設定</s:String>
+    <s:String x:Key="Lang.Options.Labels.Language">語言:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">保持版本表最新:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AutoUpdate">檢查更新:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteam">Steam連線:</s:String>
+
+    <s:String x:Key="Lang.Options.Labels.Theme">主題:</s:String>
+    <s:String x:Key="Lang.Options.Theme.Classic">經典主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Light">淺色主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Dark">深色主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartTitle">主題已變更</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartText">請重新啟動應用程式以套用主題。</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Title">主題已變更</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Text">請重新啟動應用程式以套用主題。</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Buttons.OK">確定</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Title">變更主題</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Text">要套用該主題嗎?</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.Yes">是</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.No">否</s:String>
+
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Text">未找到專案。請先建立一個專案。</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.Delete">刪除模組</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">刪除模組</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">刪除模組 &quot;{0}&quot; 及其所有版本？ 這也將從遊戲資料夾中刪除已部署的 .dll 檔案。</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">是</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">否</s:String>
+</ResourceDictionary>

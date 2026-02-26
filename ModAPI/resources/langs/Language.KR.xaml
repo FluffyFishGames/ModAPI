@@ -3,7 +3,7 @@
                     xmlns:s="clr-namespace:System;assembly=mscorlib">
     <s:String x:Key="LangCode">KO</s:String>
     <s:String x:Key="Locale">ko-KR</s:String>
-    <s:String x:Key="LangName">Korean</s:String>
+    <s:String x:Key="LangName">한국어</s:String>
 
     <s:String x:Key="Lang.Windows.DirectoryCheck.Title">오류!</s:String>
     <s:String x:Key="Lang.Windows.DirectoryCheck.Text">ModAPI를 아카이브 파일 또는 임시 디렉토리에서 실행하려고했습니다. 이것은 (문제)로 이어질 것입니다.이 파일을 작업 위치에 복사 하시겠습니까?</s:String>
@@ -22,7 +22,7 @@
     <s:String x:Key="Lang.UserGroup.User">User</s:String>
     
     <s:String x:Key="Lang.Windows.Login.Title">로그인</s:String>
-    <s:String x:Key="Lang.Windows.Login.Text">www.modapi.de 에 로그인할 아이디와 비밀번호를 입력하여 주십시오.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">modapi.survivetheforest.net 에 로그인할 아이디와 비밀번호를 입력하여 주십시오.</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Login">로그인</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">취소</s:String>
     <s:String x:Key="Lang.Windows.Login.Labels.Username">아이디:</s:String>
@@ -128,6 +128,7 @@
     <s:String x:Key="Lang.Languages.IT">이탈리아</s:String>
     <s:String x:Key="Lang.Languages.VI">베트남어</s:String>
     <s:String x:Key="Lang.Languages.ZH">중국어</s:String>
+    <s:String x:Key="Lang.Languages.ZH-TW">중국어(번체)</s:String>
     <s:String x:Key="Lang.Languages.JA">일본어</s:String>
     <s:String x:Key="Lang.Languages.KO">한국어</s:String>
     <s:String x:Key="Lang.Languages.BN">뱅골어</s:String>
@@ -186,10 +187,12 @@
     <s:String x:Key="Lang.Mods.Labels.Compatible">호환성:</s:String>
 
     <s:String x:Key="Lang.Mods.Welcome.Title0">환영합니다!</s:String>
-    <s:String x:Key="Lang.Mods.Welcome.Text0">게임에 mod 를 적용하려면 먼저 modAPI 를 활성화해야 합니다. In order to do so you have to click the round button left to the mod name. To change key bindings you can select a mod in the list and switch to the "Settings" tab.</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text0">게임에 모드를 적용하려면 먼저 modAPI를 활성화해야 합니다. 그렇게 하려면 모드 이름 왼쪽에 있는 둥근 버튼을 클릭해야 합니다. 키 바인딩을 변경하려면 목록에서 모드를 선택하고 "설정" 탭으로 전환하세요.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">mod 와 게임을 시작하려면 오른쪽 하단에 있는 "게임 시작" 을 클릭해야 합니다.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">오류?</s:String>
-    <s:String x:Key="Lang.Mods.Welcome.Text2">오류가 발생하는 경우에 포럼에서 도움을 요청하시기 바랍니다. www.modapi.de</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2a">오류가 발생하는 경우에 포럼 (</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2Link">modapi</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2b">) 에서 도움을 요청하시기 바랍니다.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text3">log 파일을 첨부하는것을 잊지 마십시오. &quot;ModAPI.log&quot; logs 폴더에서 찾아보십시오. 이 파일은 문제 해결을 위한 중요한 정보가 포함되어 있습니다.</s:String>
 
     <s:String x:Key="Lang.Savegames.Tab">점수</s:String>
@@ -206,10 +209,77 @@
     <s:String x:Key="Lang.Savegames.Buttons.LoadBackup">백업 불러오기</s:String>
     <s:String x:Key="Lang.Savegames.Buttons.DeleteBackup">백업 삭제</s:String>
 
+    <s:String x:Key="Lang.Downloads.Tab">다운로드</s:String>
+    <s:String x:Key="Lang.Downloads.Title">모드 다운로드</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Refresh">새로고침</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Download">다운로드</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Name">이름</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Author">작성자</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Category">카테고리</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Game">게임</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Downloads">다운로드수</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Ready">다운로드할 모드를 선택하세요.</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">모드 목록을 불러오는 중...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Downloading">다운로드 중...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Complete">다운로드 완료!</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Error">다운로드 중 오류가 발생했습니다.</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Version">버전</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Compatible">호환</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Date">날짜</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Size">크기</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Select">모드를 선택하면 버전이 표시됩니다</s:String>
+    <s:String x:Key="Lang.Downloads.Game.All">전체</s:String>
+    <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
+    <s:String x:Key="Lang.Downloads.Game.DedicatedServer">전용 서버</s:String>
+    <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Category.All">전체</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Bugfixes">버그수정</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Balancing">밸런싱</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Cheats">치트</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Buildings">건축</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Graphical">그래픽</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Changes">변경</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Items">아이템</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Enemies">적</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Multiplayer">멀티플레이</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Worldchanges">월드변경</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Other">기타</s:String>
+    <s:String x:Key="Lang.Downloads.Search.Placeholder">모드 검색...</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Info">정보</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Title">인터넷 연결 없음</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Text">모드 서버에 연결할 수 없습니다. 아래 웹사이트에서 수동으로 다운로드할 수 있습니다:</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">다운로드 후 .mod 파일을 ModAPI 폴더의 "mods/TheForest" 폴더에 넣어주세요.</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Retry">다시 연결</s:String>
+
     <s:String x:Key="Lang.Options.Tab">설정</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">언어 선택:</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">최신버전 유지:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">업데이트 검색:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">스팀 연결:</s:String>
+
+    <s:String x:Key="Lang.Options.Labels.Theme">테마 선택:</s:String>
+    <s:String x:Key="Lang.Options.Theme.Classic">기본 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Light">화이트 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Dark">다크 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartTitle">테마 변경</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartText">테마를 적용하려면 프로그램을 다시 시작해주세요.</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Title">테마 변경</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Text">테마를 적용하려면 프로그램을 다시 시작해주세요.</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Buttons.OK">확인</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Title">테마 변경</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Text">테마 적용을 시작하겠습니까?</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.Yes">예</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.No">아니오</s:String>
+
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Title">경고</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Text">새로운 프로젝트가 없습니다. 먼저 프로젝트를 생성해주세요.</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">확인</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.Delete">모드 삭제</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">모드 삭제</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">모드 &quot;{0}&quot;의 모든 버전을 삭제하시겠습니까? 게임 폴더에 배포된 .dll 파일도 함께 삭제됩니다.</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">예</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">아니오</s:String>
 </ResourceDictionary>
     

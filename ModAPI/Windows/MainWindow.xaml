@@ -26,110 +26,96 @@
         xmlns:local="clr-namespace:ModAPI" x:Class="ModAPI.MainWindow"
         SnapsToDevicePixels="True"
         Style="{StaticResource Window}"
-        Background="Transparent"
+        Background="{DynamicResource FluentBgBrush}"
         MinWidth="800"
         MinHeight="500"
         Width="1420"
-        Height="600"
-        Title="MainWindow" Loaded="WindowLoaded" LayoutUpdated="Window_LayoutUpdated" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Activated="Window_Activated" Closed="Window_Closed" WindowStartupLocation="CenterScreen">
-    <Grid Background="Transparent">
+        Height="650"
+        Title="ModAPI v2.0" Loaded="WindowLoaded" LayoutUpdated="Window_LayoutUpdated" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Activated="Window_Activated" Closed="Window_Closed" WindowStartupLocation="CenterScreen">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0" CaptionHeight="48" ResizeBorderThickness="6" CornerRadius="0" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Grid Background="Transparent" MouseLeftButtonDown="RootGrid_MouseLeftButtonDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="36" />
         </Grid.RowDefinitions>
-        <Components:TabControlEx x:Name="Tabs" Grid.Row="0" SnapsToDevicePixels="True" Style="{StaticResource TopTabs}" SelectionChanged="Tabs_SelectionChanged">
-            <!-- TODO: Disabled Login components due to php backend not functioning on modapi.cc
-            <Components:TabControlEx.ExtraPanel>
-                <Grid Height="60" Margin="-7,-10,-7,-10">
-                    <Grid x:Name="LoginLoader" Visibility="Collapsed">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/resources/textures/Icons/Loader.png" Width="30" Margin="0,0,0,5" Height="30" RenderOptions.BitmapScalingMode="HighQuality">
-                                <Image.RenderTransform>
-                                    <RotateTransform x:Name="LoginLoaderRotation" Angle="0" CenterX="15" CenterY="15" />
-                                </Image.RenderTransform>
-                            </Image>
-                            <TextBlock Text="{DynamicResource Lang.Loading}" VerticalAlignment="Center" Style="{StaticResource HeaderLabel}" Foreground="White" Margin="10,0,0,5" />
-                        </StackPanel>
-                    </Grid>
-                    <StackPanel Orientation="Vertical" x:Name="LoggedIn">
-                        <ContentControl Style="{StaticResource PanelTop}" Grid.Row="0" Grid.Column="0" Height="40">
-                            <StackPanel Orientation="Horizontal" Margin="10,5,10,5">
-                                <Grid Width="30" Height="30" Margin="0,0,5,0">
-                                    <Image x:Name="UserAvatar" Width="30" Height="30" RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Image Source="/resources/textures/Icons/Loader.png" Width="25" Margin="0,0,0,0" Height="25" x:Name="UserAvatarLoader" RenderOptions.BitmapScalingMode="HighQuality">
-                                        <Image.RenderTransform>
-                                            <RotateTransform x:Name="UserAvatarLoaderRotation" Angle="0" CenterX="12.5" CenterY="12.5" />
-                                        </Image.RenderTransform>
-                                    </Image>
-                                </Grid>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock x:Name="Username" Text="" FontWeight="Bold" Style="{StaticResource HeaderLabel}" FontSize="15" />
-                                    <TextBlock x:Name="Usergroup" Text="" HorizontalAlignment="Right" Style="{StaticResource HeaderLabel}" FontSize="12" />
-                                </StackPanel>
-                                <Button Height="16" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Margin="4,0,0,0" Width="16" ToolTip="{DynamicResource Lang.Logout}" Click="DoLogout">
-                                    <Image Source="/resources/textures/Icons/Icon_Logout.png" />
-                                </Button>
-                            </StackPanel>
-                        </ContentControl>
-                        <ContentControl Style="{StaticResource PanelBottom}" Height="8" />
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" x:Name="LoginButton" Margin="0,5,0,0">
-                        <Button Style="{StaticResource NormalButton}" HorizontalAlignment="Left" Click="Login">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/resources/textures/Icons/Icon_Login.png" Margin="0,0,5,0" />
-                                <TextBlock Text="{DynamicResource Lang.Login}" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Components:TabControlEx.ExtraPanel>
-            -->
-            <Components:TabControlEx.Items>
-                <Components:IconTabItem SnapsToDevicePixels="True" Label="{DynamicResource Lang.Mods.Tab}" IconSource="/resources/textures/Icons/IconTop_Mods.png" SelectedIconSource="/resources/textures/Icons/IconTop_Mods_Selected.png" Style="{StaticResource TopTab}">
-                    <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
 
-                        <Components:PopupPanel Title="{DynamicResource Lang.Mods.Title}" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0">
+        <!-- ============================================================ -->
+        <!-- Main Tab Control -->
+        <!-- ============================================================ -->
+        <Components:TabControlEx x:Name="Tabs" Grid.Row="0" SnapsToDevicePixels="True" 
+                                 Style="{StaticResource TopTabs}" SelectionChanged="Tabs_SelectionChanged">
+            <Components:TabControlEx.Items>
+
+                <!-- ======================================== -->
+                <!-- TAB: Mods -->
+                <!-- ======================================== -->
+                <Components:IconTabItem SnapsToDevicePixels="True" 
+                    Label="{DynamicResource Lang.Mods.Tab}" 
+                    IconSource="/resources/textures/Icons/IconTop_Mods.png" 
+                    SelectedIconSource="/resources/textures/Icons/IconTop_Mods_Selected.png" 
+                    Style="{StaticResource TopTab}">
+
+                    <Grid Margin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Components:PopupPanel Title="{DynamicResource Lang.Mods.Title}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                            <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
-                                <Grid Margin="10,7,10,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <Grid Grid.Column="0" Grid.RowSpan="2" x:Name="ModsPanel">
-                                    <ListBox ItemsSource="{Binding Mods}" SelectedIndex="{Binding SelectedMod,Mode=TwoWay}" SelectionMode="Extended" Style="{StaticResource List}" HorizontalAlignment="Left" Margin="0,0,0,0" MinWidth="200" VerticalAlignment="Stretch" />
+                                <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
+                                    <Grid Margin="10,7,10,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="0" x:Name="ModsPanel">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <ListBox Grid.Row="0" ItemsSource="{Binding Mods}" SelectedIndex="{Binding SelectedMod,Mode=TwoWay}" 
+                                                     SelectionMode="Extended" Style="{StaticResource List}" 
+                                                     HorizontalAlignment="Left" MinWidth="220" VerticalAlignment="Stretch" />
+                                            <Button Grid.Row="1" x:Name="DeleteModButton" 
+                                                    HorizontalAlignment="Stretch" Margin="0,5,0,0"
+                                                    Click="DeleteMod_Click" Style="{StaticResource NormalButton}"
+                                                    IsEnabled="False">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                    <TextBlock Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Buttons.Delete}" />
+                                                </StackPanel>
+                                            </Button>
                                         </Grid>
-                                <Grid Grid.Column="1" x:Name="NoModSelected" Margin="10,0,0,10">
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="348,445,-348,-445">
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Mods.Welcome.Title0}" />
-                                            <TextBlock TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text0}" />
-                                            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text1}" />
-                                            <TextBlock Margin="0,10,0,0" Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Mods.Welcome.Title1}" />
-                                            <TextBlock TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text2}" />
-                                            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text3}" />
-                                        </StackPanel>
-                                    </ScrollViewer>
-                                </Grid>
-                                <Grid Grid.Column="1" x:Name="SelectedMod" Margin="0,0,0,0" Visibility="Collapsed">
-                                    <Components:TabControlEx Grid.Column="1" Grid.Row="0" Margin="10,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource PopupTabs}">
-                                        <Components:IconTabItem SnapsToDevicePixels="True" Label="{DynamicResource Lang.Mods.Tabs.Informations}" IconSource="/resources/textures/Icons/IconTop_Informations.png" SelectedIconSource="/resources/textures/Icons/IconTop_Informations_Selected.png" Style="{StaticResource PopupTab}">
+                                        <Grid Grid.Column="1" x:Name="NoModSelected" Margin="16,0,0,10">
+                                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Mods.Welcome.Title0}" />
+                                                    <TextBlock TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Margin="0,8,0,0" Text="{DynamicResource Lang.Mods.Welcome.Text0}" />
+                                                    <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text1}" />
+                                                    <TextBlock Margin="0,16,0,0" Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Mods.Welcome.Title1}" />
+                                                    <TextBlock TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Margin="0,8,0,0">
+                                                        <TextBlock Text="{DynamicResource Lang.Mods.Welcome.Text2a}" /><Hyperlink x:Name="ModApiLink" NavigateUri="https://modapi.survivetheforest.net" RequestNavigate="Hyperlink_RequestNavigate"
+                                                                   Foreground="{DynamicResource FluentLinkBrush}" TextDecorations="None"><TextBlock Text="{DynamicResource Lang.Mods.Welcome.Text2Link}" /></Hyperlink><TextBlock Text="{DynamicResource Lang.Mods.Welcome.Text2b}" />
+                                                    </TextBlock>
+                                                    <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text3}" />
+                                                </StackPanel>
+                                            </ScrollViewer>
+                                        </Grid>
+                                        <Grid Grid.Column="1" x:Name="SelectedMod" Margin="0,0,0,0" Visibility="Collapsed">
+                                            <Components:TabControlEx Grid.Column="1" Grid.Row="0" Margin="16,0,0,0" 
+                                                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                                                     Style="{StaticResource PopupTabs}">
+                                                <!-- Mod Info Tab -->
+                                                <Components:IconTabItem SnapsToDevicePixels="True" 
+                                                    Label="{DynamicResource Lang.Mods.Tabs.Informations}" 
+                                                    IconSource="/resources/textures/Icons/IconTop_Informations.png" 
+                                                    SelectedIconSource="/resources/textures/Icons/IconTop_Informations_Selected.png" 
+                                                    Style="{StaticResource PopupTab}">
                                                     <ContentControl Style="{StaticResource TabBox}">
-                                                        <Grid Margin="10">
+                                                        <Grid Margin="12">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="*" />
                                                                 <ColumnDefinition Width="Auto" />
@@ -151,8 +137,8 @@
                                                                 <TextBlock Margin="10,0,0,5" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Grid.Column="1" Grid.Row="1" Text="{Binding Version}" />
                                                                 <TextBlock Margin="0,0,0,5" Style="{StaticResource NormalLabel}" Grid.Column="0" Grid.Row="2" Text="{DynamicResource Lang.Mods.Labels.ID}" />
                                                                 <TextBlock Margin="10,0,0,5" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Grid.Column="1" Grid.Row="2" Text="{Binding Id}" />
-                                                                <TextBlock Margin="0,0,0,5" Style="{StaticResource NormalLabel}" Grid.Column="0" Grid.Row="4" Text="{DynamicResource Lang.Mods.Labels.Description}" />
-                                                                <TextBlock Margin="10,0,0,5" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Grid.Column="1" Grid.Row="4" Text="{Binding Description}" />
+                                                                <TextBlock Margin="0,0,0,5" Style="{StaticResource NormalLabel}" Grid.Column="0" Grid.Row="3" Text="{DynamicResource Lang.Mods.Labels.Description}" />
+                                                                <TextBlock Margin="10,0,0,5" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Grid.Column="1" Grid.Row="3" Text="{Binding Description}" />
                                                             </Grid>
                                                             <Grid Grid.Column="1">
                                                                 <Grid.RowDefinitions>
@@ -165,10 +151,14 @@
                                                         </Grid>
                                                     </ContentControl>
                                                 </Components:IconTabItem>
-
-                                        <Components:IconTabItem SnapsToDevicePixels="True" Label="{DynamicResource Lang.Mods.Tabs.Settings}" IconSource="/resources/textures/Icons/IconTab_Settings.png" SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png" Style="{StaticResource PopupTab}">
+                                                <!-- Mod Settings Tab -->
+                                                <Components:IconTabItem SnapsToDevicePixels="True" 
+                                                    Label="{DynamicResource Lang.Mods.Tabs.Settings}" 
+                                                    IconSource="/resources/textures/Icons/IconTab_Settings.png" 
+                                                    SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png" 
+                                                    Style="{StaticResource PopupTab}">
                                                     <ContentControl Style="{StaticResource TabBox}">
-                                                        <Grid Margin="10">
+                                                        <Grid Margin="12">
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="Auto" />
                                                                 <RowDefinition Height="*" />
@@ -178,7 +168,7 @@
                                                                 <ItemsControl ItemsSource="{Binding Buttons}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
-                                                                            <StackPanel IsItemsHost="True" Margin="0,0,0,0" Orientation="Vertical" />
+                                                                            <StackPanel IsItemsHost="True" Orientation="Vertical" />
                                                                         </ItemsPanelTemplate>
                                                                     </ItemsControl.ItemsPanel>
                                                                 </ItemsControl>
@@ -186,20 +176,19 @@
                                                         </Grid>
                                                     </ContentControl>
                                                 </Components:IconTabItem>
-
-
-                                    </Components:TabControlEx>
-                                </Grid>
-                            </Grid>
-                            </ContentControl>
+                                            </Components:TabControlEx>
+                                        </Grid>
+                                    </Grid>
+                                </ContentControl>
+                                <!-- Mods Action Bar -->
                                 <ContentControl Grid.Row="1" Style="{StaticResource PanelButtons}">
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Margin="5,5,5,5" Style="{StaticResource NormalButton}" HorizontalAlignment="Right" Click="StartGame">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="/resources/textures/Icons/Icon_Add.png" Margin="0,0,5,0" />
-                                            <TextBlock Text="{DynamicResource Lang.Mods.Buttons.StartGame}" />
-                                        </StackPanel>
-                                    </Button>
+                                        <Button Margin="5" Style="{StaticResource AccentButton}" HorizontalAlignment="Right" Click="StartGame">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                <TextBlock Text="{DynamicResource Lang.Mods.Buttons.StartGame}" />
+                                            </StackPanel>
+                                        </Button>
                                     </StackPanel>
                                 </ContentControl>
                             </Grid>
@@ -207,28 +196,281 @@
                     </Grid>
                 </Components:IconTabItem>
 
-                <Components:IconTabItem x:Name="Development" SnapsToDevicePixels="True" Label="{DynamicResource Lang.Development.Tab}" IconSource="/resources/textures/Icons/IconTab_Debug.png" SelectedIconSource="/resources/textures/Icons/IconTab_Debug_Selected.png" Style="{StaticResource TopTab}">
-                    <Grid Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <!-- ======================================== -->
+                <!-- TAB: Downloads -->
+                <!-- ======================================== -->
+                <Components:IconTabItem SnapsToDevicePixels="True" 
+                    Label="{DynamicResource Lang.Downloads.Tab}" 
+                    IconSource="/resources/textures/Icons/Icon_Download.png" 
+                    SelectedIconSource="/resources/textures/Icons/Icon_Download.png" 
+                    Style="{StaticResource TopTab}">
+
+                    <Grid Margin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Components:PopupPanel Title="{DynamicResource Lang.Downloads.Title}">
+                            <Grid>
+                                <!-- Online Content -->
+                                <Grid x:Name="DownloadOnlinePanel" Visibility="Visible">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Top Bar: Search + Refresh -->
+                                    <ContentControl Style="{StaticResource PanelButtons}" Grid.Row="0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0" Margin="0,0,8,0">
+                                                <TextBox x:Name="DownloadSearchBox" 
+                                                         VerticalAlignment="Center"
+                                                         Text="" TextChanged="DownloadSearch_TextChanged" />
+                                                <TextBlock x:Name="DownloadSearchPlaceholder"
+                                                           Text="{DynamicResource Lang.Downloads.Search.Placeholder}"
+                                                           Style="{StaticResource NormalLabel}"
+                                                           VerticalAlignment="Center" Margin="6,0,0,0"
+                                                           Opacity="0.4" IsHitTestVisible="False" />
+                                            </Grid>
+                                            <Button x:Name="DownloadRefreshButton" Grid.Column="1" 
+                                                    Style="{StaticResource NormalButton}" Click="DownloadRefresh_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="{DynamicResource Lang.Downloads.Buttons.Refresh}" />
+                                                </StackPanel>
+                                            </Button>
+                                        </Grid>
+                                    </ContentControl>
+
+                                    <!-- Game Filter Radio Buttons (1st filter) -->
+                                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="4,2,4,2">
+                                        <WrapPanel x:Name="GameFilterPanel" Orientation="Horizontal">
+                                            <RadioButton x:Name="GameAll" Content="{DynamicResource Lang.Downloads.Game.All}" 
+                                                         GroupName="GameFilter" IsChecked="True" Checked="GameFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="GameTheForest" Content="{DynamicResource Lang.Downloads.Game.TheForest}" 
+                                                         GroupName="GameFilter" Checked="GameFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="GameDedicatedServer" Content="{DynamicResource Lang.Downloads.Game.DedicatedServer}" 
+                                                         GroupName="GameFilter" Checked="GameFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="GameVR" Content="{DynamicResource Lang.Downloads.Game.VR}" 
+                                                         GroupName="GameFilter" Checked="GameFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                        </WrapPanel>
+                                    </ScrollViewer>
+
+                                    <!-- Category Filter Radio Buttons (2nd filter) -->
+                                    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="4,2,4,2">
+                                        <WrapPanel x:Name="CategoryFilterPanel" Orientation="Horizontal">
+                                            <RadioButton x:Name="CatAll" Content="{DynamicResource Lang.Downloads.Category.All}" 
+                                                         GroupName="CategoryFilter" IsChecked="True" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatBugfixes" Content="{DynamicResource Lang.Downloads.Category.Bugfixes}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatBalancing" Content="{DynamicResource Lang.Downloads.Category.Balancing}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatCheats" Content="{DynamicResource Lang.Downloads.Category.Cheats}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatBuildings" Content="{DynamicResource Lang.Downloads.Category.Buildings}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatGraphical" Content="{DynamicResource Lang.Downloads.Category.Graphical}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatChanges" Content="{DynamicResource Lang.Downloads.Category.Changes}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatItems" Content="{DynamicResource Lang.Downloads.Category.Items}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatEnemies" Content="{DynamicResource Lang.Downloads.Category.Enemies}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatMultiplayer" Content="{DynamicResource Lang.Downloads.Category.Multiplayer}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatWorldchanges" Content="{DynamicResource Lang.Downloads.Category.Worldchanges}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                            <RadioButton x:Name="CatOther" Content="{DynamicResource Lang.Downloads.Category.Other}" 
+                                                         GroupName="CategoryFilter" Checked="CategoryFilter_Checked" Margin="2,2" Foreground="{DynamicResource FluentTextPrimaryBrush}" FontFamily="{StaticResource NormalFont}" FontSize="12" />
+                                        </WrapPanel>
+                                    </ScrollViewer>
+
+                                    <!-- Split: Left=Mod List, Right=Version List -->
+                                    <Grid Grid.Row="3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*" />
+                                            <ColumnDefinition Width="4" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Left: Mod List -->
+                                        <ContentControl Style="{StaticResource PanelCenter}" Grid.Column="0">
+                                            <ListView x:Name="DownloadModList" 
+                                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                      SelectionChanged="DownloadModList_SelectionChanged"
+                                                      GridViewColumnHeader.Click="DownloadModList_HeaderClick">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridViewColumn Header="{DynamicResource Lang.Downloads.Headers.Name}" Width="120" 
+                                                                        DisplayMemberBinding="{Binding Name}" />
+                                                        <GridViewColumn Header="{DynamicResource Lang.Downloads.Headers.Author}" Width="80" 
+                                                                        DisplayMemberBinding="{Binding Author}" />
+                                                        <GridViewColumn Header="{DynamicResource Lang.Downloads.Headers.Category}" Width="80" 
+                                                                        DisplayMemberBinding="{Binding Category}" />
+                                                        <GridViewColumn Header="{DynamicResource Lang.Downloads.Headers.Game}" Width="70" 
+                                                                        DisplayMemberBinding="{Binding Game}" />
+                                                        <GridViewColumn Header="{DynamicResource Lang.Downloads.Headers.Downloads}" Width="70" 
+                                                                        DisplayMemberBinding="{Binding DownloadCount}" />
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                        </ContentControl>
+
+                                        <!-- Separator -->
+                                        <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" />
+
+                                        <!-- Right: Version List -->
+                                        <Grid Grid.Column="2">
+                                            <!-- Empty placeholder when no mod selected -->
+                                            <TextBlock x:Name="DownloadVersionPlaceholder"
+                                                       Style="{StaticResource NormalLabel}"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       Text="{DynamicResource Lang.Downloads.Version.Select}" />
+
+                                            <!-- Version panel (shown when mod selected) -->
+                                            <Grid x:Name="DownloadVersionPanel" Visibility="Collapsed">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Version header: Mod name + Info button -->
+                                                <ContentControl Style="{StaticResource PanelButtons}" Grid.Row="0">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock x:Name="DownloadVersionTitle" Grid.Column="0"
+                                                                   Style="{StaticResource HeaderLabel}" 
+                                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                        <Button x:Name="DownloadInfoButton" Grid.Column="1"
+                                                                Style="{StaticResource NormalButton}" Click="DownloadInfo_Click">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                                <TextBlock Text="{DynamicResource Lang.Downloads.Buttons.Info}" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </Grid>
+                                                </ContentControl>
+
+                                                <!-- Version list with radio buttons -->
+                                                <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="1">
+                                                    <ListView x:Name="DownloadVersionList"
+                                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                              SelectionChanged="DownloadVersionList_SelectionChanged">
+                                                        <ListView.View>
+                                                            <GridView>
+                                                                <GridViewColumn Header="{DynamicResource Lang.Downloads.Version.Version}" Width="90" 
+                                                                                DisplayMemberBinding="{Binding Version}" />
+                                                                <GridViewColumn Header="{DynamicResource Lang.Downloads.Version.Compatible}" Width="70" 
+                                                                                DisplayMemberBinding="{Binding Compatible}" />
+                                                                <GridViewColumn Header="{DynamicResource Lang.Downloads.Version.Date}" Width="90" 
+                                                                                DisplayMemberBinding="{Binding Date}" />
+                                                                <GridViewColumn Header="{DynamicResource Lang.Downloads.Version.Size}" Width="60" 
+                                                                                DisplayMemberBinding="{Binding Size}" />
+                                                            </GridView>
+                                                        </ListView.View>
+                                                    </ListView>
+                                                </ContentControl>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                    <!-- Bottom Bar: Status + Download Button -->
+                                    <ContentControl Grid.Row="4" Style="{StaticResource PanelButtons}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="DownloadStatusText" Grid.Column="0" 
+                                                       Style="{StaticResource NormalLabel}" VerticalAlignment="Center"
+                                                       Text="{DynamicResource Lang.Downloads.Status.Ready}" />
+                                            <Button x:Name="DownloadButton" Grid.Column="1" IsEnabled="False"
+                                                    Style="{StaticResource AccentButton}" Click="DownloadMod_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="{DynamicResource Lang.Downloads.Buttons.Download}" />
+                                                </StackPanel>
+                                            </Button>
+                                        </Grid>
+                                    </ContentControl>
+                                </Grid>
+
+                                <!-- Offline Notice -->
+                                <Grid x:Name="DownloadOfflinePanel" Visibility="Collapsed">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="40">
+                                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="48" 
+                                               Foreground="{DynamicResource FluentWarningBrush}"
+                                               HorizontalAlignment="Center" Margin="0,0,0,16" />
+                                        <TextBlock Style="{StaticResource HeaderLabel}" 
+                                                   HorizontalAlignment="Center" Margin="0,0,0,12"
+                                                   Text="{DynamicResource Lang.Downloads.Offline.Title}" />
+                                        <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" 
+                                                   HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,8"
+                                                   Text="{DynamicResource Lang.Downloads.Offline.Text}" />
+                                        <TextBlock HorizontalAlignment="Center" Margin="0,8,0,16">
+                                            <Hyperlink NavigateUri="https://modapi.survivetheforest.net/mods/" 
+                                                       RequestNavigate="Hyperlink_RequestNavigate"
+                                                       Foreground="{DynamicResource FluentLinkBrush}" TextDecorations="None">
+                                                <TextBlock Text="modapi.survivetheforest.net/mods/" />
+                                            </Hyperlink>
+                                        </TextBlock>
+                                        <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" 
+                                                   HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,16"
+                                                   Text="{DynamicResource Lang.Downloads.Offline.Manual}" />
+                                        <Button Style="{StaticResource NormalButton}" HorizontalAlignment="Center"
+                                                Click="DownloadRetryConnection_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                <TextBlock Text="{DynamicResource Lang.Downloads.Offline.Retry}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </Components:PopupPanel>
+                    </Grid>
+                </Components:IconTabItem>
+
+                <!-- ======================================== -->
+                <!-- TAB: Development -->
+                <!-- ======================================== -->
+                <Components:IconTabItem x:Name="Development" SnapsToDevicePixels="True" 
+                    Label="{DynamicResource Lang.Development.Tab}" 
+                    IconSource="/resources/textures/Icons/IconTab_Debug.png" 
+                    SelectedIconSource="/resources/textures/Icons/IconTab_Debug_Selected.png" 
+                    Style="{StaticResource TopTab}">
+
+                    <Grid Margin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Components:PopupPanel Title="{DynamicResource Lang.Development.Projects}" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0">
+
+                        <!-- Projects List Panel -->
+                        <Components:PopupPanel Title="{DynamicResource Lang.Development.Projects}" Grid.Column="0">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
-                                    <ListBox Margin="10,5,10,10" x:Name="ProjectList" SelectedIndex="{Binding SelectedProject,Mode=TwoWay}" Grid.Row="0" Style="{StaticResource List}" ItemsSource="{Binding Projects}" HorizontalAlignment="Stretch" MinWidth="200" VerticalAlignment="Stretch" />
+                                    <ListBox Margin="10,5,10,10" x:Name="ProjectList" SelectedIndex="{Binding SelectedProject,Mode=TwoWay}" 
+                                             Grid.Row="0" Style="{StaticResource List}" ItemsSource="{Binding Projects}" 
+                                             HorizontalAlignment="Stretch" MinWidth="220" VerticalAlignment="Stretch" />
                                 </ContentControl>
-
                                 <ContentControl Height="42" Style="{StaticResource PanelButtons}" Grid.Row="1">
-                                    <StackPanel Orientation="Vertical" Grid.Row="1">
+                                    <StackPanel Orientation="Vertical">
                                         <Button Style="{StaticResource NormalButton}" HorizontalAlignment="Right" Click="CreateProject" Margin="5">
                                             <StackPanel Orientation="Horizontal">
-                                                <Image Source="/resources/textures/Icons/Icon_Add.png" Margin="0,0,5,0" />
+                                                <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Development.Buttons.CreateProject}" />
                                             </StackPanel>
                                         </Button>
@@ -237,8 +479,10 @@
                             </Grid>
                         </Components:PopupPanel>
 
-                        <Components:PopupPanel Title="{DynamicResource Lang.Development.SelectedProject}" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                        <!-- Selected Project Panel -->
+                        <Components:PopupPanel Title="{DynamicResource Lang.Development.SelectedProject}" Grid.Column="1" Margin="12,0,0,0">
                             <Grid Margin="0">
+                                <!-- No Project Selected -->
                                 <Grid x:Name="NoProjectSelected">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
@@ -249,17 +493,22 @@
                                     </ContentControl>
                                     <ContentControl Height="42" Style="{StaticResource PanelButtons}" Grid.Row="1" />
                                 </Grid>
+                                <!-- Selected Project Content -->
                                 <Grid x:Name="SelectedProject" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
-                                    <Components:TabControlEx Margin="10,5,10,10" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource PopupTabs}">
-
-                                        <Components:IconTabItem ShowWarning="{Binding SettingsError}" SnapsToDevicePixels="True" Label="{DynamicResource Lang.Development.Settings.Tab}" IconSource="/resources/textures/Icons/IconTab_Settings.png" SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png" Style="{StaticResource PopupTab}">
+                                        <Components:TabControlEx Margin="10,5,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource PopupTabs}">
+                                            <!-- Settings Tab -->
+                                            <Components:IconTabItem ShowWarning="{Binding SettingsError}" SnapsToDevicePixels="True" 
+                                                Label="{DynamicResource Lang.Development.Settings.Tab}" 
+                                                IconSource="/resources/textures/Icons/IconTab_Settings.png" 
+                                                SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png" 
+                                                Style="{StaticResource PopupTab}">
                                                 <ContentControl Style="{StaticResource TabBox}">
-                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="12">
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="Auto" />
@@ -278,31 +527,29 @@
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
-                                                                <Image VerticalAlignment="Top" Grid.Column="0" Height="15" Source="/resources/textures/Icons/Icon_Error.png" />
+                                                                <TextBlock VerticalAlignment="Top" Grid.Column="0" Text="&#xEA39;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{DynamicResource FluentDangerBrush}" />
                                                                 <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Text="{DynamicResource Lang.Development.Errors.Save}" />
                                                             </Grid>
-
-                                                            <TextBlock Margin="0,05,5,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Development.Labels.ID}" />
-                                                            <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Text="{Binding Id,Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" />
+                                                            <TextBlock Margin="0,5,5,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Development.Labels.ID}" />
+                                                            <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Text="{Binding Id,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                                             <Grid Margin="10,2,0,5" VerticalAlignment="Center" Grid.Column="2" Grid.Row="1">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
-                                                                <Image VerticalAlignment="Top" Grid.Column="0" Height="15" Source="/resources/textures/Icons/Icon_Information.png" />
+                                                                <TextBlock VerticalAlignment="Top" Grid.Column="0" Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{DynamicResource FluentAccentBrush}" />
                                                                 <TextBlock Grid.Column="1" Margin="5,0,0,0" FontSize="11" VerticalAlignment="Top" Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Text="{DynamicResource Lang.Development.Errors.InvalidID}" />
                                                             </Grid>
                                                             <TextBlock Margin="0,5,5,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="2" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Development.Labels.Version}" />
-                                                            <TextBox Grid.Column="1" VerticalAlignment="Top" Grid.Row="2" Text="{Binding Version,Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}" />
+                                                            <TextBox Grid.Column="1" VerticalAlignment="Top" Grid.Row="2" Text="{Binding Version,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                                             <Grid Margin="10,2,0,5" VerticalAlignment="Center" x:Name="Error_InvalidVersion" Visibility="{Binding VersionError}" Grid.Column="2" Grid.Row="2">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
-                                                                <Image VerticalAlignment="Top" Grid.Column="0" Height="15" Source="/resources/textures/Icons/Icon_Warning.png" />
+                                                                <TextBlock VerticalAlignment="Top" Grid.Column="0" Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{DynamicResource FluentWarningBrush}" />
                                                                 <TextBlock Grid.Column="1" Margin="5,0,0,0" FontSize="11" VerticalAlignment="Top" Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Text="{DynamicResource Lang.Development.Errors.InvalidVersion}" />
                                                             </Grid>
-
                                                             <TextBlock Margin="0,5,5,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="3" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Development.Labels.Name}" />
                                                             <ComponentsInputs:MultilingualTextField Languages="{Binding Languages}" Value="{Binding Name}" VerticalAlignment="Top" Grid.Column="1" Grid.Row="3" />
                                                             <Grid Margin="10,2,0,5" VerticalAlignment="Center" x:Name="Error_InvalidName" Visibility="{Binding NameError}" Grid.Column="2" Grid.Row="3">
@@ -310,17 +557,21 @@
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
-                                                                <Image VerticalAlignment="Top" Grid.Column="0" Height="15" Source="/resources/textures/Icons/Icon_Warning.png" />
+                                                                <TextBlock VerticalAlignment="Top" Grid.Column="0" Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{DynamicResource FluentWarningBrush}" />
                                                                 <TextBlock Grid.Column="1" Margin="5,0,0,0" FontSize="11" VerticalAlignment="Top" Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Text="{DynamicResource Lang.Development.Errors.InvalidName}" />
                                                             </Grid>
-
-                                                            <TextBlock Margin="0,5,5,0"  VerticalAlignment="Top" Grid.Column="0" Grid.Row="4" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Development.Labels.Description}" />
-                                                            <ComponentsInputs:MultilingualTextField  VerticalAlignment="Top" Languages="{Binding Languages}" Value="{Binding Description}" Grid.Column="1" Grid.Row="4" />
+                                                            <TextBlock Margin="0,5,5,0" VerticalAlignment="Top" Grid.Column="0" Grid.Row="4" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Development.Labels.Description}" />
+                                                            <ComponentsInputs:MultilingualTextField VerticalAlignment="Top" Languages="{Binding Languages}" Value="{Binding Description}" Grid.Column="1" Grid.Row="4" />
                                                         </Grid>
                                                     </ScrollViewer>
                                                 </ContentControl>
                                             </Components:IconTabItem>
-                                        <Components:IconTabItem ShowWarning="{Binding ButtonsError}" SnapsToDevicePixels="True" Label="{DynamicResource Lang.Development.Keys.Tab}" IconSource="/resources/textures/Icons/IconTab_Controller.png" SelectedIconSource="/resources/textures/Icons/IconTab_Controller_Selected.png" Style="{StaticResource PopupTab}">
+                                            <!-- Keys Tab -->
+                                            <Components:IconTabItem ShowWarning="{Binding ButtonsError}" SnapsToDevicePixels="True" 
+                                                Label="{DynamicResource Lang.Development.Keys.Tab}" 
+                                                IconSource="/resources/textures/Icons/IconTab_Controller.png" 
+                                                SelectedIconSource="/resources/textures/Icons/IconTab_Controller_Selected.png" 
+                                                Style="{StaticResource PopupTab}">
                                                 <ContentControl Style="{StaticResource TabBox}">
                                                     <Grid Margin="10,5,10,10">
                                                         <Grid.RowDefinitions>
@@ -331,7 +582,7 @@
                                                             <ItemsControl ItemsSource="{Binding Buttons}" Grid.Row="0" Grid.ColumnSpan="2">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
-                                                                        <StackPanel IsItemsHost="True" Margin="0,0,0,0" Orientation="Vertical" />
+                                                                        <StackPanel IsItemsHost="True" Orientation="Vertical" />
                                                                     </ItemsPanelTemplate>
                                                                 </ItemsControl.ItemsPanel>
                                                             </ItemsControl>
@@ -346,9 +597,14 @@
                                                     </Grid>
                                                 </ContentControl>
                                             </Components:IconTabItem>
-                                        <Components:IconTabItem ShowWarning="{Binding LanguagesError}" SnapsToDevicePixels="True" Label="{DynamicResource Lang.Development.Languages.Tab}" IconSource="/resources/textures/Icons/IconTab_Language.png" SelectedIconSource="/resources/textures/Icons/IconTab_Language_Selected.png" Style="{StaticResource PopupTab}">
+                                            <!-- Languages Tab -->
+                                            <Components:IconTabItem ShowWarning="{Binding LanguagesError}" SnapsToDevicePixels="True" 
+                                                Label="{DynamicResource Lang.Development.Languages.Tab}" 
+                                                IconSource="/resources/textures/Icons/IconTab_Language.png" 
+                                                SelectedIconSource="/resources/textures/Icons/IconTab_Language_Selected.png" 
+                                                Style="{StaticResource PopupTab}">
                                                 <ContentControl Style="{StaticResource TabBox}">
-                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="12">
                                                         <Grid>
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="Auto" />
@@ -361,27 +617,28 @@
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Margin="0,0,0,5" Style="{StaticResource HeaderLabel}" Grid.Row="0" Grid.ColumnSpan="2" Text="{DynamicResource Lang.Development.Languages.SelectedLanguages}" />
-                                                                <ItemsControl ItemsSource="{Binding LanguageButtons}" Grid.Row="1" Grid.ColumnSpan="2">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <WrapPanel IsItemsHost="True" Margin="0,0,0,10" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-
-                                                                </ItemsControl>
+                                                            <ItemsControl ItemsSource="{Binding LanguageButtons}" Grid.Row="1" Grid.ColumnSpan="2">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <WrapPanel IsItemsHost="True" Margin="0,0,0,10" />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                            </ItemsControl>
                                                             <Grid Margin="0,0,0,5" Grid.Row="1" Grid.ColumnSpan="2" x:Name="NoLanguageSelected" Visibility="{Binding LanguagesError}">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
-                                                                <Image Margin="0,0,5,0" VerticalAlignment="Center" Source="/resources/textures/Icons/Icon_Warning.png" Grid.Column="0" />
+                                                                <TextBlock Margin="0,0,5,0" VerticalAlignment="Center" Grid.Column="0" Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="{DynamicResource FluentWarningBrush}" />
                                                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{DynamicResource Lang.Development.Errors.NoLanguageSelected}" Style="{StaticResource NormalLabel}" />
                                                             </Grid>
                                                             <TextBlock Margin="0,0,0,5" Style="{StaticResource HeaderLabel}" Grid.Row="2" Grid.ColumnSpan="2" Text="{DynamicResource Lang.Development.Languages.AddLanguage}" />
-                                                            <ComboBox x:Name="DevelopmentLanguageSelector" Grid.Row="3" Grid.Column="0" Margin="0, 0, 10, 0" Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                                            <ComboBox x:Name="DevelopmentLanguageSelector" Grid.Row="3" Grid.Column="0" Margin="0,0,10,0" 
+                                                                      Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" 
+                                                                      Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" />
                                                             <Button Grid.Row="3" HorizontalAlignment="Left" Grid.Column="1" Style="{StaticResource NormalButton}" Click="AddProjectLanguage">
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <Image Source="/resources/textures/Icons/Icon_Add.png" Margin="0,0,5,0" />
+                                                                    <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
                                                                     <TextBlock VerticalAlignment="Center" Text="{DynamicResource Lang.Development.Languages.Buttons.AddLanguage}" />
                                                                 </StackPanel>
                                                             </Button>
@@ -389,74 +646,82 @@
                                                     </ScrollViewer>
                                                 </ContentControl>
                                             </Components:IconTabItem>
-                                    </Components:TabControlEx>
+                                        </Components:TabControlEx>
                                     </ContentControl>
+                                    <!-- Project Action Bar -->
                                     <ContentControl Height="42" Style="{StaticResource PanelButtons}" Grid.Row="1">
-                                    <StackPanel Margin="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <Button Margin="5" Style="{StaticResource NormalButton}" HorizontalAlignment="Stretch" Click="RemoveModProjectButton">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image Source="/resources/textures/Icons/Icon_Delete.png" Margin="0,0,5,0" />
-                                                <TextBlock Text="{DynamicResource Lang.Development.Buttons.RemoveProject}" />
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Margin="5" Style="{StaticResource NormalButton}" HorizontalAlignment="Stretch" Click="CreateMod">
-                                            <StackPanel Orientation="Horizontal">
-                                                    <Image Source="/resources/textures/Icons/Icon_CreateMod.png" Margin="0,0,5,0" />
-                                                    <TextBlock Text="{DynamicResource Lang.Development.Buttons.CreateMod}" />
-                                            </StackPanel>
-                                        </Button>
-                                    </StackPanel>
-                                    </ContentControl>
-                                </Grid>
-                            </Grid>
-                        </Components:PopupPanel>
-
-                        <Components:PopupPanel Title="{DynamicResource Lang.Development.ModLibrary}" Grid.Row="0" Grid.Column="2" Margin="10,0,0,0">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0">
-                                    <ContentControl Grid.Row="0" Style="{StaticResource PanelCenter}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Grid Grid.Row="0" Margin="10,5,10,10">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Margin="0,0,10,5" Style="{StaticResource NormalLabel}" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{DynamicResource Lang.Development.ModLibrary.CreationTime}" />
-                                            <TextBlock x:Name="ModLibCreationTime" Style="{StaticResource NormalLabel}" Grid.Row="0" Grid.Column="1" Text="1.0.0" />
-                                            <TextBlock Margin="0,0,10,5" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{DynamicResource Lang.Development.ModLibrary.GameVersion}" />
-                                            <TextBlock x:Name="ModLibGameVersion" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="1" Text="1.0.0" />
-                                            <TextBlock Margin="0,0,10,5" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{DynamicResource Lang.Development.ModLibrary.ModAPIVersion}" />
-                                            <TextBlock x:Name="ModLibModAPIVersion" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="1" Text="1.0.0" />
-                                        </Grid>
-                                    </ContentControl>
-                                </Grid>
-                                    <ContentControl Grid.Row="1" Style="{StaticResource PanelButtons}">
-                                        <StackPanel Orientation="Vertical" Grid.Row="1">
-                                            <Button Margin="5" Style="{StaticResource NormalButton}" HorizontalAlignment="Right" Click="CreateModLibrary">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Margin="5" Style="{StaticResource NormalButton}" Click="RemoveModProjectButton">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{DynamicResource Lang.Development.Buttons.CreateModLibrary}" />
+                                                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="{DynamicResource Lang.Development.Buttons.RemoveProject}" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Margin="5" Style="{StaticResource AccentButton}" Click="CreateMod">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                                    <TextBlock Text="{DynamicResource Lang.Development.Buttons.CreateMod}" />
                                                 </StackPanel>
                                             </Button>
                                         </StackPanel>
                                     </ContentControl>
                                 </Grid>
+                            </Grid>
+                        </Components:PopupPanel>
+
+                        <!-- Mod Library Panel -->
+                        <Components:PopupPanel Title="{DynamicResource Lang.Development.ModLibrary}" Grid.Column="2" Margin="12,0,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <ContentControl Grid.Row="0" Style="{StaticResource PanelCenter}">
+                                    <Grid Margin="12,5,12,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Margin="0,0,10,5" Style="{StaticResource NormalLabel}" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{DynamicResource Lang.Development.ModLibrary.CreationTime}" />
+                                        <TextBlock x:Name="ModLibCreationTime" Style="{StaticResource NormalLabel}" Grid.Row="0" Grid.Column="1" Text="1.0.0" />
+                                        <TextBlock Margin="0,0,10,5" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{DynamicResource Lang.Development.ModLibrary.GameVersion}" />
+                                        <TextBlock x:Name="ModLibGameVersion" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="1" Text="1.0.0" />
+                                        <TextBlock Margin="0,0,10,5" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{DynamicResource Lang.Development.ModLibrary.ModAPIVersion}" />
+                                        <TextBlock x:Name="ModLibModAPIVersion" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="1" Text="1.0.0" />
+                                    </Grid>
+                                </ContentControl>
+                                <ContentControl Grid.Row="1" Style="{StaticResource PanelButtons}">
+                                    <StackPanel Orientation="Vertical">
+                                        <Button Margin="5" Style="{StaticResource NormalButton}" HorizontalAlignment="Right" Click="CreateModLibrary">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{DynamicResource Lang.Development.Buttons.CreateModLibrary}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </ContentControl>
+                            </Grid>
                         </Components:PopupPanel>
                     </Grid>
                 </Components:IconTabItem>
 
-                <Components:IconTabItem SnapsToDevicePixels="True" Label="{DynamicResource Lang.Options.Tab}" IconSource="/resources/textures/Icons/IconTab_Settings.png" SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png" Style="{StaticResource TopTab}">
-                    <Grid Margin="10">
-                        <Components:PopupPanel Grid.Row="0" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                            <ContentControl Style="{StaticResource PanelCenter}" Grid.Row="0">
-                                <Grid x:Name="Settings" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <!-- ======================================== -->
+                <!-- TAB: Options -->
+                <!-- ======================================== -->
+                <Components:IconTabItem SnapsToDevicePixels="True" 
+                    Label="{DynamicResource Lang.Options.Tab}" 
+                    IconSource="/resources/textures/Icons/IconTab_Settings.png" 
+                    SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png" 
+                    Style="{StaticResource TopTab}">
+
+                    <Grid Margin="16">
+                        <Components:PopupPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentControl Style="{StaticResource PanelCenter}">
+                                <Grid x:Name="Settings" Margin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition MinWidth="150" Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
@@ -467,78 +732,87 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Text="{DynamicResource Lang.Options.Labels.Language}" />
-                                    <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <ComboBox SelectedIndex="{Binding Language,Mode=TwoWay}" Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" x:Name="LanguageSelector" Style="{StaticResource ComboBox}" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                    <TextBlock Margin="0,0,0,12" Padding="0,0,10,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Text="{DynamicResource Lang.Options.Labels.Language}" Style="{StaticResource NormalLabel}" />
+                                    <Grid Margin="0,0,0,12" Grid.Column="1" Grid.Row="0">
+                                        <ComboBox SelectedIndex="{Binding Language,Mode=TwoWay}" 
+                                                  Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True" 
+                                                  x:Name="LanguageSelector" Style="{StaticResource ComboBox}" Height="40" MinWidth="200"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Top" />
                                     </Grid>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Text="{DynamicResource Lang.Options.Labels.UpdateVersionsTable}" />
-                                    <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <TextBlock Margin="0,0,0,12" Padding="0,0,10,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Text="{DynamicResource Lang.Options.Labels.Theme}" Style="{StaticResource NormalLabel}" />
+                                    <Grid Margin="0,0,0,12" Grid.Column="1" Grid.Row="1">
+                                        <ComboBox x:Name="ThemeSelector" Style="{StaticResource ComboBox}" Height="40" MinWidth="200"
+                                                  Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                                                  SelectionChanged="ThemeSelector_SelectionChanged" />
+                                    </Grid>
+                                    <TextBlock Margin="0,0,0,12" Padding="0,0,10,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Text="{DynamicResource Lang.Options.Labels.UpdateVersionsTable}" Style="{StaticResource NormalLabel}" />
+                                    <Grid Margin="0,0,0,12" Grid.Column="1" Grid.Row="2">
                                         <CheckBox IsChecked="{Binding UpdateVersionsTable,Mode=TwoWay}" />
                                     </Grid>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Text="{DynamicResource Lang.Options.Labels.AutoUpdate}" />
-                                    <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <TextBlock Margin="0,0,0,12" Padding="0,0,10,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Text="{DynamicResource Lang.Options.Labels.AutoUpdate}" Style="{StaticResource NormalLabel}" />
+                                    <Grid Margin="0,0,0,12" Grid.Column="1" Grid.Row="3">
                                         <CheckBox IsChecked="{Binding AutoUpdate,Mode=TwoWay}" />
                                     </Grid>
-                                    <TextBlock Margin="10,0,0,10" Padding="0, 0, 10, 0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Text="{DynamicResource Lang.Options.Labels.UseSteam}" />
-                                    <Grid Margin="0,0,0,10" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <TextBlock Margin="0,0,0,12" Padding="0,0,10,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4" Text="{DynamicResource Lang.Options.Labels.UseSteam}" Style="{StaticResource NormalLabel}" />
+                                    <Grid Margin="0,0,0,12" Grid.Column="1" Grid.Row="4">
                                         <CheckBox IsChecked="{Binding UseSteam,Mode=TwoWay}" />
                                     </Grid>
                                 </Grid>
                             </ContentControl>
                         </Components:PopupPanel>
-
                     </Grid>
                 </Components:IconTabItem>
             </Components:TabControlEx.Items>
         </Components:TabControlEx>
 
-        <Grid Grid.Row="0" Background="Transparent" Cursor="Hand" x:Name="Mover" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="30">
-            <StackPanel HorizontalAlignment="Right" Margin="0, 2, 10, 0" Orientation="Horizontal">
-                <Button Style="{StaticResource MinimizeButton}" HorizontalAlignment="Right" Click="Minimize" />
-                <Button x:Name="NormalizeButton" Style="{StaticResource NormalizeButton}" HorizontalAlignment="Right" Click="Normalize" />
-                <Button x:Name="MaximizeButton" Style="{StaticResource MaximizeButton}" HorizontalAlignment="Right" Click="Maximize" />
-                <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Left" Click="CloseWindow" />
-            </StackPanel>
-        </Grid>
+        <!-- ============================================================ -->
+        <!-- Title Bar Drag Area + Caption Buttons (overlay on Tab strip) -->
+        <!-- ============================================================ -->
+        <!-- Mover: hidden, exists only for FindName compatibility -->
+        <Grid x:Name="Mover" Visibility="Collapsed" Height="0" />
 
-        <Grid Grid.Row="1">
-            <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="0, 0, 15, 15">
-                <Border.Background>
-                    <ImageBrush>
-                        <ImageBrush.ImageSource>
-                            <BitmapImage UriSource="/ModAPI;component/resources/textures/NewGUI/StatusBar.png" />
-                        </ImageBrush.ImageSource>
-                    </ImageBrush>
-                </Border.Background>
-                <Grid>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <Image Height="30" RenderOptions.BitmapScalingMode="HighQuality" Margin="5,0,0,3" Source="/ModAPI;component/resources/textures/Icons/FluffyFish.png" />
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="11" FontWeight="Bold" Foreground="#333333" Margin="5, 6, 0, 0" HorizontalAlignment="Left" Text="{DynamicResource Lang.Window.Copyright}" />
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="15" VerticalAlignment="Top" FontWeight="Black" Foreground="#ff0000" Margin="5, 0, 0, 0"  HorizontalAlignment="Left" Text="♥" />
-                                <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="9" Foreground="#666666" Margin="3, 4 , 0, 0"  HorizontalAlignment="Left" Text="Made with love in Engelskirchen, Germany" />
-                            </StackPanel>
-                        </StackPanel>
-<!--
-                        <Button Style="{StaticResource FacebookButton}" Margin="10, 0, 0, 0" Width="32" Height="32" Click="ClickFacebook" />
-                        <Button Style="{StaticResource TwitterButton}" Margin="5, 0, 0, 0" Width="32" Height="32" Click="ClickTwitter" />
-                        <Button Style="{StaticResource YoutubeButton}" Margin="5, 0, 0, 0" Width="32" Height="32" Click="ClickYouTube" />
-                        <Button Style="{StaticResource TwitchButton}" Margin="5, 0, 0, 0" Width="32" Height="32" Click="ClickTwitch" />
-                        -->
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="12" Foreground="#333333" Margin="0, 8, 5, 0" HorizontalAlignment="Right" Text="{DynamicResource Lang.Window.Version}" />
-                        <TextBlock x:Name="VersionLabel" FontFamily="{StaticResource NormalFont}" FontSize="12" Foreground="#333333" Margin="0, 8, 10, 0" HorizontalAlignment="Right" Text="0.1.9 (Unstable)" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </Grid>
-        <Border x:Name="FadeBackground" Grid.RowSpan="2" Opacity="0" Visibility="Collapsed" BorderBrush="Transparent" BorderThickness="0" CornerRadius="15, 15, 15, 15">
-            <Border.Background>
-                <ImageBrush Viewport="0,0,4,4" ViewportUnits="Absolute" ImageSource="/resources/Textures/NewGUI/FadeBackground.png" TileMode="Tile" Stretch="None" />
-            </Border.Background>
+        <!-- Caption Buttons (CaptionHeight=48 handles drag, these are exempt via IsHitTestVisibleInChrome) -->
+        <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="48"
+                    Orientation="Horizontal" Margin="0,0,16,0"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+            <Button Style="{StaticResource MinimizeButton}" Click="Minimize" Margin="4,0" />
+            <Button x:Name="NormalizeButton" Style="{StaticResource NormalizeButton}" Click="Normalize" Margin="4,0" />
+            <Button x:Name="MaximizeButton" Style="{StaticResource MaximizeButton}" Click="Maximize" Margin="4,0" />
+            <Button Style="{DynamicResource FluentCloseButton}" Content="&#xE8BB;" 
+                    FontFamily="{DynamicResource FluentIconFont}" FontSize="10" Click="CloseWindow" Margin="4,0" />
+        </StackPanel>
+
+        <!-- ============================================================ -->
+        <!-- Status Bar -->
+        <!-- ============================================================ -->
+        <Border Grid.Row="1" Background="{DynamicResource FluentTabBarBrush}" 
+                BorderBrush="{DynamicResource FluentBorderBrush}" BorderThickness="0,1,0,0">
+            <Grid Margin="12,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="11" 
+                               Foreground="{DynamicResource FluentTextTertiaryBrush}" Text="{DynamicResource Lang.Window.Copyright}" />
+                    <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="11" 
+                               Foreground="{DynamicResource FluentTextTertiaryBrush}" Margin="6,0,0,0" Text="·" />
+                    <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="11" 
+                               Foreground="{DynamicResource FluentTextTertiaryBrush}" Margin="6,0,0,0" 
+                               Text="Made with ♥ in Engelskirchen, Germany | upgrade by zzangae, Republic of Korea" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock FontFamily="{StaticResource NormalFont}" FontSize="11" 
+                               Foreground="{DynamicResource FluentTextTertiaryBrush}" Text="{DynamicResource Lang.Window.Version}" />
+                    <TextBlock x:Name="VersionLabel" FontFamily="{StaticResource NormalFont}" FontSize="11" 
+                               Foreground="{DynamicResource FluentTextTertiaryBrush}" Margin="4,0,0,0" Text="2.0.0" />
+                </StackPanel>
+            </Grid>
         </Border>
+
+        <!-- ============================================================ -->
+        <!-- Fade Background Overlay (for modal dialogs) -->
+        <!-- ============================================================ -->
+        <Border x:Name="FadeBackground" Grid.RowSpan="2" Opacity="0" Visibility="Collapsed" 
+                Background="#80000000" />
     </Grid>
 </Window>

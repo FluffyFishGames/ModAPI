@@ -1,0 +1,287 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+
+
+    <s:String x:Key="LangCode">VI</s:String>
+    <s:String x:Key="Locale">vi-VN</s:String>
+    <s:String x:Key="LangName">Tiếng Việt</s:String>
+
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">Lỗi!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">Bạn đã cố chạy ModAPI từ tệp nén hoặc thư mục tạm. Điều này sẽ gây ra sự cố. Bạn có muốn sao chép các tệp đến thư mục làm việc không?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">Sửa lỗi</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">Không</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+    
+    <s:String x:Key="Lang.Window.Version">Phiên bản:</s:String>
+    <s:String x:Key="Lang.Window.Copyright">Created by FluffyFish</s:String>
+    <s:String x:Key="Lang.Logout">Đăng xuất</s:String>
+    <s:String x:Key="Lang.Loading">Đang tải...</s:String>
+    <s:String x:Key="Lang.Login">Đăng nhập</s:String>
+    <s:String x:Key="Lang.UserGroup.Administrator">Quản trị viên</s:String>
+    <s:String x:Key="Lang.UserGroup.Press">Báo chí</s:String>
+    <s:String x:Key="Lang.UserGroup.Moderator">Điều hành viên</s:String>
+    <s:String x:Key="Lang.UserGroup.User">Người dùng</s:String>
+    
+    <s:String x:Key="Lang.Windows.Login.Title">Đăng nhập</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">Nhập tên đăng nhập và mật khẩu từ modapi.survivetheforest.net để đăng nhập.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Login">Đăng nhập</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">Hủy</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Username">Tên đăng nhập:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Password">Mật khẩu:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Errors.WrongLogin">Tên đăng nhập và/hoặc mật khẩu không đúng.</s:String>
+    
+    <s:String x:Key="Lang.Windows.OperationPending.Title">Đang thực hiện...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Continue">Tiếp tục</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Cancel">Hủy</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.BackupGameFiles.CreatingBackup">Đang sao lưu tệp trò chơi...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.RemovingOldFiles">Đang xóa tệp cũ...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CreatingModToolkit">Đang tạo tiện ích mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.ModifyingAssemblies">Đang sửa đổi thư viện trò chơi...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CopyingAssemblies">Đang sao chép thư viện trò chơi...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Finish">Đã tạo thư viện mod thành công.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.BaseModLibNotFound">Lỗi!: Không tìm thấy BaseModLib.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyFileNotFound">Lỗi!: Không tìm thấy thư viện trò chơi.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.CopyAssemblyFileNotFound">Lỗi!: Không tìm thấy thư viện trò chơi.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyException">Lỗi!: Đã xảy ra lỗi không mong muốn khi sửa đổi thư viện trò chơi.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Finish">Đã tạo mod thành công.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.SavingMod">Đang tạo tệp mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.FetchingTypes">Đang lấy tất cả các kiểu...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.ConvertingClasses">Đang chuyển đổi các kiểu...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Preparing">Đang chuẩn bị tạo mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.Save">Lỗi!: Không thể lưu mod.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.UnexpectedError">Lỗi!: Đã xảy ra lỗi không mong muốn.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.FileNotFound">Lỗi!: Không tìm thấy tệp. Có thể dự án chưa được biên dịch.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.CorruptedAssembly">Lỗi!: Một trong các assembly có vẻ bị hỏng.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Preparing">Đang chuẩn bị môi trường mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.FetchingInjections">Đang lấy tệp...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Injecting">Đang thao tác tệp trò chơi...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Resolving">Đang giải quyết mã MSIL...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Saving">Đang lưu tệp...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Error.Unexpected">Lỗi!: Đã xảy ra lỗi khi áp dụng mod.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Restore">Đang khôi phục tệp...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.Cancelled">Lỗi!: Khôi phục đã bị hủy bởi người dùng!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.NoConnection">Lỗi!: Steam không thể kết nối Internet!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">Lỗi!: Steam đã bị đóng!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">Đang tải bản cập nhật...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">Đang giải nén bản cập nhật...</s:String>
+
+    <s:String x:Key="Lang.Windows.CreateModProject.Title">Tạo dự án mod</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Text">Nhập ID của dự án mới. ID phải là duy nhất và chỉ chứa ký tự chữ-số và "_".</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Errors.ID">Đã tồn tại dự án với ID này.</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Cancel">Hủy</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Add">Thêm</s:String>
+
+    <s:String x:Key="Lang.Windows.RemoveModProject.Title">Xóa dự án</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPre">Bạn có chắc muốn xóa dự án này?</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPost">Thao tác này KHÔNG THỂ hoàn tác. Tất cả tệp dự án sẽ bị xóa vĩnh viễn.</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">Hủy</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">Xóa</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">Nhập đường dẫn trò chơi</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">Không tìm thấy trò chơi tự động. Vui lòng nhập đường dẫn trò chơi thủ công.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">Duyệt</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">Tiếp tục</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">Nhập đường dẫn Steam</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Text">Không tìm thấy Steam tự động. Vui lòng nhập đường dẫn Steam thủ công.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Browse">Duyệt</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Continue">Tiếp tục</s:String>
+
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Title">Không thể phát hiện phiên bản trò chơi</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoVersionUpdate">Không thể phát hiện phiên bản trò chơi. Để phát hiện phiên bản mới, hãy kích hoạt cập nhật bảng phiên bản. Cũng có thể tệp trò chơi bị hỏng hoặc bị sửa đổi bên ngoài ModAPI.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.VersionNotFound">Không thể phát hiện phiên bản trò chơi. Dữ liệu trò chơi có vẻ đã bị sửa đổi bên ngoài ModAPI.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoSteamText">Do kết nối Steam bị tắt, ModAPI không thể khôi phục tệp trò chơi. Hãy khôi phục trạng thái gốc của tệp trò chơi và kiểm tra lại. Bạn cũng có thể kích hoạt kết nối Steam để ModAPI tự động khôi phục.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.SteamText">Bạn có muốn ModAPI khôi phục tệp qua Steam không?</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateVersionUpdate">Kích hoạt cập nhật bảng phiên bản</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateSteam">Kích hoạt kết nối Steam</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Restore">Khôi phục tệp</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Recheck">Kiểm tra lại</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Close">Thoát</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Yes">Có</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">Không</s:String>
+
+    <s:String x:Key="Lang.Windows.FirstSetup.Title">Chào mừng!</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">Đây là lần chạy đầu tiên của ModAPI. Trước khi bắt đầu, hãy kiểm tra các tùy chọn sau:</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">Tự động cập nhật</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">Kích hoạt tự động cập nhật, bạn sẽ được thông báo khi có phiên bản ModAPI mới. Bạn có thể áp dụng bản cập nhật chỉ với một cú nhấp.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Kết nối Steam</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Kết nối Steam cho phép truy cập các tính năng Steam trong trò chơi (ví dụ: Steam overlay). ModAPI cũng có thể khôi phục tệp trò chơi nếu bị hỏng hoặc bị sửa đổi.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">Cập nhật bảng phiên bản</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">Kích hoạt cập nhật bảng phiên bản, ModAPI sẽ tải bảng phiên bản khi khởi động. Các bản cập nhật trò chơi mới sẽ được nhận diện tự động. Có thể mất đến 24 giờ để phiên bản mới được thêm vào.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">Tiếp tục</s:String>
+
+
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Title">Có bản cập nhật!</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Text">Có phiên bản ModAPI mới. Bạn có muốn cập nhật ngay không?</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">Cập nhật ngay</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">Cập nhật sau</s:String>
+
+
+    <s:String x:Key="Lang.Languages.EN">Tiếng Anh</s:String>
+    <s:String x:Key="Lang.Languages.DE">Tiếng Đức</s:String>
+    <s:String x:Key="Lang.Languages.FR">Tiếng Pháp</s:String>
+    <s:String x:Key="Lang.Languages.ES">Tiếng Tây Ban Nha</s:String>
+    <s:String x:Key="Lang.Languages.RU">Tiếng Nga</s:String>
+    <s:String x:Key="Lang.Languages.HI">Tiếng Hindi</s:String>
+    <s:String x:Key="Lang.Languages.AR">Tiếng Ả Rập</s:String>
+    <s:String x:Key="Lang.Languages.TR">Tiếng Thổ Nhĩ Kỳ</s:String>
+    <s:String x:Key="Lang.Languages.IT">Tiếng Ý</s:String>
+    <s:String x:Key="Lang.Languages.VI">Tiếng Việt</s:String>
+    <s:String x:Key="Lang.Languages.ZH">Tiếng Trung</s:String>
+    <s:String x:Key="Lang.Languages.ZH-TW">Tiếng Trung (Phồn thể)</s:String>
+    <s:String x:Key="Lang.Languages.JA">Tiếng Nhật</s:String>
+    <s:String x:Key="Lang.Languages.KO">Tiếng Hàn</s:String>
+    <s:String x:Key="Lang.Languages.BN">Tiếng Bengal</s:String>
+    <s:String x:Key="Lang.Languages.PT">Tiếng Bồ Đào Nha</s:String>
+
+    <s:String x:Key="Lang.Development.Tab">Phát triển</s:String>
+    <s:String x:Key="Lang.Development.Settings.Tab">Cài đặt</s:String>
+    <s:String x:Key="Lang.Development.Keys.Tab">Phím gán</s:String>
+    <s:String x:Key="Lang.Development.Projects">Dự án</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Name">Tên:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Description">Mô tả:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.StandardKey">Phím mặc định:</s:String>
+    <s:String x:Key="Lang.Development.Languages.Tab">Ngôn ngữ</s:String>
+    <s:String x:Key="Lang.Development.Languages.AddLanguage">Thêm ngôn ngữ</s:String>
+    <s:String x:Key="Lang.Development.Languages.SelectedLanguages">Ngôn ngữ đã chọn</s:String>
+    <s:String x:Key="Lang.Development.Languages.Buttons.AddLanguage">Thêm</s:String>
+
+    <s:String x:Key="Lang.Development.NoProjectSelected">Chưa chọn dự án</s:String>
+    <s:String x:Key="Lang.Development.SelectedProject">Dự án đang chọn</s:String>
+    <s:String x:Key="Lang.Development.Errors.Save">Đã xảy ra lỗi khi lưu dự án. Hãy đảm bảo dự án đã đóng và không có ứng dụng nào khác đang truy cập.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidID">ID chỉ được chứa ký tự chữ-số và "_". ID là bắt buộc và phải là duy nhất.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidButtonID">ID phải là duy nhất.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidVersion">Phiên bản chỉ chứa 4 số từ 0-99 phân cách bằng dấu chấm.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidName">Cần có tên cho mỗi ngôn ngữ đã chọn.</s:String>
+    <s:String x:Key="Lang.Development.Errors.NoLanguageSelected">Bạn cần chọn ít nhất một ngôn ngữ.</s:String>
+
+    <s:String x:Key="Lang.Development.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Labels.StandardKey">Phím mặc định:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Version">Phiên bản:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Name">Tên:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Description">Mô tả:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary">Thư viện mod</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.CreationTime">Ngày tạo:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.GameVersion">Phiên bản trò chơi:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.ModAPIVersion">Phiên bản ModAPI:</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateModLibrary">Tạo lại thư viện mod</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateProject">Tạo dự án mới</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveProject">Xóa dự án</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateMod">Tạo mod</s:String>
+    <s:String x:Key="Lang.Development.Buttons.AddButton">Thêm phím</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveButton">Xóa phím</s:String>
+
+    <s:String x:Key="Lang.Mods.Tab">Mod</s:String>
+    <s:String x:Key="Lang.Mods.Title">Mod có sẵn</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.StartGame">Bắt đầu trò chơi</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.SelectVersion">Chọn phiên bản</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Informations">Thông tin</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Settings">Cài đặt</s:String>
+    <s:String x:Key="Lang.Mods.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Version">Phiên bản đã chọn:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.AvailableVersions">Phiên bản có sẵn:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Name">Tên:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Description">Mô tả:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Buttons">Gán phím</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Compatible">Tương thích với:</s:String>
+
+    <s:String x:Key="Lang.Mods.Welcome.Title0">Chào mừng!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text0">Để áp dụng mod vào trò chơi, trước tiên bạn cần kích hoạt mod. Nhấp vào nút tròn bên trái tên mod. Để thay đổi phím gán, chọn mod trong danh sách và chuyển sang tab "Cài đặt".</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text1">Để bắt đầu trò chơi với mod, chỉ cần nhấp nút "Bắt đầu trò chơi" ở góc dưới bên phải.</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Title1">Gặp lỗi?</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2a">Nếu gặp lỗi, hãy tìm trợ giúp trên diễn đàn (</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2Link">modapi</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2b">).</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text3">Đừng quên đính kèm tệp log "ModAPI.log" trong thư mục logs. Tệp này chứa thông tin quan trọng để khắc phục sự cố.</s:String>
+
+    <s:String x:Key="Lang.Savegames.Tab">Lưu trò chơi</s:String>
+    <s:String x:Key="Lang.Savegames.Title">Lưu trò chơi của bạn</s:String>
+    <s:String x:Key="Lang.Savegames.MainSavegame">Lưu chính</s:String>
+
+    <s:String x:Key="Lang.Savegames.SelectedSavegame">Lưu đang chọn:</s:String>
+    <s:String x:Key="Lang.Savegames.Options">Tùy chọn:</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Save">Lưu</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.SaveAs">Lưu thành...</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Delete">Xóa</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.CreateBackup">Tạo bản sao lưu</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.RemoveAllBackups">Xóa tất cả bản sao lưu</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.LoadBackup">Tải bản sao lưu</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.DeleteBackup">Xóa bản sao lưu</s:String>
+
+    <s:String x:Key="Lang.Downloads.Tab">Tải xuống</s:String>
+    <s:String x:Key="Lang.Downloads.Title">Tải mod</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Refresh">Làm mới</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Download">Tải xuống</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Name">Tên</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Author">Tác giả</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Category">Thể loại</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Game">Trò chơi</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Downloads">Lượt tải</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Ready">Chọn mod để tải xuống.</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">Đang tải danh sách mod...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Downloading">Đang tải xuống...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Complete">Tải xuống hoàn tất!</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Error">Đã xảy ra lỗi khi tải xuống.</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Version">Phiên bản</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Compatible">Tương thích</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Date">Ngày</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Size">Kích thước</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Select">Chọn mod để xem các phiên bản</s:String>
+    <s:String x:Key="Lang.Downloads.Game.All">Tất cả</s:String>
+    <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
+    <s:String x:Key="Lang.Downloads.Game.DedicatedServer">Máy chủ riêng</s:String>
+    <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Category.All">Tất cả</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Bugfixes">Sửa lỗi</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Balancing">Cân bằng</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Cheats">Gian lận</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Buildings">Công trình</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Graphical">Đồ họa</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Changes">Thay đổi</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Items">Vật phẩm</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Enemies">Kẻ thù</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Multiplayer">Nhiều người chơi</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Worldchanges">Thay đổi thế giới</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Other">Khác</s:String>
+    <s:String x:Key="Lang.Downloads.Search.Placeholder">Tìm mod...</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Info">Thông tin</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Title">Không có kết nối Internet</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Text">Không thể kết nối máy chủ mod. Bạn có thể tải mod thủ công từ trang web:</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">Sau khi tải, đặt tệp .mod vào thư mục "mods/TheForest" trong thư mục ModAPI.</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Retry">Thử kết nối lại</s:String>
+
+    <s:String x:Key="Lang.Options.Tab">Cài đặt</s:String>
+    <s:String x:Key="Lang.Options.Labels.Language">Ngôn ngữ:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Cập nhật bảng phiên bản:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AutoUpdate">Tìm bản cập nhật:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteam">Kết nối Steam:</s:String>
+
+    <s:String x:Key="Lang.Options.Labels.Theme">Giao diện:</s:String>
+    <s:String x:Key="Lang.Options.Theme.Classic">Giao diện cổ điển</s:String>
+    <s:String x:Key="Lang.Options.Theme.Light">Giao diện sáng</s:String>
+    <s:String x:Key="Lang.Options.Theme.Dark">Giao diện tối</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartTitle">Đã đổi giao diện</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartText">Khởi động lại ứng dụng để áp dụng giao diện.</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Title">Đã đổi giao diện</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Text">Khởi động lại ứng dụng để áp dụng giao diện.</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Buttons.OK">OK</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Title">Đổi giao diện</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Text">Bạn có muốn áp dụng giao diện không?</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.Yes">Có</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.No">Không</s:String>
+
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Title">Cảnh báo</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Text">Không tìm thấy dự án. Hãy tạo dự án trước.</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.Delete">Xóa Mod</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Xóa Mod</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Xóa mod &quot;{0}&quot; và tất cả phiên bản? File .dll cũng sẽ bị xóa khỏi thư mục game.</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Có</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Không</s:String>
+</ResourceDictionary>

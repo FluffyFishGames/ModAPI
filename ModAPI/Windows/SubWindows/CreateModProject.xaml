@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Source="/resources/textures/Icons/Icon_Decline.png" Width="20" Grid.Column="0" />
+                <TextBlock Text="&#xEA39;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource FluentDangerBrush}" Width="20" Grid.Column="0" VerticalAlignment="Center" />
                 <TextBlock Style="{StaticResource NormalLabel}" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Errors.ID" />
             </Grid>
             <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,5">
@@ -56,19 +56,19 @@
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Source="/resources/textures/Icons/Icon_Information.png" Width="20" Grid.Column="0" />
+                <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource FluentAccentBrush}" Width="20" Grid.Column="0" VerticalAlignment="Center" />
                 <TextBlock Style="{StaticResource NormalLabel}" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1" Utils:Language.Key="Text" />
             </Grid>
             <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right">
                 <Button x:Name="CancelButton" Margin="0, 0, 10, 0" Style="{StaticResource NormalButton}" Click="Cancel">
                     <StackPanel Orientation="Horizontal">
-                        <Image Margin="0, 0, 5, 0" Source="/resources/textures/Icons/Icon_Decline.png" />
+                        <TextBlock Margin="0,0,5,0" Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Utils:Language.Key="Buttons.Cancel" />
                     </StackPanel>
                 </Button>
                 <Button x:Name="ConfirmButton" Margin="0" Style="{StaticResource NormalButton}" Click="Add">
                     <StackPanel Orientation="Horizontal">
-                        <Image Margin="0, 0, 5, 0" Source="/resources/textures/Icons/Icon_Add.png" />
+                        <TextBlock Margin="0,0,5,0" Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
                         <TextBlock Utils:Language.Key="Buttons.Add" />
                     </StackPanel>
                 </Button>

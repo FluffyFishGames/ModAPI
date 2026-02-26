@@ -22,7 +22,7 @@
     <s:String x:Key="Lang.UserGroup.User">Benutzer</s:String>
     
     <s:String x:Key="Lang.Windows.Login.Title">Einloggen</s:String>
-    <s:String x:Key="Lang.Windows.Login.Text">Gib bitte deine Logindaten von www.modapi.cc ein um dich einzuloggen.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">Gib bitte deine Logindaten von modapi.survivetheforest.net ein um dich einzuloggen.</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Login">Einloggen</s:String>
     <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">Abbrechen</s:String>
     <s:String x:Key="Lang.Windows.Login.Labels.Username">Benutzername:</s:String>
@@ -128,6 +128,7 @@
     <s:String x:Key="Lang.Languages.IT">Italienisch</s:String>
     <s:String x:Key="Lang.Languages.VI">Vietnamesisch</s:String>
     <s:String x:Key="Lang.Languages.ZH">Chinese</s:String>
+    <s:String x:Key="Lang.Languages.ZH-TW">Chinesisch (Traditionell)</s:String>
     <s:String x:Key="Lang.Languages.JA">Japanisch</s:String>
     <s:String x:Key="Lang.Languages.KO">Koreanisch</s:String>
     <s:String x:Key="Lang.Languages.BN">Bengalisch</s:String>
@@ -189,7 +190,9 @@
     <s:String x:Key="Lang.Mods.Welcome.Text0">Um Mods auf dein Spiel anzuwenden, musst du die Mods zunächst aktivieren. Um dies zu tun, klickst du einfach auf den runden Knopf neben den Mod in der linken Liste. Um Änderungen an z.B. der Tastenbelegung der einzelnen Mods vorzunehmen, kannst du einen Mod aus der Liste auswählen und die Werte anpassen.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">Damit die Mods auf das Spiel angewendet werden, musst du nur unten rechts auf die Schaltfläche &quot;Spiel starten&quot; drücken.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">Fehler?</s:String>
-    <s:String x:Key="Lang.Mods.Welcome.Text2">Sollten Fehler auftreten wende dich hilfesuchend an das Forum unter www.modapi.cc</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2a">Sollten Fehler auftreten wende dich hilfesuchend an das Forum (</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2Link">modapi</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2b">).</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text3">Denke daran die Logdatei &quot;ModAPI.log&quot; im Unterordner &quot;Logs&quot; mitzusenden. Diese Datei enthält wichtige Informationen zur Fehlerfindung.</s:String>
 
     <s:String x:Key="Lang.Savegames.Tab">Spielstände</s:String>
@@ -353,10 +356,77 @@
     <s:String x:Key="Lang.Savegames.Savegame.Buildings.LogSled">Logsled</s:String>
     <s:String x:Key="Lang.Savegames.Savegame.Buildings.TreeHouse">Treehouse</s:String>
 
+    <s:String x:Key="Lang.Downloads.Tab">Downloads</s:String>
+    <s:String x:Key="Lang.Downloads.Title">Mods herunterladen</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Refresh">Aktualisieren</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Download">Herunterladen</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Name">Name</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Author">Autor</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Category">Kategorie</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Game">Spiel</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Downloads">Downloads</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Ready">Wähle einen Mod zum Herunterladen.</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">Modliste wird geladen...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Downloading">Wird heruntergeladen...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Complete">Download abgeschlossen!</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Error">Beim Herunterladen ist ein Fehler aufgetreten.</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Version">Version</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Compatible">Kompatibel</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Date">Datum</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Size">Größe</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Select">Mod auswählen um Versionen anzuzeigen</s:String>
+    <s:String x:Key="Lang.Downloads.Game.All">Alle</s:String>
+    <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
+    <s:String x:Key="Lang.Downloads.Game.DedicatedServer">Dedicated Server</s:String>
+    <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Category.All">Alle</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Bugfixes">Bugfixes</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Balancing">Balancing</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Cheats">Cheats</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Buildings">Gebäude</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Graphical">Grafik</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Changes">Änderungen</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Items">Items</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Enemies">Feinde</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Multiplayer">Multiplayer</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Worldchanges">Weltänderungen</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Other">Sonstige</s:String>
+    <s:String x:Key="Lang.Downloads.Search.Placeholder">Mods suchen...</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Info">Info</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Title">Keine Internetverbindung</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Text">Verbindung zum Mod-Server nicht möglich. Sie können Mods manuell von der Website herunterladen:</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">Legen Sie die heruntergeladenen .mod-Dateien in den Ordner "mods/TheForest" in Ihrem ModAPI-Verzeichnis.</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Retry">Erneut verbinden</s:String>
+
     <s:String x:Key="Lang.Options.Tab">Einstellungen</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">Sprache:</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Versionstabelle aktuell halten:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Nach Updates suchen:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steamanbindung:</s:String>
+
+    <s:String x:Key="Lang.Options.Labels.Theme">Design:</s:String>
+    <s:String x:Key="Lang.Options.Theme.Classic">Klassisches Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Light">Helles Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Dark">Dunkles Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartTitle">Design geändert</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartText">Bitte starten Sie die Anwendung neu, um das Design anzuwenden.</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Title">Design geändert</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Text">Bitte starten Sie die Anwendung neu, um das Design anzuwenden.</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Buttons.OK">OK</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Title">Design ändern</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Text">Möchten Sie das Design anwenden?</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.Yes">Ja</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.No">Nein</s:String>
+
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Title">Warnung</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Text">Keine Projekte gefunden. Bitte erstellen Sie zuerst ein Projekt.</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.Delete">Mod löschen</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Mod löschen</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Mod &quot;{0}&quot; und alle Versionen löschen? Die installierte .dll wird ebenfalls aus dem Spielordner entfernt.</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Ja</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Nein</s:String>
 </ResourceDictionary>
     

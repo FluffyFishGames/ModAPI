@@ -41,9 +41,8 @@ namespace ModAPI.Windows.SubWindows
         {
             InitializeComponent();
             Task = task;
-            GamePath.Text = ((Game) task.Parameters[0]).GamePath;
+            GamePath.Text = ((Game)task.Parameters[0]).GamePath;
             Check();
-            SetCloseable(false);
         }
 
         public SpecifyGamePath(string langKey, Schedule.Task task)
@@ -51,14 +50,13 @@ namespace ModAPI.Windows.SubWindows
         {
             InitializeComponent();
             Task = task;
-            GamePath.Text = ((Game) task.Parameters[0]).GamePath;
+            GamePath.Text = ((Game)task.Parameters[0]).GamePath;
             Check();
-            SetCloseable(false);
         }
 
         protected void Check()
         {
-            ((Game) Task.Parameters[0]).GamePath = GamePath.Text;
+            ((Game)Task.Parameters[0]).GamePath = GamePath.Text;
             if (Task.Check())
             {
                 AcceptIcon.Visibility = Visibility.Visible;
@@ -77,7 +75,7 @@ namespace ModAPI.Windows.SubWindows
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            ((Game) Task.Parameters[0]).GamePath = GamePath.Text;
+            ((Game)Task.Parameters[0]).GamePath = GamePath.Text;
             if (Task.Check())
             {
                 Completed = true;

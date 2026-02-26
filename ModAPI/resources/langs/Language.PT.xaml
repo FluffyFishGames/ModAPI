@@ -1,0 +1,287 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+
+
+    <s:String x:Key="LangCode">PT</s:String>
+    <s:String x:Key="Locale">pt-BR</s:String>
+    <s:String x:Key="LangName">Português</s:String>
+
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Title">Erro!</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Text">Você tentou executar o ModAPI de um arquivo compactado ou diretório temporário. Isso causará problemas. Deseja copiar os arquivos para um local de trabalho?</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.Fix">Corrigir</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.Buttons.No">Não</s:String>
+    <s:String x:Key="Lang.Windows.DirectoryCheck.IDesc">ModAPI</s:String>
+    
+    <s:String x:Key="Lang.Window.Version">Versão:</s:String>
+    <s:String x:Key="Lang.Window.Copyright">Created by FluffyFish</s:String>
+    <s:String x:Key="Lang.Logout">Sair</s:String>
+    <s:String x:Key="Lang.Loading">Carregando...</s:String>
+    <s:String x:Key="Lang.Login">Entrar</s:String>
+    <s:String x:Key="Lang.UserGroup.Administrator">Administrador</s:String>
+    <s:String x:Key="Lang.UserGroup.Press">Imprensa</s:String>
+    <s:String x:Key="Lang.UserGroup.Moderator">Moderador</s:String>
+    <s:String x:Key="Lang.UserGroup.User">Usuário</s:String>
+    
+    <s:String x:Key="Lang.Windows.Login.Title">Login</s:String>
+    <s:String x:Key="Lang.Windows.Login.Text">Digite seu nome de usuário e senha do modapi.survivetheforest.net para fazer login.</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Login">Entrar</s:String>
+    <s:String x:Key="Lang.Windows.Login.Buttons.Cancel">Cancelar</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Username">Usuário:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Labels.Password">Senha:</s:String>
+    <s:String x:Key="Lang.Windows.Login.Errors.WrongLogin">O nome de usuário e/ou senha estão incorretos.</s:String>
+    
+    <s:String x:Key="Lang.Windows.OperationPending.Title">Operação em andamento...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Continue">Continuar</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Buttons.Cancel">Cancelar</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.BackupGameFiles.CreatingBackup">Fazendo backup dos arquivos do jogo...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.RemovingOldFiles">Removendo arquivos antigos...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CreatingModToolkit">Criando utilitários de mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.ModifyingAssemblies">Modificando bibliotecas do jogo...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.CopyingAssemblies">Copiando bibliotecas do jogo...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Finish">Biblioteca de mods criada com sucesso.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.BaseModLibNotFound">Erro!: BaseModLib não encontrada.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyFileNotFound">Erro!: Biblioteca do jogo não encontrada.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.CopyAssemblyFileNotFound">Erro!: Biblioteca do jogo não encontrada.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreatingModLibrary.Error.ModifyAssemblyException">Erro!: Ocorreu um erro inesperado ao modificar uma biblioteca do jogo.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Finish">Mod criado com sucesso.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.SavingMod">Criando arquivo de mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.FetchingTypes">Buscando todos os tipos...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.ConvertingClasses">Convertendo tipos...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Preparing">Preparando criação do mod...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.Save">Erro!: Não foi possível salvar o mod.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.UnexpectedError">Erro!: Ocorreu um erro inesperado.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.FileNotFound">Erro!: Arquivo não encontrado. É possível que o projeto não tenha sido compilado.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.CreateMod.Error.CorruptedAssembly">Erro!: Um dos assemblies parece estar corrompido.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Preparing">Preparando ambiente de mods...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.FetchingInjections">Buscando arquivos...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Injecting">Manipulando arquivos do jogo...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Resolving">Resolvendo código MSIL...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Saving">Salvando arquivos...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.ApplyMods.Error.Unexpected">Erro!: Ocorreu um erro ao aplicar mods.</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Restore">Restaurando arquivos...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.Cancelled">Erro!: A restauração foi cancelada pelo usuário!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.NoConnection">Erro!: O Steam não conseguiu conectar à internet!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">Erro!: O Steam foi fechado!</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">Baixando atualização...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">Extraindo atualização...</s:String>
+
+    <s:String x:Key="Lang.Windows.CreateModProject.Title">Criar projeto de mod</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Text">Digite o ID do novo projeto. O ID deve ser único e pode conter apenas caracteres alfanuméricos e "_".</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Errors.ID">Já existe um projeto com este ID.</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Cancel">Cancelar</s:String>
+    <s:String x:Key="Lang.Windows.CreateModProject.Buttons.Add">Adicionar</s:String>
+
+    <s:String x:Key="Lang.Windows.RemoveModProject.Title">Remover projeto</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPre">Tem certeza que deseja remover este projeto?</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.TextPost">Esta ação NÃO pode ser desfeita. Todos os arquivos do projeto serão removidos permanentemente.</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">Cancelar</s:String>
+    <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">Remover</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">Digite o caminho do jogo</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">O jogo não foi encontrado automaticamente. Digite o caminho do jogo manualmente.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">Procurar</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">Continuar</s:String>
+
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">Digite o caminho do Steam</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Text">O Steam não foi encontrado automaticamente. Digite o caminho do Steam manualmente.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Browse">Procurar</s:String>
+    <s:String x:Key="Lang.Windows.SpecifySteamPath.Buttons.Continue">Continuar</s:String>
+
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Title">Não foi possível detectar a versão do jogo</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoVersionUpdate">Não foi possível detectar a versão do jogo. Para detectar novas versões, ative a atualização da tabela de versões. Também é possível que os arquivos do jogo estejam corrompidos ou modificados fora do ModAPI.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.VersionNotFound">Não foi possível detectar a versão do jogo. Os dados do jogo parecem ter sido modificados fora do ModAPI.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.NoSteamText">Como a conexão Steam está desativada, o ModAPI não pode restaurar seus arquivos de jogo. Restaure o estado original dos arquivos e verifique novamente. Você também pode ativar a conexão Steam para restauração automática.</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.SteamText">Deseja que o ModAPI restaure os arquivos pelo Steam?</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateVersionUpdate">Ativar atualização da tabela de versões</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.ActivateSteam">Ativar conexão Steam</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Restore">Restaurar arquivos</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Recheck">Verificar novamente</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Close">Sair</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.Yes">Sim</s:String>
+    <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">Não</s:String>
+
+    <s:String x:Key="Lang.Windows.FirstSetup.Title">Bem-vindo!</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">Esta é a primeira execução do ModAPI. Antes de começar, verifique as seguintes opções:</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">Atualização automática</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">Ativando a atualização automática, você será notificado quando uma nova versão do ModAPI estiver disponível. Você pode aplicar a atualização com apenas um clique.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Conexão Steam</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">A conexão Steam permite acessar funções do Steam no jogo (ex: overlay Steam). O ModAPI também poderá restaurar seus arquivos de jogo se estiverem corrompidos ou modificados.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">Atualizar tabela de versões</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">Ativando a atualização da tabela de versões, o ModAPI baixará a tabela na inicialização. Novas atualizações do jogo serão reconhecidas automaticamente. Pode levar até 24 horas para novas versões serem adicionadas.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">Continuar</s:String>
+
+
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Title">Atualização disponível!</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Text">Há uma nova versão do ModAPI. Deseja atualizar agora?</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">Atualizar agora</s:String>
+    <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">Atualizar depois</s:String>
+
+
+    <s:String x:Key="Lang.Languages.EN">Inglês</s:String>
+    <s:String x:Key="Lang.Languages.DE">Alemão</s:String>
+    <s:String x:Key="Lang.Languages.FR">Francês</s:String>
+    <s:String x:Key="Lang.Languages.ES">Espanhol</s:String>
+    <s:String x:Key="Lang.Languages.RU">Russo</s:String>
+    <s:String x:Key="Lang.Languages.HI">Hindi</s:String>
+    <s:String x:Key="Lang.Languages.AR">Árabe</s:String>
+    <s:String x:Key="Lang.Languages.TR">Turco</s:String>
+    <s:String x:Key="Lang.Languages.IT">Italiano</s:String>
+    <s:String x:Key="Lang.Languages.VI">Vietnamita</s:String>
+    <s:String x:Key="Lang.Languages.ZH">Chinês</s:String>
+    <s:String x:Key="Lang.Languages.ZH-TW">Chinês (Tradicional)</s:String>
+    <s:String x:Key="Lang.Languages.JA">Japonês</s:String>
+    <s:String x:Key="Lang.Languages.KO">Coreano</s:String>
+    <s:String x:Key="Lang.Languages.BN">Bengali</s:String>
+    <s:String x:Key="Lang.Languages.PT">Português</s:String>
+
+    <s:String x:Key="Lang.Development.Tab">Desenvolvimento</s:String>
+    <s:String x:Key="Lang.Development.Settings.Tab">Configurações</s:String>
+    <s:String x:Key="Lang.Development.Keys.Tab">Teclas atribuíveis</s:String>
+    <s:String x:Key="Lang.Development.Projects">Projetos</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Name">Nome:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.Description">Descrição:</s:String>
+    <s:String x:Key="Lang.Development.Keys.Labels.StandardKey">Tecla padrão:</s:String>
+    <s:String x:Key="Lang.Development.Languages.Tab">Idiomas</s:String>
+    <s:String x:Key="Lang.Development.Languages.AddLanguage">Adicionar idioma</s:String>
+    <s:String x:Key="Lang.Development.Languages.SelectedLanguages">Idiomas selecionados</s:String>
+    <s:String x:Key="Lang.Development.Languages.Buttons.AddLanguage">Adicionar</s:String>
+
+    <s:String x:Key="Lang.Development.NoProjectSelected">Nenhum projeto selecionado</s:String>
+    <s:String x:Key="Lang.Development.SelectedProject">Projeto selecionado</s:String>
+    <s:String x:Key="Lang.Development.Errors.Save">Ocorreu um erro ao salvar o projeto. Certifique-se de que o projeto está fechado e que nenhum outro aplicativo está acessando-o.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidID">O ID pode conter apenas caracteres alfanuméricos e "_". O ID é obrigatório e deve ser único.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidButtonID">O ID deve ser único.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidVersion">A versão pode conter apenas 4 números de 0 a 99 separados por ponto.</s:String>
+    <s:String x:Key="Lang.Development.Errors.InvalidName">É necessário um nome para cada idioma selecionado.</s:String>
+    <s:String x:Key="Lang.Development.Errors.NoLanguageSelected">Você precisa selecionar pelo menos um idioma.</s:String>
+
+    <s:String x:Key="Lang.Development.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Development.Labels.StandardKey">Tecla padrão:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Version">Versão:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Name">Nome:</s:String>
+    <s:String x:Key="Lang.Development.Labels.Description">Descrição:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary">Biblioteca de mods</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.CreationTime">Data de criação:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.GameVersion">Versão do jogo:</s:String>
+    <s:String x:Key="Lang.Development.ModLibrary.ModAPIVersion">Versão ModAPI:</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateModLibrary">Recriar biblioteca de mods</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateProject">Criar novo projeto</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveProject">Remover projeto</s:String>
+    <s:String x:Key="Lang.Development.Buttons.CreateMod">Criar mod</s:String>
+    <s:String x:Key="Lang.Development.Buttons.AddButton">Adicionar tecla</s:String>
+    <s:String x:Key="Lang.Development.Buttons.RemoveButton">Remover tecla</s:String>
+
+    <s:String x:Key="Lang.Mods.Tab">Mods</s:String>
+    <s:String x:Key="Lang.Mods.Title">Mods disponíveis</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.StartGame">Iniciar jogo</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.SelectVersion">Selecionar versão</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Informations">Informações</s:String>
+    <s:String x:Key="Lang.Mods.Tabs.Settings">Configurações</s:String>
+    <s:String x:Key="Lang.Mods.Labels.ID">ID:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Version">Versão selecionada:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.AvailableVersions">Versões disponíveis:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Name">Nome:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Description">Descrição:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Buttons">Atribuição de teclas</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Compatible">Compatível com:</s:String>
+
+    <s:String x:Key="Lang.Mods.Welcome.Title0">Bem-vindo!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text0">Para aplicar mods ao jogo, primeiro ative-os. Clique no botão redondo à esquerda do nome do mod. Para alterar as teclas atribuídas, selecione um mod na lista e mude para a aba "Configurações".</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text1">Para iniciar o jogo com mods, basta clicar no botão "Iniciar jogo" no canto inferior direito.</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Title1">Erros?</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2a">Se encontrar algum erro, procure ajuda nos fóruns (</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2Link">modapi</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text2b">).</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Text3">Não esqueça de anexar o arquivo de log "ModAPI.log" que está na pasta logs. Este arquivo contém informações importantes para a solução de problemas.</s:String>
+
+    <s:String x:Key="Lang.Savegames.Tab">Saves</s:String>
+    <s:String x:Key="Lang.Savegames.Title">Seus saves</s:String>
+    <s:String x:Key="Lang.Savegames.MainSavegame">Save principal</s:String>
+
+    <s:String x:Key="Lang.Savegames.SelectedSavegame">Save selecionado:</s:String>
+    <s:String x:Key="Lang.Savegames.Options">Opções:</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Save">Salvar</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.SaveAs">Salvar como...</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.Delete">Excluir</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.CreateBackup">Criar backup</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.RemoveAllBackups">Remover todos os backups</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.LoadBackup">Carregar backup</s:String>
+    <s:String x:Key="Lang.Savegames.Buttons.DeleteBackup">Excluir backup</s:String>
+
+    <s:String x:Key="Lang.Downloads.Tab">Downloads</s:String>
+    <s:String x:Key="Lang.Downloads.Title">Baixar mods</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Refresh">Atualizar</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Download">Baixar</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Name">Nome</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Author">Autor</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Category">Categoria</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Game">Jogo</s:String>
+    <s:String x:Key="Lang.Downloads.Headers.Downloads">Downloads</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Ready">Selecione um mod para baixar.</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">Carregando lista de mods...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Downloading">Baixando...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Complete">Download concluído!</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Error">Ocorreu um erro durante o download.</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Version">Versão</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Compatible">Compatível</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Date">Data</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Size">Tamanho</s:String>
+    <s:String x:Key="Lang.Downloads.Version.Select">Selecione um mod para ver as versões</s:String>
+    <s:String x:Key="Lang.Downloads.Game.All">Todos</s:String>
+    <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
+    <s:String x:Key="Lang.Downloads.Game.DedicatedServer">Servidor dedicado</s:String>
+    <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Category.All">Todos</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Bugfixes">Correções</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Balancing">Balanceamento</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Cheats">Trapaças</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Buildings">Construções</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Graphical">Gráfico</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Changes">Alterações</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Items">Itens</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Enemies">Inimigos</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Multiplayer">Multijogador</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Worldchanges">Mudanças do mundo</s:String>
+    <s:String x:Key="Lang.Downloads.Category.Other">Outros</s:String>
+    <s:String x:Key="Lang.Downloads.Search.Placeholder">Pesquisar mods...</s:String>
+    <s:String x:Key="Lang.Downloads.Buttons.Info">Info</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Title">Sem conexão com a Internet</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Text">Não foi possível conectar ao servidor de mods. Você pode baixar mods manualmente pelo site:</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">Após o download, coloque os arquivos .mod na pasta "mods/TheForest" no diretório do ModAPI.</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Retry">Tentar novamente</s:String>
+
+    <s:String x:Key="Lang.Options.Tab">Configurações</s:String>
+    <s:String x:Key="Lang.Options.Labels.Language">Idioma:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Manter tabela de versões atualizada:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AutoUpdate">Buscar atualizações:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteam">Conexão Steam:</s:String>
+
+    <s:String x:Key="Lang.Options.Labels.Theme">Tema:</s:String>
+    <s:String x:Key="Lang.Options.Theme.Classic">Tema clássico</s:String>
+    <s:String x:Key="Lang.Options.Theme.Light">Tema claro</s:String>
+    <s:String x:Key="Lang.Options.Theme.Dark">Tema escuro</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartTitle">Tema alterado</s:String>
+    <s:String x:Key="Lang.Options.Theme.RestartText">Reinicie o aplicativo para aplicar o tema.</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Title">Tema alterado</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Text">Reinicie o aplicativo para aplicar o tema.</s:String>
+    <s:String x:Key="Lang.Windows.ThemeRestartNotice.Buttons.OK">OK</s:String>
+
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Title">Alterar tema</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Text">Deseja aplicar o tema?</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.Yes">Sim</s:String>
+    <s:String x:Key="Lang.Windows.ThemeConfirm.Buttons.No">Não</s:String>
+
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Title">Aviso</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Text">Nenhum projeto encontrado. Crie um projeto primeiro.</s:String>
+    <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Mods.Buttons.Delete">Excluir Mod</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Excluir Mod</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Excluir o mod &quot;{0}&quot; e todas as versões? Isso também removerá o .dll da pasta do jogo.</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Sim</s:String>
+    <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Não</s:String>
+</ResourceDictionary>

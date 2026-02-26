@@ -55,10 +55,12 @@ namespace ModAPI.Windows.SubWindows
         private void ConfirmButton_Click(object sender, RoutedEventArgs ev)
         {
             var handler = new ProgressHandler();
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
-                var request = (HttpWebRequest) WebRequest.Create("http://www.modapi.cc/app/archives/" + NewVersion + ".zip");
-                var response = (HttpWebResponse) request.GetResponse();
+                var request = (HttpWebRequest)WebRequest.Create("https://github.com/zzangae/ModAPI/releases/download/" + NewVersion + "/ModAPI.zip");
+                request.AllowAutoRedirect = true;
+                request.UserAgent = "ModAPI-Updater";
+                var response = (HttpWebResponse)request.GetResponse();
                 var s = response.GetResponseStream();
                 var buffer = new byte[4096];
                 var memory = new MemoryStream();
@@ -70,7 +72,7 @@ namespace ModAPI.Windows.SubWindows
                 {
                     memory.Write(buffer, 0, count);
                     current += count;
-                    progress = (float) (((current / (double) response.ContentLength)) * 70.0);
+                    progress = (float)(((current / (double)response.ContentLength)) * 70.0);
                     handler.Progress = progress;
                 }
 
@@ -89,7 +91,7 @@ namespace ModAPI.Windows.SubWindows
                     {
                     }
                     n += 1;
-                    handler.Progress = 70f + (n / (float) zip.Count) * 30f;
+                    handler.Progress = 70f + (n / (float)zip.Count) * 30f;
                 }
 
                 var p = new Process();

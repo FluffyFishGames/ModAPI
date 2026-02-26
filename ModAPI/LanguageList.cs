@@ -24,6 +24,11 @@ using System.Windows.Controls;
 
 /*namespace ModAPI
 {*/
+/// <summary>
+/// Legacy language list - no longer used.
+/// Depends on OldConfiguration which is also deprecated.
+/// </summary>
+[System.Obsolete("Legacy code - not used anywhere in the application")]
 public class LanguageList
 {
     public List<ComboBoxItem> Items = new List<ComboBoxItem>();

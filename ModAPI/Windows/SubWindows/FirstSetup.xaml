@@ -38,19 +38,19 @@
             <TextBlock Style="{StaticResource NormalLabel}" Margin="0, 0, 0, 5" TextWrapping="Wrap" Utils:Language.Key="Text" />
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="true" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="AutoUpdate" />
-                <Image VerticalAlignment="Center" Margin="0, 0, 0, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Download.png" />
+                <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 <TextBlock  Style="{StaticResource NormalLabel}" Utils:Language.Key="AutoUpdate" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Utils:Language.Key="AutoUpdateText" />
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="true" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseSteam" />
-                <Image VerticalAlignment="Center" Margin="0, 0, 0, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Steam.png" />
+                <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE7F8;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="Steam" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="SteamText" TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="true" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseAutoUpdateVersions" />
-                <Image VerticalAlignment="Center" Margin="0, 0, 0, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_AutoUpdate.png" />
+                <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE895;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="UpdateVersions" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="UpdateVersionsText" TextWrapping="Wrap" />
@@ -58,7 +58,7 @@
         <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="ConfirmButton" Margin="0" Style="{StaticResource NormalButton}" Click="ConfirmButton_Click">
                 <StackPanel Orientation="Horizontal">
-                    <Image Margin="0, 0, 5, 0" Source="/ModAPI;component/resources/textures/Icons/Icon_Continue.png" />
+                    <TextBlock Margin="0,0,5,0" Text="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
                     <TextBlock Utils:Language.Key="Buttons.Confirm" />
                 </StackPanel>
             </Button>

@@ -98,7 +98,8 @@ namespace ModAPI.Utils
 
         public static void Initialize()
         {
-            CheckSession();
+            // Legacy login system disabled - backend (modapi.cc) no longer exists
+            // CheckSession() removed to prevent dead HTTP calls on startup
         }
 
         public static void Login(string username, string password)
@@ -110,11 +111,11 @@ namespace ModAPI.Utils
                 Method = "POST",
                 ResponseType = typeof(LoginResponse),
                 Parameters = new[] { "username=" + username, "password=" + password }
-            }.Send(delegate(Response _response)
+            }.Send(delegate (Response _response)
             {
                 if (_response != null)
                 {
-                    var response = (LoginResponse) _response;
+                    var response = (LoginResponse)_response;
                     if (response.Header.Status == "OK")
                     {
                         if (response.Header.UserId != null)
@@ -150,11 +151,11 @@ namespace ModAPI.Utils
                     Method = "GET",
                     ResponseType = typeof(UserDataResponse),
                     Parameters = new[] { "id=" + UserId }
-                }.Send(delegate(Response _response)
+                }.Send(delegate (Response _response)
                 {
                     if (_response != null)
                     {
-                        var response = (UserDataResponse) _response;
+                        var response = (UserDataResponse)_response;
 
                         if (response.Header.Status == "OK")
                         {
@@ -217,20 +218,20 @@ namespace ModAPI.Utils
             public void LoadAvatar()
             {
                 var t = new Thread(
-                    delegate()
+                    delegate ()
                     {
                         if (AvatarUrl.EndsWith(".jpg"))
                         {
                             var buffer = new byte[1024];
 
-                            var httpRequest = (HttpWebRequest) WebRequest.Create(AvatarUrl);
+                            var httpRequest = (HttpWebRequest)WebRequest.Create(AvatarUrl);
                             httpRequest.Timeout = 30000;
                             httpRequest.Method = "GET";
                             httpRequest.UserAgent = "ModAPI";
                             httpRequest.Accept = "image/jpeg";
                             httpRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
                             Console.WriteLine(AvatarUrl);
-                            using (var httpResponse = (HttpWebResponse) httpRequest.GetResponse())
+                            using (var httpResponse = (HttpWebResponse)httpRequest.GetResponse())
                             {
                                 using (var responseStream = httpResponse.GetResponseStream())
                                 {
@@ -328,6 +329,7 @@ namespace ModAPI.Utils
 
         public class Request
         {
+            // Legacy backend - no longer operational
             protected const string BackendUrl = "https://www.modapi.cc/external.php/";
             public string Path;
             public string Method;
@@ -372,7 +374,7 @@ namespace ModAPI.Utils
 
             protected void Execute()
             {
-                var requestThread = new Thread(delegate()
+                var requestThread = new Thread(delegate ()
                 {
                     try
                     {
@@ -390,7 +392,7 @@ namespace ModAPI.Utils
                         {
                             url += data;
                         }
-                        var request = (HttpWebRequest) HttpWebRequest.Create(url);
+                        var request = (HttpWebRequest)HttpWebRequest.Create(url);
                         request.CookieContainer = new CookieContainer(3);
                         request.CookieContainer.Add(new Cookie("wcf_cookieHash", CurrentSessionId, "/", ".www.modapi.cc"));
                         request.CookieContainer.Add(new Cookie("wcf_userID", UserId + "", "/", ".www.modapi.cc"));
@@ -412,11 +414,11 @@ namespace ModAPI.Utils
                             }
                         }
 
-                        var response = (HttpWebResponse) request.GetResponse();
+                        var response = (HttpWebResponse)request.GetResponse();
                         var responseStream = response.GetResponseStream();
 
                         var serializer = new DataContractJsonSerializer(ResponseType);
-                        var obj = (Response) serializer.ReadObject(responseStream);
+                        var obj = (Response)serializer.ReadObject(responseStream);
 
                         if (obj.Header != null && obj.Header.SessionId != null)
                         {
