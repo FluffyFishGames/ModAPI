@@ -61,6 +61,10 @@ ModAPI is a desktop application for managing mods for The Forest. This upgraded 
 | Light | FluentStylesLight.xaml | Bright tone + blue accent |
 | Dark | FluentStyles.xaml | Dark tone + blue accent (default) |
 
+![1classic](https://github.com/user-attachments/assets/40c44058-f695-40d9-9a2d-6d17f2b8f2ac)
+![2light](https://github.com/user-attachments/assets/061fff93-1c0e-4076-b125-250a9815b4f5)
+![3dark](https://github.com/user-attachments/assets/fcc1a188-99ef-465f-a336-614d93dc3652)
+
 - Added **Theme Selector ComboBox** in Settings tab
 - Theme change triggers **confirmation popup** → **auto restart**
 - Theme setting saved/loaded via `theme.cfg` file
