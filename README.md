@@ -1,18 +1,18 @@
 [![English](https://img.shields.io/badge/English-🇺🇸-blue)](README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](Docs/ko/README.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](Docs/de/README.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](Docs/es/README.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](Docs/fr/README.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](Docs/pl/README.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](Docs/ru/README.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](Docs/it/README.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](Docs/ja/README.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](Docs/pt/README.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](Docs/vi/README.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](Docs/zh-CN/README.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](Docs/zh-TW/README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](Docs/README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](Docs/README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](Docs/README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](Docs/README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](Docs/README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](Docs/README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](Docs/README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](Docs/README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](Docs/README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](Docs/README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](Docs/README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](Docs/README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9561 - 20260306
+# ModAPI(v1) v2.0.9586 - 20260331
 
 **The Forest Mod Management Tool — Upgraded Edition**
 
@@ -24,6 +24,44 @@
 ## Overview
 
 ModAPI is a desktop application for managing mods for The Forest. This upgraded edition includes .NET Framework 4.8 migration, Windows 11 Fluent Design UI, a 3-theme system, enhanced multilingual support, a full Downloads tab implementation, and C# 7.3 mod development support.
+
+---
+
+## What Changed in v2.0.9586
+
+The following issues were identified and resolved after v2.0.9561. All findings are based on in-game testing.
+
+| # | Category | Issue | Resolution |
+|---|---|---|---|
+| 1 | **Critical** | Black screen on game main menu after applying mods | Confirmed fixed — assembly remapping pipeline now correctly patches PE headers and reference tables |
+| 2 | **Polyfill** | `Portable.System.ValueTuple.dll` included but non-functional | Removed entirely — Mono 2.0's `mscorlib` emits IL referencing `ValueTuple` directly; no polyfill can override it |
+| 3 | **Polyfill** | Wrong filename: `System.Threading.Tasks.dll` | Corrected to `System.Threading.dll` — actual filename from `TaskParallelLibrary 1.0.2856` NuGet |
+| 4 | **Polyfill** | `Game.cs` copy destination bug: files copied to `Managed\polyfills\` instead of `Managed\` | Fixed by using `Path.GetFileName()` to extract filename only for the flat destination path |
+| 5 | **Build** | PostBuild target missing polyfill auto-copy | `BaseModLib.csproj` PostBuild now auto-copies `AsyncBridge.dll` and `System.Threading.dll` to `bin\{Config}\libs\polyfills\` |
+| 6 | **C# 7.3** | Tuple (`ValueTuple`) support attempted and failed | Definitively removed from all configs — tuples are an architectural hard limit on Mono 2.0 |
+| 7 | **C# 7.3** | In-game verification of remaining C# 7.3 features | Confirmed working in real gameplay: pattern matching, string interpolation, `out` variable inline |
+
+### C# 7.3 Final Feature Matrix
+
+| Feature | Status | Notes |
+|---|---|---|
+| Pattern matching (`is`, `switch`) | ✅ Confirmed | Tested in-game via `TEST_MOD.log` |
+| String interpolation (`$""`) | ✅ Confirmed | Tested in-game via `TEST_MOD.log` |
+| `out` variable inline | ✅ Confirmed | Tested in-game via `TEST_MOD.log` |
+| Expression-bodied members (`=>`) | ✅ | Compiler-handled, no runtime dependency |
+| Local functions | ✅ | Compiler-handled, no runtime dependency |
+| `nameof` | ✅ | Compiler-handled, no runtime dependency |
+| Null-conditional (`?.`, `??`) | ✅ | Compiler-handled, no runtime dependency |
+| `async`/`await` | ✅ | Via AsyncBridge + System.Threading polyfills |
+| Tuples (`ValueTuple`) | ❌ Hard limit | Mono 2.0 `mscorlib` ABI — no workaround exists |
+
+### Final Polyfill Configuration
+
+| DLL | NuGet Package | Destination | Purpose |
+|---|---|---|---|
+| `AsyncBridge.dll` | AsyncBridge 0.3.1 | `libs/polyfills/` → `Managed/` | `async`/`await` for .NET 3.5 |
+| `System.Threading.dll` | TaskParallelLibrary 1.0.2856 | `libs/polyfills/` → `Managed/` | AsyncBridge dependency |
+| ~~`Portable.System.ValueTuple.dll`~~ | ~~Portable.System.ValueTuple~~ | ~~Removed~~ | ~~Tuple support — non-functional on Mono 2.0~~ |
 
 ---
 
@@ -57,29 +95,6 @@ v4.8 build  →  PE header: CLR Runtime v4.0.30319  ←  Mono 2.0 rejects  ❌  
 
 Unity 5.6.x embeds `Mono/mono.dll` compiled and ABI-linked against its own engine internals. Replacing this DLL with a newer Mono version causes an immediate crash because the Unity engine binary expects the exact ABI of its bundled Mono. The Forest is a released, no-longer-updated game — a Unity engine upgrade is not possible.
 
-### C# 7.3 for Mod Developers
-
-Although BaseModLib targets .NET 3.5, the C# language version is set independently:
-
-```xml
-<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-<LangVersion>7.3</LangVersion>
-```
-
-This allows mod developers to use modern C# syntax while staying within Mono 2.0's runtime constraints.
-
-| C# 7.3 Feature | Available | Notes |
-|---|---|---|
-| Pattern matching (`is`, `switch`) | ✅ | Compiler-handled |
-| String interpolation (`$""`) | ✅ | Compiler-handled |
-| `out` variable inline | ✅ | Compiler-handled |
-| Expression-bodied members (`=>`) | ✅ | Compiler-handled |
-| Local functions | ✅ | Compiler-handled |
-| `nameof` | ✅ | Compiler-handled |
-| Null-conditional (`?.`, `??`) | ✅ | Compiler-handled |
-| `async`/`await` | ✅ | Via AsyncBridge + TaskParallelLibrary polyfills |
-| Tuples (`ValueTuple`) | ❌ | Mono 2.0 `mscorlib` does not contain `ValueTuple` — polyfill insufficient |
-
 ### Assembly Remapping Pipeline
 
 Mod DLLs built with .NET 4.8 go through the following pipeline at Apply time:
@@ -99,16 +114,21 @@ Mod DLLs built with .NET 4.8 go through the following pipeline at Apply time:
   → Assembly references resolved ✅
 ```
 
-### C# 7.3 Polyfill DLLs
+### Polyfill Deployment Pipeline
 
-Two polyfill DLLs are automatically deployed to `TheForest_Data/Managed/` during Apply:
+```
+[BaseModLib PostBuild]
+  New_MODAPI2\libs\polyfills\AsyncBridge.dll
+  New_MODAPI2\libs\polyfills\System.Threading.dll
+    → auto-copied to bin\{Config}\libs\polyfills\
 
-| DLL | NuGet Package | Purpose |
-|---|---|---|
-| `AsyncBridge.dll` | AsyncBridge 0.3.1 | `async`/`await` Task implementation for .NET 3.5 |
-| `System.Threading.dll` | TaskParallelLibrary 1.0.2856 | AsyncBridge dependency |
-
-These are sourced from `libs/polyfills/` and copied automatically by `Game.cs` during the Apply phase. BaseModLib's PostBuild target copies them from the development tree into the ModAPI libs folder.
+[ModAPI Apply — Game.cs]
+  bin\{Config}\libs\polyfills\AsyncBridge.dll
+  bin\{Config}\libs\polyfills\System.Threading.dll
+    → Path.GetFileName() extracts filename only
+    → flat-copied to TheForest_Data\Managed\AsyncBridge.dll
+    → flat-copied to TheForest_Data\Managed\System.Threading.dll
+```
 
 ---
 
@@ -132,12 +152,6 @@ These are sourced from `libs/polyfills/` and copied automatically by `Game.cs` d
 
 ### Phase 3 — UI Redesign & Theme System
 
-#### Fluent UI Redesign
-- Complete **MainWindow.xaml** restructuring
-  - Fluent Design-based layout, colors, typography
-  - Redesigned tab controls, status bar, caption buttons
-- Runtime fixes: SplashScreen freezing, tab switching, icon states, window dragging
-
 #### 3-Theme System
 
 | Theme | Style File | Description |
@@ -146,18 +160,9 @@ These are sourced from `libs/polyfills/` and copied automatically by `Game.cs` d
 | Light | FluentStylesLight.xaml | Bright tone + blue accent |
 | Dark | FluentStyles.xaml | Dark tone + blue accent (default) |
 
-![1classic](./Docs/1classic.jpg)
-![2light](./Docs/2light.jpg)
-![3dark](./Docs/3dark.jpg)
-
 - Added **Theme Selector ComboBox** in Settings tab
 - Theme change triggers **confirmation popup** → **auto restart**
 - Theme setting saved/loaded via `theme.cfg` file
-
-#### Window Drag / SubWindows / Hyperlinks
-- Root Grid `MouseLeftButtonDown` event for direct drag handling
-- ThemeConfirm, ThemeRestartNotice, NoProjectWarning, DeleteModConfirm popups
-- Theme-specific link colors: Dark/Classic (`#FFD700`), Light (`#0078D4`)
 
 ### Phase 4 — Code Cleanup & Legacy Removal
 
@@ -180,67 +185,36 @@ These are sourced from `libs/polyfills/` and copied automatically by `Game.cs` d
 
 ### Phase 5-1 — Downloads Tab & Theme Completion
 
-#### Downloads Tab
 - Loads mod list from 3 sources (`mods.json`, `versions.xml`, HTML parsing)
 - Search functionality (filter by mod name/description/author)
 - **Game filter** (All / The Forest / Dedicated Server / VR)
 - **Category filter** (All / Bugfixes / Balancing / Cheats, etc. — 12 categories)
-- Version selection split-panel UI
 - Direct `.mod` file download → game folder installation
-- Column sorting (click name/category/author) and resizing
-- Mod deletion (DLL + staging file cleanup)
-
-#### Icon Modernization (All Themes)
 - All button PNG icons → **Segoe MDL2 Assets** font icons
-- Applied across MainWindow.xaml + 14 SubWindow files
-- Font icons inherit Foreground color, ensuring visibility across all themes
-
-| Original PNG | Font Icon | Usage |
-|---|---|---|
-| Icon_Add | &#xE710; / &#xE768; | Add / Start Game |
-| Icon_Delete | &#xE74D; | Delete |
-| Icon_Refresh | &#xE72C; | Refresh |
-| Icon_Download | &#xE896; | Download |
-| Icon_Continue/Accept | &#xE8FB; | Confirm/Continue |
-| Icon_Decline | &#xE711; | Cancel/Close |
-| Icon_Information | &#xE946; | Information |
-| Icon_Warning | &#xE7BA; | Warning |
-| Icon_Error | &#xEA39; | Error |
-| Icon_Browse | &#xED25; | Browse |
-| Icon_CreateMod | &#xE713; | Create Mod |
-
-#### Unified Controls Across All Themes
-
-| Control | Classic | Dark | Light |
-|---------|---------|------|-------|
-| CheckBox | Toggle (Gold) | Toggle (AccentBrush) | Toggle (AccentBrush) |
-| RadioButton | Circle (Gold) | Circle (AccentBrush) | Circle (AccentBrush) |
-| ComboBox | Scale9 original | Fluent custom | Fluent custom |
-
-#### Theme Visibility Fixes
-- Light: AccentButton text forced White, tab icon Opacity adjustment
-- Dark/Light: ComboBoxItem `TextElement.Foreground` approach for selected text visibility
-- Classic: Fluent fallback resources added to Dictionary.xaml
 
 ### Phase 5-5 — Assembly Resolution Restoration
 
 - **`AssemblyVersionMap.cs`** — new shared utility mapping 20 system assemblies to correct Mono 2.0 versions and public key tokens
-- **`CustomAssemblyResolver.cs`** — rewritten with name-based (not `FullName`) matching and Dictionary caching for cross-version compatibility
+- **`CustomAssemblyResolver.cs`** — rewritten with name-based matching and Dictionary caching
 - **`ModLib.cs`** — removed Silverlight hardcoding, replaced with `AssemblyVersionMap.RemapAllReferences()`
 - **`Game.cs`** — replaced `@HOTFIX` loop with `RemapAllReferences()` + `RemoveDuplicateReferences()`
-- **`ModProject.cs`** — updated with v3.5→v4.8 template, `UpgradeProjectFile()` method, system assembly filtering
-- **`MonoHelper.cs`** — replaced `Console.WriteLine` debug calls with `Debug.Log`
-- Fixed `CS0723` build error: `ModAPI.Version` shadowing `System.Version` resolved by full qualification
+- **`ModProject.cs`** — updated with v3.5→v4.8 template, `UpgradeProjectFile()`, system assembly filtering
+- Fixed `CS0723` build error: `ModAPI.Version` shadowing `System.Version`
 
 ### Phase 5-6 — C# 7.3 Mod Development Support
 
 - **`BaseModLib.csproj`**: `.NET 3.5` permanently fixed + `<LangVersion>7.3</LangVersion>` added
-- **`ModProject.cs`**: `modModule.RuntimeVersion = "v2.0.50727"` added after `RemapAllReferences()` to patch mod DLL PE headers
+- **`ModProject.cs`**: `modModule.RuntimeVersion = "v2.0.50727"` added after `RemapAllReferences()`
 - **`Game.cs`**: polyfill DLL auto-deployment to `TheForest_Data/Managed/` during Apply
 - **`BaseModLib.csproj` PostBuild**: polyfill DLLs auto-copied from `libs/polyfills/` to ModAPI libs folder on build
-- Polyfill DLLs added: `AsyncBridge.dll`, `System.Threading.dll`
-- Confirmed working: pattern matching, string interpolation, `out` variable inline, `async`/`await`
-- Confirmed unsupported: `ValueTuple` tuples (Mono 2.0 `mscorlib` limitation, no workaround)
+
+### Phase 5-6B — Black Screen Fix & Polyfill Pipeline Finalization
+
+- **Black screen resolved**: assembly remapping pipeline confirmed working end-to-end in real gameplay
+- **`Portable.System.ValueTuple.dll` removed**: Mono 2.0 `mscorlib` ABI makes tuple polyfill impossible — definitive architectural conclusion
+- **`System.Threading.dll` filename corrected**: was incorrectly named `System.Threading.Tasks.dll`
+- **`Game.cs` copy path bug fixed**: destination now uses `Path.GetFileName()` for flat copy into `Managed/`
+- **C# 7.3 in-game verification completed**: pattern matching, string interpolation, `out` variable inline all confirmed via `TEST_MOD.log`
 
 ---
 
@@ -248,6 +222,7 @@ These are sourced from `libs/polyfills/` and copied automatically by `Game.cs` d
 
 | Version | Date | Summary |
 |---|---|---|
+| v2.0.9586 | 2026-03-31 | Black screen fix confirmed, polyfill pipeline finalized, ValueTuple removed, filename/path bugs fixed, C# 7.3 in-game verified |
 | v2.0.9561 | 2026-03-06 | C# 7.3 mod dev support, PE header patching, polyfill pipeline, assembly resolution restoration |
 | v2.0.9552 | 2026-02-25 | Downloads tab, icon modernization, theme unification, 13-language support |
 | v2.0.9500 | — | Theme system (Classic/Light/Dark), Fluent Design UI, SubWindow system |
@@ -302,12 +277,14 @@ BaseModLib/
 
 ## Build Requirements
 
-- **Visual Studio 2022**
-- **.NET Framework 4.8** SDK
-- **.NET Framework 3.5** SDK (for BaseModLib)
-- **ModernWpf 0.9.6** (NuGet)
-- **AsyncBridge 0.3.1** (NuGet — `libs/polyfills/`)
-- **TaskParallelLibrary 1.0.2856** (NuGet — `libs/polyfills/`)
+| Requirement | Version | Notes |
+|---|---|---|
+| Visual Studio | 2022 | |
+| .NET Framework SDK | 4.8 | For ModAPI projects |
+| .NET Framework SDK | 3.5 | For BaseModLib only |
+| ModernWpf | 0.9.6 | NuGet |
+| AsyncBridge | 0.3.1 | NuGet — place in `libs/polyfills/` |
+| TaskParallelLibrary | 1.0.2856 | NuGet — `System.Threading.dll` in `libs/polyfills/` |
 
 ---
 
