@@ -1,18 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](../ko/README.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](../de/README.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](../es/README.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](../fr/README.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](../ru/README.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](../it/README.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](../jp/README.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](../pt/README.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](../vi/README.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](../zh-CN/README.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](../zh-TW/README.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9552 - 20260225
+# ModAPI(v1) v2.0.9586 - 20260331
 
 **Narzędzie do Zarządzania Modami The Forest — Edycja Ulepszona**
 
@@ -23,143 +23,86 @@
 
 ## Przegląd
 
-ModAPI to aplikacja desktopowa do zarządzania modami do The Forest. Ta ulepszona edycja zawiera migrację na .NET Framework 4.8, interfejs Windows 11 Fluent Design, system 3 motywów, rozszerzone wsparcie wielojęzyczne oraz pełną implementację karty Pobieranie.
+ModAPI to aplikacja desktopowa do zarządzania modami do The Forest. Ta ulepszona edycja zawiera migrację na .NET Framework 4.8, interfejs Windows 11 Fluent Design, system 3 motywów, rozszerzone wsparcie wielojęzyczne, pełną implementację karty Pobieranie oraz wsparcie dla tworzenia modów w C# 7.3.
 
 ---
 
-## Kluczowe Zmiany
+## Co zmieniło się w v2.0.9586
 
-### Faza 1 — Aktualizacja .NET Framework 4.8
+| # | Kategoria | Problem | Rozwiązanie |
+|---|---|---|---|
+| 1 | **Krytyczne** | Czarny ekran w menu głównym po zastosowaniu modów | Naprawione — pipeline przemapowania assembly poprawnie łata nagłówki PE i tabele referencji |
+| 2 | **Polyfill** | `Portable.System.ValueTuple.dll` dołączony, ale niedziałający | Całkowicie usunięty — `mscorlib` Mono 2.0 generuje IL z bezpośrednią referencją do `ValueTuple`; żaden polyfill nie może tego zastąpić |
+| 3 | **Polyfill** | Błędna nazwa pliku: `System.Threading.Tasks.dll` | Poprawiono na `System.Threading.dll` — rzeczywista nazwa pliku z NuGet `TaskParallelLibrary 1.0.2856` |
+| 4 | **Polyfill** | Bug ścieżki kopiowania w `Game.cs`: pliki kopiowane do `Managed\polyfills\` | Naprawione przez `Path.GetFileName()` dla płaskiego kopiowania do `Managed\` |
+| 5 | **Build** | Target PostBuild bez auto-kopiowania polyfilli | `BaseModLib.csproj` PostBuild teraz automatycznie kopiuje `AsyncBridge.dll` i `System.Threading.dll` |
+| 6 | **C# 7.3** | Próba wsparcia krotki (`ValueTuple`) zakończona niepowodzeniem | Definitywnie usunięte — krotki to architektoniczne ograniczenie na Mono 2.0 |
+| 7 | **C# 7.3** | Weryfikacja w grze pozostałych funkcji C# 7.3 | Potwierdzone: dopasowywanie wzorców, interpolacja ciągów, zmienna `out` inline |
 
-- Migracja wszystkich projektów (5) z `.NET Framework 4.5` → `4.8`
-- Aktualizacja `TargetFrameworkVersion`, `App.config`, `packages.config` we wszystkich projektach
-- Ujednolicona wersja assembly
+### Finalna Macierz Funkcji C# 7.3
 
-### Faza 2 — Środowisko Build i Podstawy Fluent Design
-
-- Wprowadzenie pakietu NuGet **ModernWpf 0.9.6**
-- Utworzenie **FluentStyles.xaml** — warstwa nadpisań Windows 11 Fluent Design
-  - Paleta kolorów Fluent, typografia, przyciski, karty, combobox, style pasków przewijania
-  - Szablony Window, SubWindow, SplashScreen
-- Kompilacja **DLL stub UnityEngine**
-  - Dodano brakujące typy: `WWW`, `Event`, `TextEditor`, `Physics` itp.
-- Poprawiono referencje zależności i potwierdzono pomyślny build
-
-### Faza 3 — Przeprojektowanie UI i System Motywów
-
-#### Przeprojektowanie Fluent UI
-- Kompletna restrukturyzacja **MainWindow.xaml**
-  - Układ, kolory i typografia oparte na Fluent Design
-  - Przeprojektowane kontrolki kart, pasek stanu, przyciski paska tytułu
-- Poprawki uruchomieniowe: zamrożenie SplashScreen, przełączanie kart, stany ikon, przeciąganie okna
-
-#### System 3 Motywów
-
-| Motyw | Plik Stylu | Opis |
-|-------|-----------|------|
-| Klasyczny | Tylko Dictionary.xaml | Oryginalny design ModAPI (tło teksturowe) |
-| Jasny | FluentStylesLight.xaml | Jasny ton + niebieski akcent |
-| Ciemny | FluentStyles.xaml | Ciemny ton + niebieski akcent (domyślny) |
-
-- Dodano **ComboBox wyboru motywu** w karcie Ustawienia
-- Zmiana motywu uruchamia **okno potwierdzenia** → **automatyczny restart**
-- Ustawienie motywu zapisywane/wczytywane przez plik `theme.cfg`
-
-#### Przeciąganie Okna / SubWindows / Hiperłącza
-- Zdarzenie `MouseLeftButtonDown` na Root Grid do bezpośredniej obsługi przeciągania
-- Okna dialogowe ThemeConfirm, ThemeRestartNotice, NoProjectWarning, DeleteModConfirm
-- Kolory linków specyficzne dla motywu: Ciemny/Klasyczny (`#FFD700`), Jasny (`#0078D4`)
-
-### Faza 4 — Czyszczenie Kodu i Usuwanie Starych Elementów
-
-- Usunięto system logowania (serwer niedziałający)
-- Zmodernizowano mechanizm aktualizacji
-- Wyczyszczono nieużywany kod
-- Poprawiono UI SubWindow (okna dialogowe ścieżki gry itp.)
-
-### Faza 5 — Rozszerzenie Wsparcia Wielojęzycznego (13 Języków)
-
-| Język | Plik | Język | Plik |
-|-------|------|-------|------|
-| Koreański | Language.KR.xaml | Włoski | Language.IT.xaml |
-| Angielski | Language.EN.xaml | Japoński | Language.JA.xaml |
-| Niemiecki | Language.DE.xaml | Portugalski | Language.PT.xaml |
-| Hiszpański | Language.ES.xaml | Wietnamski | Language.VI.xaml |
-| Francuski | Language.FR.xaml | Chiński (Uproszczony) | Language.ZH.xaml |
-| Polski | Language.PL.xaml | Chiński (Tradycyjny) | Language.ZH-TW.xaml |
-| Rosyjski | Language.RU.xaml | | |
-
-### Faza 5-1 — Karta Pobierania i Uzupełnienie Motywów
-
-#### Karta Pobierania
-- Ładowanie listy modów z 3 źródeł (`mods.json`, `versions.xml`, parsowanie HTML)
-- Funkcja wyszukiwania (filtrowanie po nazwie/opisie/autorze moda)
-- **Filtr gry** (Wszystkie / The Forest / Serwer Dedykowany / VR)
-- **Filtr kategorii** (Wszystkie / Poprawki błędów / Balansowanie / Cheaty itp. — 12 kategorii)
-- UI panelu podzielonego do wyboru wersji
-- Bezpośrednie pobieranie plików `.mod` → instalacja w folderze gry
-- Sortowanie kolumn (kliknięcie na nazwę/kategorię/autora) i zmiana rozmiaru
-- Usuwanie modów (czyszczenie DLL + plików tymczasowych)
-
-#### Modernizacja Ikon (Wszystkie Motywy)
-- Wszystkie ikony PNG przycisków → ikony czcionki **Segoe MDL2 Assets**
-- Zastosowane w MainWindow.xaml + 14 plikach SubWindow
-- Ikony czcionki dziedziczą kolor pierwszego planu, zapewniając widoczność we wszystkich motywach
-
-| Oryginalne PNG | Ikona Czcionki | Użycie |
+| Funkcja | Status | Uwagi |
 |---|---|---|
-| Icon_Add | &#xE710; / &#xE768; | Dodaj / Uruchom Grę |
-| Icon_Delete | &#xE74D; | Usuń |
-| Icon_Refresh | &#xE72C; | Odśwież |
-| Icon_Download | &#xE896; | Pobierz |
-| Icon_Continue/Accept | &#xE8FB; | Potwierdź/Kontynuuj |
-| Icon_Decline | &#xE711; | Anuluj/Zamknij |
-| Icon_Information | &#xE946; | Informacja |
-| Icon_Warning | &#xE7BA; | Ostrzeżenie |
-| Icon_Error | &#xEA39; | Błąd |
-| Icon_Browse | &#xED25; | Przeglądaj |
-| Icon_CreateMod | &#xE713; | Utwórz Mod |
+| Dopasowywanie wzorców (`is`, `switch`) | ✅ Potwierdzone | Przetestowane w grze via `TEST_MOD.log` |
+| Interpolacja ciągów (`$""`) | ✅ Potwierdzone | Przetestowane w grze via `TEST_MOD.log` |
+| Zmienna `out` inline | ✅ Potwierdzone | Przetestowane w grze via `TEST_MOD.log` |
+| Składowe z ciałem wyrażenia (`=>`) | ✅ | Obsługiwane przez kompilator |
+| Funkcje lokalne | ✅ | Obsługiwane przez kompilator |
+| `nameof` | ✅ | Obsługiwane przez kompilator |
+| Operator warunkowy null (`?.`, `??`) | ✅ | Obsługiwane przez kompilator |
+| `async`/`await` | ✅ | Przez polyfille AsyncBridge + System.Threading |
+| Krotki (`ValueTuple`) | ❌ Twarde ograniczenie | ABI mscorlib Mono 2.0 — bez obejścia |
 
-#### Ujednolicone Kontrolki we Wszystkich Motywach
+### Finalna Konfiguracja Polyfilli
 
-| Kontrolka | Klasyczny | Ciemny | Jasny |
-|-----------|-----------|--------|-------|
-| Pole wyboru | Przełącznik (Złoty) | Przełącznik (AccentBrush) | Przełącznik (AccentBrush) |
-| Przycisk opcji | Koło (Złoty) | Koło (AccentBrush) | Koło (AccentBrush) |
-| ComboBox | Scale9 oryginał | Fluent niestandardowy | Fluent niestandardowy |
-
-#### Poprawki Widoczności Motywów
-- Jasny: tekst AccentButton wymuszony na Biały, dostosowanie Opacity ikon kart
-- Ciemny/Jasny: podejście `TextElement.Foreground` ComboBoxItem dla widoczności zaznaczonego tekstu
-- Klasyczny: zasoby zapasowe Fluent dodane do Dictionary.xaml
+| DLL | Pakiet NuGet | Cel | Przeznaczenie |
+|---|---|---|---|
+| `AsyncBridge.dll` | AsyncBridge 0.3.1 | `libs/polyfills/` → `Managed/` | `async`/`await` dla .NET 3.5 |
+| `System.Threading.dll` | TaskParallelLibrary 1.0.2856 | `libs/polyfills/` → `Managed/` | Zależność AsyncBridge |
+| ~~`Portable.System.ValueTuple.dll`~~ | ~~Usunięto~~ | ~~Usunięto~~ | ~~Niedziałające na Mono 2.0~~ |
 
 ---
 
-## Struktura Plików
+## Architektura Środowiska Wykonawczego
+
+| Komponent | Cel | Środowisko | Powód |
+|---|---|---|---|
+| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | Aplikacja desktopowa |
+| `BaseModLib.dll` | .NET Framework 3.5 | Gra Mono 2.0 | **Na stałe zablokowane** |
+| DLL modów | .NET Framework 4.8 | Gra Mono 2.0 (z łatką) | Nagłówek PE łatany przy Apply |
 
 ```
-ModAPI/
-├── App.xaml / App.xaml.cs          # Ładowanie/zapisywanie/stosowanie motywu
-├── Dictionary.xaml                  # Oryginalne style + zasoby przełącznik/radio/zapasowe
-├── FluentStyles.xaml                # Ciemny motyw + ComboBox/CheckBox/RadioButton
-├── FluentStylesLight.xaml           # Jasny motyw + ComboBox/CheckBox/RadioButton
-├── Windows/
-│   ├── MainWindow.xaml / .cs        # Główne UI + karta pobierania + wybór motywu
-│   └── SubWindows/                  # 16 SubWindows (wszystkie z ikonami czcionki)
-├── resources/
-│   ├── langs/                       # 13 plików językowych
-│   └── textures/Icons/flags/        # Ikony flag (16x11 PNG)
-└── libs/
-    └── UnityEngine.dll              # DLL stub
+Build v3.5  →  Nagłówek PE: CLR Runtime v2.0.50727  ←  Mono 2.0 akceptuje  ✅
+Build v4.8  →  Nagłówek PE: CLR Runtime v4.0.30319  ←  Mono 2.0 odmawia    ❌
 ```
+
+---
+
+## Historia Wersji
+
+| Wersja | Data | Podsumowanie |
+|---|---|---|
+| v2.0.9586 | 2026-03-31 | Czarny ekran naprawiony, pipeline polyfill sfinalizowany, ValueTuple usunięty, bugi naprawione, C# 7.3 zweryfikowany |
+| v2.0.9561 | 2026-03-06 | Wsparcie modów C# 7.3, łatanie nagłówka PE, pipeline polyfill |
+| v2.0.9552 | 2026-02-25 | Karta pobierania, ikony, 13 języków |
+| v2.0.9500 | — | System motywów, Fluent Design UI |
+| v2.0.9400 | — | Czyszczenie kodu |
+| v2.0.9300 | — | Środowisko build, DLL stub UnityEngine |
+| v2.0.9200 | — | Migracja .NET Framework 4.8 |
+| v1.x | — | Oryginalne wydanie FluffyFish |
 
 ---
 
 ## Wymagania Build
 
-- **Visual Studio 2022**
-- **.NET Framework 4.8** SDK
-- **ModernWpf 0.9.6** (NuGet)
+| Wymaganie | Wersja | Uwagi |
+|---|---|---|
+| Visual Studio | 2022 | |
+| .NET Framework SDK | 4.8 | Dla projektów ModAPI |
+| .NET Framework SDK | 3.5 | Tylko dla BaseModLib |
+| ModernWpf | 0.9.6 | NuGet |
+| AsyncBridge | 0.3.1 | NuGet — w `libs/polyfills/` |
+| TaskParallelLibrary | 1.0.2856 | NuGet — `System.Threading.dll` w `libs/polyfills/` |
 
 ---
 

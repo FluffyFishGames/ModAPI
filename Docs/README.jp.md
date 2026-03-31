@@ -1,18 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](../ko/README.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](../de/README.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](../es/README.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](../fr/README.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](../pl/README.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](../ru/README.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](../it/README.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](../pt/README.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](../vi/README.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](../zh-CN/README.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](../zh-TW/README.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9552 - 20260225
+# ModAPI(v1) v2.0.9586 - 20260331
 
 **The Forest Mod管理ツール — アップグレード版**
 
@@ -23,143 +23,86 @@
 
 ## 概要
 
-ModAPIはThe ForestのMod管理用デスクトップアプリケーションです。このアップグレード版には、.NET Framework 4.8への移行、Windows 11 Fluent Design UI、3テーマシステム、多言語サポートの強化、およびダウンロードタブの完全な実装が含まれています。
+ModAPIはThe ForestのMod管理用デスクトップアプリケーションです。このアップグレード版には、.NET Framework 4.8への移行、Windows 11 Fluent Design UI、3テーマシステム、多言語サポートの強化、ダウンロードタブの完全な実装、およびC# 7.3 Mod開発サポートが含まれています。
 
 ---
 
-## 主な変更点
+## v2.0.9586 での変更点
 
-### フェーズ 1 — .NET Framework 4.8 アップグレード
+| # | カテゴリ | 問題 | 解決策 |
+|---|---|---|---|
+| 1 | **重大** | Mod適用後のゲームメインメニューでのブラックスクリーン | 解決済み — アセンブリリマッピングパイプラインがPEヘッダーと参照テーブルを正しくパッチ |
+| 2 | **ポリフィル** | `Portable.System.ValueTuple.dll` 含まれていたが動作不可 | 完全削除 — Mono 2.0 の `mscorlib` が `ValueTuple` を直接参照するILを生成するため、ポリフィルで上書き不可 |
+| 3 | **ポリフィル** | 誤ったファイル名: `System.Threading.Tasks.dll` | `System.Threading.dll` に修正 — `TaskParallelLibrary 1.0.2856` NuGet の実際のファイル名 |
+| 4 | **ポリフィル** | `Game.cs` コピーパスのバグ: `Managed\polyfills\` にコピーされた | `Path.GetFileName()` で `Managed\` へのフラットコピーに修正 |
+| 5 | **ビルド** | PostBuildターゲットにポリフィル自動コピーなし | `BaseModLib.csproj` PostBuildが `AsyncBridge.dll` と `System.Threading.dll` を自動コピー |
+| 6 | **C# 7.3** | タプル(`ValueTuple`)サポートを試みたが失敗 | 完全削除 — Mono 2.0ではタプルはアーキテクチャ上の限界 |
+| 7 | **C# 7.3** | 残りのC# 7.3機能のインゲーム検証 | 確認済み: パターンマッチング、文字列補間、`out`変数インライン |
 
-- すべてのプロジェクト（5つ）を`.NET Framework 4.5` → `4.8`に移行
-- すべてのプロジェクトで`TargetFrameworkVersion`、`App.config`、`packages.config`を更新
-- アセンブリバージョンの統一
+### C# 7.3 最終機能マトリックス
 
-### フェーズ 2 — ビルド環境とFluent Design基盤
-
-- **ModernWpf 0.9.6** NuGetパッケージの導入
-- **FluentStyles.xaml**の作成 — Windows 11 Fluent Designオーバーライドレイヤー
-  - Fluentカラーパレット、タイポグラフィ、ボタン、タブ、コンボボックス、スクロールバースタイル
-  - Window、SubWindow、SplashScreenテンプレート
-- **UnityEngineスタブDLL**のコンパイル
-  - 不足していた型を追加: `WWW`、`Event`、`TextEditor`、`Physics`など
-- 依存関係参照を修正し、ビルド成功を確認
-
-### フェーズ 3 — UIリデザインとテーマシステム
-
-#### Fluent UIリデザイン
-- **MainWindow.xaml**の完全な再構成
-  - Fluent Designベースのレイアウト、カラー、タイポグラフィ
-  - タブコントロール、ステータスバー、キャプションボタンの再設計
-- ランタイム修正: SplashScreenフリーズ、タブ切り替え、アイコン状態、ウィンドウドラッグ
-
-#### 3テーマシステム
-
-| テーマ | スタイルファイル | 説明 |
-|--------|----------------|------|
-| クラシック | Dictionary.xamlのみ | オリジナルModAPIデザイン（テクスチャ背景） |
-| ライト | FluentStylesLight.xaml | 明るいトーン + ブルーアクセント |
-| ダーク | FluentStyles.xaml | 暗いトーン + ブルーアクセント（デフォルト） |
-
-- 設定タブに**テーマ選択コンボボックス**を追加
-- テーマ変更で**確認ダイアログ** → **自動再起動**がトリガー
-- `theme.cfg`ファイルによるテーマ設定の保存/読み込み
-
-#### ウィンドウドラッグ / サブウィンドウ / ハイパーリンク
-- Root Grid `MouseLeftButtonDown`イベントによる直接ドラッグ処理
-- ThemeConfirm、ThemeRestartNotice、NoProjectWarning、DeleteModConfirmダイアログ
-- テーマ別リンクカラー: ダーク/クラシック (`#FFD700`)、ライト (`#0078D4`)
-
-### フェーズ 4 — コードクリーンアップとレガシー除去
-
-- ログインシステムの削除（サーバー運用終了）
-- 更新メカニズムの近代化
-- 未使用コードの整理
-- SubWindow UIの修正（ゲームパスダイアログなど）
-
-### フェーズ 5 — 多言語サポート拡張（13言語）
-
-| 言語 | ファイル | 言語 | ファイル |
-|------|---------|------|---------|
-| 韓国語 | Language.KR.xaml | イタリア語 | Language.IT.xaml |
-| 英語 | Language.EN.xaml | 日本語 | Language.JA.xaml |
-| ドイツ語 | Language.DE.xaml | ポルトガル語 | Language.PT.xaml |
-| スペイン語 | Language.ES.xaml | ベトナム語 | Language.VI.xaml |
-| フランス語 | Language.FR.xaml | 中国語（簡体字） | Language.ZH.xaml |
-| ポーランド語 | Language.PL.xaml | 中国語（繁体字） | Language.ZH-TW.xaml |
-| ロシア語 | Language.RU.xaml | | |
-
-### フェーズ 5-1 — ダウンロードタブとテーマ完成
-
-#### ダウンロードタブ
-- 3つのソースからModリストを読み込み（`mods.json`、`versions.xml`、HTMLパース）
-- 検索機能（Mod名/説明/作者でフィルタリング）
-- **ゲームフィルター**（すべて / The Forest / 専用サーバー / VR）
-- **カテゴリフィルター**（すべて / バグ修正 / バランス調整 / チートなど — 12カテゴリ）
-- バージョン選択スプリットパネルUI
-- `.mod`ファイルの直接ダウンロード → ゲームフォルダへのインストール
-- カラムソート（名前/カテゴリ/作者クリック）とリサイズ
-- Mod削除（DLL + ステージングファイルのクリーンアップ）
-
-#### アイコンの近代化（全テーマ）
-- すべてのボタンPNGアイコン → **Segoe MDL2 Assets**フォントアイコン
-- MainWindow.xaml + 14のSubWindowファイルに適用
-- フォントアイコンがForegroundカラーを継承し、すべてのテーマで視認性を確保
-
-| オリジナルPNG | フォントアイコン | 用途 |
+| 機能 | 状態 | 備考 |
 |---|---|---|
-| Icon_Add | &#xE710; / &#xE768; | 追加 / ゲーム開始 |
-| Icon_Delete | &#xE74D; | 削除 |
-| Icon_Refresh | &#xE72C; | 更新 |
-| Icon_Download | &#xE896; | ダウンロード |
-| Icon_Continue/Accept | &#xE8FB; | 確認/続行 |
-| Icon_Decline | &#xE711; | キャンセル/閉じる |
-| Icon_Information | &#xE946; | 情報 |
-| Icon_Warning | &#xE7BA; | 警告 |
-| Icon_Error | &#xEA39; | エラー |
-| Icon_Browse | &#xED25; | 参照 |
-| Icon_CreateMod | &#xE713; | Mod作成 |
+| パターンマッチング (`is`, `switch`) | ✅ 確認済み | `TEST_MOD.log` でインゲームテスト |
+| 文字列補間 (`$""`) | ✅ 確認済み | `TEST_MOD.log` でインゲームテスト |
+| `out`変数インライン | ✅ 確認済み | `TEST_MOD.log` でインゲームテスト |
+| 式本体メンバー (`=>`) | ✅ | コンパイラー処理 |
+| ローカル関数 | ✅ | コンパイラー処理 |
+| `nameof` | ✅ | コンパイラー処理 |
+| Null条件演算子 (`?.`, `??`) | ✅ | コンパイラー処理 |
+| `async`/`await` | ✅ | AsyncBridge + System.Threadingポリフィル経由 |
+| タプル (`ValueTuple`) | ❌ ハードリミット | Mono 2.0 mscorlib ABI — 回避不可 |
 
-#### 全テーマ統一コントロール
+### 最終ポリフィル設定
 
-| コントロール | クラシック | ダーク | ライト |
-|-------------|----------|--------|--------|
-| チェックボックス | トグル（ゴールド） | トグル（AccentBrush） | トグル（AccentBrush） |
-| ラジオボタン | 円（ゴールド） | 円（AccentBrush） | 円（AccentBrush） |
-| コンボボックス | Scale9オリジナル | Fluentカスタム | Fluentカスタム |
-
-#### テーマ視認性修正
-- ライト: AccentButtonテキストを強制ホワイト、タブアイコンのOpacity調整
-- ダーク/ライト: ComboBoxItem `TextElement.Foreground`アプローチで選択テキストの視認性確保
-- クラシック: Dictionary.xamlにFluentフォールバックリソースを追加
+| DLL | NuGetパッケージ | 宛先 | 目的 |
+|---|---|---|---|
+| `AsyncBridge.dll` | AsyncBridge 0.3.1 | `libs/polyfills/` → `Managed/` | .NET 3.5の`async`/`await` |
+| `System.Threading.dll` | TaskParallelLibrary 1.0.2856 | `libs/polyfills/` → `Managed/` | AsyncBridge依存関係 |
+| ~~`Portable.System.ValueTuple.dll`~~ | ~~削除済み~~ | ~~削除済み~~ | ~~Mono 2.0で動作不可~~ |
 
 ---
 
-## ファイル構造
+## ランタイムアーキテクチャ
+
+| コンポーネント | ターゲット | ランタイム | 理由 |
+|---|---|---|---|
+| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | デスクトップApp |
+| `BaseModLib.dll` | .NET Framework 3.5 | ゲーム Mono 2.0 | **永久固定** |
+| Mod DLL | .NET Framework 4.8 | ゲーム Mono 2.0（パッチ済み） | Apply時にPEヘッダーをパッチ |
 
 ```
-ModAPI/
-├── App.xaml / App.xaml.cs          # テーマの読み込み/保存/適用
-├── Dictionary.xaml                  # オリジナルスタイル + トグル/ラジオ/フォールバックリソース
-├── FluentStyles.xaml                # ダークテーマ + ComboBox/CheckBox/RadioButton
-├── FluentStylesLight.xaml           # ライトテーマ + ComboBox/CheckBox/RadioButton
-├── Windows/
-│   ├── MainWindow.xaml / .cs        # メインUI + ダウンロードタブ + テーマセレクター
-│   └── SubWindows/                  # 16個のSubWindow（すべてフォントアイコン付き）
-├── resources/
-│   ├── langs/                       # 13言語ファイル
-│   └── textures/Icons/flags/        # 国旗アイコン（16x11 PNG）
-└── libs/
-    └── UnityEngine.dll              # スタブDLL
+v3.5ビルド  →  PEヘッダー: CLR Runtime v2.0.50727  ←  Mono 2.0 受け入れ  ✅
+v4.8ビルド  →  PEヘッダー: CLR Runtime v4.0.30319  ←  Mono 2.0 拒否     ❌
 ```
+
+---
+
+## バージョン履歴
+
+| バージョン | 日付 | 概要 |
+|---|---|---|
+| v2.0.9586 | 2026-03-31 | ブラックスクリーン修正確認、ポリフィルパイプライン完成、ValueTuple削除、バグ修正、C# 7.3インゲーム検証 |
+| v2.0.9561 | 2026-03-06 | C# 7.3 Mod開発サポート、PEヘッダーパッチ、ポリフィルパイプライン |
+| v2.0.9552 | 2026-02-25 | ダウンロードタブ、アイコン近代化、13言語 |
+| v2.0.9500 | — | テーマシステム、Fluent Design UI |
+| v2.0.9400 | — | コードクリーンアップ |
+| v2.0.9300 | — | ビルド環境、UnityEngineスタブDLL |
+| v2.0.9200 | — | .NET Framework 4.8移行 |
+| v1.x | — | オリジナルFluffyFishリリース |
 
 ---
 
 ## ビルド要件
 
-- **Visual Studio 2022**
-- **.NET Framework 4.8** SDK
-- **ModernWpf 0.9.6** (NuGet)
+| 要件 | バージョン | 備考 |
+|---|---|---|
+| Visual Studio | 2022 | |
+| .NET Framework SDK | 4.8 | ModAPIプロジェクト用 |
+| .NET Framework SDK | 3.5 | BaseModLibのみ |
+| ModernWpf | 0.9.6 | NuGet |
+| AsyncBridge | 0.3.1 | NuGet — `libs/polyfills/` に配置 |
+| TaskParallelLibrary | 1.0.2856 | NuGet — `System.Threading.dll` を `libs/polyfills/` に |
 
 ---
 

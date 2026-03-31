@@ -1,18 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](../ko/README.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](../de/README.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](../es/README.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](../fr/README.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](../pl/README.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](../ru/README.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](../it/README.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](../jp/README.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](../pt/README.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](../vi/README.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](../zh-TW/README.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9552 - 20260225
+# ModAPI(v1) v2.0.9586 - 20260331
 
 **The Forest Mod管理工具 — 升级版**
 
@@ -23,143 +23,86 @@
 
 ## 概述
 
-ModAPI是一款用于管理The Forest游戏Mod的桌面应用程序。此升级版包括.NET Framework 4.8迁移、Windows 11 Fluent Design界面、3主题系统、增强的多语言支持以及完整的下载选项卡实现。
+ModAPI是一款用于管理The Forest游戏Mod的桌面应用程序。此升级版包括.NET Framework 4.8迁移、Windows 11 Fluent Design界面、3主题系统、增强的多语言支持、完整的下载选项卡实现以及C# 7.3 Mod开发支持。
 
 ---
 
-## 主要变更
+## v2.0.9586 的变更内容
 
-### 第1阶段 — .NET Framework 4.8 升级
+| # | 类别 | 问题 | 解决方案 |
+|---|---|---|---|
+| 1 | **严重** | 应用Mod后游戏主菜单出现黑屏 | 已修复 — 程序集重映射管道正确修补PE头和引用表 |
+| 2 | **多填** | `Portable.System.ValueTuple.dll` 包含但无法正常工作 | 完全移除 — Mono 2.0的`mscorlib`生成直接引用`ValueTuple`的IL；任何多填均无法覆盖 |
+| 3 | **多填** | 文件名错误：`System.Threading.Tasks.dll` | 更正为`System.Threading.dll` — `TaskParallelLibrary 1.0.2856` NuGet的实际文件名 |
+| 4 | **多填** | `Game.cs`复制路径错误：文件被复制到`Managed\polyfills\` | 使用`Path.GetFileName()`修复为平铺复制到`Managed\` |
+| 5 | **构建** | PostBuild目标缺少多填自动复制 | `BaseModLib.csproj` PostBuild现在自动复制`AsyncBridge.dll`和`System.Threading.dll` |
+| 6 | **C# 7.3** | 尝试支持元组(`ValueTuple`)失败 | 从所有配置中完全移除 — 元组在Mono 2.0上是架构硬限制 |
+| 7 | **C# 7.3** | 游戏内验证剩余C# 7.3功能 | 已确认：模式匹配、字符串插值、`out`变量内联 |
 
-- 将所有项目（5个）从`.NET Framework 4.5` → `4.8`迁移
-- 更新所有项目的`TargetFrameworkVersion`、`App.config`、`packages.config`
-- 统一程序集版本
+### C# 7.3最终功能矩阵
 
-### 第2阶段 — 构建环境与Fluent Design基础
-
-- 引入**ModernWpf 0.9.6** NuGet包
-- 创建**FluentStyles.xaml** — Windows 11 Fluent Design覆盖层
-  - Fluent调色板、排版、按钮、选项卡、组合框、滚动条样式
-  - Window、SubWindow、SplashScreen模板
-- 编译**UnityEngine存根DLL**
-  - 添加缺失的类型：`WWW`、`Event`、`TextEditor`、`Physics`等
-- 修复依赖引用并确认成功构建
-
-### 第3阶段 — UI重设计与主题系统
-
-#### Fluent UI重设计
-- 完全重构**MainWindow.xaml**
-  - 基于Fluent Design的布局、颜色、排版
-  - 重新设计选项卡控件、状态栏、标题按钮
-- 运行时修复：SplashScreen冻结、选项卡切换、图标状态、窗口拖动
-
-#### 3主题系统
-
-| 主题 | 样式文件 | 描述 |
-|------|---------|------|
-| 经典 | 仅Dictionary.xaml | 原版ModAPI设计（纹理背景） |
-| 亮色 | FluentStylesLight.xaml | 明亮色调 + 蓝色强调 |
-| 暗色 | FluentStyles.xaml | 深色色调 + 蓝色强调（默认） |
-
-- 在设置选项卡中添加**主题选择组合框**
-- 主题更改触发**确认对话框** → **自动重启**
-- 通过`theme.cfg`文件保存/加载主题设置
-
-#### 窗口拖动 / 子窗口 / 超链接
-- Root Grid `MouseLeftButtonDown`事件直接处理拖动
-- ThemeConfirm、ThemeRestartNotice、NoProjectWarning、DeleteModConfirm对话框
-- 主题特定链接颜色：暗色/经典（`#FFD700`），亮色（`#0078D4`）
-
-### 第4阶段 — 代码清理与遗留功能移除
-
-- 移除登录系统（服务器已停止运营）
-- 现代化更新机制
-- 清理未使用的代码
-- 修复子窗口UI（游戏路径对话框等）
-
-### 第5阶段 — 多语言支持扩展（13种语言）
-
-| 语言 | 文件 | 语言 | 文件 |
-|------|------|------|------|
-| 韩语 | Language.KR.xaml | 意大利语 | Language.IT.xaml |
-| 英语 | Language.EN.xaml | 日语 | Language.JA.xaml |
-| 德语 | Language.DE.xaml | 葡萄牙语 | Language.PT.xaml |
-| 西班牙语 | Language.ES.xaml | 越南语 | Language.VI.xaml |
-| 法语 | Language.FR.xaml | 中文（简体） | Language.ZH.xaml |
-| 波兰语 | Language.PL.xaml | 中文（繁体） | Language.ZH-TW.xaml |
-| 俄语 | Language.RU.xaml | | |
-
-### 第5-1阶段 — 下载选项卡与主题完善
-
-#### 下载选项卡
-- 从3个来源加载Mod列表（`mods.json`、`versions.xml`、HTML解析）
-- 搜索功能（按Mod名称/描述/作者筛选）
-- **游戏筛选**（全部 / The Forest / 专用服务器 / VR）
-- **类别筛选**（全部 / Bug修复 / 平衡性 / 作弊等 — 12个类别）
-- 版本选择分割面板UI
-- 直接下载`.mod`文件 → 安装到游戏文件夹
-- 列排序（点击名称/类别/作者）和调整大小
-- Mod删除（DLL + 暂存文件清理）
-
-#### 图标现代化（所有主题）
-- 所有按钮PNG图标 → **Segoe MDL2 Assets**字体图标
-- 应用于MainWindow.xaml + 14个子窗口文件
-- 字体图标继承前景色，确保在所有主题中可见
-
-| 原始PNG | 字体图标 | 用途 |
+| 功能 | 状态 | 备注 |
 |---|---|---|
-| Icon_Add | &#xE710; / &#xE768; | 添加 / 启动游戏 |
-| Icon_Delete | &#xE74D; | 删除 |
-| Icon_Refresh | &#xE72C; | 刷新 |
-| Icon_Download | &#xE896; | 下载 |
-| Icon_Continue/Accept | &#xE8FB; | 确认/继续 |
-| Icon_Decline | &#xE711; | 取消/关闭 |
-| Icon_Information | &#xE946; | 信息 |
-| Icon_Warning | &#xE7BA; | 警告 |
-| Icon_Error | &#xEA39; | 错误 |
-| Icon_Browse | &#xED25; | 浏览 |
-| Icon_CreateMod | &#xE713; | 创建Mod |
+| 模式匹配（`is`、`switch`） | ✅ 已确认 | 通过`TEST_MOD.log`游戏内测试 |
+| 字符串插值（`$""`） | ✅ 已确认 | 通过`TEST_MOD.log`游戏内测试 |
+| `out`变量内联 | ✅ 已确认 | 通过`TEST_MOD.log`游戏内测试 |
+| 表达式体成员（`=>`） | ✅ | 编译器处理 |
+| 本地函数 | ✅ | 编译器处理 |
+| `nameof` | ✅ | 编译器处理 |
+| Null条件运算符（`?.`、`??`） | ✅ | 编译器处理 |
+| `async`/`await` | ✅ | 通过AsyncBridge + System.Threading多填 |
+| 元组（`ValueTuple`） | ❌ 硬限制 | Mono 2.0 mscorlib ABI — 无法绕过 |
 
-#### 所有主题统一控件
+### 最终多填配置
 
-| 控件 | 经典 | 暗色 | 亮色 |
-|------|------|------|------|
-| 复选框 | 开关（金色） | 开关（AccentBrush） | 开关（AccentBrush） |
-| 单选按钮 | 圆形（金色） | 圆形（AccentBrush） | 圆形（AccentBrush） |
-| 组合框 | Scale9原版 | Fluent自定义 | Fluent自定义 |
-
-#### 主题可见性修复
-- 亮色：AccentButton文本强制白色，选项卡图标不透明度调整
-- 暗色/亮色：ComboBoxItem `TextElement.Foreground`方法确保选中文本可见性
-- 经典：Dictionary.xaml中添加Fluent后备资源
+| DLL | NuGet包 | 目标 | 用途 |
+|---|---|---|---|
+| `AsyncBridge.dll` | AsyncBridge 0.3.1 | `libs/polyfills/` → `Managed/` | .NET 3.5的`async`/`await` |
+| `System.Threading.dll` | TaskParallelLibrary 1.0.2856 | `libs/polyfills/` → `Managed/` | AsyncBridge依赖 |
+| ~~`Portable.System.ValueTuple.dll`~~ | ~~已移除~~ | ~~已移除~~ | ~~在Mono 2.0上不可用~~ |
 
 ---
 
-## 文件结构
+## 运行时架构
+
+| 组件 | 目标 | 运行时 | 原因 |
+|---|---|---|---|
+| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | 桌面应用 |
+| `BaseModLib.dll` | .NET Framework 3.5 | 游戏 Mono 2.0 | **永久固定** |
+| Mod DLL | .NET Framework 4.8 | 游戏 Mono 2.0（已修补） | Apply时修补PE头 |
 
 ```
-ModAPI/
-├── App.xaml / App.xaml.cs          # 主题加载/保存/应用
-├── Dictionary.xaml                  # 原始样式 + 开关/单选/后备资源
-├── FluentStyles.xaml                # 暗色主题 + 组合框/复选框/单选按钮
-├── FluentStylesLight.xaml           # 亮色主题 + 组合框/复选框/单选按钮
-├── Windows/
-│   ├── MainWindow.xaml / .cs        # 主UI + 下载选项卡 + 主题选择器
-│   └── SubWindows/                  # 16个子窗口（全部使用字体图标）
-├── resources/
-│   ├── langs/                       # 13个语言文件
-│   └── textures/Icons/flags/        # 国旗图标（16x11 PNG）
-└── libs/
-    └── UnityEngine.dll              # 存根DLL
+v3.5构建  →  PE头：CLR Runtime v2.0.50727  ←  Mono 2.0 接受  ✅
+v4.8构建  →  PE头：CLR Runtime v4.0.30319  ←  Mono 2.0 拒绝  ❌
 ```
+
+---
+
+## 版本历史
+
+| 版本 | 日期 | 摘要 |
+|---|---|---|
+| v2.0.9586 | 2026-03-31 | 黑屏修复确认，多填管道完成，ValueTuple移除，错误修复，C# 7.3游戏内验证 |
+| v2.0.9561 | 2026-03-06 | C# 7.3 Mod开发支持，PE头修补，多填管道 |
+| v2.0.9552 | 2026-02-25 | 下载选项卡，图标现代化，13语言 |
+| v2.0.9500 | — | 主题系统，Fluent Design UI |
+| v2.0.9400 | — | 代码清理 |
+| v2.0.9300 | — | 构建环境，UnityEngine存根DLL |
+| v2.0.9200 | — | .NET Framework 4.8迁移 |
+| v1.x | — | FluffyFish原始版本 |
 
 ---
 
 ## 构建要求
 
-- **Visual Studio 2022**
-- **.NET Framework 4.8** SDK
-- **ModernWpf 0.9.6** (NuGet)
+| 要求 | 版本 | 备注 |
+|---|---|---|
+| Visual Studio | 2022 | |
+| .NET Framework SDK | 4.8 | 用于ModAPI项目 |
+| .NET Framework SDK | 3.5 | 仅用于BaseModLib |
+| ModernWpf | 0.9.6 | NuGet |
+| AsyncBridge | 0.3.1 | NuGet — 放置于`libs/polyfills/` |
+| TaskParallelLibrary | 1.0.2856 | NuGet — `System.Threading.dll`置于`libs/polyfills/` |
 
 ---
 
