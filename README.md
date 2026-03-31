@@ -220,16 +220,29 @@ Mod DLLs built with .NET 4.8 go through the following pipeline at Apply time:
 
 ## Version History
 
-| Version | Date | Summary |
-|---|---|---|
-| v2.0.9586 | 2026-03-31 | Black screen fix confirmed, polyfill pipeline finalized, ValueTuple removed, filename/path bugs fixed, C# 7.3 in-game verified |
-| v2.0.9561 | 2026-03-06 | C# 7.3 mod dev support, PE header patching, polyfill pipeline, assembly resolution restoration |
-| v2.0.9552 | 2026-02-25 | Downloads tab, icon modernization, theme unification, 13-language support |
-| v2.0.9500 | — | Theme system (Classic/Light/Dark), Fluent Design UI, SubWindow system |
-| v2.0.9400 | — | Code cleanup, login removal, legacy modernization |
-| v2.0.9300 | — | Build environment, UnityEngine stub DLL, ModernWpf integration |
-| v2.0.9200 | — | .NET Framework 4.8 migration |
-| v1.x | — | Original FluffyFish release |
+### v2.0.9586 — 2026-03-31
+Black screen fix confirmed, polyfill pipeline finalized, ValueTuple removed, filename/path bugs fixed, C# 7.3 in-game verified
+
+### v2.0.9561 — 2026-03-06
+C# 7.3 mod dev support, PE header patching, polyfill pipeline, assembly resolution restoration
+
+### v2.0.9552 — 2026-02-25
+Downloads tab, icon modernization, theme unification, 13-language support
+
+### v2.0.9500
+Theme system (Classic/Light/Dark), Fluent Design UI, SubWindow system
+
+### v2.0.9400
+Code cleanup, login removal, legacy modernization
+
+### v2.0.9300
+Build environment, UnityEngine stub DLL, ModernWpf integration
+
+### v2.0.9200
+.NET Framework 4.8 migration
+
+### v1.x
+Original FluffyFish release
 
 ---
 
