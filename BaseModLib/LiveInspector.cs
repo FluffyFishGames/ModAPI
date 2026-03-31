@@ -286,14 +286,14 @@ public class LiveInspector : MonoBehaviour
             {
                 if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
                 {
-                    SelectedTransform = ((GameObject) value).transform;
+                    SelectedTransform = ((GameObject)value).transform;
                 }
             }
             else if (value.GetType().FullName == "UnityEngine.Transform")
             {
                 if (GUI.Button(new Rect(20f, startY + 20f, 270f, 20f), value.ToString(), LabelStyle))
                 {
-                    SelectedTransform = ((Transform) value);
+                    SelectedTransform = ((Transform)value);
                 }
             }
             else

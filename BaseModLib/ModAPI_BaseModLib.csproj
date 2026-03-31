@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BaseModLib</RootNamespace>
     <AssemblyName>BaseModLib</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <LangVersion>7.3</LangVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <MSBuildWarningsAsMessages>MSB3243</MSBuildWarningsAsMessages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,6 +99,16 @@
     <Reference Include="UnityEngine">
       <HintPath>..\libs\UnityEngine.dll</HintPath>
     </Reference>
+    <!-- C# 7.3 polyfills: async/await support for .NET 3.5 -->
+    <!-- Copy these DLLs to libs\polyfills\ from NuGet:                   -->
+    <!--   AsyncBridge (NuGet: AsyncBridge)                               -->
+    <!--   TaskParallelLibrary (NuGet: TaskParallelLibrary)               -->
+    <Reference Include="AsyncBridge">
+      <HintPath>..\libs\polyfills\AsyncBridge.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>..\libs\polyfills\System.Threading.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\AddModname.cs" />
@@ -129,11 +141,25 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <!-- PostBuild: Copy BaseModLib.dll to ModAPI libs folder for all build configurations -->
+  <Target Name="CopyToModAPILibs" AfterTargets="Build">
+    <PropertyGroup>
+      <ModAPILibsPath>$(SolutionDir)bin\$(Configuration)\libs\</ModAPILibsPath>
+      <ModAPIPolyfillsPath>$(SolutionDir)bin\$(Configuration)\libs\polyfills\</ModAPIPolyfillsPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(ModAPILibsPath)" Condition="!Exists('$(ModAPILibsPath)')" />
+    <MakeDir Directories="$(ModAPIPolyfillsPath)" Condition="!Exists('$(ModAPIPolyfillsPath)')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModAPILibsPath)" SkipUnchangedFiles="true" Condition="!$(OutputPath.Contains('libs'))" />
+    <Message Importance="high" Text="BaseModLib.dll copied to $(ModAPILibsPath)" />
+    <!-- Copy C# 7.3 polyfill DLLs to ModAPI libs\polyfills\ so Game.cs can deploy them to Managed\ -->
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\libs\polyfills\AsyncBridge.dll"
+          DestinationFolder="$(ModAPIPolyfillsPath)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(MSBuildProjectDirectory)\..\libs\polyfills\AsyncBridge.dll')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\libs\polyfills\System.Threading.dll"
+          DestinationFolder="$(ModAPIPolyfillsPath)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(MSBuildProjectDirectory)\..\libs\polyfills\System.Threading.dll')" />
+    <Message Importance="high" Text="Polyfill DLLs copied to $(ModAPIPolyfillsPath)" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

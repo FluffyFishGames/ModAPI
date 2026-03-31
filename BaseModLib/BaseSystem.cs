@@ -183,7 +183,7 @@ namespace ModAPI
                             Log.Write("Asset bundle: " + o, "Core");
                             if (o is GUISkin)
                             {
-                                Gui.Skin = (GUISkin) o;
+                                Gui.Skin = (GUISkin)o;
                             }
                         }
                     }
@@ -282,8 +282,8 @@ namespace ModAPI
                             CurrentZipFile = new ZipFile(modResourceFile);
                         }
                     }
-                    var per = mod / (float) ToLoad.Count;
-                    Progress = (per * mod + per * (CurrentEntry / (float) CurrentZipFile.Entries.Count)) * 100f;
+                    var per = mod / (float)ToLoad.Count;
+                    Progress = (per * mod + per * (CurrentEntry / (float)CurrentZipFile.Entries.Count)) * 100f;
                 }
                 else
                 {

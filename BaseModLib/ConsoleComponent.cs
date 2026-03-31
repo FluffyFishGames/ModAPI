@@ -164,8 +164,8 @@ namespace ModAPI
                     Input = Input.Substring(1);
                 }
                 var spaceIndex = Input.IndexOf(" ");
-                var editor = (TextEditor) GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
-                if (spaceIndex > 0 && editor.pos == Input.Length && editor.pos == editor.selectPos)
+                var editor = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
+                if (spaceIndex > 0 && editor.cursorIndex == Input.Length && editor.cursorIndex == editor.selectIndex)
                 {
                     var command = Input.Substring(0, spaceIndex);
                     var c = Console.GetCommand(command);
@@ -197,7 +197,7 @@ namespace ModAPI
                             GUI.Box(new Rect(x + 10f + left, y + height - 35f - contentHeight, labelWidth + 10f, contentHeight), "");
 
                             var maxNum = possible.Count;
-                            var perPage = (int) (contentHeight / entryHeight);
+                            var perPage = (int)(contentHeight / entryHeight);
                             var istartIndex = 0;
                             if (CurrentAutocompletion > perPage / 2)
                             {
@@ -240,8 +240,8 @@ namespace ModAPI
                                     Input = newInput;
                                     AddParam = false;
 
-                                    editor.pos = Input.Length;
-                                    editor.selectPos = Input.Length;
+                                    editor.cursorIndex = Input.Length;
+                                    editor.selectIndex = Input.Length;
                                 }
                             }
                         }

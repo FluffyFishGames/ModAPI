@@ -183,11 +183,11 @@ namespace ModAPI
             }
             else
             {
-                if (CommandList.Contains((string) param[0]))
+                if (CommandList.Contains((string)param[0]))
                 {
-                    var com = Commands[(string) param[0]];
-                    var help = "Help for command \"" + Commands[(string) param[0]].CommandName + "\":\r\n" + Commands[(string) param[0]].HelpText + "\r\nUsage: " +
-                               Commands[(string) param[0]].CommandName;
+                    var com = Commands[(string)param[0]];
+                    var help = "Help for command \"" + Commands[(string)param[0]].CommandName + "\":\r\n" + Commands[(string)param[0]].HelpText + "\r\nUsage: " +
+                               Commands[(string)param[0]].CommandName;
                     var optional = false;
                     foreach (var param2 in com.Parameters)
                     {
