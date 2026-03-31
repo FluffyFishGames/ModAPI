@@ -1198,15 +1198,11 @@ namespace ModAPI.Data
                     var key = System.IO.Path.GetFileNameWithoutExtension(path);
 
                     var module = Assemblies[key];
-                    for (var i = 0; i < module.AssemblyReferences.Count; i++)
-                    {
-                        // @HOTFIX: Remove unwanted references to mscorlib 2.0.5.0
-                        if (module.AssemblyReferences[i].Name == "mscorlib" && module.AssemblyReferences[i].Version.ToString() == "2.0.5.0")
-                        {
-                            module.AssemblyReferences.RemoveAt(i);
-                            i--;
-                        }
-                    }
+
+                    // Remap all .NET 4.8 / Silverlight assembly references to The Forest's Mono 2.0 versions
+                    // and remove any duplicate references (e.g., mscorlib 2.0.5.0 from Silverlight)
+                    AssemblyVersionMap.RemapAllReferences(module);
+                    AssemblyVersionMap.RemoveDuplicateReferences(module);
 
                     foreach (var type in module.Types)
                     {
@@ -1255,14 +1251,22 @@ namespace ModAPI.Data
                     "I18N.Other.dll",
                     "I18N.Rare.dll",
                     "I18N.West.dll",
-                    "System.Xml.Linq.dll"
+                    "System.Xml.Linq.dll",
+                    // C# 7.3 polyfills for BaseModLib and mod DLLs built with .NET 3.5 + LangVersion 7.3.
+                    // These DLLs must be present in TheForest_Data/Managed/ at runtime so Mono 2.0
+                    // can resolve them when loading mods that use async/await.
+                    System.IO.Path.Combine("polyfills", "AsyncBridge.dll"),
+                    System.IO.Path.Combine("polyfills", "System.Threading.dll"),
                 };
                 foreach (var ass in assemblies)
                 {
                     var assPath = System.IO.Path.GetFullPath(Configuration.GetPath("Libraries") + System.IO.Path.DirectorySeparatorChar + ass);
                     if (File.Exists(assPath))
                     {
-                        File.Copy(assPath, System.IO.Path.GetFullPath(assemblyFolder + ass), true);
+                        // Use filename only for destination — polyfills are in a subfolder of Libraries
+                        // but must be copied flat into Managed/ (no subdirectory).
+                        var destFileName = System.IO.Path.GetFileName(assPath);
+                        File.Copy(assPath, System.IO.Path.GetFullPath(assemblyFolder + destFileName), true);
                     }
                 }
                 var ionicZipPath = System.IO.Path.GetFullPath("Ionic.Zip.dll");

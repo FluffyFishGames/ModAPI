@@ -455,6 +455,25 @@ namespace UnityEngine
         {
             return !(x == y);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Vector3 other)
+                return this == other;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 31 + X.GetHashCode();
+                hash = hash * 31 + Y.GetHashCode();
+                hash = hash * 31 + Z.GetHashCode();
+                return hash;
+            }
+        }
     }
 
     public class Vector4
@@ -522,6 +541,26 @@ namespace UnityEngine
         public static bool operator !=(Quaternion x, Quaternion y)
         {
             return !(x == y);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Quaternion other)
+                return this == other;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 31 + X.GetHashCode();
+                hash = hash * 31 + Y.GetHashCode();
+                hash = hash * 31 + Z.GetHashCode();
+                hash = hash * 31 + W.GetHashCode();
+                return hash;
+            }
         }
     }
 

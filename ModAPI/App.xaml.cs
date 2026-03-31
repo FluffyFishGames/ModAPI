@@ -50,7 +50,7 @@ namespace ModAPI
                     File.Copy(file, RootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
                     File.Delete(file);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //System.Console.WriteLine(e);
                 }

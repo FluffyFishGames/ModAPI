@@ -18,7 +18,7 @@ namespace ModAPI.Utils
             while (!found && (current = GetParent(current)) != null)
             {
                 var rootPart = "";
-                if (current.GetValue(KeyProperty) != null && current.GetValue(KeyProperty) != "")
+                if (current.GetValue(KeyProperty) != null && (string)current.GetValue(KeyProperty) != "")
                 {
                     rootPart = current.GetValue(KeyProperty) as string;
                 }
@@ -26,9 +26,9 @@ namespace ModAPI.Utils
                 {
                     try
                     {
-                        rootPart = ((IPanel) current).GetLangRoot();
+                        rootPart = ((IPanel)current).GetLangRoot();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         Debug.Log("LanguageHelper", "It seems like InitializeComponent is called in constructor of \"" + current.GetType().FullName + "\".", Debug.Type.Warning);
                     }
@@ -61,7 +61,7 @@ namespace ModAPI.Utils
             }
             if (o is ContentElement)
             {
-                var parent = ContentOperations.GetParent((ContentElement) o);
+                var parent = ContentOperations.GetParent((ContentElement)o);
                 if (parent != null)
                 {
                     return parent;
@@ -69,12 +69,12 @@ namespace ModAPI.Utils
 
                 if (o is FrameworkContentElement)
                 {
-                    return ((FrameworkContentElement) o).Parent;
+                    return ((FrameworkContentElement)o).Parent;
                 }
             }
             else if (o is FrameworkElement)
             {
-                return ((FrameworkElement) o).Parent;
+                return ((FrameworkElement)o).Parent;
             }
             return VisualTreeHelper.GetParent(o);
         }
@@ -86,7 +86,7 @@ namespace ModAPI.Utils
 
         public static string GetKey(UIElement element)
         {
-            return (string) element.GetValue(KeyProperty);
+            return (string)element.GetValue(KeyProperty);
         }
     }
 }

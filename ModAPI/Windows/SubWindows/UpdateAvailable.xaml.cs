@@ -87,7 +87,7 @@ namespace ModAPI.Windows.SubWindows
                     {
                         e.Extract(directory, ExtractExistingFileAction.OverwriteSilently);
                     }
-                    catch (Exception ex3)
+                    catch (Exception)
                     {
                     }
                     n += 1;

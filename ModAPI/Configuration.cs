@@ -71,7 +71,7 @@ public class OldConfiguration
             }
             return int.Parse(Data[key]);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return 0;
         }
@@ -88,7 +88,7 @@ public class OldConfiguration
             }
             return Data[key];
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return "";
         }
@@ -143,28 +143,28 @@ public class OldConfiguration
         {
             b1 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-CSharp.dll");
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
         try
         {
             b2 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-CSharp-firstpass.dll");
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
         try
         {
             b3 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-UnityScript.dll");
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
         try
         {
             b4 = File.ReadAllBytes(gamePath + "\\theforest_data\\Managed\\Assembly-UnityScript-firstpass.dll");
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
 

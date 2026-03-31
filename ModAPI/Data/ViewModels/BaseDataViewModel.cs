@@ -48,7 +48,7 @@ namespace ModAPI.Data.ViewModels
                     result = null;
                     return false;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     result = null;
                     return false;
@@ -67,7 +67,7 @@ namespace ModAPI.Data.ViewModels
                     result = null;
                     return false;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     result = null;
                     return false;
@@ -94,7 +94,7 @@ namespace ModAPI.Data.ViewModels
                     }
                     return true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -112,7 +112,7 @@ namespace ModAPI.Data.ViewModels
                     }
                     return false;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return false;
                 }

@@ -54,7 +54,7 @@ namespace ModAPI.Windows.SubWindows
                 path = Path.GetFullPath(Configuration.GetPath("Projects") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id +
                                         Path.DirectorySeparatorChar + ID.Text);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 

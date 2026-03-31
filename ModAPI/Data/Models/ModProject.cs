@@ -279,6 +279,9 @@ namespace ModAPI.Data.Models
 
             if (File.Exists(projectPath))
             {
+                // Upgrade existing v3.5 project files to v4.8
+                UpgradeProjectFile(projectPath);
+
                 var projectFile = XDocument.Load(projectPath);
 
                 foreach (var element in projectFile.Root.Elements())
@@ -319,6 +322,9 @@ namespace ModAPI.Data.Models
             {
                 var filePath = projectUri.MakeRelativeUri(uri).ToString();
                 var libName = Path.GetFileNameWithoutExtension(filePath);
+                // Skip system assemblies - they are automatically referenced in .NET 4.8
+                if (AssemblyVersionMap.IsSystemAssembly(libName))
+                    continue;
                 references += "<Reference Include=\"" + libName + "\">\r\n" +
                               "      <HintPath>" + filePath + "</HintPath>\r\n" +
                               "      <Aliases>global," + GetUniqueAliasForLib(ref uniqueAliases, libName) + "</Aliases>\r\n" + // Allows to avoid compilation errors when a class has same namespace defined in two different DLLs.
@@ -345,9 +351,10 @@ namespace ModAPI.Data.Models
                               "    <AppDesignerFolder>Properties</AppDesignerFolder>\r\n" +
                               "    <RootNamespace>" + Id + "</RootNamespace>\r\n" +
                               "    <AssemblyName>" + Id + "</AssemblyName>\r\n" +
-                              "    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>\r\n" +
+                              "    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>\r\n" +
                               "    <FileAlignment>512</FileAlignment>\r\n" +
                               "    <TargetFrameworkProfile />\r\n" +
+                              "    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>\r\n" +
                               "  </PropertyGroup>\r\n" +
                               "  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|x86' \">\r\n" +
                               "    <DebugType>pdbonly</DebugType>\r\n" +
@@ -641,7 +648,7 @@ namespace ModAPI.Data.Models
                             }
                         }
                     }
-                    SetProgress(progress, 20f + (i / (float) Game.GameConfiguration.IncludeAssemblies.Count) * 30f);
+                    SetProgress(progress, 20f + (i / (float)Game.GameConfiguration.IncludeAssemblies.Count) * 30f);
                 }
 
                 SetProgress(progress, 50f, "ConvertingClasses");
@@ -667,7 +674,7 @@ namespace ModAPI.Data.Models
                                 {
                                     foreach (var map in baseModLibRemap)
                                     {
-                                        if (((MethodReference) instruction.Operand).FullName == map.Key.FullName)
+                                        if (((MethodReference)instruction.Operand).FullName == map.Key.FullName)
                                         {
                                             instruction.Operand = type.Module.Import(map.Value);
                                             var newInstruction = methodIl.Create(OpCodes.Ldstr, Id);
@@ -713,7 +720,7 @@ namespace ModAPI.Data.Models
                                 {
                                     if (attribute.AttributeType.Name == "Priority")
                                     {
-                                        priority = (int) attribute.ConstructorArguments[0].Value;
+                                        priority = (int)attribute.ConstructorArguments[0].Value;
                                     }
                                 }
                             }
@@ -733,7 +740,7 @@ namespace ModAPI.Data.Models
                                             inject = true;
                                             break;
                                         }
-                                        
+
                                         // Comapare parameters
                                         if (!m.Parameters.Where((param, pi) => param.ParameterType.FullName != method.Parameters[pi].ParameterType.FullName).Any())
                                         {
@@ -765,27 +772,19 @@ namespace ModAPI.Data.Models
                             }
                         }
                     }
-                    SetProgress(progress, 50f + (i / (float) modModule.Types.Count) * 30f);
+                    SetProgress(progress, 50f + (i / (float)modModule.Types.Count) * 30f);
                 }
 
-                foreach (var aref in modModule.AssemblyReferences)
-                {
-                    if (aref.Name == "mscorlib" || aref.Name == "System")
-                    {
-                        aref.Version = new System.Version("2.0.0.0");
-                        aref.PublicKeyToken = new byte[] { 0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89 };
-                    }
-                    if (aref.Name == "System.Core")
-                    {
-                        aref.Version = new System.Version("3.5.0.0");
-                        aref.PublicKeyToken = new byte[] { 0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89 };
-                    }
-                    if (aref.Name == "System.Xml")
-                    {
-                        aref.Version = new System.Version("2.0.0.0");
-                        aref.PublicKeyToken = new byte[] { 0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89 };
-                    }
-                }
+                // Remap .NET 4.8 assembly references to The Forest's Mono 2.0 runtime versions.
+                // Mod is built with .NET 4.8 but must reference the correct versions at runtime.
+                AssemblyVersionMap.RemapAllReferences(modModule);
+
+                // Downgrade PE header CLR Runtime version from v4.0.30319 (.NET 4.8) to
+                // v2.0.50727 (Mono 2.0) so the game's Unity 5.6.x Mono runtime can load the DLL.
+                // RemapAllReferences() only patches assembly reference table entries — it does NOT
+                // touch the PE header. Without this line the game refuses to load the mod DLL
+                // and produces a black screen, identical to the BaseModLib v4.8 issue.
+                modModule.RuntimeVersion = "v2.0.50727";
             }
             catch (Exception e)
             {
@@ -846,6 +845,75 @@ namespace ModAPI.Data.Models
             {
                 Debug.Log("Mod: " + Id, "An error occured while saving the mod: " + e, Debug.Type.Error);
                 SetProgress(progress, "Error.Save");
+            }
+        }
+        /// <summary>
+        /// Upgrades an existing mod .csproj file from .NET Framework 3.5 to 4.8.
+        /// This is needed because existing mod projects were created with v3.5 targeting,
+        /// but ModAPI now uses .NET 4.8 for improved API support and development experience.
+        /// The assembly references are still remapped to Mono 2.0 versions at build time.
+        /// </summary>
+        private void UpgradeProjectFile(string projectPath)
+        {
+            try
+            {
+                var projectFile = XDocument.Load(projectPath);
+                var ns = projectFile.Root.Name.Namespace;
+                var modified = false;
+
+                foreach (var propertyGroup in projectFile.Root.Elements(ns + "PropertyGroup"))
+                {
+                    var targetFramework = propertyGroup.Element(ns + "TargetFrameworkVersion");
+                    if (targetFramework != null && targetFramework.Value != "v4.8")
+                    {
+                        var oldVersion = targetFramework.Value;
+                        targetFramework.Value = "v4.8";
+                        modified = true;
+                        Debug.Log("Mod: " + Id, "Upgraded TargetFrameworkVersion from " + oldVersion + " to v4.8");
+                    }
+
+                    // Add AutoGenerateBindingRedirects if not present
+                    var autoBindingRedirects = propertyGroup.Element(ns + "AutoGenerateBindingRedirects");
+                    if (autoBindingRedirects == null && targetFramework != null)
+                    {
+                        propertyGroup.Add(new XElement(ns + "AutoGenerateBindingRedirects", "true"));
+                        modified = true;
+                    }
+                }
+
+                // Remove explicit system assembly references that are now auto-referenced in .NET 4.8
+                foreach (var itemGroup in projectFile.Root.Elements(ns + "ItemGroup"))
+                {
+                    var refsToRemove = new List<XElement>();
+                    foreach (var reference in itemGroup.Elements(ns + "Reference"))
+                    {
+                        var include = reference.Attribute("Include")?.Value;
+                        if (include != null)
+                        {
+                            // Extract assembly name (before comma if qualified)
+                            var assemblyName = include.Contains(",") ? include.Substring(0, include.IndexOf(",")).Trim() : include.Trim();
+                            if (AssemblyVersionMap.IsSystemAssembly(assemblyName))
+                            {
+                                refsToRemove.Add(reference);
+                            }
+                        }
+                    }
+                    foreach (var refElement in refsToRemove)
+                    {
+                        refElement.Remove();
+                        modified = true;
+                    }
+                }
+
+                if (modified)
+                {
+                    projectFile.Save(projectPath);
+                    Debug.Log("Mod: " + Id, "Project file upgraded to .NET Framework 4.8: " + projectPath);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Mod: " + Id, "Failed to upgrade project file: " + e.Message, Debug.Type.Warning);
             }
         }
     }

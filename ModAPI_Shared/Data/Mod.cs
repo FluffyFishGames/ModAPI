@@ -146,7 +146,7 @@ namespace ModAPI.Data
                 OriginalModule = ModuleDefinition.ReadModule(stream);
                 stream.Position = 0;
                 var modBytes = new byte[stream.Length];
-                stream.Read(modBytes, 0, (int) stream.Length); //max size of mods are 2047,9MB
+                stream.Read(modBytes, 0, (int)stream.Length); //max size of mods are 2047,9MB
                 modContent += Convert.ToBase64String(modBytes);
 
                 var folder = Path.GetDirectoryName(FileName);
@@ -1303,7 +1303,7 @@ namespace ModAPI.Data
                         {
                             if (ca.AttributeType.FullName == "ModAPI.Priority")
                             {
-                                Priority = (int) ca.ConstructorArguments[0].Value;
+                                Priority = (int)ca.ConstructorArguments[0].Value;
                             }
                         }
 

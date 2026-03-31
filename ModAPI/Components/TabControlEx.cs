@@ -84,8 +84,8 @@ namespace ModAPI.Components
                     var currIndex = Items.IndexOf(item);
                     var subHandler = new ProgressHandler();
                     subHandler.OnComplete += delegate { _loadNext(); };
-                    subHandler.OnChange += delegate { handler.Progress = ((((float) currIndex - 1) / (Items.Count - 1f)) + (subHandler.Progress / 100f * 1f / (Items.Count - 1f))) * 100f; };
-                    ((IPanel) item.Content).Preload(subHandler);
+                    subHandler.OnChange += delegate { handler.Progress = ((((float)currIndex - 1) / (Items.Count - 1f)) + (subHandler.Progress / 100f * 1f / (Items.Count - 1f))) * 100f; };
+                    ((IPanel)item.Content).Preload(subHandler);
                 }
                 else
                 {
@@ -105,10 +105,10 @@ namespace ModAPI.Components
         void item_GotFocus(object sender, RoutedEventArgs e)
         {
             _loaded();
-            ((TabItem) sender).Loaded -= item_GotFocus;
+            ((TabItem)sender).Loaded -= item_GotFocus;
         }
 
-        public void Loaded()
+        public new void Loaded()
         {
             Opacity = 1.0;
         }

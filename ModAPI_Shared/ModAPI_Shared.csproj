@@ -11,6 +11,7 @@
     <AssemblyName>ModAPI_Shared</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <MSBuildWarningsAsMessages>MSB3243</MSBuildWarningsAsMessages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -83,6 +84,7 @@
     <Compile Include="ProgressHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Checksum.cs" />
+    <Compile Include="Utils\AssemblyVersionMap.cs" />
     <Compile Include="Utils\CustomAssemblyResolver.cs" />
     <Compile Include="Utils\MonoHelper.cs" />
     <Compile Include="Utils\NameResolver.cs" />

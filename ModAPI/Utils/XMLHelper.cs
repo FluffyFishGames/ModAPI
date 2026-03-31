@@ -34,7 +34,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToBoolean(attribute.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -50,7 +50,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToDouble(attribute.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -66,7 +66,7 @@ namespace ModAPI.Utils
                 {
                     return float.Parse(attribute.Value.Replace(".", ","));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -82,7 +82,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToInt32(attribute.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -98,7 +98,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToString(attribute.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -114,7 +114,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToString(subElement.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -130,7 +130,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToDouble(subElement.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -146,7 +146,7 @@ namespace ModAPI.Utils
                 {
                     return float.Parse(subElement.Value.Replace(".", ","));
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -162,7 +162,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToBoolean(subElement.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -178,7 +178,7 @@ namespace ModAPI.Utils
                 {
                     return Convert.ToInt32(subElement.Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }

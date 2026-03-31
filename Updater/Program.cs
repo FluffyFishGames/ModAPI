@@ -40,7 +40,7 @@ namespace Updater
                     }
                     return null;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }

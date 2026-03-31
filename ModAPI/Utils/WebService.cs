@@ -61,7 +61,7 @@ namespace ModAPI.Utils
                 UserId = int.Parse(Configuration.GetString("Login.User"));
                 Hash = Configuration.GetString("Login.Hash");
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
             if (UserId > 0 && Hash != null && Hash != "")

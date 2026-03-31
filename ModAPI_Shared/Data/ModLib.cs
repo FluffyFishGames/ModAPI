@@ -54,7 +54,7 @@ namespace ModAPI.Data
                     {
                         if (r is EmbeddedResource && r.Name == "Meta")
                         {
-                            var metaXml = XDocument.Parse(Encoding.UTF8.GetString(((EmbeddedResource) r).GetResourceData()));
+                            var metaXml = XDocument.Parse(Encoding.UTF8.GetString(((EmbeddedResource)r).GetResourceData()));
                             GameVersion = metaXml.Root.Element("GameVersion").Value;
                             ModApiVersion = metaXml.Root.Element("ModAPIVersion").Value;
                             CreationTime = new DateTime(long.Parse(metaXml.Root.Element("CreationTime").Value));
@@ -158,25 +158,11 @@ namespace ModAPI.Data
                 }
             }
 
-            var mscorlibPublicKeyToken = new byte[] { 0x7C, 0xEC, 0x85, 0xD7, 0xBE, 0xA7, 0x79, 0x8E };
-            var systemXmlPublicKeyToken = new byte[] { 0x31, 0xBF, 0x38, 0x56, 0xAD, 0x36, 0x4E, 0x35 };
-            foreach (var assemblyReference in baseModLib.AssemblyReferences)
-            {
-                if ((assemblyReference.Name.StartsWith("System") || assemblyReference.Name.StartsWith("mscorlib")))
-                {
-                    assemblyReference.Version = new System.Version("2.0.5.0");
-                    if (assemblyReference.Name == "System.Xml.Linq")
-                    {
-                        assemblyReference.PublicKeyToken = systemXmlPublicKeyToken;
-                    }
-                    else
-                    {
-                        assemblyReference.PublicKeyToken = mscorlibPublicKeyToken;
-                    }
-
-                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed assembly reference token of " + assemblyReference.Name + " in BaseModLib.dll.");
-                }
-            }
+            // Remap BaseModLib's .NET 4.8 assembly references to The Forest's Mono 2.0 runtime versions.
+            // BaseModLib is built with .NET 4.8 for development convenience, but must reference
+            // the correct assembly versions when deployed to the game's Unity 5.6.x environment.
+            var remappedCount = AssemblyVersionMap.RemapAllReferences(baseModLib);
+            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Remapped " + remappedCount + " assembly references in BaseModLib.dll to Unity 5.6.x Mono 2.0 versions.");
 
             CreationTime = DateTime.Now;
             GameVersion = Game.BackupVersion.Id;
@@ -353,7 +339,7 @@ namespace ModAPI.Data
                     Debug.Log("ModLib: " + Game.GameConfiguration.Id, "File not found: \"" + assemblyPath + "\".", Debug.Type.Error);
                     return;
                 }
-                SetProgress(progress, 5f + (i / (float) Game.GameConfiguration.IncludeAssemblies.Count) * 75f);
+                SetProgress(progress, 5f + (i / (float)Game.GameConfiguration.IncludeAssemblies.Count) * 75f);
             }
 
             SetProgress(progress, 80f, "CopyingAssemblies");
@@ -375,7 +361,7 @@ namespace ModAPI.Data
                     Debug.Log("ModLib: " + Game.GameConfiguration.Id, "File not found: \"" + copyFrom + "\".", Debug.Type.Error);
                     return;
                 }
-                SetProgress(progress, 80f + (i / (float) Game.GameConfiguration.CopyAssemblies.Count) * 20f);
+                SetProgress(progress, 80f + (i / (float)Game.GameConfiguration.CopyAssemblies.Count) * 20f);
             }
             Exists = true;
             SetProgress(progress, 100f, "Finish");

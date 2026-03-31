@@ -65,7 +65,7 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToString(value);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
@@ -75,7 +75,7 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToSingle(value);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
@@ -85,7 +85,7 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToDouble(value);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
@@ -95,7 +95,7 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToInt32(value);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
@@ -105,7 +105,7 @@ namespace ModAPI.Data.Models
                         {
                             _Value = Convert.ToBoolean(value);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
@@ -129,27 +129,27 @@ namespace ModAPI.Data.Models
                     {
                         if (_Value is double)
                         {
-                            if ((double) _Value < Convert.ToDouble(_MinValue))
+                            if ((double)_Value < Convert.ToDouble(_MinValue))
                             {
                                 _Value = Convert.ToDouble(_MinValue);
                             }
                         }
                         if (_Value is float)
                         {
-                            if ((float) _Value < Convert.ToSingle(_MinValue))
+                            if ((float)_Value < Convert.ToSingle(_MinValue))
                             {
                                 _Value = Convert.ToSingle(_MinValue);
                             }
                         }
                         if (_Value is int)
                         {
-                            if ((int) _Value < Convert.ToInt32(_MinValue))
+                            if ((int)_Value < Convert.ToInt32(_MinValue))
                             {
                                 _Value = Convert.ToInt32(_MinValue);
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         Value = 0;
                     }
@@ -160,27 +160,27 @@ namespace ModAPI.Data.Models
                     {
                         if (_Value is double)
                         {
-                            if ((double) _Value > Convert.ToDouble(_MaxValue))
+                            if ((double)_Value > Convert.ToDouble(_MaxValue))
                             {
                                 _Value = Convert.ToDouble(_MaxValue);
                             }
                         }
                         if (_Value is float)
                         {
-                            if ((float) _Value > Convert.ToSingle(_MaxValue))
+                            if ((float)_Value > Convert.ToSingle(_MaxValue))
                             {
                                 _Value = Convert.ToSingle(_MaxValue);
                             }
                         }
                         if (_Value is int)
                         {
-                            if ((int) _Value > Convert.ToInt32(_MaxValue))
+                            if ((int)_Value > Convert.ToInt32(_MaxValue))
                             {
                                 _Value = Convert.ToInt32(_MaxValue);
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         Value = 0;
                     }

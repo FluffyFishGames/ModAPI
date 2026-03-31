@@ -109,7 +109,7 @@ namespace ModAPI.Utils
             {
                 if (obj is IEnumerable)
                 {
-                    var i = (IEnumerable) obj;
+                    var i = (IEnumerable)obj;
                     foreach (var a in i)
                     {
                         if (already.Contains(a))

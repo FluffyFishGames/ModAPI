@@ -140,7 +140,7 @@ namespace ModAPI.Utils
                 {
                     if (instruction.Operand is MethodReference)
                     {
-                        var methodReference = (MethodReference) instruction.Operand;
+                        var methodReference = (MethodReference)instruction.Operand;
                         if (newMethods.ContainsKey(methodReference))
                         {
                             instruction.Operand = newMethods[methodReference]; //hostModule.Import(
@@ -234,22 +234,22 @@ namespace ModAPI.Utils
                 {
                     if (instruction.Operand is GenericInstanceMethod)
                     {
-                        var genericInstance = (GenericInstanceMethod) instruction.Operand;
+                        var genericInstance = (GenericInstanceMethod)instruction.Operand;
                         instruction.Operand = Resolve(hostModule, genericInstance, addedClasses, addedMethods, typesMap);
                     }
                     else if (instruction.Operand is MethodReference)
                     {
-                        var methodReference = (MethodReference) instruction.Operand;
+                        var methodReference = (MethodReference)instruction.Operand;
                         instruction.Operand = Resolve(hostModule, methodReference, addedClasses, addedMethods, typesMap);
                     }
                     else if (instruction.Operand is TypeReference)
                     {
-                        var typeReference = (TypeReference) instruction.Operand;
+                        var typeReference = (TypeReference)instruction.Operand;
                         instruction.Operand = Resolve(hostModule, typeReference, addedClasses, typesMap);
                     }
                     else if (instruction.Operand is FieldReference)
                     {
-                        var fieldReference = (FieldReference) instruction.Operand;
+                        var fieldReference = (FieldReference)instruction.Operand;
                         instruction.Operand = Resolve(hostModule, fieldReference, addedClasses, addedFields, typesMap);
                     }
                 }
@@ -273,7 +273,7 @@ namespace ModAPI.Utils
         {
             if (type is GenericInstanceType)
             {
-                var gType = (GenericInstanceType) type;
+                var gType = (GenericInstanceType)type;
                 var nType = new GenericInstanceType(Resolve(hostModule, gType.ElementType, addedClasses, typesMap));
                 foreach (var t in gType.GenericArguments)
                 {
@@ -309,8 +309,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(type.GetElementType());
-                    Console.WriteLine(type.GetType().FullName);
+                    Debug.Log("MonoHelper", "Failed to import type reference: " + type.GetElementType() + " (" + type.GetType().FullName + ")", Debug.Type.Warning);
                     throw e;
                 }
             }
@@ -397,7 +396,7 @@ namespace ModAPI.Utils
             }
             if (method.ReturnType is GenericParameter)
             {
-                var g = (GenericParameter) method.ReturnType;
+                var g = (GenericParameter)method.ReturnType;
                 if (newReference.GenericParameters.Count > g.Position)
                 {
                     newReference.ReturnType = newReference.GenericParameters[g.Position];
@@ -431,7 +430,7 @@ namespace ModAPI.Utils
         {
             if (addedMethods.ContainsKey(method))
             {
-                return (GenericInstanceMethod) ((MethodReference) addedMethods[method]); //hostModule.Import(
+                return (GenericInstanceMethod)((MethodReference)addedMethods[method]); //hostModule.Import(
             }
             var elementMethod = Resolve(hostModule, method.ElementMethod, addedClasses, addedMethods, typesMap);
             var newReference = new GenericInstanceMethod(elementMethod);
@@ -442,7 +441,7 @@ namespace ModAPI.Utils
             }
             if (method.ReturnType is GenericParameter)
             {
-                var g = (GenericParameter) method.ReturnType;
+                var g = (GenericParameter)method.ReturnType;
 
                 newReference.ReturnType = elementMethod.GenericParameters[g.Position];
             }

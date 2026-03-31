@@ -317,7 +317,7 @@ namespace ModAPI
                     image.EndInit();
                     newTab.IconSource = image;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Debug.Log("MainWindow", "Couldn't find the icon \"" + tab.IconName + "\".", Debug.Type.Warning);
                 }
@@ -329,7 +329,7 @@ namespace ModAPI
                     imageSelected.EndInit();
                     newTab.SelectedIconSource = imageSelected;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Debug.Log("MainWindow", "Couldn't find the icon \"" + tab.IconSelectedName + "\".", Debug.Type.Warning);
                 }
@@ -745,7 +745,7 @@ namespace ModAPI
             {
                 App.Instance.Shutdown();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

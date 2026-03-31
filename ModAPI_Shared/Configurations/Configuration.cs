@@ -470,7 +470,7 @@ namespace ModAPI.Configurations
                     try
                     {
                         var fs = new FileStream(langFile, FileMode.Open);
-                        var dlc = (ResourceDictionary) XamlReader.Load(fs);
+                        var dlc = (ResourceDictionary)XamlReader.Load(fs);
 
                         var language = new Language(dlc, imageFile);
                         if (language.Key == "")
@@ -668,7 +668,7 @@ namespace ModAPI.Configurations
                             ImageStream = new MemoryStream();
                             var stream = new FileStream(imageFile, FileMode.Open);
                             ImageStream.SetLength(stream.Length);
-                            stream.Read(ImageStream.GetBuffer(), 0, (int) stream.Length);
+                            stream.Read(ImageStream.GetBuffer(), 0, (int)stream.Length);
                             ImageStream.Flush();
                             stream.Close();
                             Debug.Log("Language", "Image file \"" + imageFile + "\" loaded for language \"" + Key + "\".");

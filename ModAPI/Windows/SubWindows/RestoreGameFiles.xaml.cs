@@ -65,7 +65,7 @@ namespace ModAPI.Windows.SubWindows
             Restore.Visibility = Visibility.Collapsed;
             Recheck.Visibility = Visibility.Collapsed;
 
-            Close.Visibility = Visibility.Visible;
+            CloseButton.Visibility = Visibility.Visible;
 
             if (Configuration.GetString("UpdateVersions").ToLower() != "true")
             {
@@ -145,7 +145,7 @@ namespace ModAPI.Windows.SubWindows
         {
             var progressHandler = new ProgressHandler();
             progressHandler.OnComplete += (s, ev) => Dispatcher.Invoke(delegate { Task.Complete(); });
-            var t = new Thread(delegate()
+            var t = new Thread(delegate ()
             {
                 try
                 {
@@ -173,7 +173,7 @@ namespace ModAPI.Windows.SubWindows
                                     break;
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                             }
                         }
@@ -182,7 +182,7 @@ namespace ModAPI.Windows.SubWindows
                         var s = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                         var f = new FileInfo(logFile);
                         var data = new byte[f.Length];
-                        s.Read(data, 0, (int) f.Length);
+                        s.Read(data, 0, (int)f.Length);
                         var content = Encoding.UTF8.GetString(data);
 
                         var l = content.Split(new[] { "\r\n" }, StringSplitOptions.None); // System.IO.File.ReadAllLines(SteamPath + "\\logs\\content_log.txt");

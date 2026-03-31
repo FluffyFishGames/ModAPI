@@ -49,7 +49,7 @@ namespace Updater
                             breakit = false;
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                     }
                 }
@@ -80,7 +80,7 @@ namespace Updater
                     File.Copy(file, RootPath + Path.DirectorySeparatorChar + b + Path.GetFileName(file), true);
                     File.Delete(file);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //System.Console.WriteLine(e);
                 }

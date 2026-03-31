@@ -77,7 +77,7 @@ namespace ModAPI.Components
                     var child = VisualTreeHelper.GetChild(depObj, i);
                     if (child != null && child is T)
                     {
-                        yield return (T) child;
+                        yield return (T)child;
                     }
 
                     foreach (var childOfChild in FindVisualChildren<T>(child))
@@ -90,7 +90,7 @@ namespace ModAPI.Components
 
         public static void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var myControl = (Scale9) sender;
+            var myControl = (Scale9)sender;
             if ((e.Property.Name == "Selected" || e.Property.Name == "HoverOpacity" || e.Property.Name == "ActiveOpacity") && myControl.BlendNormal)
             {
                 if (myControl.BaseNormalOpacity == 0.0)
@@ -134,7 +134,7 @@ namespace ModAPI.Components
                         }
                         //(t.Foreground as SolidColorBrush).Color = myControl.TextColor;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 }
@@ -302,7 +302,7 @@ namespace ModAPI.Components
                     }
                     //(t.Foreground as SolidColorBrush).Color = myControl.TextColor;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }
@@ -313,176 +313,176 @@ namespace ModAPI.Components
 
         public void FindChilds()
         {
-            TopRow = (RowDefinition) GetTemplateChild("TopRow");
-            BottomRow = (RowDefinition) GetTemplateChild("BottomRow");
-            LeftColumn = (ColumnDefinition) GetTemplateChild("LeftColumn");
-            RightColumn = (ColumnDefinition) GetTemplateChild("RightColumn");
+            TopRow = (RowDefinition)GetTemplateChild("TopRow");
+            BottomRow = (RowDefinition)GetTemplateChild("BottomRow");
+            LeftColumn = (ColumnDefinition)GetTemplateChild("LeftColumn");
+            RightColumn = (ColumnDefinition)GetTemplateChild("RightColumn");
 
-            MouseRect = (Rectangle) GetTemplateChild("MouseRect");
-            ContentElement = (ContentControl) GetTemplateChild("ContentElement");
+            MouseRect = (Rectangle)GetTemplateChild("MouseRect");
+            ContentElement = (ContentControl)GetTemplateChild("ContentElement");
 
-            NormalTopLeftRect = (Rectangle) GetTemplateChild("NormalTopLeftRect");
-            NormalTopRect = (Rectangle) GetTemplateChild("NormalTopRect");
-            NormalTopRightRect = (Rectangle) GetTemplateChild("NormalTopRightRect");
-            NormalLeftRect = (Rectangle) GetTemplateChild("NormalLeftRect");
-            NormalCenterRect = (Rectangle) GetTemplateChild("NormalCenterRect");
-            NormalRightRect = (Rectangle) GetTemplateChild("NormalRightRect");
-            NormalBottomLeftRect = (Rectangle) GetTemplateChild("NormalBottomLeftRect");
-            NormalBottomRect = (Rectangle) GetTemplateChild("NormalBottomRect");
-            NormalBottomRightRect = (Rectangle) GetTemplateChild("NormalBottomRightRect");
+            NormalTopLeftRect = (Rectangle)GetTemplateChild("NormalTopLeftRect");
+            NormalTopRect = (Rectangle)GetTemplateChild("NormalTopRect");
+            NormalTopRightRect = (Rectangle)GetTemplateChild("NormalTopRightRect");
+            NormalLeftRect = (Rectangle)GetTemplateChild("NormalLeftRect");
+            NormalCenterRect = (Rectangle)GetTemplateChild("NormalCenterRect");
+            NormalRightRect = (Rectangle)GetTemplateChild("NormalRightRect");
+            NormalBottomLeftRect = (Rectangle)GetTemplateChild("NormalBottomLeftRect");
+            NormalBottomRect = (Rectangle)GetTemplateChild("NormalBottomRect");
+            NormalBottomRightRect = (Rectangle)GetTemplateChild("NormalBottomRightRect");
 
-            HoverTopLeftRect = (Rectangle) GetTemplateChild("HoverTopLeftRect");
-            HoverTopRect = (Rectangle) GetTemplateChild("HoverTopRect");
-            HoverTopRightRect = (Rectangle) GetTemplateChild("HoverTopRightRect");
-            HoverLeftRect = (Rectangle) GetTemplateChild("HoverLeftRect");
-            HoverCenterRect = (Rectangle) GetTemplateChild("HoverCenterRect");
-            HoverRightRect = (Rectangle) GetTemplateChild("HoverRightRect");
-            HoverBottomLeftRect = (Rectangle) GetTemplateChild("HoverBottomLeftRect");
-            HoverBottomRect = (Rectangle) GetTemplateChild("HoverBottomRect");
-            HoverBottomRightRect = (Rectangle) GetTemplateChild("HoverBottomRightRect");
+            HoverTopLeftRect = (Rectangle)GetTemplateChild("HoverTopLeftRect");
+            HoverTopRect = (Rectangle)GetTemplateChild("HoverTopRect");
+            HoverTopRightRect = (Rectangle)GetTemplateChild("HoverTopRightRect");
+            HoverLeftRect = (Rectangle)GetTemplateChild("HoverLeftRect");
+            HoverCenterRect = (Rectangle)GetTemplateChild("HoverCenterRect");
+            HoverRightRect = (Rectangle)GetTemplateChild("HoverRightRect");
+            HoverBottomLeftRect = (Rectangle)GetTemplateChild("HoverBottomLeftRect");
+            HoverBottomRect = (Rectangle)GetTemplateChild("HoverBottomRect");
+            HoverBottomRightRect = (Rectangle)GetTemplateChild("HoverBottomRightRect");
 
-            ActiveTopLeftRect = (Rectangle) GetTemplateChild("ActiveTopLeftRect");
-            ActiveTopRect = (Rectangle) GetTemplateChild("ActiveTopRect");
-            ActiveTopRightRect = (Rectangle) GetTemplateChild("ActiveTopRightRect");
-            ActiveLeftRect = (Rectangle) GetTemplateChild("ActiveLeftRect");
-            ActiveCenterRect = (Rectangle) GetTemplateChild("ActiveCenterRect");
-            ActiveRightRect = (Rectangle) GetTemplateChild("ActiveRightRect");
-            ActiveBottomLeftRect = (Rectangle) GetTemplateChild("ActiveBottomLeftRect");
-            ActiveBottomRect = (Rectangle) GetTemplateChild("ActiveBottomRect");
-            ActiveBottomRightRect = (Rectangle) GetTemplateChild("ActiveBottomRightRect");
+            ActiveTopLeftRect = (Rectangle)GetTemplateChild("ActiveTopLeftRect");
+            ActiveTopRect = (Rectangle)GetTemplateChild("ActiveTopRect");
+            ActiveTopRightRect = (Rectangle)GetTemplateChild("ActiveTopRightRect");
+            ActiveLeftRect = (Rectangle)GetTemplateChild("ActiveLeftRect");
+            ActiveCenterRect = (Rectangle)GetTemplateChild("ActiveCenterRect");
+            ActiveRightRect = (Rectangle)GetTemplateChild("ActiveRightRect");
+            ActiveBottomLeftRect = (Rectangle)GetTemplateChild("ActiveBottomLeftRect");
+            ActiveBottomRect = (Rectangle)GetTemplateChild("ActiveBottomRect");
+            ActiveBottomRightRect = (Rectangle)GetTemplateChild("ActiveBottomRightRect");
 
-            SelectedNormalTopLeftRect = (Rectangle) GetTemplateChild("SelectedNormalTopLeftRect");
-            SelectedNormalTopRect = (Rectangle) GetTemplateChild("SelectedNormalTopRect");
-            SelectedNormalTopRightRect = (Rectangle) GetTemplateChild("SelectedNormalTopRightRect");
-            SelectedNormalLeftRect = (Rectangle) GetTemplateChild("SelectedNormalLeftRect");
-            SelectedNormalCenterRect = (Rectangle) GetTemplateChild("SelectedNormalCenterRect");
-            SelectedNormalRightRect = (Rectangle) GetTemplateChild("SelectedNormalRightRect");
-            SelectedNormalBottomLeftRect = (Rectangle) GetTemplateChild("SelectedNormalBottomLeftRect");
-            SelectedNormalBottomRect = (Rectangle) GetTemplateChild("SelectedNormalBottomRect");
-            SelectedNormalBottomRightRect = (Rectangle) GetTemplateChild("SelectedNormalBottomRightRect");
+            SelectedNormalTopLeftRect = (Rectangle)GetTemplateChild("SelectedNormalTopLeftRect");
+            SelectedNormalTopRect = (Rectangle)GetTemplateChild("SelectedNormalTopRect");
+            SelectedNormalTopRightRect = (Rectangle)GetTemplateChild("SelectedNormalTopRightRect");
+            SelectedNormalLeftRect = (Rectangle)GetTemplateChild("SelectedNormalLeftRect");
+            SelectedNormalCenterRect = (Rectangle)GetTemplateChild("SelectedNormalCenterRect");
+            SelectedNormalRightRect = (Rectangle)GetTemplateChild("SelectedNormalRightRect");
+            SelectedNormalBottomLeftRect = (Rectangle)GetTemplateChild("SelectedNormalBottomLeftRect");
+            SelectedNormalBottomRect = (Rectangle)GetTemplateChild("SelectedNormalBottomRect");
+            SelectedNormalBottomRightRect = (Rectangle)GetTemplateChild("SelectedNormalBottomRightRect");
 
-            SelectedHoverTopLeftRect = (Rectangle) GetTemplateChild("SelectedHoverTopLeftRect");
-            SelectedHoverTopRect = (Rectangle) GetTemplateChild("SelectedHoverTopRect");
-            SelectedHoverTopRightRect = (Rectangle) GetTemplateChild("SelectedHoverTopRightRect");
-            SelectedHoverLeftRect = (Rectangle) GetTemplateChild("SelectedHoverLeftRect");
-            SelectedHoverCenterRect = (Rectangle) GetTemplateChild("SelectedHoverCenterRect");
-            SelectedHoverRightRect = (Rectangle) GetTemplateChild("SelectedHoverRightRect");
-            SelectedHoverBottomLeftRect = (Rectangle) GetTemplateChild("SelectedHoverBottomLeftRect");
-            SelectedHoverBottomRect = (Rectangle) GetTemplateChild("SelectedHoverBottomRect");
-            SelectedHoverBottomRightRect = (Rectangle) GetTemplateChild("SelectedHoverBottomRightRect");
+            SelectedHoverTopLeftRect = (Rectangle)GetTemplateChild("SelectedHoverTopLeftRect");
+            SelectedHoverTopRect = (Rectangle)GetTemplateChild("SelectedHoverTopRect");
+            SelectedHoverTopRightRect = (Rectangle)GetTemplateChild("SelectedHoverTopRightRect");
+            SelectedHoverLeftRect = (Rectangle)GetTemplateChild("SelectedHoverLeftRect");
+            SelectedHoverCenterRect = (Rectangle)GetTemplateChild("SelectedHoverCenterRect");
+            SelectedHoverRightRect = (Rectangle)GetTemplateChild("SelectedHoverRightRect");
+            SelectedHoverBottomLeftRect = (Rectangle)GetTemplateChild("SelectedHoverBottomLeftRect");
+            SelectedHoverBottomRect = (Rectangle)GetTemplateChild("SelectedHoverBottomRect");
+            SelectedHoverBottomRightRect = (Rectangle)GetTemplateChild("SelectedHoverBottomRightRect");
 
-            SelectedActiveTopLeftRect = (Rectangle) GetTemplateChild("SelectedActiveTopLeftRect");
-            SelectedActiveTopRect = (Rectangle) GetTemplateChild("SelectedActiveTopRect");
-            SelectedActiveTopRightRect = (Rectangle) GetTemplateChild("SelectedActiveTopRightRect");
-            SelectedActiveLeftRect = (Rectangle) GetTemplateChild("SelectedActiveLeftRect");
-            SelectedActiveCenterRect = (Rectangle) GetTemplateChild("SelectedActiveCenterRect");
-            SelectedActiveRightRect = (Rectangle) GetTemplateChild("SelectedActiveRightRect");
-            SelectedActiveBottomLeftRect = (Rectangle) GetTemplateChild("SelectedActiveBottomLeftRect");
-            SelectedActiveBottomRect = (Rectangle) GetTemplateChild("SelectedActiveBottomRect");
-            SelectedActiveBottomRightRect = (Rectangle) GetTemplateChild("SelectedActiveBottomRightRect");
+            SelectedActiveTopLeftRect = (Rectangle)GetTemplateChild("SelectedActiveTopLeftRect");
+            SelectedActiveTopRect = (Rectangle)GetTemplateChild("SelectedActiveTopRect");
+            SelectedActiveTopRightRect = (Rectangle)GetTemplateChild("SelectedActiveTopRightRect");
+            SelectedActiveLeftRect = (Rectangle)GetTemplateChild("SelectedActiveLeftRect");
+            SelectedActiveCenterRect = (Rectangle)GetTemplateChild("SelectedActiveCenterRect");
+            SelectedActiveRightRect = (Rectangle)GetTemplateChild("SelectedActiveRightRect");
+            SelectedActiveBottomLeftRect = (Rectangle)GetTemplateChild("SelectedActiveBottomLeftRect");
+            SelectedActiveBottomRect = (Rectangle)GetTemplateChild("SelectedActiveBottomRect");
+            SelectedActiveBottomRightRect = (Rectangle)GetTemplateChild("SelectedActiveBottomRightRect");
 
-            NormalTopLeft = (ImageBrush) GetTemplateChild("NormalTopLeft");
-            NormalTop = (ImageBrush) GetTemplateChild("NormalTop");
-            NormalTopRight = (ImageBrush) GetTemplateChild("NormalTopRight");
-            NormalLeft = (ImageBrush) GetTemplateChild("NormalLeft");
-            NormalCenter = (ImageBrush) GetTemplateChild("NormalCenter");
-            NormalRight = (ImageBrush) GetTemplateChild("NormalRight");
-            NormalBottomLeft = (ImageBrush) GetTemplateChild("NormalBottomLeft");
-            NormalBottom = (ImageBrush) GetTemplateChild("NormalBottom");
-            NormalBottomRight = (ImageBrush) GetTemplateChild("NormalBottomRight");
+            NormalTopLeft = (ImageBrush)GetTemplateChild("NormalTopLeft");
+            NormalTop = (ImageBrush)GetTemplateChild("NormalTop");
+            NormalTopRight = (ImageBrush)GetTemplateChild("NormalTopRight");
+            NormalLeft = (ImageBrush)GetTemplateChild("NormalLeft");
+            NormalCenter = (ImageBrush)GetTemplateChild("NormalCenter");
+            NormalRight = (ImageBrush)GetTemplateChild("NormalRight");
+            NormalBottomLeft = (ImageBrush)GetTemplateChild("NormalBottomLeft");
+            NormalBottom = (ImageBrush)GetTemplateChild("NormalBottom");
+            NormalBottomRight = (ImageBrush)GetTemplateChild("NormalBottomRight");
 
-            HoverTopLeft = (ImageBrush) GetTemplateChild("HoverTopLeft");
-            HoverTop = (ImageBrush) GetTemplateChild("HoverTop");
-            HoverTopRight = (ImageBrush) GetTemplateChild("HoverTopRight");
-            HoverLeft = (ImageBrush) GetTemplateChild("HoverLeft");
-            HoverCenter = (ImageBrush) GetTemplateChild("HoverCenter");
-            HoverRight = (ImageBrush) GetTemplateChild("HoverRight");
-            HoverBottomLeft = (ImageBrush) GetTemplateChild("HoverBottomLeft");
-            HoverBottom = (ImageBrush) GetTemplateChild("HoverBottom");
-            HoverBottomRight = (ImageBrush) GetTemplateChild("HoverBottomRight");
+            HoverTopLeft = (ImageBrush)GetTemplateChild("HoverTopLeft");
+            HoverTop = (ImageBrush)GetTemplateChild("HoverTop");
+            HoverTopRight = (ImageBrush)GetTemplateChild("HoverTopRight");
+            HoverLeft = (ImageBrush)GetTemplateChild("HoverLeft");
+            HoverCenter = (ImageBrush)GetTemplateChild("HoverCenter");
+            HoverRight = (ImageBrush)GetTemplateChild("HoverRight");
+            HoverBottomLeft = (ImageBrush)GetTemplateChild("HoverBottomLeft");
+            HoverBottom = (ImageBrush)GetTemplateChild("HoverBottom");
+            HoverBottomRight = (ImageBrush)GetTemplateChild("HoverBottomRight");
 
-            ActiveTopLeft = (ImageBrush) GetTemplateChild("ActiveTopLeft");
-            ActiveTop = (ImageBrush) GetTemplateChild("ActiveTop");
-            ActiveTopRight = (ImageBrush) GetTemplateChild("ActiveTopRight");
-            ActiveLeft = (ImageBrush) GetTemplateChild("ActiveLeft");
-            ActiveCenter = (ImageBrush) GetTemplateChild("ActiveCenter");
-            ActiveRight = (ImageBrush) GetTemplateChild("ActiveRight");
-            ActiveBottomLeft = (ImageBrush) GetTemplateChild("ActiveBottomLeft");
-            ActiveBottom = (ImageBrush) GetTemplateChild("ActiveBottom");
-            ActiveBottomRight = (ImageBrush) GetTemplateChild("ActiveBottomRight");
+            ActiveTopLeft = (ImageBrush)GetTemplateChild("ActiveTopLeft");
+            ActiveTop = (ImageBrush)GetTemplateChild("ActiveTop");
+            ActiveTopRight = (ImageBrush)GetTemplateChild("ActiveTopRight");
+            ActiveLeft = (ImageBrush)GetTemplateChild("ActiveLeft");
+            ActiveCenter = (ImageBrush)GetTemplateChild("ActiveCenter");
+            ActiveRight = (ImageBrush)GetTemplateChild("ActiveRight");
+            ActiveBottomLeft = (ImageBrush)GetTemplateChild("ActiveBottomLeft");
+            ActiveBottom = (ImageBrush)GetTemplateChild("ActiveBottom");
+            ActiveBottomRight = (ImageBrush)GetTemplateChild("ActiveBottomRight");
 
-            SelectedNormalTopLeft = (ImageBrush) GetTemplateChild("SelectedNormalTopLeft");
-            SelectedNormalTop = (ImageBrush) GetTemplateChild("SelectedNormalTop");
-            SelectedNormalTopRight = (ImageBrush) GetTemplateChild("SelectedNormalTopRight");
-            SelectedNormalLeft = (ImageBrush) GetTemplateChild("SelectedNormalLeft");
-            SelectedNormalCenter = (ImageBrush) GetTemplateChild("SelectedNormalCenter");
-            SelectedNormalRight = (ImageBrush) GetTemplateChild("SelectedNormalRight");
-            SelectedNormalBottomLeft = (ImageBrush) GetTemplateChild("SelectedNormalBottomLeft");
-            SelectedNormalBottom = (ImageBrush) GetTemplateChild("SelectedNormalBottom");
-            SelectedNormalBottomRight = (ImageBrush) GetTemplateChild("SelectedNormalBottomRight");
+            SelectedNormalTopLeft = (ImageBrush)GetTemplateChild("SelectedNormalTopLeft");
+            SelectedNormalTop = (ImageBrush)GetTemplateChild("SelectedNormalTop");
+            SelectedNormalTopRight = (ImageBrush)GetTemplateChild("SelectedNormalTopRight");
+            SelectedNormalLeft = (ImageBrush)GetTemplateChild("SelectedNormalLeft");
+            SelectedNormalCenter = (ImageBrush)GetTemplateChild("SelectedNormalCenter");
+            SelectedNormalRight = (ImageBrush)GetTemplateChild("SelectedNormalRight");
+            SelectedNormalBottomLeft = (ImageBrush)GetTemplateChild("SelectedNormalBottomLeft");
+            SelectedNormalBottom = (ImageBrush)GetTemplateChild("SelectedNormalBottom");
+            SelectedNormalBottomRight = (ImageBrush)GetTemplateChild("SelectedNormalBottomRight");
 
-            SelectedHoverTopLeft = (ImageBrush) GetTemplateChild("SelectedHoverTopLeft");
-            SelectedHoverTop = (ImageBrush) GetTemplateChild("SelectedHoverTop");
-            SelectedHoverTopRight = (ImageBrush) GetTemplateChild("SelectedHoverTopRight");
-            SelectedHoverLeft = (ImageBrush) GetTemplateChild("SelectedHoverLeft");
-            SelectedHoverCenter = (ImageBrush) GetTemplateChild("SelectedHoverCenter");
-            SelectedHoverRight = (ImageBrush) GetTemplateChild("SelectedHoverRight");
-            SelectedHoverBottomLeft = (ImageBrush) GetTemplateChild("SelectedHoverBottomLeft");
-            SelectedHoverBottom = (ImageBrush) GetTemplateChild("SelectedHoverBottom");
-            SelectedHoverBottomRight = (ImageBrush) GetTemplateChild("SelectedHoverBottomRight");
+            SelectedHoverTopLeft = (ImageBrush)GetTemplateChild("SelectedHoverTopLeft");
+            SelectedHoverTop = (ImageBrush)GetTemplateChild("SelectedHoverTop");
+            SelectedHoverTopRight = (ImageBrush)GetTemplateChild("SelectedHoverTopRight");
+            SelectedHoverLeft = (ImageBrush)GetTemplateChild("SelectedHoverLeft");
+            SelectedHoverCenter = (ImageBrush)GetTemplateChild("SelectedHoverCenter");
+            SelectedHoverRight = (ImageBrush)GetTemplateChild("SelectedHoverRight");
+            SelectedHoverBottomLeft = (ImageBrush)GetTemplateChild("SelectedHoverBottomLeft");
+            SelectedHoverBottom = (ImageBrush)GetTemplateChild("SelectedHoverBottom");
+            SelectedHoverBottomRight = (ImageBrush)GetTemplateChild("SelectedHoverBottomRight");
 
-            SelectedActiveTopLeft = (ImageBrush) GetTemplateChild("SelectedActiveTopLeft");
-            SelectedActiveTop = (ImageBrush) GetTemplateChild("SelectedActiveTop");
-            SelectedActiveTopRight = (ImageBrush) GetTemplateChild("SelectedActiveTopRight");
-            SelectedActiveLeft = (ImageBrush) GetTemplateChild("SelectedActiveLeft");
-            SelectedActiveCenter = (ImageBrush) GetTemplateChild("SelectedActiveCenter");
-            SelectedActiveRight = (ImageBrush) GetTemplateChild("SelectedActiveRight");
-            SelectedActiveBottomLeft = (ImageBrush) GetTemplateChild("SelectedActiveBottomLeft");
-            SelectedActiveBottom = (ImageBrush) GetTemplateChild("SelectedActiveBottom");
-            SelectedActiveBottomRight = (ImageBrush) GetTemplateChild("SelectedActiveBottomRight");
+            SelectedActiveTopLeft = (ImageBrush)GetTemplateChild("SelectedActiveTopLeft");
+            SelectedActiveTop = (ImageBrush)GetTemplateChild("SelectedActiveTop");
+            SelectedActiveTopRight = (ImageBrush)GetTemplateChild("SelectedActiveTopRight");
+            SelectedActiveLeft = (ImageBrush)GetTemplateChild("SelectedActiveLeft");
+            SelectedActiveCenter = (ImageBrush)GetTemplateChild("SelectedActiveCenter");
+            SelectedActiveRight = (ImageBrush)GetTemplateChild("SelectedActiveRight");
+            SelectedActiveBottomLeft = (ImageBrush)GetTemplateChild("SelectedActiveBottomLeft");
+            SelectedActiveBottom = (ImageBrush)GetTemplateChild("SelectedActiveBottom");
+            SelectedActiveBottomRight = (ImageBrush)GetTemplateChild("SelectedActiveBottomRight");
         }
 
         public double BaseNormalOpacity;
 
         public Double NormalOpacity
         {
-            get => (Double) GetValue(NormalOpacityProperty);
+            get => (Double)GetValue(NormalOpacityProperty);
             set => SetValue(NormalOpacityProperty, value);
         }
 
         public Double HoverOpacity
         {
-            get => (Double) GetValue(HoverOpacityProperty);
+            get => (Double)GetValue(HoverOpacityProperty);
             set => SetValue(HoverOpacityProperty, value);
         }
 
         public Color TextColor
         {
-            get => (Color) GetValue(TextColorProperty);
+            get => (Color)GetValue(TextColorProperty);
             set => SetValue(TextColorProperty, value);
         }
 
         public Color SelectedTextColor
         {
-            get => (Color) GetValue(SelectedTextColorProperty);
+            get => (Color)GetValue(SelectedTextColorProperty);
             set => SetValue(SelectedTextColorProperty, value);
         }
 
         public bool BlendNormal
         {
-            get => (bool) GetValue(BlendNormalProperty);
+            get => (bool)GetValue(BlendNormalProperty);
             set => SetValue(BlendNormalProperty, value);
         }
 
         public bool Selected
         {
-            get => (bool) GetValue(SelectedProperty);
+            get => (bool)GetValue(SelectedProperty);
             set => SetValue(SelectedProperty, value);
         }
 
         public Double ActiveOpacity
         {
-            get => (Double) GetValue(ActiveOpacityProperty);
+            get => (Double)GetValue(ActiveOpacityProperty);
             set => SetValue(ActiveOpacityProperty, value);
         }
 
@@ -530,31 +530,31 @@ namespace ModAPI.Components
 
         public Point ContentOffset
         {
-            get => (Point) GetValue(ContentOffsetProperty);
+            get => (Point)GetValue(ContentOffsetProperty);
             set => SetValue(ContentOffsetProperty, value);
         }
 
         public Thickness Border
         {
-            get => (Thickness) GetValue(BorderProperty);
+            get => (Thickness)GetValue(BorderProperty);
             set => SetValue(BorderProperty, value);
         }
 
         public Thickness BorderSize
         {
-            get => (Thickness) GetValue(BorderSizeProperty);
+            get => (Thickness)GetValue(BorderSizeProperty);
             set => SetValue(BorderSizeProperty, value);
         }
 
         public Thickness InnerPadding
         {
-            get => (Thickness) GetValue(InnerPaddingProperty);
+            get => (Thickness)GetValue(InnerPaddingProperty);
             set => SetValue(InnerPaddingProperty, value);
         }
 
         public Thickness Overflow
         {
-            get => (Thickness) GetValue(OverflowProperty);
+            get => (Thickness)GetValue(OverflowProperty);
             set => SetValue(OverflowProperty, value);
         }
 
