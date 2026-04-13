@@ -152,6 +152,7 @@ namespace ModAPI.Utils
             }
             catch (Exception e)
             {
+                Debug.Log("Checksum", e.Message, Debug.Type.Warning);
                 data += "StackOverflow|";
             }
             return data;

@@ -177,7 +177,7 @@ namespace ModAPI
 
         protected static void Help(object[] param)
         {
-            if (param.Length == 0 || param[0] == "")
+            if (param.Length == 0 || (string)param[0] == "")
             {
                 Write("Available commands: " + string.Join(", ", CommandList.ToArray()), "Help");
             }
@@ -258,7 +258,7 @@ namespace ModAPI
                 Initialized = true;
             }
 
-            if (systemObject.transform.FindChild("__ModAPIConsole__") == null)
+            if (systemObject.transform.Find("__ModAPIConsole__") == null)
             {
                 var console = new GameObject("__ModAPIConsole__");
                 ConsoleComponent = console.AddComponent<ConsoleComponent>();

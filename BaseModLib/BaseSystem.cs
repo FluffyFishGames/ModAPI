@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using Ionic.Zip;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ModAPI
 {
@@ -183,7 +184,7 @@ namespace ModAPI
                             Log.Write("Asset bundle: " + o, "Core");
                             if (o is GUISkin)
                             {
-                                Gui.Skin = (GUISkin)o;
+                                Interface.Skin = (GUISkin)o;
                             }
                         }
                     }
@@ -195,7 +196,7 @@ namespace ModAPI
             }
             if (SystemObject == null)
             {
-                Log.Write(Application.loadedLevel + "", "Core");
+                Log.Write(SceneManager.GetActiveScene().buildIndex + "", "Core");
                 SystemObject = new GameObject("__ModAPISystem__");
                 ;
                 Input.Initialize(SystemObject);
@@ -209,7 +210,7 @@ namespace ModAPI
                     SystemObject.AddComponent<LiveInspector>();
                 }
 
-                if (Application.loadedLevel > 0)
+                if (SceneManager.GetActiveScene().buildIndex > 0)
                 {
                     Execute(ExecuteOnGameStart);
                 }
@@ -288,7 +289,7 @@ namespace ModAPI
                 else
                 {
                     Execute(ExecuteEveryFrame);
-                    if (Application.loadedLevel > 0)
+                    if (SceneManager.GetActiveScene().buildIndex > 0)
                     {
                         Execute(ExecuteEveryFrameInGame);
                     }

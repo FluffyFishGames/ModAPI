@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VersionsData>
+	<files>
+		<file>%fileBase%_Data/Managed/Assembly-CSharp.dll</file>
+	</files>
+	<version id="2.9.5">
+		<checksum>ED9DE9E5A0AE7CA138082E2F85316430C05C409954154B4544EBED5ABA287B36</checksum>
+	</version>
+</VersionsData>

@@ -25,6 +25,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using ModAPI.Data;
 using ModAPI.Utils;
+using System.IO;
 using Path = System.IO.Path;
 
 namespace ModAPI.Windows.SubWindows
@@ -50,33 +51,61 @@ namespace ModAPI.Windows.SubWindows
         {
             InitializeComponent();
             Task = task;
-            GamePath.Text = ((Game)task.Parameters[0]).GamePath;
+            var game = (Game)task.Parameters[0];
+            GamePath.Text = game.GamePath;
+            GameNameLabel.Text = !string.IsNullOrEmpty(game.GameConfiguration.Name)
+                ? game.GameConfiguration.Name
+                : game.GameConfiguration.Id;
             Check();
         }
 
         protected void Check()
         {
-            ((Game)Task.Parameters[0]).GamePath = GamePath.Text;
-            if (Task.Check())
-            {
-                AcceptIcon.Visibility = Visibility.Visible;
-                DeclineIcon.Visibility = Visibility.Hidden;
-                ConfirmButton.Opacity = 1f;
-                ConfirmButton.IsEnabled = true;
-            }
-            else
-            {
-                AcceptIcon.Visibility = Visibility.Hidden;
-                DeclineIcon.Visibility = Visibility.Visible;
-                ConfirmButton.Opacity = 0.5f;
-                ConfirmButton.IsEnabled = false;
-            }
+            var game = (Game)Task.Parameters[0];
+            game.GamePath = GamePath.Text;
+
+            // 경로 지정 팝업에서는 SelectFile(실행파일)만 존재하면 유효
+            // CheckGamePath()는 모든 DLL을 검사하므로 여기서는 사용하지 않음
+            var valid = IsGamePathValid(game);
+
+            AcceptIcon.Visibility = valid ? Visibility.Visible : Visibility.Hidden;
+            DeclineIcon.Visibility = valid ? Visibility.Hidden : Visibility.Visible;
+            ConfirmButton.Opacity = valid ? 1f : 0.5f;
+            ConfirmButton.IsEnabled = valid;
+        }
+
+        protected bool IsGamePathValid(Game game)
+        {
+            var path = game.GamePath;
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            // 파일이 선택된 경우 → 폴더로 변환
+            string folder = path;
+            if (File.Exists(path) && !Directory.Exists(path))
+                folder = Path.GetDirectoryName(path);
+
+            if (!Directory.Exists(folder))
+                return false;
+
+            // SelectFile(실행파일)이 존재하는지만 확인
+            var selectFile = game.GameConfiguration.SelectFile;
+            if (string.IsNullOrWhiteSpace(selectFile))
+                return false;
+
+            return File.Exists(Path.Combine(folder, selectFile));
         }
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            ((Game)Task.Parameters[0]).GamePath = GamePath.Text;
-            if (Task.Check())
+            var game = (Game)Task.Parameters[0];
+            // 파일이 선택된 경우 → 폴더로 변환
+            var path = GamePath.Text;
+            if (File.Exists(path) && !Directory.Exists(path))
+                path = Path.GetDirectoryName(path);
+            game.GamePath = path;
+
+            if (IsGamePathValid(game))
             {
                 Completed = true;
                 Task.Complete();
@@ -96,9 +125,12 @@ namespace ModAPI.Windows.SubWindows
 
         private void OnClickBrowse(object sender, RoutedEventArgs e)
         {
+            // App.Game 대신 실제 대상 게임의 SelectFile 사용
+            var targetGame = (Game)Task.Parameters[0];
+            var selectFile = targetGame.GameConfiguration.SelectFile;
             var openFileDialog1 = new OpenFileDialog
             {
-                Filter = App.Game.GameConfiguration.SelectFile + "|" + App.Game.GameConfiguration.SelectFile,
+                Filter = selectFile + "|" + selectFile,
                 RestoreDirectory = true
             };
             if (openFileDialog1.ShowDialog() == true)

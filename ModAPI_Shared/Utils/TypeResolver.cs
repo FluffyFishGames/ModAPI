@@ -198,7 +198,7 @@ namespace ModAPI.Utils
             {
                 return type;
             }
-            return module.Import(type);
+            return module.ImportReference(type);
         }
 
         public static MethodReference GetMethodReference(ModuleDefinition module, string Namespace, string method, string type, string returnType, string[] arguments)
@@ -212,7 +212,7 @@ namespace ModAPI.Utils
             {
                 return m;
             }
-            return module.Import(m);
+            return module.ImportReference(m);
         }
 
         public static FieldReference GetFieldReference(ModuleDefinition module, string Namespace, string type, string fieldName, string fieldType)
@@ -226,7 +226,7 @@ namespace ModAPI.Utils
             {
                 return f;
             }
-            return module.Import(f);
+            return module.ImportReference(f);
         }
     }
 }

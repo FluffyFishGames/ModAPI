@@ -219,6 +219,7 @@ namespace ModAPI.Data.Models
                     }
                     catch (Exception e)
                     {
+                        Debug.Log("ModProject", e.Message, Debug.Type.Warning);
                         SaveFailed = true;
                         Id = PreviousId;
                         return;
@@ -231,7 +232,7 @@ namespace ModAPI.Data.Models
             var rootElement = new XElement("Mod");
             rootElement.SetAttributeValue("ID", Id);
 
-            rootElement.Add(new XElement("Compatible", Game.ModLibrary.GameVersion));
+            rootElement.Add(new XElement("Compatible", Game.ModLibrary != null ? Game.ModLibrary.GameVersion : ""));
 
             var nameElement = new XElement("Name");
             foreach (var langKey in Languages)
@@ -266,6 +267,7 @@ namespace ModAPI.Data.Models
             }
             catch (Exception e)
             {
+                Debug.Log("ModProject", e.Message, Debug.Type.Warning);
                 SaveFailed = true;
                 return;
             }
@@ -304,13 +306,16 @@ namespace ModAPI.Data.Models
             }
 
             modLibrary.Add(new Uri(Path.GetFullPath(Configuration.GetPath("Libraries") + Path.DirectorySeparatorChar + "BaseModLib.dll")));
-            foreach (var assemblyPath in Game.GameConfiguration.IncludeAssemblies)
+            if (Game.ModLibrary != null)
             {
-                modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
-            }
-            foreach (var assemblyPath in Game.GameConfiguration.CopyAssemblies)
-            {
-                modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
+                foreach (var assemblyPath in Game.GameConfiguration.IncludeAssemblies)
+                {
+                    modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
+                }
+                foreach (var assemblyPath in Game.GameConfiguration.CopyAssemblies)
+                {
+                    modLibrary.Add(new Uri(Path.GetFullPath(Game.ModLibrary.GetLibraryFolder() + Path.DirectorySeparatorChar + Game.ParsePath(assemblyPath))));
+                }
             }
 
             var projectUri = new Uri(GetFolderPath());
@@ -402,6 +407,7 @@ namespace ModAPI.Data.Models
             }
             catch (Exception e)
             {
+                Debug.Log("ModProject", e.Message, Debug.Type.Warning);
                 SaveFailed = true;
             }
         }
@@ -471,6 +477,7 @@ namespace ModAPI.Data.Models
             }
             catch (Exception e)
             {
+                Debug.Log("ModProject", e.Message, Debug.Type.Warning);
             }
         }
 
@@ -506,6 +513,7 @@ namespace ModAPI.Data.Models
             }
             catch (Exception e)
             {
+                Debug.Log("ModProject", e.Message, Debug.Type.Warning);
                 return "";
             }
         }
@@ -550,6 +558,12 @@ namespace ModAPI.Data.Models
                 return;
             }
 
+            if (Game.ModLibrary == null)
+            {
+                Debug.Log("Mod: " + Id, "ModLibrary is not initialized. Please create Mod Library first.", Debug.Type.Error);
+                SetProgress(progress, "Error.FileNotFound");
+                return;
+            }
             var libraryFolder = Game.ModLibrary.GetLibraryFolder();
             var baseModLibPath = libraryFolder + Path.DirectorySeparatorChar + "BaseModLib.dll";
 
@@ -676,7 +690,7 @@ namespace ModAPI.Data.Models
                                     {
                                         if (((MethodReference)instruction.Operand).FullName == map.Key.FullName)
                                         {
-                                            instruction.Operand = type.Module.Import(map.Value);
+                                            instruction.Operand = type.Module.ImportReference(map.Value);
                                             var newInstruction = methodIl.Create(OpCodes.Ldstr, Id);
                                             methodIl.InsertBefore(instruction, newInstruction);
                                         }

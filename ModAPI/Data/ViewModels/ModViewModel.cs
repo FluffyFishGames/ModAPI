@@ -51,7 +51,7 @@ public class ModViewModel : INotifyPropertyChanged
         OnPropertyChanged("Description");
         foreach (var li in Buttons)
         {
-            var mv = (ModButtonViewModel) li.DataContext;
+            var mv = (ModButtonViewModel)li.DataContext;
             mv.OnPropertyChanged("Name");
             mv.OnPropertyChanged("Description");
         }
@@ -85,7 +85,7 @@ public class ModViewModel : INotifyPropertyChanged
         for (var i = 0; i < _Versions.Count; i++)
         {
             var item = _Versions[i];
-            var mod = ((ModVersionViewModel) item.DataContext).Mod;
+            var mod = ((ModVersionViewModel)item.DataContext).Mod;
             if (!VersionsData.Values.Contains(mod))
             {
                 _Versions.RemoveAt(i);
@@ -122,7 +122,7 @@ public class ModViewModel : INotifyPropertyChanged
 
                 var label = new TextBlock();
                 label.SetBinding(TextBlock.TextProperty, "Version");
-                label.Style = (Style) Application.Current.FindResource("HeaderLabel");
+                label.Style = (Style)Application.Current.FindResource("HeaderLabel");
 
                 var panel2 = new StackPanel
                 {
@@ -131,7 +131,7 @@ public class ModViewModel : INotifyPropertyChanged
                 var compatibleLabel = new TextBlock();
                 compatibleLabel.SetResourceReference(TextBlock.TextProperty, "Lang.Mods.Labels.Compatible");
                 compatibleLabel.FontSize = 14;
-                compatibleLabel.Style = (Style) Application.Current.FindResource("NormalLabel");
+                compatibleLabel.Style = (Style)Application.Current.FindResource("NormalLabel");
 
                 compatibleLabel.Margin = new Thickness(0, 0, 5, 0);
                 var label2 = new TextBlock();
@@ -159,7 +159,7 @@ public class ModViewModel : INotifyPropertyChanged
             var found = false;
             foreach (var item in _Versions)
             {
-                var mod = ((ModVersionViewModel) item.DataContext).Mod;
+                var mod = ((ModVersionViewModel)item.DataContext).Mod;
                 var build = Mod.Header.ParseModVersion(mod.HeaderData.GetVersion());
                 if (build == versionToPrefer)
                 {
@@ -209,7 +209,7 @@ public class ModViewModel : INotifyPropertyChanged
             {
                 return "";
             }
-            var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
+            var vm = ((ModVersionViewModel)SelectedVersion.DataContext);
             if (vm != null)
             {
                 var mod = vm.Mod;
@@ -235,7 +235,7 @@ public class ModViewModel : INotifyPropertyChanged
             {
                 return "";
             }
-            var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
+            var vm = ((ModVersionViewModel)SelectedVersion.DataContext);
 
             if (vm != null)
             {
@@ -251,6 +251,54 @@ public class ModViewModel : INotifyPropertyChanged
                 }
             }
             return "";
+        }
+    }
+
+    public string GameId
+    {
+        get
+        {
+            if (VersionsData.Count == 0) return "";
+            var mod = VersionsData[VersionsData.Keys.First()];
+
+            // 파일 경로의 폴더명에서 게임 ID 직접 추출
+            // mods\{GameId}\xxx.mod 구조에서 GameId를 읽음
+            if (!string.IsNullOrEmpty(mod?.FileName))
+            {
+                var folderName = System.IO.Path.GetFileName(
+                    System.IO.Path.GetDirectoryName(mod.FileName));
+                if (!string.IsNullOrEmpty(folderName))
+                    return folderName;
+            }
+            return mod?.Game?.GameConfiguration?.Id ?? "";
+        }
+    }
+
+    public string GameName
+    {
+        get
+        {
+            var id = GameId;
+            if (string.IsNullOrEmpty(id)) return "";
+
+            // Configuration.Games에서 게임 ID로 이름 조회
+            ModAPI.Configurations.Configuration.GameConfiguration config = null;
+            if (ModAPI.Configurations.Configuration.Games.ContainsKey(id))
+                config = ModAPI.Configurations.Configuration.Games[id];
+            else
+            {
+                foreach (var kv in ModAPI.Configurations.Configuration.Games)
+                {
+                    if (string.Equals(kv.Value.Id, id, StringComparison.OrdinalIgnoreCase))
+                    {
+                        config = kv.Value;
+                        break;
+                    }
+                }
+            }
+
+            if (config == null) return id;
+            return !string.IsNullOrEmpty(config.Name) ? config.Name : config.Id;
         }
     }
 
@@ -281,7 +329,7 @@ public class ModViewModel : INotifyPropertyChanged
             _SelectedVersion = value;
             if (_SelectedVersion != null)
             {
-                var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
+                var vm = ((ModVersionViewModel)SelectedVersion.DataContext);
                 _Buttons = new ObservableCollection<Grid>();
                 if (vm != null)
                 {
@@ -344,8 +392,8 @@ public class ModViewModel : INotifyPropertyChanged
                             {
                                 IsReadOnly = true
                             };
-                            input.KeyUp += delegate(object o, KeyEventArgs e) { ChangeStandardKey(o, e, bvm); };
-                            input.KeyDown += delegate(object o, KeyEventArgs e) { StandardKeyDown(o, e, bvm); };
+                            input.KeyUp += delegate (object o, KeyEventArgs e) { ChangeStandardKey(o, e, bvm); };
+                            input.KeyDown += delegate (object o, KeyEventArgs e) { StandardKeyDown(o, e, bvm); };
                             input.SetBinding(TextBox.TextProperty, "Key");
 
                             Grid.SetColumn(input, 1);
@@ -371,7 +419,7 @@ public class ModViewModel : INotifyPropertyChanged
 
     private void ChangeStandardKey(object sender, KeyEventArgs e, ModButtonViewModel button)
     {
-        var t = (TextBox) sender;
+        var t = (TextBox)sender;
         t.Focus();
         var kc = new KeysConverter();
         var keys = new List<string>();
@@ -473,7 +521,7 @@ public class ModViewModel : INotifyPropertyChanged
 
     private void StandardKeyDown(object sender, KeyEventArgs e, ModButtonViewModel button)
     {
-        var t = (TextBox) sender;
+        var t = (TextBox)sender;
         t.Focus();
         e.Handled = true;
         if (PressedKeys.Contains(e.Key))
@@ -491,7 +539,7 @@ public class ModViewModel : INotifyPropertyChanged
             {
                 return "";
             }
-            var vm = ((ModVersionViewModel) SelectedVersion.DataContext);
+            var vm = ((ModVersionViewModel)SelectedVersion.DataContext);
             if (vm != null)
             {
                 var mod = vm.Mod;

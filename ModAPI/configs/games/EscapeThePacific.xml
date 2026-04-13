@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<game id="EscapeThePacific">
+	<n>Escape The Pacific</n>
+	<steamAppID>632730</steamAppID>
+	<selectFile>EscapeThePacific.exe</selectFile>
+	<assemblyPath>%fileBase%_Data/Managed/</assemblyPath>
+	<searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\Escape The Pacific</searchPath>
+	<searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\Escape The Pacific</searchPath>
+	<!-- includeAssembly: CheckGamePath() 존재 검사 대상 -->
+	<includeAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</includeAssembly>
+	<!-- System / Mono -->
+	<copyAssembly>%fileBase%_Data/Managed/mscorlib.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Mono.Security.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Core.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Configuration.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Xml.dll</copyAssembly>
+	<!-- UnityEngine -->
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.CoreModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UI.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.IMGUIModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.PhysicsModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AnimationModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AudioModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.InputLegacyModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AssetBundleModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TextRenderingModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.ParticleSystemModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.DirectorModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.VFXModule.dll</copyAssembly>
+	<!-- Game assembly -->
+	<copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</copyAssembly>
+</game>

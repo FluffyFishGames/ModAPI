@@ -106,7 +106,7 @@ namespace ModAPI
 
         public static void Initialize(GameObject parent)
         {
-            if (parent.transform.FindChild("__ModAPIInputManager__") == null)
+            if (parent.transform.Find("__ModAPIInputManager__") == null)
             {
                 var inputManager = new GameObject("__ModAPIInputManager__");
                 inputManager.AddComponent<Input>();

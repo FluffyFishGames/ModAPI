@@ -227,6 +227,13 @@ namespace ModAPI.Data
 
                 if (File.Exists(assemblyPath))
                 {
+#if DEBUG
+                    // 디버그: 더미 파일은 Cecil 파싱 없이 그대로 복사
+                    var savePath = Path.GetFullPath(libraryPath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]));
+                    Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                    File.Copy(assemblyPath, savePath, overwrite: true);
+                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "[DEBUG] Copied dummy assembly to " + savePath);
+#else
                     try
                     {
                         var module = ModuleDefinition.ReadModule(assemblyPath, new ReaderParameters
@@ -332,12 +339,17 @@ namespace ModAPI.Data
                         return;
                     }
                     Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Successfully parsed file: \"" + assemblyPath + "\" and copied in mod library.");
+#endif
                 }
                 else
                 {
+#if DEBUG
+                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "[DEBUG] Skipped missing assembly: \"" + assemblyPath + "\".", Debug.Type.Warning);
+#else
                     SetProgress(progress, "Error.ModifyAssemblyFileNotFound");
                     Debug.Log("ModLib: " + Game.GameConfiguration.Id, "File not found: \"" + assemblyPath + "\".", Debug.Type.Error);
                     return;
+#endif
                 }
                 SetProgress(progress, 5f + (i / (float)Game.GameConfiguration.IncludeAssemblies.Count) * 75f);
             }
@@ -357,9 +369,13 @@ namespace ModAPI.Data
                 }
                 else
                 {
+#if DEBUG
+                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "[DEBUG] Skipped missing copy assembly: \"" + copyFrom + "\".", Debug.Type.Warning);
+#else
                     SetProgress(progress, "Error.CopyAssemblyFileNotFound");
                     Debug.Log("ModLib: " + Game.GameConfiguration.Id, "File not found: \"" + copyFrom + "\".", Debug.Type.Error);
                     return;
+#endif
                 }
                 SetProgress(progress, 80f + (i / (float)Game.GameConfiguration.CopyAssemblies.Count) * 20f);
             }

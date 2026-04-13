@@ -1,4 +1,4 @@
-<!--  
+﻿<!--  
     ModAPI v2.0 - Fluent Design Styles (Light Theme)
     Windows 11 Fluent Design override layer - Light variant
     Loaded after Dictionary.xaml to override key visual styles
@@ -52,7 +52,7 @@
     <!-- ===== Override: NormalLabel ===== -->
     <Style x:Key="NormalLabel" TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
     </Style>
 
@@ -64,7 +64,7 @@
     <!-- ===== Override: HeaderLabel ===== -->
     <Style x:Key="HeaderLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseHeaderFontSize}" />
     </Style>
 
     <!-- ===== Override: Window (Minimal - content handles layout) ===== -->
@@ -75,6 +75,7 @@
         <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
         <Setter Property="Background" Value="{StaticResource FluentBgBrush}" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="AllowsTransparency" Value="False" />
         <Setter Property="WindowChrome.WindowChrome">
@@ -102,7 +103,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FontFamily" Value="{StaticResource FluentIconFont}" />
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseTinyFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextSecondaryBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -275,7 +276,7 @@
     <Style x:Key="TopTab" TargetType="{x:Type Components:IconTabItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Height" Value="48" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextSecondaryBrush}" />
         <Setter Property="Padding" Value="16,0" />
@@ -371,7 +372,7 @@
     <Style x:Key="PopupTab" TargetType="{x:Type Components:IconTabItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="Height" Value="40" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextSecondaryBrush}" />
         <Setter Property="Padding" Value="12,0" />
@@ -458,7 +459,7 @@
     <!-- ===== Override: NormalButton (Fluent Button) ===== -->
     <Style TargetType="{x:Type Button}" x:Key="NormalButton">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
         <Setter Property="Height" Value="32" />
@@ -660,7 +661,7 @@
     <!-- ===== Override: ChromelessTextBox ===== -->
     <Style x:Key="ChromelessTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
         <Setter Property="Background" Value="{StaticResource FluentBgTertiaryBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource FluentBorderBrush}" />
@@ -697,7 +698,7 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10,6,10,8" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToolTip}">
@@ -736,7 +737,7 @@
     <!-- ===== TreeViewItem Override ===== -->
     <Style TargetType="{x:Type TreeViewItem}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
         <Setter Property="Padding" Value="4,2" />
     </Style>
@@ -808,7 +809,7 @@
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="6,4" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Template">
             <Setter.Value>
@@ -849,7 +850,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
@@ -857,7 +858,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid Width="16" Height="16" Margin="0,0,5,0" VerticalAlignment="Center">
                             <Ellipse x:Name="OuterCircle" Width="16" Height="16" 
-                                     Stroke="{StaticResource FluentTextTertiaryBrush}" StrokeThickness="1.5" Fill="Transparent" />
+                                     Stroke="{StaticResource FluentTextSecondaryBrush}" StrokeThickness="1.5" Fill="Transparent" />
                             <Ellipse x:Name="InnerDot" Width="8" Height="8" 
                                      Fill="{StaticResource FluentAccentBrush}" Visibility="Collapsed" />
                         </Grid>
@@ -881,7 +882,7 @@
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
@@ -924,7 +925,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="8,4" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -952,7 +953,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource FluentBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Padding" Value="8,6" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItem}" />
         <Setter Property="Template">

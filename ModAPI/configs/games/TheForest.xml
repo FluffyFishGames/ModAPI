@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <game id="TheForest" extends="GenericUnityGame">
-  <name>The Forest</name>
+  <n>The Forest</n>
   <steamAppID>242760</steamAppID>
   <selectFile>TheForest.exe</selectFile>
   <excludeNamespace>ManagedSteam*</excludeNamespace>
@@ -12,29 +12,48 @@
   <excludeType>Car*</excludeType>
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\The Forest</searchPath>
   <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\The Forest</searchPath>
-  <copyAssembly>%fileBase%_data/Managed/Boo.Lang.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Mono.Posix.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Mono.Security.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/mscorlib.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Pathfinding.ClipperLib.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Pathfinding.Ionic.Zip.Reduced.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Pathfinding.JsonFx.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Pathfinding.Poly2Tri.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/PlayMaker.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/Rewired_Core.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Configuration.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Core.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Security.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/System.Xml.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/TheForest.Commons.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/TheForest.Modding.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/UnityEngine.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/UnityEngine.Networking.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/UnityEngine.UI.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/UnityScript.Lang.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/udpkit.dll</copyAssembly>
-  <copyAssembly>%fileBase%_data/Managed/udpkit.common.dll</copyAssembly>
+  <!-- System / Mono -->
+  <copyAssembly>%fileBase%_Data/Managed/mscorlib.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Boo.Lang.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Mono.Data.Tds.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Mono.Posix.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Mono.Security.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Configuration.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Core.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Data.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.EnterpriseServices.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Security.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Transactions.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Xml.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Xml.Linq.dll</copyAssembly>
+  <!-- UnityEngine -->
+  <copyAssembly>%fileBase%_Data/Managed/UnityEngine.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/UnityEngine.Networking.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/UnityEngine.UI.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/UnityScript.Lang.dll</copyAssembly>
+  <!-- Third-party -->
+  <copyAssembly>%fileBase%_Data/Managed/bolt.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/bolt.user.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Newtonsoft.Json.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Pathfinding.ClipperLib.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Pathfinding.Ionic.Zip.Reduced.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Pathfinding.JsonFx.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Pathfinding.Poly2Tri.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/PlayMaker.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/RestSharp.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Rewired_Core.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Rewired_Windows_Lib.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/SteamworksManaged.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/udpkit.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/udpkit.common.dll</copyAssembly>
+  <!-- Game assemblies -->
+  <copyAssembly>%fileBase%_Data/Managed/TheForest.Commons.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/TheForest.Modding.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp-firstpass.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Assembly-UnityScript-firstpass.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Assembly-UnityScript.dll</copyAssembly>
   <noFamily>OVRCamera</noFamily>
   <noFamily>OVRCameraController</noFamily>
   <noFamily>ObservedList*</noFamily>

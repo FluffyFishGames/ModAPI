@@ -149,10 +149,16 @@ namespace ModAPI.Windows.SubWindows
             {
                 try
                 {
+                    // Task.Parameters[0] = 해당 게임 객체 (App.Game 대신 사용)
+                    var targetGame = (Task.Parameters != null && Task.Parameters.Length > 0)
+                        ? Task.Parameters[0] as ModAPI.Data.Game
+                        : null;
+                    if (targetGame == null) targetGame = App.Game;
+
                     var steamPath = Configuration.GetPath("Steam");
                     var p = new Process();
                     p.StartInfo.FileName = steamPath + Path.DirectorySeparatorChar + "Steam.exe";
-                    p.StartInfo.Arguments = "steam://validate/" + App.Game.GameConfiguration.SteamAppId;
+                    p.StartInfo.Arguments = "steam://validate/" + targetGame.GameConfiguration.SteamAppId;
                     p.StartInfo.UseShellExecute = false;
                     p.Start();
                     progressHandler.Task = "Restore";
@@ -199,11 +205,11 @@ namespace ModAPI.Windows.SubWindows
                             }
                             if (check)
                             {
-                                if (n.EndsWith("AppID " + App.Game.GameConfiguration.SteamAppId + " state changed : Fully Installed,"))
+                                if (n.EndsWith("AppID " + targetGame.GameConfiguration.SteamAppId + " state changed : Fully Installed,"))
                                 {
                                     state = 3;
                                 }
-                                else if (n.Contains("AppID " + App.Game.GameConfiguration.SteamAppId) && n.Contains("(Suspended)"))
+                                else if (n.Contains("AppID " + targetGame.GameConfiguration.SteamAppId) && n.Contains("(Suspended)"))
                                 {
                                     state = 1;
                                 }

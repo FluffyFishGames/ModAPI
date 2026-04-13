@@ -136,7 +136,7 @@ namespace ModAPI
                 }
             }
             catch { }
-            return "dark";
+            return "classic";
         }
 
         public static void SaveTheme(string theme)

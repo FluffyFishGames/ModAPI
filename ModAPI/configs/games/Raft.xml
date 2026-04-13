@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<game id="Raft">
+	<n>RAFT</n>
+	<steamAppID>648800</steamAppID>
+	<selectFile>Raft.exe</selectFile>
+	<assemblyPath>%fileBase%_Data/Managed/</assemblyPath>
+	<searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\Raft</searchPath>
+	<searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\Raft</searchPath>
+	<!-- 필수 포함 어셈블리 (존재 검사 대상) -->
+	<includeAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</includeAssembly>
+	<!-- System / Mono -->
+	<copyAssembly>%fileBase%_Data/Managed/mscorlib.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Mono.Security.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/netstandard.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Core.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Configuration.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Data.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.IO.Compression.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.IO.Compression.FileSystem.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Net.Http.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Numerics.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Runtime.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Runtime.Serialization.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Security.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Xml.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Xml.Linq.dll</copyAssembly>
+	<!-- UnityEngine core -->
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.CoreModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UI.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.IMGUIModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.InputLegacyModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.InputModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.PhysicsModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.Physics2DModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AnimationModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AudioModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TextRenderingModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TextCoreFontEngineModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TextCoreTextEngineModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AIModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AssetBundleModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.DirectorModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.ParticleSystemModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TerrainModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TerrainPhysicsModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.VideoModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.VFXModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.SpriteMaskModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.SpriteShapeModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TilemapModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll</copyAssembly>
+	<!-- Unity packages -->
+	<copyAssembly>%fileBase%_Data/Managed/Unity.TextMeshPro.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.InputSystem.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.InputSystem.ForUI.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Netcode.Runtime.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Netcode.Components.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Networking.Transport.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Collections.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Mathematics.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Burst.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Timeline.dll</copyAssembly>
+	<!-- Third-party -->
+	<copyAssembly>%fileBase%_Data/Managed/Newtonsoft.Json.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/com.rlabrecque.steamworks.net.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/FMODUnity.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/FMODUnityResonance.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/PlayFab.dll</copyAssembly>
+	<!-- Game assembly -->
+	<copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</copyAssembly>
+</game>

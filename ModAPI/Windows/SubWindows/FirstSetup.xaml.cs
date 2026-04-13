@@ -53,9 +53,9 @@ namespace ModAPI.Windows.SubWindows
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             Completed = true;
-            Configuration.SetString("UseSteam", (bool) UseSteam.IsChecked ? "true" : "false", true);
-            Configuration.SetString("AutoUpdate", (bool) AutoUpdate.IsChecked ? "true" : "false", true);
-            Configuration.SetString("UpdateVersions", (bool) UseAutoUpdateVersions.IsChecked ? "true" : "false", true);
+            Configuration.SetString("UseSteam", (bool)UseSteam.IsChecked ? "true" : "false", true);
+            Configuration.SetString("AutoUpdate", (bool)AutoUpdate.IsChecked ? "true" : "false", true);
+            Configuration.SetString("UpdateVersions", (bool)UseAutoUpdateVersions.IsChecked ? "true" : "false", true);
             Configuration.SetString("SetupDone", "true", true);
             Configuration.Save();
             Close();

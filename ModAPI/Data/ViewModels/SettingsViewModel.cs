@@ -49,7 +49,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public bool UpdateVersionsTable
     {
-        get => Configuration.GetString("UpdateVersions") == "true";
+        get { var v = Configuration.GetString("UpdateVersions"); return v == "" || v == "true"; }
         set
         {
             Configuration.SetString("UpdateVersions", value ? "true" : "false", true);
@@ -59,7 +59,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public bool AutoUpdate
     {
-        get => Configuration.GetString("AutoUpdate") == "true";
+        get { var v = Configuration.GetString("AutoUpdate"); return v == "" || v == "true"; }
         set
         {
             Configuration.SetString("AutoUpdate", value ? "true" : "false", true);
@@ -68,7 +68,7 @@ public class SettingsViewModel : INotifyPropertyChanged
     }
     public bool UseSteam
     {
-        get => Configuration.GetString("UseSteam") == "true";
+        get { var v = Configuration.GetString("UseSteam"); return v == "" || v == "true"; }
         set
         {
             Configuration.SetString("UseSteam", value ? "true" : "false", true);

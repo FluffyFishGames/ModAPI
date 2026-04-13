@@ -33,6 +33,11 @@ namespace ModAPI
     // ReSharper disable once InconsistentNaming
     public class Interface
     {
-        public static GUISkin Skin => Gui.Skin;
+        private static GUISkin _skin;
+        public static GUISkin Skin
+        {
+            get => _skin;
+            set => _skin = value;
+        }
     }
 }

@@ -81,9 +81,10 @@
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">Cancelar</s:String>
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">Remover</s:String>
 
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">Ingresa la ruta del juego</s:String>
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">El juego no se pudo encontrar automáticamente. Por favor ingresa la ruta del juego manualmente.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">Ruta del Juego</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">No se pudo encontrar automáticamente la ruta del juego. Por favor, configure las rutas de instalación en la pestaña Settings.</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">Navegar</s:String>
+        <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.GoToSettings">Ir a Configuración</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">Continuar</s:String>
 
     <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">Ingresa la ruta de Steam</s:String>
@@ -139,6 +140,7 @@
     <s:String x:Key="Lang.Languages.PT">Portugués</s:String>
 
     <s:String x:Key="Lang.Development.Tab">Desarrollo</s:String>
+    <s:String x:Key="Lang.Development.Labels.GameFilter">Filtro de juego</s:String>
     <s:String x:Key="Lang.Development.Settings.Tab">Ajustes</s:String>
     <s:String x:Key="Lang.Development.Keys.Tab">Teclas asignadas</s:String>
     <s:String x:Key="Lang.Development.Projects">Projectos</s:String>
@@ -187,6 +189,7 @@
     <s:String x:Key="Lang.Mods.Labels.AvailableVersions">Versiones disponibles:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Name">Nombre:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Description">Descripción:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Game">Juego</s:String>
     <s:String x:Key="Lang.Mods.Labels.Buttons">Asignación de teclas</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">Compatible con:</s:String>
 
@@ -227,15 +230,25 @@
     <s:String x:Key="Lang.Downloads.Status.Downloading">Descargando...</s:String>
     <s:String x:Key="Lang.Downloads.Status.Complete">¡Descarga completa!</s:String>
     <s:String x:Key="Lang.Downloads.Status.Error">Error durante la descarga.</s:String>
+    <s:String x:Key="Lang.Downloads.Status.InProgress">En progreso</s:String>
+    <s:String x:Key="Lang.Downloads.Status.LoadComplete">Carga completa</s:String>
+    <s:String x:Key="Lang.Downloads.Status.NoDownloads">No hay descargas disponibles para este mod.</s:String>
     <s:String x:Key="Lang.Downloads.Version.Version">Versión</s:String>
     <s:String x:Key="Lang.Downloads.Version.Compatible">Compatible</s:String>
     <s:String x:Key="Lang.Downloads.Version.Date">Fecha</s:String>
     <s:String x:Key="Lang.Downloads.Version.Size">Tamaño</s:String>
     <s:String x:Key="Lang.Downloads.Version.Select">Selecciona un mod para ver versiones</s:String>
+    <s:String x:Key="Lang.Downloads.Label.GameFilter">Filtro de juego</s:String>
+    <s:String x:Key="Lang.Downloads.Label.ModSelect">Selección de MOD</s:String>
     <s:String x:Key="Lang.Downloads.Game.All">Todos</s:String>
     <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Game.DedicatedServer">Servidor dedicado</s:String>
     <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Subnautica">Subnautica</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Raft">RAFT</s:String>
+    <s:String x:Key="Lang.Downloads.Game.EscapeThePacific">Escape The Pacific</s:String>
+    <s:String x:Key="Lang.Downloads.Game.GreenHell">Green Hell</s:String>
+    <s:String x:Key="Lang.Downloads.Game.SOTF">Sons Of The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Category.All">Todos</s:String>
     <s:String x:Key="Lang.Downloads.Category.Bugfixes">Correcciones</s:String>
     <s:String x:Key="Lang.Downloads.Category.Balancing">Equilibrio</s:String>
@@ -252,16 +265,34 @@
     <s:String x:Key="Lang.Downloads.Buttons.Info">Info</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Title">Sin conexión a Internet</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Text">No se puede conectar al servidor de mods. Puedes descargar mods manualmente desde el sitio web:</s:String>
-    <s:String x:Key="Lang.Downloads.Offline.Manual">Después de descargar, coloca los archivos .mod en la carpeta "mods/TheForest" en tu directorio de ModAPI.</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">Después de descargar, coloque los archivos .mod en la carpeta del juego correspondiente en "mods/" de su directorio ModAPI.</s:String>
+        <s:String x:Key="Lang.Downloads.Offline.Manual2">(ej. mods/TheForest, mods/Subnautica, mods/Raft, mods/EscapeThePacific, mods/GH)</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Retry">Reintentar conexión</s:String>
 
     <s:String x:Key="Lang.Options.Tab">Ajustes</s:String>
+    <s:String x:Key="Lang.Welcome.Tab">Bienvenido</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">Idioma:</s:String>
+    <s:String x:Key="Lang.Options.Labels.FontSize">Tamaño de fuente</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Mantener tabla de versiones actualizada:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Buscar actualizaciones:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Conexión con Steam:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Siempre visible</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePaths">Rutas de instalación del juego</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePathSave">Guardar</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPath">Ruta de instalación de Steam</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steam no encontrado</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam no está instalado. Por favor, configure Steam en la pestaña Settings.</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">Aceptar</s:String>
+    <s:String x:Key="Lang.Options.Labels.Browse">Examinar</s:String>
+    <s:String x:Key="Lang.Options.Labels.Installed">Instalado</s:String>
+    <s:String x:Key="Lang.Options.Labels.NotInstalled">No instalado</s:String>
+    <s:String x:Key="Lang.Options.Labels.ExpandAll">Expandir todo</s:String>
+    <s:String x:Key="Lang.Options.Labels.CollapseAll">Contraer todo</s:String>
 
     <s:String x:Key="Lang.Options.Labels.Theme">Tema:</s:String>
+    <s:String x:Key="Lang.Options.Labels.MaxWidth">Ancho máximo</s:String>
+    <s:String x:Key="Lang.Options.Labels.ModListWidth">Ancho de lista de mods</s:String>
+    <s:String x:Key="Lang.Options.Labels.ProjectListWidth">Ancho de lista de proyectos</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">Tema clásico</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">Tema claro</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">Tema oscuro</s:String>
@@ -280,6 +311,22 @@
     <s:String x:Key="Lang.Windows.NoProjectWarning.Title">Advertencia</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Text">No se encontraron proyectos. Por favor, cree un proyecto primero.</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Title">Advertencia</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Text">No se ha seleccionado ningún mod. Por favor, seleccione un mod antes de iniciar el juego.</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Buttons.OK">Aceptar</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Title">Advertencia</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Text">Hay mods de diferentes juegos seleccionados. Por favor, seleccione mods del mismo juego.</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Buttons.OK">Aceptar</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Title">Advertencia</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Text">No hay ningún juego instalado. Por favor, configure la ruta del juego en la pestaña Settings.</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Buttons.OK">Aceptar</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Title">Ruta de juego no configurada</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Text">No hay ningún juego instalado. Por favor, configure la ruta del juego en la pestaña Settings.</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Buttons.OK">Aceptar</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Title">Conflicto de Juego</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Text">El juego configurado en la pestaña Settings no coincide con los mods instalados.
+Por favor, configure la ruta del juego en la pestaña Settings.</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Buttons.OK">Aceptar</s:String>
     <s:String x:Key="Lang.Mods.Buttons.Delete">Eliminar Mod</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Eliminar Mod</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">¿Eliminar el mod &quot;{0}&quot; y todas sus versiones? Esto también eliminará el .dll de la carpeta del juego.</s:String>

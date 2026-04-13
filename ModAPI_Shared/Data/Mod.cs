@@ -941,7 +941,7 @@ namespace ModAPI.Data
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Error while parsing header of mod \"" + Id + "\". Filename: \"" + Mod.FileName + "\"", Debug.Type.Warning);
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Error while parsing header of mod \"" + Id + "\". Filename: \"" + Mod.FileName + "\": " + e.Message, Debug.Type.Warning);
                     Valid = false;
                 }
             }

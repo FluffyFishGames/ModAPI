@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<game id="Subnautica">
+	<n>Subnautica</n>
+	<steamAppID>264710</steamAppID>
+	<selectFile>Subnautica.exe</selectFile>
+	<assemblyPath>%fileBase%_Data/Managed/</assemblyPath>
+	<searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\Subnautica</searchPath>
+	<searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\Subnautica</searchPath>
+	<!-- includeAssembly: CheckGamePath() 존재 검사 대상 -->
+	<includeAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</includeAssembly>
+	<!-- System / Mono -->
+	<copyAssembly>%fileBase%_Data/Managed/mscorlib.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Mono.Security.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Mono.Posix.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/netstandard.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Core.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Configuration.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Data.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Drawing.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.IO.Compression.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.IO.Compression.FileSystem.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Net.Http.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Numerics.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Runtime.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Runtime.Serialization.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Runtime.Serialization.Formatters.Soap.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Security.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Xml.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Xml.Linq.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/System.Windows.Forms.dll</copyAssembly>
+	<!-- UnityEngine core -->
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.CoreModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.SharedInternalsModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UI.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.IMGUIModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UIModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UIElementsModule.dll</copyAssembly>
+	<!-- UnityEngine gameplay -->
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AIModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AnimationModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AudioModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.ClothModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.DirectorModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.GridModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.InputLegacyModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.InputModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.ParticleSystemModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.Physics2DModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.PhysicsModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.SpriteMaskModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.SpriteShapeModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TerrainModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TerrainPhysicsModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TilemapModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.VideoModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.VFXModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.WindModule.dll</copyAssembly>
+	<!-- UnityEngine assets/rendering -->
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.AssetBundleModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.ImageConversionModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TextRenderingModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.TextCoreModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll</copyAssembly>
+	<!-- Unity packages -->
+	<copyAssembly>%fileBase%_Data/Managed/Unity.TextMeshPro.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Timeline.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.InputSystem.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Collections.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Mathematics.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Burst.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.ResourceManager.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Unity.Addressables.dll</copyAssembly>
+	<!-- Third-party -->
+	<copyAssembly>%fileBase%_Data/Managed/FMODUnity.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Newtonsoft.Json.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/LitJson.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/com.rlabrecque.steamworks.net.dll</copyAssembly>
+	<!-- Xbox/Gaming Runtime -->
+	<copyAssembly>%fileBase%_Data/Managed/XGamingRuntime.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/XblPCSandbox.dll</copyAssembly>
+	<!-- Game assemblies -->
+	<copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp-firstpass.dll</copyAssembly>
+	<copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</copyAssembly>
+</game>

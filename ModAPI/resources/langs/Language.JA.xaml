@@ -80,9 +80,10 @@
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">キャンセル</s:String>
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">削除</s:String>
 
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">ゲームパスを入力</s:String>
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">ゲームが自動的に見つかりませんでした。ゲームパスを手動で入力してください。</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">ゲームパス</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">ゲームパスが自動的に見つかりませんでした。Settingsタブのゲームインストールパスで設定してください。</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">参照</s:String>
+        <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.GoToSettings">Settingsへ移動</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">続行</s:String>
 
     <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">Steamパスを入力</s:String>
@@ -138,6 +139,7 @@
     <s:String x:Key="Lang.Languages.PT">ポルトガル語</s:String>
 
     <s:String x:Key="Lang.Development.Tab">開発</s:String>
+    <s:String x:Key="Lang.Development.Labels.GameFilter">ゲームフィルター</s:String>
     <s:String x:Key="Lang.Development.Settings.Tab">設定</s:String>
     <s:String x:Key="Lang.Development.Keys.Tab">割り当てキー</s:String>
     <s:String x:Key="Lang.Development.Projects">プロジェクト</s:String>
@@ -186,6 +188,7 @@
     <s:String x:Key="Lang.Mods.Labels.AvailableVersions">利用可能なバージョン:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Name">名前:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Description">説明:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Game">ゲーム</s:String>
     <s:String x:Key="Lang.Mods.Labels.Buttons">キー割り当て</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">対応バージョン:</s:String>
 
@@ -222,19 +225,29 @@
     <s:String x:Key="Lang.Downloads.Headers.Game">ゲーム</s:String>
     <s:String x:Key="Lang.Downloads.Headers.Downloads">ダウンロード数</s:String>
     <s:String x:Key="Lang.Downloads.Status.Ready">ダウンロードするModを選択してください。</s:String>
-    <s:String x:Key="Lang.Downloads.Status.Loading">Modリストを読み込み中...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">MODリストを読み込み中...</s:String>
     <s:String x:Key="Lang.Downloads.Status.Downloading">ダウンロード中...</s:String>
     <s:String x:Key="Lang.Downloads.Status.Complete">ダウンロード完了!</s:String>
     <s:String x:Key="Lang.Downloads.Status.Error">ダウンロード中にエラーが発生しました。</s:String>
+    <s:String x:Key="Lang.Downloads.Status.InProgress">読み込み中</s:String>
+    <s:String x:Key="Lang.Downloads.Status.LoadComplete">読み込み完了</s:String>
+    <s:String x:Key="Lang.Downloads.Status.NoDownloads">このModのダウンロードファイルがありません。</s:String>
     <s:String x:Key="Lang.Downloads.Version.Version">バージョン</s:String>
     <s:String x:Key="Lang.Downloads.Version.Compatible">互換性</s:String>
     <s:String x:Key="Lang.Downloads.Version.Date">日付</s:String>
     <s:String x:Key="Lang.Downloads.Version.Size">サイズ</s:String>
     <s:String x:Key="Lang.Downloads.Version.Select">MODを選択してバージョンを表示</s:String>
+    <s:String x:Key="Lang.Downloads.Label.GameFilter">ゲームフィルター</s:String>
+    <s:String x:Key="Lang.Downloads.Label.ModSelect">MOD選択</s:String>
     <s:String x:Key="Lang.Downloads.Game.All">すべて</s:String>
     <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Game.DedicatedServer">専用サーバー</s:String>
     <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Subnautica">Subnautica</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Raft">RAFT</s:String>
+    <s:String x:Key="Lang.Downloads.Game.EscapeThePacific">Escape The Pacific</s:String>
+    <s:String x:Key="Lang.Downloads.Game.GreenHell">Green Hell</s:String>
+    <s:String x:Key="Lang.Downloads.Game.SOTF">Sons Of The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Category.All">すべて</s:String>
     <s:String x:Key="Lang.Downloads.Category.Bugfixes">バグ修正</s:String>
     <s:String x:Key="Lang.Downloads.Category.Balancing">バランス</s:String>
@@ -251,16 +264,34 @@
     <s:String x:Key="Lang.Downloads.Buttons.Info">情報</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Title">インターネット接続なし</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Text">Modサーバーに接続できません。以下のサイトから手動でダウンロードできます:</s:String>
-    <s:String x:Key="Lang.Downloads.Offline.Manual">ダウンロード後、.modファイルをModAPIフォルダの「mods/TheForest」フォルダに配置してください。</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">ダウンロード後、.modファイルをModAPIディレクトリの"mods/"内の対応するゲームフォルダに入れてください。</s:String>
+        <s:String x:Key="Lang.Downloads.Offline.Manual2">(例: mods/TheForest, mods/Subnautica, mods/Raft, mods/EscapeThePacific, mods/GH)</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Retry">再接続</s:String>
 
     <s:String x:Key="Lang.Options.Tab">設定</s:String>
+    <s:String x:Key="Lang.Welcome.Tab">ようこそ</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">言語:</s:String>
+    <s:String x:Key="Lang.Options.Labels.FontSize">フォントサイズ</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">バージョンテーブルを最新に保つ:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">アップデートを確認:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam接続:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">常に手前に表示</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePaths">ゲームインストールパス</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePathSave">保存</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPath">Steamインストールパス</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steamが見つかりません</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steamがインストールされていません。SettingsタブでSteamを設定してください。</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Options.Labels.Browse">参照</s:String>
+    <s:String x:Key="Lang.Options.Labels.Installed">インストール済み</s:String>
+    <s:String x:Key="Lang.Options.Labels.NotInstalled">未インストール</s:String>
+    <s:String x:Key="Lang.Options.Labels.ExpandAll">すべて展開</s:String>
+    <s:String x:Key="Lang.Options.Labels.CollapseAll">すべて折りたたむ</s:String>
 
     <s:String x:Key="Lang.Options.Labels.Theme">テーマ:</s:String>
+    <s:String x:Key="Lang.Options.Labels.MaxWidth">最大幅</s:String>
+    <s:String x:Key="Lang.Options.Labels.ModListWidth">MODリスト幅</s:String>
+    <s:String x:Key="Lang.Options.Labels.ProjectListWidth">プロジェクトリスト幅</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">クラシックテーマ</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">ライトテーマ</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">ダークテーマ</s:String>
@@ -279,6 +310,22 @@
     <s:String x:Key="Lang.Windows.NoProjectWarning.Title">警告</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Text">プロジェクトが見つかりません。先にプロジェクトを作成してください。</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Text">Modが選択されていません。ゲームを開始する前にModを選択してください。</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Text">異なるゲームのModが選択されています。同じゲームのModのみ選択してください。</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Text">インストールされているゲームがありません。Settingsタブでゲームパスを設定してください。</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Title">ゲームパス未設定</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Text">インストールされているゲームがありません。Settingsタブでゲームパスを設定してください。</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Title">ゲーム不一致</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Text">Settingsタブで設定されたゲームとmodsフォルダのModが一致しません。
+Settingsタブでゲームパスを設定してください。</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Buttons.OK">OK</s:String>
     <s:String x:Key="Lang.Mods.Buttons.Delete">Modを削除</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Modを削除</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Mod &quot;{0}&quot; の全バージョンを削除しますか？ ゲームフォルダの.dllファイルも削除されます。</s:String>

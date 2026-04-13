@@ -56,7 +56,7 @@ namespace ModAPI
                     {
                         LogStream.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 }
@@ -85,7 +85,7 @@ namespace ModAPI
                                 File.Delete(oldLog);
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                         }
                     }

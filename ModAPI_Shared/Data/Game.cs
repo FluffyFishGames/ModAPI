@@ -68,6 +68,16 @@ namespace ModAPI.Data
             Verify();
         }
 
+        /// <summary>
+        /// 경량 생성자 — Verify() 없이 GameConfiguration과 GamePath만 설정
+        /// </summary>
+        public Game(Configuration.GameConfiguration gameConfiguration, bool lightweightOnly)
+        {
+            GameConfiguration = gameConfiguration;
+            GamePath = Configuration.GetPath("Games." + gameConfiguration.Id);
+            ModLibrary = new ModLib(this);
+        }
+
         protected void GamePathSpecified()
         {
             Configuration.SetPath("Games." + GameConfiguration.Id, GamePath, true);
@@ -91,13 +101,12 @@ namespace ModAPI.Data
                 }
             }
 
-            /** Some files are missing. We need to schedule a task to specify a new path before we can continue. **/
+            /** Some files are missing. Try auto-detection. If not found, user sets path in Settings tab. **/
             if (!CheckGamePath())
             {
                 GamePath = FindGamePath();
                 if (!CheckGamePath())
                 {
-                    Schedule.AddTask("GUI", "SpecifyGamePath", GamePathSpecified, new object[] { this }, CheckGamePath);
                     Valid = false;
                     return;
                 }
@@ -129,10 +138,10 @@ namespace ModAPI.Data
 
             if ((CheckSumGame != CheckSumBackup && CheckSumGame != CheckSumModded) || (!GameVersion.IsValid && CheckSumModded != "" && CheckSumModded != CheckSumGame))
             {
-                /*// Auto update the game without the need of Versions.xml
+                // Versions.xml에 현재 버전이 없으면 자동 등록
                 if (VersionsData.VersionsList.Count == 0 || VersionsData.VersionsList.All(o => o.CheckSum != CheckSumGame))
                 {
-                    Debug.Log("Game: " + GameConfiguration.ID, "Auto updating game with checksum: " + CheckSumGame);
+                    Debug.Log("Game: " + GameConfiguration.Id, "Auto registering game version with checksum: " + CheckSumGame);
                     VersionsData.VersionsList.Add(new Versions.Version(CheckSumGame));
 
                     BackupGameFiles();
@@ -142,9 +151,8 @@ namespace ModAPI.Data
                     BackupVersion = VersionsData.GetVersion(CheckSumBackup);
                     RegenerateModLibrary = true;
                 }
-                else*/
+                else
                 {
-                    Console.WriteLine("EH?");
                     Debug.Log("Game: " + GameConfiguration.Id, "Neither the game and modded checksum nor the game and backup checksum did match. Game checksum: " + CheckSumGame);
                     Schedule.AddTask("GUI", "RestoreGameFiles", Verify, new object[] { this });
                     Valid = false;
@@ -217,6 +225,7 @@ namespace ModAPI.Data
             var t = new Thread(delegate ()
             {
                 var gameFolder = GetGameFolder();
+                if (string.IsNullOrEmpty(gameFolder)) return;
                 foreach (var n in GameConfiguration.IncludeAssemblies)
                 {
                     var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
@@ -244,6 +253,7 @@ namespace ModAPI.Data
             CheckSumGame = "";
             CheckSumModded = "";
             var gameFolder = GetGameFolder();
+            if (string.IsNullOrEmpty(gameFolder)) return;
             var digester = MD5.Create();
             foreach (var p in VersionsData.CheckFiles)
             {
@@ -282,23 +292,27 @@ namespace ModAPI.Data
         public bool CheckGamePath()
         {
             var gameFolder = GetGameFolder();
+            if (string.IsNullOrEmpty(gameFolder)) return false;
+            // IncludeAssemblies만 확인 — 게임 설치 여부 판단 기준
+            // CopyAssemblies는 복사 대상일 뿐, 없어도 게임 설치 자체는 유효
             foreach (var n in GameConfiguration.IncludeAssemblies)
             {
                 var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+#if DEBUG
+                // 디버그: File.Exists만 확인 (더미 파일 허용)
                 if (!File.Exists(path))
                 {
                     Debug.Log("Required file \"" + path + "\" couldn't be found.", Debug.Type.Warning);
                     return false;
                 }
-            }
-            foreach (var n in GameConfiguration.CopyAssemblies)
-            {
-                var path = System.IO.Path.GetFullPath(gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
-                if (!File.Exists(path))
+#else
+                // 릴리즈: PE 헤더 + .NET 메타데이터 검증
+                if (!ModAPI.Utils.FileValidator.IsValidAssemblyDll(path))
                 {
-                    Debug.Log("Required file \"" + path + "\" couldn't be found.", Debug.Type.Warning);
+                    Debug.Log("Required assembly validation failed: \"" + path + "\"", Debug.Type.Warning);
                     return false;
                 }
+#endif
             }
             return true;
         }
@@ -306,6 +320,7 @@ namespace ModAPI.Data
         public string[] GetIncludedAssemblies()
         {
             var gameFolder = GetGameFolder();
+            if (string.IsNullOrEmpty(gameFolder)) return new string[0];
             var ret = new string[GameConfiguration.IncludeAssemblies.Count];
             for (var i = 0; i < GameConfiguration.IncludeAssemblies.Count; i++)
             {
@@ -347,6 +362,17 @@ namespace ModAPI.Data
             progress.Task = newTask;
         }
 
+        private static TypeDefinition GetTypeFromModules(Dictionary<string, ModuleDefinition> assemblies, string typeName, params string[] moduleKeys)
+        {
+            foreach (var key in moduleKeys)
+            {
+                if (!assemblies.ContainsKey(key)) continue;
+                var t = assemblies[key].GetType(typeName);
+                if (t != null) return t;
+            }
+            return null;
+        }
+
         public void ApplyMods(List<Mod> mods, ProgressHandler handler)
         {
             try
@@ -372,8 +398,68 @@ namespace ModAPI.Data
 
                 var libraryFolder = ModLibrary.GetLibraryFolder();
 
+                // modlib\{GameId}\ 폴더가 없으면 먼저 생성
+                if (!Directory.Exists(libraryFolder))
+                {
+                    Debug.Log("ModLoader: " + GameConfiguration.Id, "Library folder does not exist, creating: " + libraryFolder, Debug.Type.Warning);
+                    Directory.CreateDirectory(libraryFolder);
+                }
+
                 var baseModLibPath = libraryFolder + System.IO.Path.DirectorySeparatorChar + "BaseModLib.dll";
-                var baseModLib = ModuleDefinition.ReadModule(baseModLibPath);
+
+                // BaseModLib.dll 없으면 자동 생성 후 재시도
+                if (!File.Exists(baseModLibPath))
+                {
+                    Debug.Log("ModLoader: " + GameConfiguration.Id, "BaseModLib.dll not found at: " + baseModLibPath + ". Attempting to create ModLibrary.", Debug.Type.Warning);
+                    if (!ModLibrary.Exists || ModLibrary.ModApiVersion != Version.Descriptor)
+                    {
+                        CreateModLibrary(true);
+                    }
+                }
+
+                // CreateModLibrary가 비동기로 실행될 수 있으므로 완료될 때까지 대기 (최대 15초)
+                if (!File.Exists(baseModLibPath))
+                {
+                    Debug.Log("ModLoader: " + GameConfiguration.Id, "Waiting for CreateModLibrary to complete...", Debug.Type.Warning);
+                    for (int wait = 0; wait < 30; wait++)
+                    {
+                        Thread.Sleep(500);
+                        if (File.Exists(baseModLibPath))
+                        {
+                            Debug.Log("ModLoader: " + GameConfiguration.Id, "BaseModLib.dll created after " + ((wait + 1) * 500) + "ms.");
+                            break;
+                        }
+                    }
+                }
+
+                if (!File.Exists(baseModLibPath))
+                {
+                    Debug.Log("ModLoader: " + GameConfiguration.Id, "BaseModLib.dll still not found after waiting. Cannot apply mods.", Debug.Type.Error);
+                    Schedule.AddTask("GUI", "OperationDone", null, new object[] { handler });
+                    return;
+                }
+
+                // BaseModLib.dll이 다른 스레드(CreateModLibrary)에서 쓰기 중일 수 있으므로 재시도
+                ModuleDefinition baseModLib = null;
+                for (int retry = 0; retry < 10; retry++)
+                {
+                    try
+                    {
+                        baseModLib = ModuleDefinition.ReadModule(baseModLibPath);
+                        break;
+                    }
+                    catch (System.IO.IOException)
+                    {
+                        Debug.Log("ModLoader: " + GameConfiguration.Id, "BaseModLib.dll is locked, retrying... (" + (retry + 1) + "/10)", Debug.Type.Warning);
+                        Thread.Sleep(500);
+                    }
+                }
+                if (baseModLib == null)
+                {
+                    Debug.Log("ModLoader: " + GameConfiguration.Id, "Could not read BaseModLib.dll after 10 retries.", Debug.Type.Error);
+                    Schedule.AddTask("GUI", "OperationDone", null, new object[] { handler });
+                    return;
+                }
                 var logType = baseModLib.GetType("ModAPI.Log");
                 var baseSystemType = baseModLib.GetType("ModAPI.BaseSystem");
                 MethodReference initializeMethod = null;
@@ -421,6 +507,16 @@ namespace ModAPI.Data
                 var assemblyResolver = new CustomAssemblyResolver();
                 assemblyResolver.AddPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                          System.IO.Path.DirectorySeparatorChar);
+
+                // 실제 게임 폴더도 추가 — 백업에 없는 DLL(신규 copyAssembly 등)을 폴백으로 검색
+                var _gameFolder = GetGameFolder();
+                if (string.IsNullOrEmpty(_gameFolder)) return;
+                var actualManagedPath = System.IO.Path.GetFullPath(_gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.AssemblyPath));
+                if (Directory.Exists(actualManagedPath))
+                {
+                    assemblyResolver.AddPath(actualManagedPath);
+                    Debug.Log("ModLib: " + GameConfiguration.Id, "Added actual game folder to resolver: " + actualManagedPath);
+                }
 
                 var searchFolders = new List<string>();
                 for (var i = 0; i < GameConfiguration.IncludeAssemblies.Count; i++)
@@ -482,22 +578,35 @@ namespace ModAPI.Data
                 {
                     foreach (var p in GameConfiguration.CopyAssemblies)
                     {
-                        var path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
+                        var originalPath = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                               System.IO.Path.DirectorySeparatorChar + ParsePath(p));
-                        var key = System.IO.Path.GetFileNameWithoutExtension(path);
+                        var key = System.IO.Path.GetFileNameWithoutExtension(originalPath);
 
-                        if ((key == "mscorlib" && !Assemblies.ContainsKey("mscorlib")) || (key == "UnityEngine" && !Assemblies.ContainsKey("UnityEngine")))
+                        // mscorlib, UnityEngine, UnityEngine.CoreModule 모두 로드
+                        if ((key == "mscorlib" || key == "UnityEngine" || key == "UnityEngine.CoreModule") && !Assemblies.ContainsKey(key))
                         {
-                            var module = ModuleDefinition.ReadModule(path);
-                            Assemblies.Add(key, module);
+                            // 원본 백업 경로 우선, 없으면 실제 게임 폴더에서 로드
+                            var path = originalPath;
+                            if (!File.Exists(path))
+                            {
+                                var _gf = GetGameFolder();
+                                if (!string.IsNullOrEmpty(_gf))
+                                    path = System.IO.Path.GetFullPath(_gf + System.IO.Path.DirectorySeparatorChar + ParsePath(p));
+                            }
+                            if (File.Exists(path))
+                            {
+                                var module = ModuleDefinition.ReadModule(path);
+                                Assemblies.Add(key, module);
+                            }
                         }
                     }
                 }
 
                 SetProgress(handler, 5f);
-                var unityEngineObject = Assemblies["UnityEngine"].GetType("UnityEngine.Object");
-                var unityEngineApplication = Assemblies["UnityEngine"].GetType("UnityEngine.Application");
-                var unityEngineComponent = Assemblies["UnityEngine"].GetType("UnityEngine.Component");
+                // 신규 Unity는 타입이 CoreModule에 있으므로 두 모듈 모두에서 탐색
+                var unityEngineObject = GetTypeFromModules(Assemblies, "UnityEngine.Object", "UnityEngine", "UnityEngine.CoreModule");
+                var unityEngineApplication = GetTypeFromModules(Assemblies, "UnityEngine.Application", "UnityEngine", "UnityEngine.CoreModule");
+                var unityEngineComponent = GetTypeFromModules(Assemblies, "UnityEngine.Component", "UnityEngine", "UnityEngine.CoreModule");
 
                 var systemAppDomain = Assemblies["mscorlib"].GetType("System.AppDomain");
                 var systemResolveEventHandler = Assemblies["mscorlib"].GetType("System.ResolveEventHandler");
@@ -796,6 +905,7 @@ namespace ModAPI.Data
 
                     foreach (var entry in typesMap)
                     {
+                        if (entry.Value == null) continue;
                         Debug.Log("Game: " + GameConfiguration.Id, "Type entry: " + entry.Key.FullName + " - " + entry.Value.FullName);
                     }
 
@@ -1336,11 +1446,14 @@ namespace ModAPI.Data
             {
                 var originalFolder = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                                 System.IO.Path.DirectorySeparatorChar);
-                /*string[] originalFiles = System.IO.Directory.GetFiles(OriginalFolder);
-                foreach (string file in originalFiles)
-                    System.IO.File.Copy(file, GamePath + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(file));
-                string[] originalDirectories = System.IO.Directory.GetDirectories(OriginalFolder);
-                foreach (string directory in originalDirectories)*/
+
+                // 원본 백업 폴더가 없으면 건너뜀 (첫 실행 시 정상)
+                if (!Directory.Exists(originalFolder))
+                {
+                    Debug.Log("ModLoader: " + GameConfiguration.Id, "Original files folder does not exist yet, skipping restore: " + originalFolder, Debug.Type.Warning);
+                    return true;
+                }
+
                 DirectoryCopy(originalFolder, GamePath, true);
                 return true;
             }

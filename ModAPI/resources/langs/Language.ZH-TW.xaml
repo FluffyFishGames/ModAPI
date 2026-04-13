@@ -80,9 +80,10 @@
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">取消</s:String>
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">刪除</s:String>
 
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">輸入遊戲路徑</s:String>
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">無法自動找到遊戲，請手動輸入遊戲路徑。</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">遊戲路徑</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">無法自動找到遊戲路徑。請在Settings標籤中設定遊戲安裝路徑。</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">瀏覽</s:String>
+        <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.GoToSettings">前往設定</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">繼續</s:String>
 
     <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">輸入Steam路徑</s:String>
@@ -138,6 +139,7 @@
     <s:String x:Key="Lang.Languages.PT">葡萄牙語</s:String>
 
     <s:String x:Key="Lang.Development.Tab">開發</s:String>
+    <s:String x:Key="Lang.Development.Labels.GameFilter">遊戲篩選</s:String>
     <s:String x:Key="Lang.Development.Settings.Tab">設定</s:String>
     <s:String x:Key="Lang.Development.Keys.Tab">可指定按鍵</s:String>
     <s:String x:Key="Lang.Development.Projects">專案</s:String>
@@ -186,6 +188,7 @@
     <s:String x:Key="Lang.Mods.Labels.AvailableVersions">可用版本:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Name">名稱:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Description">描述:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Game">遊戲</s:String>
     <s:String x:Key="Lang.Mods.Labels.Buttons">按鍵綁定</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">相容版本:</s:String>
 
@@ -222,19 +225,29 @@
     <s:String x:Key="Lang.Downloads.Headers.Game">遊戲</s:String>
     <s:String x:Key="Lang.Downloads.Headers.Downloads">下載次數</s:String>
     <s:String x:Key="Lang.Downloads.Status.Ready">選擇要下載的Mod。</s:String>
-    <s:String x:Key="Lang.Downloads.Status.Loading">正在載入Mod清單...</s:String>
+    <s:String x:Key="Lang.Downloads.Status.Loading">正在載入模組列表...</s:String>
     <s:String x:Key="Lang.Downloads.Status.Downloading">下載中...</s:String>
     <s:String x:Key="Lang.Downloads.Status.Complete">下載完成!</s:String>
     <s:String x:Key="Lang.Downloads.Status.Error">下載時發生錯誤。</s:String>
+    <s:String x:Key="Lang.Downloads.Status.InProgress">進行中</s:String>
+    <s:String x:Key="Lang.Downloads.Status.LoadComplete">載入完成</s:String>
+    <s:String x:Key="Lang.Downloads.Status.NoDownloads">此模組沒有可下載的檔案。</s:String>
     <s:String x:Key="Lang.Downloads.Version.Version">版本</s:String>
     <s:String x:Key="Lang.Downloads.Version.Compatible">相容</s:String>
     <s:String x:Key="Lang.Downloads.Version.Date">日期</s:String>
     <s:String x:Key="Lang.Downloads.Version.Size">大小</s:String>
     <s:String x:Key="Lang.Downloads.Version.Select">選擇模組查看版本</s:String>
+    <s:String x:Key="Lang.Downloads.Label.GameFilter">遊戲篩選</s:String>
+    <s:String x:Key="Lang.Downloads.Label.ModSelect">MOD 選擇</s:String>
     <s:String x:Key="Lang.Downloads.Game.All">全部</s:String>
     <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Game.DedicatedServer">專用伺服器</s:String>
     <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Subnautica">Subnautica</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Raft">RAFT</s:String>
+    <s:String x:Key="Lang.Downloads.Game.EscapeThePacific">Escape The Pacific</s:String>
+    <s:String x:Key="Lang.Downloads.Game.GreenHell">Green Hell</s:String>
+    <s:String x:Key="Lang.Downloads.Game.SOTF">Sons Of The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Category.All">全部</s:String>
     <s:String x:Key="Lang.Downloads.Category.Bugfixes">漏洞修復</s:String>
     <s:String x:Key="Lang.Downloads.Category.Balancing">平衡</s:String>
@@ -251,16 +264,34 @@
     <s:String x:Key="Lang.Downloads.Buttons.Info">資訊</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Title">無網路連線</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Text">無法連線到Mod伺服器。你可以從網站手動下載:</s:String>
-    <s:String x:Key="Lang.Downloads.Offline.Manual">下載後將.mod檔案放入ModAPI目錄下的「mods/TheForest」資料夾。</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">下載後，將.mod文件放入ModAPI目錄"mods/"下對應的遊戲文件夾中。</s:String>
+        <s:String x:Key="Lang.Downloads.Offline.Manual2">(例如 mods/TheForest, mods/Subnautica, mods/Raft, mods/EscapeThePacific, mods/GH)</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Retry">重試連線</s:String>
 
     <s:String x:Key="Lang.Options.Tab">設定</s:String>
+    <s:String x:Key="Lang.Welcome.Tab">歡迎</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">語言:</s:String>
+    <s:String x:Key="Lang.Options.Labels.FontSize">字體大小</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">保持版本表最新:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">檢查更新:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam連線:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">總在最前</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePaths">遊戲安裝路徑</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePathSave">儲存</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPath">Steam安裝路徑</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Title">未找到Steam</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Text">未安裝Steam。請在Settings標籤中配置Steam。</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Options.Labels.Browse">瀏覽</s:String>
+    <s:String x:Key="Lang.Options.Labels.Installed">已安裝</s:String>
+    <s:String x:Key="Lang.Options.Labels.NotInstalled">未安裝</s:String>
+    <s:String x:Key="Lang.Options.Labels.ExpandAll">全部展開</s:String>
+    <s:String x:Key="Lang.Options.Labels.CollapseAll">全部折疊</s:String>
 
     <s:String x:Key="Lang.Options.Labels.Theme">主題:</s:String>
+    <s:String x:Key="Lang.Options.Labels.MaxWidth">最大寬度</s:String>
+    <s:String x:Key="Lang.Options.Labels.ModListWidth">模組列表寬度</s:String>
+    <s:String x:Key="Lang.Options.Labels.ProjectListWidth">專案列表寬度</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">經典主題</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">淺色主題</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">深色主題</s:String>
@@ -279,6 +310,22 @@
     <s:String x:Key="Lang.Windows.NoProjectWarning.Title">警告</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Text">未找到專案。請先建立一個專案。</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Text">未選擇任何模組。請在啟動遊戲前選擇一個模組。</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Text">已選擇不同遊戲的模組。請僅選擇同一遊戲的模組。</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Title">警告</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Text">沒有安裝遊戲。請在Settings標籤中設定遊戲路徑。</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Title">遊戲路徑未設定</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Text">沒有安裝遊戲。請在Settings標籤中設定遊戲路徑。</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Buttons.OK">確定</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Title">遊戲不匹配</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Text">Settings標籤中配置的遊戲與mods文件夾中安裝的Mod不匹配。
+請在Settings標籤中配置遊戲路徑。</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Buttons.OK">確定</s:String>
     <s:String x:Key="Lang.Mods.Buttons.Delete">刪除模組</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">刪除模組</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">刪除模組 &quot;{0}&quot; 及其所有版本？ 這也將從遊戲資料夾中刪除已部署的 .dll 檔案。</s:String>

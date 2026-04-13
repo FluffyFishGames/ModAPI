@@ -36,6 +36,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
+            <TextBlock x:Name="GameNameLabel" Style="{StaticResource HeaderLabel}" Margin="0,0,0,6" />
             <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Utils:Language.Key="Text" />
             <Grid Margin="0, 5, 0, 0">
                 <Grid.ColumnDefinitions>

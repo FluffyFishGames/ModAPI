@@ -41,6 +41,9 @@ using ModAPI.Data;
 using ModAPI.Data.Models;
 using ModAPI.Utils;
 using ModAPI.Windows.SubWindows;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using Path = System.IO.Path;
 
 namespace ModAPI
@@ -144,20 +147,47 @@ namespace ModAPI
             ModsPanel.DataContext = Mods;
             Development.DataContext = ModProjects;
 
+            // 게임 필터 탭 빌드 (고정 목록 — 게임 설치/모드 유무 무관)
+            BuildModGameFilter();
+            InitSteamPath();
+            BuildGamePathsPanel();
+            BuildDevGameFilter();
+            InitFontSize();
+            InitModListWidth();
+            InitProjectListWidth();
+            _uiInitialized = true;
+            UpdateListWidthSliderMax();
+            UpdateMinWindowWidth();
+            // FirstSetup에서 저장된 값을 Settings 탭에 반영
+            SettingsVm?.Changed();
+
+            // AlwaysOnTop 상태 복원
+            if ((LoadUiCfg("AlwaysOnTop") ?? Configuration.GetString("AlwaysOnTop")).ToLower() == "true")
+            {
+                this.Topmost = true;
+                var cb = FindName("AlwaysOnTopCheckBox") as System.Windows.Controls.CheckBox;
+                if (cb != null) cb.IsChecked = true;
+            }
+
+            // 지원 게임 5종의 mods / projects 폴더 초기 생성
+            var supportedIds = new List<string> { "TheForest", "Subnautica", "Raft", "EscapeThePacific", "GH" };
+            var modsBase = Configuration.GetPath("mods");
+            var projectsBase = Configuration.GetPath("projects");
+            foreach (var gid in supportedIds)
+            {
+                var modsDir = System.IO.Path.Combine(modsBase, gid);
+                var projectDir = System.IO.Path.Combine(projectsBase, gid);
+                if (!string.IsNullOrEmpty(modsBase) && !Directory.Exists(modsDir)) Directory.CreateDirectory(modsDir);
+                if (!string.IsNullOrEmpty(projectsBase) && !Directory.Exists(projectDir)) Directory.CreateDirectory(projectDir);
+            }
+
             Configuration.Save();
         }
 
         public bool CheckSteamPath()
         {
             if (App.DevMode) return true;
-            if (Configuration.GetString("UseSteam").ToLower() == "true")
-            {
-                if (!CheckSteam())
-                {
-                    Schedule.AddTask("GUI", "SpecifySteamPath", FirstSetupDone, CheckSteam);
-                    return false;
-                }
-            }
+            // 스팀 미설치 시 팝업 없이 진행 — Mods탭 게임시작 버튼에서 안내
             return true;
         }
 
@@ -183,12 +213,26 @@ namespace ModAPI
         protected bool CheckSteam()
         {
             var steamPath = Configuration.GetPath("Steam");
-            if (!File.Exists(steamPath + Path.DirectorySeparatorChar + "Steam.exe"))
+            var steamExe = steamPath + Path.DirectorySeparatorChar + "Steam.exe";
+#if DEBUG
+            // 디버그: File.Exists만 확인 (더미 파일 허용)
+            if (!File.Exists(steamExe))
             {
                 steamPath = SearchSteam();
                 Configuration.SetPath("Steam", steamPath, true);
+                steamExe = steamPath + Path.DirectorySeparatorChar + "Steam.exe";
             }
-            return File.Exists(steamPath + Path.DirectorySeparatorChar + "Steam.exe");
+            return File.Exists(steamExe);
+#else
+            // 릴리즈: PE 헤더 검증
+            if (!ModAPI.Utils.FileValidator.IsValidSteamExe(steamExe))
+            {
+                steamPath = SearchSteam();
+                Configuration.SetPath("Steam", steamPath, true);
+                steamExe = steamPath + Path.DirectorySeparatorChar + "Steam.exe";
+            }
+            return ModAPI.Utils.FileValidator.IsValidSteamExe(steamExe);
+#endif
         }
 
         protected string SearchSteam()
@@ -217,6 +261,12 @@ namespace ModAPI
             {
                 App.Instance.Resources.MergedDictionaries.Add(Configuration.Languages["en"].Resource);
             }
+            // AppBaseFontSize 기본값 사전 등록 (DynamicResource가 찾을 수 있도록)
+            Application.Current.Resources["AppBaseFontSize"] = 13.0;
+            Application.Current.Resources["AppBaseHeaderFontSize"] = 16.0;
+            Application.Current.Resources["AppBaseSmallFontSize"] = 12.0;
+            Application.Current.Resources["AppBaseTinyFontSize"] = 10.0;
+            Application.Current.Resources["AppBaseLargeFontSize"] = 20.0;
             InitializeComponent();
             Instance = this;
             CheckDir();
@@ -299,6 +349,7 @@ namespace ModAPI
 
             SettingsVm = new SettingsViewModel();
             Settings.DataContext = SettingsVm;
+            SettingsCheckboxes.DataContext = SettingsVm;
             //LanguageSelector.SelectedIndex = Configuration.Languages.Values.ToList().IndexOf(Configuration.CurrentLanguage);
 
             InitializeThemeSelector();
@@ -538,6 +589,112 @@ namespace ModAPI
             _themeInitializing = false;
         }
 
+        // ── UI Settings File (ui.cfg) ────────────────────────────────────────
+        private static readonly string UiCfgFile = "ui.cfg";
+
+        private static string GetUiCfgPath()
+        {
+            // App.RootPath 우선, 없으면 실행 파일 위치 사용
+            var root = App.RootPath;
+            if (string.IsNullOrEmpty(root))
+                root = System.IO.Path.GetDirectoryName(
+                    System.Reflection.Assembly.GetExecutingAssembly().Location) ?? ".";
+            return System.IO.Path.Combine(root, UiCfgFile);
+        }
+
+        private static void SaveUiCfg(string key, string value)
+        {
+            try
+            {
+                var path = GetUiCfgPath();
+                var lines = System.IO.File.Exists(path)
+                    ? new System.Collections.Generic.List<string>(System.IO.File.ReadAllLines(path))
+                    : new System.Collections.Generic.List<string>();
+
+                var found = false;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    if (lines[i].StartsWith(key + "="))
+                    {
+                        lines[i] = key + "=" + value;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) lines.Add(key + "=" + value);
+                System.IO.File.WriteAllLines(path, lines);
+                Debug.Log("UiCfg", "Saved: " + key + "=" + value + " \u2192 " + path);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log("UiCfg", "Save failed: " + ex.Message, Debug.Type.Warning);
+            }
+        }
+
+        private static string LoadUiCfg(string key)
+        {
+            try
+            {
+                var path = GetUiCfgPath();
+                if (!System.IO.File.Exists(path)) return null;
+                foreach (var line in System.IO.File.ReadAllLines(path))
+                {
+                    if (line.StartsWith(key + "="))
+                        return line.Substring(key.Length + 1).Trim();
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private void SaveAllSettings()
+        {
+            // ui.cfg에 직접 저장 (Configuration 시스템 우회)
+            SaveUiCfg("ModListWidth", ((int)_modListWidth).ToString());
+            SaveUiCfg("ProjectListWidth", ((int)_projectListWidth).ToString());
+
+            // FontSize
+            var fontSel = FindName("FontSizeSelector") as System.Windows.Controls.ComboBox;
+            if (fontSel?.SelectedItem is System.Windows.Controls.ComboBoxItem fontItem)
+                SaveUiCfg("AppFontSize", ((double)fontItem.Tag).ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+            // AlwaysOnTop
+            var aotCb = FindName("AlwaysOnTopCheckBox") as System.Windows.Controls.CheckBox;
+            if (aotCb != null)
+                SaveUiCfg("AlwaysOnTop", aotCb.IsChecked == true ? "true" : "false");
+
+            // 게임 경로 — GamePathsPanel 내 TextBox 값 모두 저장
+            var pathsPanel = FindName("GamePathsPanel") as StackPanel;
+            if (pathsPanel != null)
+            {
+                foreach (var child in pathsPanel.Children)
+                {
+                    var card = child as System.Windows.Controls.Border;
+                    if (card?.Tag is string gameId)
+                    {
+                        // 각 카드 내부 TextBox 찾아 경로 저장
+                        var tb = FindVisualChild<System.Windows.Controls.TextBox>(card);
+                        if (tb != null && !string.IsNullOrWhiteSpace(tb.Text))
+                            Configuration.SetPath("Games." + gameId, tb.Text, true);
+                    }
+                }
+            }
+
+            Configuration.Save();
+        }
+
+        private static T FindVisualChild<T>(System.Windows.DependencyObject parent) where T : System.Windows.DependencyObject
+        {
+            for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
+                if (child is T t) return t;
+                var result = FindVisualChild<T>(child);
+                if (result != null) return result;
+            }
+            return null;
+        }
+
         private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_themeInitializing) return;
@@ -566,6 +723,8 @@ namespace ModAPI
                 if (win.Confirmed)
                 {
                     App.SaveTheme(selectedTheme);
+                    SaveAllSettings();
+                    Configuration.Save();
 
                     // Auto restart
                     var exePath = System.IO.Path.Combine(App.RootPath, "ModAPI.exe");
@@ -615,15 +774,32 @@ namespace ModAPI
 
             if (language.ImageStream != null)
             {
-                var i = new Image();
                 var img = new BitmapImage();
                 img.BeginInit();
                 img.StreamSource = language.ImageStream;
                 img.EndInit();
-                i.Source = img;
-                i.Margin = new Thickness(0, 0, 10, 0);
 
-                panel.Children.Add(i);
+                var i = new Image
+                {
+                    Width = 36,
+                    Height = 24,
+                    Stretch = System.Windows.Media.Stretch.Uniform,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Source = img,
+                };
+
+                // 테두리 추가 — Light 테마에서 흰색 국기가 배경에 묻히지 않도록
+                var border = new Border
+                {
+                    BorderBrush = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0)),
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(2),
+                    Margin = new Thickness(0, 0, 10, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Child = i,
+                };
+
+                panel.Children.Add(border);
             }
 
             var text = new TextBlock
@@ -662,7 +838,18 @@ namespace ModAPI
                 ((Button)FindName("NormalizeButton")).Width = 0;
             }
 
+            // 레이아웃 완료 후 MinWidth 계산 → 창 너비를 MinWidth(최소)로 설정
+            this.UpdateLayout();
+            UpdateMinWindowWidth();
+            this.Width = this.MinWidth;
+            var screenW = System.Windows.SystemParameters.PrimaryScreenWidth;
+            this.Width = this.MinWidth;
+            this.Left = (screenW - this.Width) / 2;
+
             VersionLabel.Text = Version.Descriptor + " [" + Version.BuildDate + "]";
+
+            // Welcome 탭을 기본 선택 (index 0 — 맨 앞)
+            Tabs.SelectedIndex = 0;
         }
 
         private void MoveWindow(object sender, MouseButtonEventArgs args)
@@ -725,7 +912,17 @@ namespace ModAPI
 
         public void Preload(ProgressHandler handler)
         {
-            handler.OnComplete += delegate { Debug.Log("MainWindow", "GUI is ready."); };
+            handler.OnComplete += delegate
+            {
+                Debug.Log("MainWindow", "GUI is ready.");
+                // 화면 해상도의 80%를 MAX값으로 메모리에 저장 (1회)
+                var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+                ScreenMaxWidth = Math.Floor(screenWidth * 0.8);
+                // 슬라이더 최대값 적용
+                UpdateListWidthSliderMax();
+                // 창 최대 너비 설정 (사용자가 드래그로 MAX까지 조절 가능)
+                this.MaxWidth = ScreenMaxWidth;
+            };
             Debug.Log("MainWindow", "Preparing GUI.");
             Opacity = 0.0f;
             Tabs.Preload(handler);
@@ -752,6 +949,22 @@ namespace ModAPI
 
         private void CreateModLibrary(object sender, RoutedEventArgs e)
         {
+            // 검증 1: 스팀 설치 여부 확인 (프로젝트 존재 여부와 무관하게 항상 먼저)
+            var steamPathLib = ModAPI.Configurations.Configuration.GetPath("Steam");
+            var steamExeLib = steamPathLib + System.IO.Path.DirectorySeparatorChar + "Steam.exe";
+#if DEBUG
+            var steamValidLib = !string.IsNullOrEmpty(steamPathLib) && System.IO.File.Exists(steamExeLib);
+#else
+            var steamValidLib = ModAPI.Utils.FileValidator.IsValidSteamExe(steamExeLib);
+#endif
+            if (!steamValidLib)
+            {
+                var winSteam = new Windows.SubWindows.NoProjectWarning("Lang.Windows.SteamNotFound");
+                winSteam.ShowSubWindow();
+                winSteam.Show();
+                return;
+            }
+            // 검증 2: 프로젝트 목록 확인
             if (ProjectList.Items.Count == 0)
             {
                 var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.NoProjectWarning");
@@ -759,7 +972,39 @@ namespace ModAPI
                 win.Show();
                 return;
             }
-            App.Game.CreateModLibrary();
+            // 검증 3: 게임 경로 미설정 시 ModLibrary 생성 불가
+            if (App.Game == null || string.IsNullOrEmpty(App.Game.GamePath))
+            {
+                var win2 = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GamePathNotSet");
+                win2.ShowSubWindow();
+                win2.Show();
+                return;
+            }
+
+            // 검증 4: gamefiles\original 백업 폴더 존재 여부 확인
+            // 백업이 없으면 Verify()를 먼저 실행 (BackupGameFiles + CreateModLibrary 포함)
+            // 백업이 있으면 바로 CreateModLibrary() 실행
+            bool backupExists = false;
+            if (App.Game.GameConfiguration.IncludeAssemblies.Count > 0)
+            {
+                var firstInclude = App.Game.GameConfiguration.IncludeAssemblies[0];
+                var backupFile = System.IO.Path.GetFullPath(
+                    ModAPI.Configurations.Configuration.GetPath("OriginalGameFiles") +
+                    System.IO.Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id +
+                    System.IO.Path.DirectorySeparatorChar + App.Game.ParsePath(firstInclude));
+                backupExists = System.IO.File.Exists(backupFile);
+            }
+
+            if (!backupExists)
+            {
+                // 백업 없음 → Verify()가 BackupGameFiles() + CreateModLibrary()까지 처리
+                App.Game.Verify();
+            }
+            else
+            {
+                // 백업 있음 → 바로 ModLib 재생성
+                App.Game.CreateModLibrary();
+            }
         }
 
         private void CreateProject(object sender, RoutedEventArgs e)
@@ -785,13 +1030,11 @@ namespace ModAPI
             if (model != null)
             {
                 SelectedMod.Visibility = Visibility.Visible;
-                NoModSelected.Visibility = Visibility.Collapsed;
                 SelectedMod.DataContext = model;
             }
             else
             {
                 SelectedMod.Visibility = Visibility.Collapsed;
-                NoModSelected.Visibility = Visibility.Visible;
                 SelectedMod.DataContext = null;
             }
         }
@@ -927,16 +1170,20 @@ namespace ModAPI
         public void SetProject(ModProjectViewModel model)
         {
             CurrentModProjectViewModel = model;
+
+            // DataContext를 먼저 null로 해제한 뒤 SelectedIndex를 변경
+            // → SelectedIndex 변경 이벤트가 발생할 때 DataContext가 없어 NameChanged가 SaveConfiguration을 호출하지 않음
+            SelectedProject.DataContext = null;
             DevelopmentLanguageSelector.SelectedIndex = -1;
-            foreach (var kv in LanguageItems)
-            {
-                var a = model.Project.Languages.Contains(kv.Key);
-                kv.Value.Visibility = a ? Visibility.Collapsed : Visibility.Visible;
-                kv.Value.IsEnabled = !a;
-            }
 
             if (model != null)
             {
+                foreach (var kv in LanguageItems)
+                {
+                    var a = model.Project.Languages.Contains(kv.Key);
+                    kv.Value.Visibility = a ? Visibility.Collapsed : Visibility.Visible;
+                    kv.Value.IsEnabled = !a;
+                }
                 SelectedProject.Visibility = Visibility.Visible;
                 NoProjectSelected.Visibility = Visibility.Collapsed;
                 SelectedProject.DataContext = model;
@@ -945,7 +1192,6 @@ namespace ModAPI
             {
                 SelectedProject.Visibility = Visibility.Collapsed;
                 NoProjectSelected.Visibility = Visibility.Visible;
-                SelectedProject.DataContext = null;
             }
         }
 
@@ -1011,6 +1257,54 @@ namespace ModAPI
 
         private void StartGame(object sender, RoutedEventArgs e)
         {
+            // 검증 1: Settings 탭에 스팀 경로가 설정되어 있는지 확인
+            var steamPath = ModAPI.Configurations.Configuration.GetPath("Steam");
+            var steamExePath = steamPath + System.IO.Path.DirectorySeparatorChar + "Steam.exe";
+#if DEBUG
+            var steamValid = !string.IsNullOrEmpty(steamPath) && System.IO.File.Exists(steamExePath);
+#else
+            var steamValid = ModAPI.Utils.FileValidator.IsValidSteamExe(steamExePath);
+#endif
+            if (!steamValid)
+            {
+                var winSteam = new Windows.SubWindows.NoProjectWarning("Lang.Windows.SteamNotFound");
+                winSteam.ShowSubWindow();
+                winSteam.Show();
+                return;
+            }
+
+            // 검증 2: mods/ 폴더에 .mod 파일이 있는 게임과 Settings 탭에 경로가 설정된 게임이 일치하는지 확인
+            var modsBase = ModAPI.Configurations.Configuration.GetPath("mods");
+            var supportedIds = new List<string> { "TheForest", "Subnautica", "Raft", "EscapeThePacific", "GH" };
+            bool anyMatch = false;
+            foreach (var gid in supportedIds)
+            {
+                // mods/{GameId}/ 폴더에 .mod 파일이 1개 이상 있는지
+                var modsDir = System.IO.Path.Combine(modsBase, gid);
+                bool hasMods = System.IO.Directory.Exists(modsDir) &&
+                               System.IO.Directory.GetFiles(modsDir, "*.mod").Length > 0;
+                if (!hasMods) continue;
+
+                // Settings 탭에 해당 게임 경로가 설정되어 있고 실행파일이 존재하는지
+                var gamePath = ModAPI.Configurations.Configuration.GetPath("Games." + gid);
+                if (string.IsNullOrEmpty(gamePath)) continue;
+                if (!Configuration.Games.ContainsKey(gid)) continue;
+                var exeName = Configuration.Games[gid].SelectFile;
+                if (!string.IsNullOrEmpty(exeName) &&
+                    System.IO.File.Exists(System.IO.Path.Combine(gamePath, exeName)))
+                {
+                    anyMatch = true;
+                    break;
+                }
+            }
+            if (!anyMatch)
+            {
+                var winMatch = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GameModsMismatch");
+                winMatch.ShowSubWindow();
+                winMatch.Show();
+                return;
+            }
+
             var mods = new List<Mod>();
             foreach (var i in Mods.Mods)
             {
@@ -1024,25 +1318,121 @@ namespace ModAPI
                     }
                 }
             }
+
+            // 검증 2: 선택된 mod가 없으면 경고
+            if (mods.Count == 0)
+            {
+                var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.NoModSelected");
+                win.ShowSubWindow();
+                win.Show();
+                return;
+            }
+
+            // 검증 3: 서로 다른 게임의 mod가 혼합되어 있으면 경고
+            var gameIds = mods.Select(m => m.Game?.GameConfiguration?.Id ?? "").Distinct().ToList();
+            if (gameIds.Count > 1)
+            {
+                var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.MixedGameMods");
+                win.ShowSubWindow();
+                win.Show();
+                return;
+            }
+
+            // 선택된 mod의 게임 ID로 게임 객체 결정
+            var modGameId = mods[0].Game?.GameConfiguration?.Id;
+            Game targetGame = null;
+
+            if (!string.IsNullOrEmpty(modGameId))
+            {
+                // App.Game이 같은 게임이면 바로 사용 (이미 완전 초기화됨)
+                if (App.Game != null &&
+                    string.Equals(App.Game.GameConfiguration.Id, modGameId, StringComparison.OrdinalIgnoreCase))
+                {
+                    targetGame = App.Game;
+                }
+                else
+                {
+                    // 저장된 경로로 게임 실행 가능 여부 먼저 확인
+                    Configuration.GameConfiguration gameConfig = null;
+                    if (Configuration.Games.ContainsKey(modGameId))
+                        gameConfig = Configuration.Games[modGameId];
+                    else
+                    {
+                        foreach (var kv in Configuration.Games)
+                        {
+                            if (string.Equals(kv.Value.Id, modGameId, StringComparison.OrdinalIgnoreCase))
+                            {
+                                gameConfig = kv.Value;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (gameConfig != null)
+                    {
+                        // 경량 Game으로 FindGamePath() 자동 탐색 시도
+                        var tempGame = new Game(gameConfig, true);
+                        var savedPath = Configuration.GetPath("Games." + gameConfig.Id);
+
+                        if (string.IsNullOrEmpty(savedPath))
+                        {
+                            // 자동 탐색 시도
+                            savedPath = tempGame.FindGamePath();
+                            if (!string.IsNullOrEmpty(savedPath))
+                            {
+                                // 탐색 성공 → 저장
+                                Configuration.SetPath("Games." + gameConfig.Id, savedPath, true);
+                                Configuration.Save();
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(savedPath))
+                        {
+                            // 검증 4: 경로 미설정 → Settings 탭 안내
+                            var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GamePathNotSet");
+                            win.ShowSubWindow();
+                            win.Show();
+                            return;
+                        }
+
+                        // 검증 5: 게임 실행파일 존재 여부 확인
+                        var exePath = System.IO.Path.Combine(savedPath, gameConfig.SelectFile);
+                        if (!System.IO.File.Exists(exePath))
+                        {
+                            var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GameNotInstalled");
+                            win.ShowSubWindow();
+                            win.Show();
+                            return;
+                        }
+
+                        // 완전 초기화된 Game 객체 생성 (Verify 포함)
+                        targetGame = new Game(gameConfig);
+                    }
+                }
+            }
+
+            if (targetGame == null)
+                targetGame = App.Game;
+
             var progressHandler = new ProgressHandler();
             progressHandler.OnComplete += (o, ex) =>
             {
-                if (Configuration.GetString("UseSteam") == "true" && App.Game.GameConfiguration.SteamAppId != "")
+                if (Configuration.GetString("UseSteam") == "true" && targetGame.GameConfiguration.SteamAppId != "")
                 {
                     var p = new Process();
                     p.StartInfo.FileName = Configuration.GetPath("Steam") + Path.DirectorySeparatorChar + "Steam.exe";
-                    p.StartInfo.Arguments = "-applaunch " + App.Game.GameConfiguration.SteamAppId;
+                    p.StartInfo.Arguments = "-applaunch " + targetGame.GameConfiguration.SteamAppId;
                     p.Start();
                 }
                 else
                 {
                     var p = new Process();
-                    p.StartInfo.FileName = App.Game.GamePath + Path.DirectorySeparatorChar + App.Game.GameConfiguration.SelectFile;
+                    p.StartInfo.FileName = targetGame.GamePath + Path.DirectorySeparatorChar + targetGame.GameConfiguration.SelectFile;
                     p.Start();
                 }
             };
 
-            var thread = new Thread(delegate () { App.Game.ApplyMods(mods, progressHandler); });
+            var thread = new Thread(delegate () { targetGame.ApplyMods(mods, progressHandler); });
             var window = new OperationPending("Lang.Windows.OperationPending", "ApplyMods", progressHandler, null, true);
             if (!window.Completed)
             {
@@ -1066,6 +1456,7 @@ namespace ModAPI
             public string Author { get; set; }
             public string Category { get; set; }
             public string Game { get; set; }
+            public string GameId { get; set; }   // 게임 폴더명 (mods\{GameId}\)
             public string DownloadCount { get; set; }
             public int ModId { get; set; }
             public string Slug { get; set; }
@@ -1126,7 +1517,7 @@ namespace ModAPI
             }
         }
 
-        private List<ModInfo> ParseModsFromHtml(string html, string gameLabel)
+        private List<ModInfo> ParseModsFromHtml(string html, string gameLabel, string gameId = "TheForest")
         {
             var mods = new List<ModInfo>();
             if (string.IsNullOrEmpty(html)) return mods;
@@ -1180,6 +1571,7 @@ namespace ModAPI
                     Author = author,
                     Category = category,
                     Game = gameLabel,
+                    GameId = gameId,
                     DownloadCount = downloadCount,
                     ModId = modId,
                     Slug = slug
@@ -1189,22 +1581,32 @@ namespace ModAPI
             return mods;
         }
 
-        private void LoadModsFromWeb()
+        private void LoadModsFromWeb(Action<int> onProgress = null)
         {
             var sources = new[]
             {
-                new { Url = "https://modapi.survivetheforest.net/mods/", Label = "The Forest" },
-                new { Url = "https://modapi.survivetheforest.net/mods/game/TheForestDedicatedServer/", Label = "Dedicated Server" },
-                new { Url = "https://modapi.survivetheforest.net/mods/game/TheForestVR/", Label = "VR" }
+                new { Url = "https://modapi.survivetheforest.net/mods/", Label = "The Forest", Id = "TheForest" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/TheForestDedicatedServer/", Label = "Dedicated Server", Id = "TheForestDedicatedServer" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/TheForestVR/", Label = "VR", Id = "TheForestVR" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/Subnautica/", Label = "Subnautica", Id = "Subnautica" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/Raft/", Label = "RAFT", Id = "Raft" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/EscapeThePacific/", Label = "Escape The Pacific", Id = "EscapeThePacific" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/GH/", Label = "Green Hell", Id = "GH" },
+                new { Url = "https://modapi.survivetheforest.net/mods/game/SonsOfTheForest/", Label = "SOTF", Id = "SonsOfTheForest" },
             };
 
             var allMods = new List<ModInfo>();
 
-            foreach (var source in sources)
+            for (var i = 0; i < sources.Length; i++)
             {
+                var source = sources[i];
                 var html = FetchHtml(source.Url);
-                var mods = ParseModsFromHtml(html, source.Label);
+                var mods = ParseModsFromHtml(html, source.Label, source.Id);
                 allMods.AddRange(mods);
+
+                // 진행률: 현재 소스 완료 후 비율 (1~100%)
+                var percent = (int)Math.Round((i + 1) / (double)sources.Length * 100);
+                onProgress?.Invoke(percent);
             }
 
             // Remove duplicates by ModId (keep first occurrence)
@@ -1262,7 +1664,8 @@ namespace ModAPI
                 DownloadModList.Items.Add(mod);
             }
 
-            DownloadStatusText.Text = string.Format("{0} mods", filteredList.Count);
+            var loadComplete = FindResource("Lang.Downloads.Status.LoadComplete") as string ?? "불러오기 완료";
+            DownloadStatusText.Text = string.Format("  {0} mods  ←  {1}", filteredList.Count, loadComplete);
         }
 
         private static readonly Dictionary<string, string> CategoryMap = new Dictionary<string, string>
@@ -1301,7 +1704,752 @@ namespace ModAPI
             { "GameTheForest", "The Forest" },
             { "GameDedicatedServer", "Dedicated Server" },
             { "GameVR", "VR" },
+            { "GameSubnautica", "Subnautica" },
+            { "GameRaft", "RAFT" },
+            { "GameEscapeThePacific", "Escape The Pacific" },
+            { "GameGreenHell", "Green Hell" },
+            { "GameSOTF", "SOTF" },
         };
+
+        // GameConfiguration.Id → Lang key (Downloads 탭과 공유)
+        private static readonly List<string> GamePathOrderedIds = new List<string>
+        {
+            "TheForest", "TheForestDedicatedServer", "TheForestVR",
+            "Subnautica", "Raft", "EscapeThePacific", "GH"
+        };
+
+        private bool _allExpanded = false;
+        private readonly List<Border> _gameCardBorders = new List<Border>();
+        private readonly List<StackPanel> _gameCardContents = new List<StackPanel>();
+
+        private void InitSteamPath()
+        {
+            var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
+            if (box == null) return;
+            var saved = Configuration.GetPath("Steam");
+            box.Text = string.IsNullOrEmpty(saved) ? "" : saved;
+        }
+
+        private void SteamBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Steam.exe|Steam.exe",
+                RestoreDirectory = true
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
+                if (box != null)
+                    box.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+            }
+        }
+
+        private void SteamSave_Click(object sender, RoutedEventArgs e)
+        {
+            var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
+            if (box == null) return;
+            Configuration.SetPath("Steam", box.Text, true);
+            Configuration.Save();
+            Debug.Log("Steam", "Path saved: " + box.Text);
+        }
+
+        private void BuildGamePathsPanel()
+        {
+            var panel = FindName("GamePathsPanel") as StackPanel;
+            if (panel == null) return;
+            panel.Children.Clear();
+            _gameCardBorders.Clear();
+            _gameCardContents.Clear();
+
+            foreach (var gameId in GamePathOrderedIds)
+            {
+                Configuration.GameConfiguration config = null;
+                if (Configuration.Games.ContainsKey(gameId))
+                    config = Configuration.Games[gameId];
+                else
+                {
+                    foreach (var kv in Configuration.Games)
+                    {
+                        if (string.Equals(kv.Value.Id, gameId, StringComparison.OrdinalIgnoreCase))
+                        { config = kv.Value; break; }
+                    }
+                }
+                if (config == null) continue;
+
+                var gameName = !string.IsNullOrEmpty(config.Name) ? config.Name : config.Id;
+                // 경로 정규화 — 구분자를 백슬래시로 통일
+                var rawPath = Configuration.GetPath("Games." + gameId);
+                var savedPath = string.IsNullOrEmpty(rawPath)
+                    ? ""
+                    : System.IO.Path.GetFullPath(rawPath.Replace('/', '\\'));
+
+                // 경로 미설정 시 FindGamePath()로 자동 탐색
+                if (string.IsNullOrEmpty(savedPath))
+                {
+                    try
+                    {
+                        var tempGame = new ModAPI.Data.Game(config, true);
+                        var detected = tempGame.FindGamePath();
+                        if (!string.IsNullOrEmpty(detected))
+                        {
+                            savedPath = System.IO.Path.GetFullPath(detected.Replace('/', '\\'));
+                            Configuration.SetPath("Games." + gameId, savedPath, true);
+                            Configuration.Save();
+                            Debug.Log("BuildGamePathsPanel", "Auto-detected: " + gameId + " → " + savedPath);
+                        }
+                    }
+                    catch { }
+                }
+                // 설치 여부 확인 — 경로 비어있거나 exe 없으면 미설치
+                var exeName = config.SelectFile;
+                var isInstalled = !string.IsNullOrEmpty(savedPath)
+                    && System.IO.File.Exists(System.IO.Path.Combine(savedPath, exeName));
+                // 미설치: 경로 비어있거나 exe 없는 경우 모두 해당
+                var capturedId = gameId;
+                var capturedConfig = config;
+
+                // 카드 외곽 Border
+                var card = new Border
+                {
+                    Margin = new Thickness(0, 0, 0, 0),
+                    CornerRadius = new CornerRadius(0),
+                    BorderThickness = new Thickness(0, 0, 0, 1),
+                    Tag = capturedId,
+                };
+                card.SetResourceReference(Border.BorderBrushProperty, "FluentBorderBrush");
+                card.SetResourceReference(Border.BackgroundProperty, "FluentSurfaceBrush");
+
+                // 헤더 행 (클릭 시 펼치기/닫기)
+                var headerGrid = new Grid { Margin = new Thickness(12, 10, 12, 10), Cursor = Cursors.Hand };
+                headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                // 화살표 아이콘
+                var arrow = new TextBlock
+                {
+                    Text = "▶",
+                    FontSize = 10,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 10, 0),
+                };
+                arrow.SetResourceReference(TextBlock.ForegroundProperty, "FluentTextSecondaryBrush");
+                Grid.SetColumn(arrow, 0);
+
+                // 게임명
+                var nameText = new TextBlock
+                {
+                    Text = gameName,
+                    FontSize = 14,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontFamily = (FontFamily)FindResource("NormalFont"),
+                };
+                nameText.SetResourceReference(TextBlock.ForegroundProperty, "FluentTextPrimaryBrush");
+                Grid.SetColumn(nameText, 1);
+
+                // 현재 경로 요약 (헤더 우측) — 설치됨 / 미설치
+                // SetResourceReference 사용 → 언어 변경 시 자동 반영
+                var pathSummary = new TextBlock
+                {
+                    FontSize = 11,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    MaxWidth = 280,
+                };
+                // 설치됨: 경로 있고 exe 존재 / 미설치: 그 외 모든 경우
+                pathSummary.SetResourceReference(TextBlock.TextProperty,
+                    isInstalled ? "Lang.Options.Labels.Installed" : "Lang.Options.Labels.NotInstalled");
+                pathSummary.SetResourceReference(TextBlock.ForegroundProperty, "FluentTextPrimaryBrush");
+                Grid.SetColumn(pathSummary, 2);
+
+                headerGrid.Children.Add(arrow);
+                headerGrid.Children.Add(nameText);
+                headerGrid.Children.Add(pathSummary);
+
+                // 펼침 콘텐츠 (기본 숨김)
+                var pathBox = new TextBox
+                {
+                    Text = savedPath,   // 이미 정규화된 경로
+                    Height = 32,
+                    MinWidth = 300,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalContentAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 6, 0),
+                    FontFamily = (FontFamily)FindResource("NormalFont"),
+                    FontSize = 12,
+                    IsReadOnly = true,
+                };
+                pathBox.SetResourceReference(TextBox.ForegroundProperty, "FluentTextPrimaryBrush");
+                pathBox.SetResourceReference(TextBox.BackgroundProperty, "FluentSurfaceBrush");
+
+                var browseBtn = new Button
+                {
+                    Width = 80,
+                    Height = 32,
+                    Style = (Style)FindResource("NormalButton"),
+                };
+                var browseBtnText = new TextBlock { Style = (Style)FindResource("NormalLabel") };
+                browseBtnText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Labels.Browse");
+                browseBtn.Content = browseBtnText;
+
+                var saveBtn = new Button
+                {
+                    Height = 32,
+                    Margin = new Thickness(6, 0, 0, 0),
+                    Style = (Style)FindResource("NormalButton"),
+                    IsEnabled = false,
+                };
+                var saveBtnText = new TextBlock { Style = (Style)FindResource("NormalLabel") };
+                saveBtnText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Labels.GamePathSave");
+                saveBtn.Content = saveBtnText;
+
+                browseBtn.Click += (s, e) =>
+                {
+                    var dlg = new Microsoft.Win32.OpenFileDialog
+                    {
+                        Filter = capturedConfig.SelectFile + "|" + capturedConfig.SelectFile,
+                        Title = gameName,
+                        RestoreDirectory = true,
+                    };
+                    if (dlg.ShowDialog() == true)
+                    {
+                        var folder = System.IO.Path.GetFullPath(System.IO.Path.GetDirectoryName(dlg.FileName));
+                        pathBox.Text = folder;
+                        saveBtn.IsEnabled = true;
+                        // 저장 전 미리 설치 여부 확인
+                        var preCheck = System.IO.Path.Combine(folder, capturedConfig.SelectFile);
+                        pathSummary.SetResourceReference(TextBlock.TextProperty,
+                            System.IO.File.Exists(preCheck)
+                                ? "Lang.Options.Labels.Installed"
+                                : "Lang.Options.Labels.NotInstalled");
+                    }
+                };
+
+                saveBtn.Click += (s, e) =>
+                {
+                    Configuration.SetPath("Games." + capturedId, pathBox.Text, true);
+                    Configuration.Save();
+                    saveBtn.IsEnabled = false;
+                    // 저장 후 실행파일 존재 확인 → 설치됨 / 미설치 표시
+                    var exeCheck = System.IO.Path.Combine(pathBox.Text, capturedConfig.SelectFile);
+                    pathSummary.SetResourceReference(TextBlock.TextProperty,
+                        System.IO.File.Exists(exeCheck)
+                            ? "Lang.Options.Labels.Installed"
+                            : "Lang.Options.Labels.NotInstalled");
+                };
+
+                var pathRow = new Grid { Margin = new Thickness(12, 0, 12, 10) };
+                pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                Grid.SetColumn(pathBox, 0);
+                Grid.SetColumn(browseBtn, 1);
+                Grid.SetColumn(saveBtn, 2);
+                pathRow.Children.Add(pathBox);
+                pathRow.Children.Add(browseBtn);
+                pathRow.Children.Add(saveBtn);
+
+                var content = new StackPanel { Orientation = Orientation.Vertical, Visibility = Visibility.Collapsed };
+                content.Children.Add(pathRow);
+
+                var cardStack = new StackPanel { Orientation = Orientation.Vertical };
+                cardStack.Children.Add(headerGrid);
+                cardStack.Children.Add(content);
+                card.Child = cardStack;
+
+                // 클릭 이벤트
+                var capturedArrow = arrow;
+                var capturedContent = content;
+                headerGrid.MouseLeftButtonDown += (s, e) =>
+                {
+                    var isVisible = capturedContent.Visibility == Visibility.Visible;
+                    capturedContent.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
+                    capturedArrow.Text = isVisible ? "▶" : "▼";
+                    UpdateWindowHeight();
+                };
+
+                _gameCardBorders.Add(card);
+                _gameCardContents.Add(content);
+                panel.Children.Add(card);
+
+            }
+        }
+
+        private static readonly List<string> DevGameOrderedIds = new List<string>
+        {
+            "TheForest", "Subnautica", "Raft", "EscapeThePacific", "GH"
+        };
+
+        private void BuildDevGameFilter()
+        {
+            var panel = FindName("DevGameFilterPanel") as StackPanel;
+            if (panel == null) return;
+            panel.Children.Clear();
+
+            var currentId = App.Game?.GameConfiguration?.Id ?? "TheForest";
+
+            foreach (var gameId in DevGameOrderedIds)
+            {
+                Configuration.GameConfiguration config = null;
+                if (Configuration.Games.ContainsKey(gameId))
+                    config = Configuration.Games[gameId];
+                else
+                {
+                    foreach (var kv in Configuration.Games)
+                    {
+                        if (string.Equals(kv.Value.Id, gameId, StringComparison.OrdinalIgnoreCase))
+                        { config = kv.Value; break; }
+                    }
+                }
+                if (config == null) continue;
+
+                var name = !string.IsNullOrEmpty(config.Name) ? config.Name : config.Id;
+                var capturedId = gameId;
+                var capturedConfig = config;
+
+                var rb = new RadioButton
+                {
+                    Content = name,
+                    Margin = new Thickness(0, 0, 0, 4),
+                    IsChecked = string.Equals(gameId, currentId, StringComparison.OrdinalIgnoreCase),
+                    Tag = gameId,
+                };
+                rb.Checked += (s, e) => SwitchDevGame(capturedId, capturedConfig);
+                panel.Children.Add(rb);
+            }
+        }
+
+        private void SwitchDevGame(string gameId, Configuration.GameConfiguration config)
+        {
+            if (App.Game != null && string.Equals(App.Game.GameConfiguration.Id, gameId, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var savedPath = Configuration.GetPath("Games." + gameId);
+            if (string.IsNullOrEmpty(savedPath))
+                Debug.Log("DevGameFilter", "Game path not set for: " + gameId + ". Please set in Settings tab.", Debug.Type.Warning);
+
+            // 경량 생성자로 즉시 전환 (UI 블로킹 없음)
+            App.Game = new Game(config, true);
+            // 저장된 경로가 있으면 GamePath 설정 — CreateModLibrary 등이 경로를 사용할 수 있도록
+            if (!string.IsNullOrEmpty(savedPath))
+                App.Game.GamePath = savedPath;
+            App.Game.OnModlibUpdate += (s, ev) => Dispatcher.Invoke(delegate { UpdateModlibVersion(); });
+
+            // 기존 프로젝트 뷰모델 타이머 정지
+            if (ModProjects != null) ModProjects.Dispose();
+
+            // 프로젝트 목록 즉시 새로고침
+            ModProjects = new ModProjectsViewModel();
+            var devTab = FindName("Development") as FrameworkElement;
+            if (devTab != null) devTab.DataContext = ModProjects;
+            SetProject(null);
+            UpdateModlibVersion();
+            Debug.Log("DevGameFilter", "Development context switched to: " + gameId);
+        }
+
+        // ── Font Size ────────────────────────────────────────────────────────
+        private bool _fontSizeUpdating = false;
+        private static readonly double DefaultFontSize = 13.0;
+
+        private void InitFontSize()
+        {
+            var selector = FindName("FontSizeSelector") as System.Windows.Controls.ComboBox;
+            if (selector == null) return;
+
+            selector.Items.Clear();
+
+            // 테마 ComboBoxItem 스타일 적용
+            if (Application.Current.Resources.Contains("ComboBoxItem"))
+                selector.ItemContainerStyle = Application.Current.Resources["ComboBoxItem"] as Style;
+
+            // 화면 해상도 기반 폰트 크기 범위
+            var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            int maxSize = screenWidth >= 7680 ? 28 : screenWidth >= 3840 ? 22 : 16;
+
+            for (int sz = 10; sz <= maxSize; sz++)
+            {
+                var item = new System.Windows.Controls.ComboBoxItem
+                {
+                    Content = sz + "px",
+                    Tag = (double)sz
+                };
+                if (Application.Current.Resources.Contains("ComboBoxItem"))
+                    item.Style = Application.Current.Resources["ComboBoxItem"] as Style;
+                selector.Items.Add(item);
+            }
+
+            // 저장된 값 또는 기본값 선택 (클램프 없이 그대로)
+            var saved = LoadUiCfg("AppFontSize") ?? Configuration.GetString("AppFontSize");
+            double current = DefaultFontSize;
+            if (!string.IsNullOrEmpty(saved) && double.TryParse(saved, out double s))
+                current = s;
+
+            _fontSizeUpdating = true;
+            for (int i = 0; i < selector.Items.Count; i++)
+            {
+                var item = selector.Items[i] as System.Windows.Controls.ComboBoxItem;
+                if (item != null && (double)item.Tag == current)
+                {
+                    selector.SelectedIndex = i;
+                    break;
+                }
+            }
+            if (selector.SelectedIndex < 0) selector.SelectedIndex = 0;
+            _fontSizeUpdating = false;
+
+            ApplyFontSize(current);
+        }
+
+        private void ApplyFontSize(double size)
+        {
+            var r = Application.Current.Resources;
+            r["AppBaseFontSize"] = (double)size;
+            r["AppBaseHeaderFontSize"] = (double)(size + 3);   // 16 기준 +3
+            r["AppBaseSmallFontSize"] = (double)Math.Max(8, size - 1);  // 12 기준 -1
+            r["AppBaseTinyFontSize"] = (double)Math.Max(7, size - 3);  // 10 기준 -3
+            r["AppBaseLargeFontSize"] = (double)(size + 7);   // 20 기준 +7
+        }
+
+        private void FontSizeSelector_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_fontSizeUpdating) return;
+            var selector = sender as System.Windows.Controls.ComboBox;
+            if (selector == null) return;
+            var item = selector.SelectedItem as System.Windows.Controls.ComboBoxItem;
+            if (item == null) return;
+            var size = (double)item.Tag;
+            ApplyFontSize(size);
+            SaveUiCfg("AppFontSize", size.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            // 폰트 크기 변경 후 레이아웃 재계산 완료 후 MinWidth 업데이트
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.UpdateLayout();
+                UpdateMinWindowWidth();
+                this.Width = this.MinWidth;
+            }), System.Windows.Threading.DispatcherPriority.Render);
+        }
+
+        // ── Minimum Window Width ─────────────────────────────────────────────
+        private void UpdateMinWindowWidth()
+        {
+            try
+            {
+                // ProjectListWidthMax/Box 중 가장 오른쪽 끝을 기준으로 창 너비 설정
+                double rightEdge = 0;
+                var elements = new string[] { "ProjectListWidthMax", "ProjectListWidthBox" };
+                foreach (var name in elements)
+                {
+                    var el = FindName(name) as System.Windows.FrameworkElement;
+                    if (el == null) continue;
+                    var transform = el.TransformToAncestor(this);
+                    var r = transform.Transform(new System.Windows.Point(el.ActualWidth, 0)).X;
+                    if (r > rightEdge) rightEdge = r;
+                }
+
+                if (rightEdge < 10) return;
+
+                // 우측 여백 48px 포함한 너비가 MinWidth이자 기본 Width
+                var targetWidth = Math.Max(800, rightEdge + 48);
+                this.MinWidth = targetWidth;
+                this.Width = targetWidth;
+            }
+            catch { }
+        }
+
+        // ── Screen Width MAX (해상도 기반, 시작 시 1회 계산) ─────────────────
+        public static double ScreenMaxWidth { get; private set; } = 1200;
+
+        private void UpdateWindowHeight()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.SizeToContent = SizeToContent.Height;
+                this.SizeToContent = SizeToContent.Manual;
+            }), System.Windows.Threading.DispatcherPriority.Render);
+        }
+
+        public void NavigateToSettings()
+        {
+            // Settings 탭 인덱스: Welcome(0), Mods(1), Downloads(2), Development(3), Settings(4)
+            Tabs.SelectedIndex = 4;
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            // 콘텐츠 렌더링 완료 후 — ActualWidth 정확히 측정 가능
+            UpdateMinWindowWidth();
+            this.Width = this.MinWidth;
+            var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            this.Left = (screenWidth - this.Width) / 2;
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // 창 크기 변경 시에는 별도 처리 없음 (너비는 시작 시 고정)
+        }
+
+        private void UpdateListWidthSliderMax()
+        {
+            // ScreenMaxWidth가 아직 설정되지 않았으면 건너뜀
+            var maxVal = ScreenMaxWidth;
+            if (maxVal <= 0) return;
+
+            var modSlider = FindName("ModListWidthSlider") as System.Windows.Controls.Slider;
+            var projSlider = FindName("ProjectListWidthSlider") as System.Windows.Controls.Slider;
+            var maxLabel = FindName("MaxWidthLabel") as System.Windows.Controls.TextBlock;
+            var modList = FindName("ModListBox") as System.Windows.Controls.ListBox;
+            var projList = FindName("ProjectList") as System.Windows.Controls.ListBox;
+
+            var modMax = FindName("ModListWidthMax") as System.Windows.Controls.TextBlock;
+            var projMax = FindName("ProjectListWidthMax") as System.Windows.Controls.TextBlock;
+
+            // 목록 너비 슬라이더의 MAX = ScreenMaxWidth × 30%
+            var listMaxVal = Math.Floor(maxVal * 0.3);
+
+            // Maximum 변경 시 Value 클램프 이벤트가 발생하지 않도록 플래그 설정
+            _modListWidthUpdating = true;
+            _projectListWidthUpdating = true;
+
+            if (modSlider != null) modSlider.Maximum = listMaxVal;
+            if (projSlider != null) projSlider.Maximum = listMaxVal;
+            if (modList != null) modList.MaxWidth = listMaxVal;
+            if (projList != null) projList.MaxWidth = listMaxVal;
+            if (maxLabel != null) maxLabel.Text = (int)maxVal + " px";
+            if (modMax != null) modMax.Text = (int)listMaxVal + "  ";
+            if (projMax != null) projMax.Text = (int)listMaxVal + "  ";
+
+            _modListWidthUpdating = false;
+            _projectListWidthUpdating = false;
+        }
+
+        // ── UI 초기화 완료 플래그 — 초기화 중 이벤트로 인한 저장 방지 ────────────
+        private bool _uiInitialized = false;
+
+        // ── Mod List Width ──────────────────────────────────────────────────
+        private bool _modListWidthUpdating = false;
+        private double _modListWidth = 220;
+
+        private void InitModListWidth()
+        {
+            var uiCfgVal = LoadUiCfg("ModListWidth");
+            var configVal = Configuration.GetString("ModListWidth");
+            Debug.Log("InitModListWidth", "ui.cfg=" + (uiCfgVal ?? "null") + " config=" + (configVal ?? "null") + " path=" + GetUiCfgPath());
+            var saved = uiCfgVal ?? configVal;
+            double defaultWidth = 150; // 저장값 없을 때 슬라이더 최솟값으로 시작
+            double width = defaultWidth;
+            if (!string.IsNullOrEmpty(saved) && double.TryParse(saved, out double w))
+                width = w;
+            Debug.Log("InitModListWidth", "Using width=" + width);
+
+            _modListWidthUpdating = true;
+            var slider = FindName("ModListWidthSlider") as System.Windows.Controls.Slider;
+            var box = FindName("ModListWidthBox") as System.Windows.Controls.TextBox;
+            if (slider != null) { slider.Maximum = 7680; slider.Value = width; }
+            if (box != null) box.Text = ((int)width).ToString();
+            _modListWidthUpdating = false;
+            Debug.Log("InitModListWidth", "Set slider.Value=" + width);
+        }
+
+        private void ApplyModListWidth(double width)
+        {
+            _modListWidth = width;
+            var list = FindName("ModListBox") as System.Windows.Controls.ListBox;
+            if (list != null) list.Width = width;
+            if (Mods != null) Mods.ModListWidth = width;
+        }
+
+        private void ModListWidthSlider_Changed(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        {
+            Debug.Log("ModListWidth", "Slider changed: " + e.NewValue + " updating=" + _modListWidthUpdating + " initialized=" + _uiInitialized);
+            if (_modListWidthUpdating || !_uiInitialized) return;
+            var width = Math.Round(e.NewValue);
+            _modListWidthUpdating = true;
+            var box = FindName("ModListWidthBox") as System.Windows.Controls.TextBox;
+            if (box != null) box.Text = ((int)width).ToString();
+            _modListWidthUpdating = false;
+            if (ScreenMaxWidth > 0 && width > Math.Floor(ScreenMaxWidth * 0.3)) width = Math.Floor(ScreenMaxWidth * 0.3);
+            ApplyModListWidth(width);
+            SaveUiCfg("ModListWidth", ((int)width).ToString());
+            Debug.Log("ModListWidth", "Saved: " + ((int)width));
+        }
+
+        private void ModListWidthBox_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (_modListWidthUpdating || !_uiInitialized) return;
+            var box = sender as System.Windows.Controls.TextBox;
+            if (box == null) return;
+            if (!int.TryParse(box.Text, out int val)) return;
+            val = (int)Math.Max(150, Math.Min(ScreenMaxWidth > 0 ? Math.Floor(ScreenMaxWidth * 0.3) : 7680, val));
+            _modListWidthUpdating = true;
+            var slider = FindName("ModListWidthSlider") as System.Windows.Controls.Slider;
+            if (slider != null) slider.Value = val;
+            _modListWidthUpdating = false;
+            ApplyModListWidth(val);
+            SaveUiCfg("ModListWidth", val.ToString());
+        }
+
+        // ── Project List Width ───────────────────────────────────────────────
+        private bool _projectListWidthUpdating = false;
+        private double _projectListWidth = 180;
+        public double ProjectListWidth
+        {
+            get => _projectListWidth;
+            set { _projectListWidth = value; }
+        }
+
+        private void InitProjectListWidth()
+        {
+            var saved = LoadUiCfg("ProjectListWidth") ?? Configuration.GetString("ProjectListWidth");
+            double defaultWidth = 150; // 저장값 없을 때 슬라이더 최솟값으로 시작
+            double width = defaultWidth;
+            if (!string.IsNullOrEmpty(saved) && double.TryParse(saved, out double w))
+                width = w;
+
+            _projectListWidthUpdating = true;
+            var slider = FindName("ProjectListWidthSlider") as System.Windows.Controls.Slider;
+            var box = FindName("ProjectListWidthBox") as System.Windows.Controls.TextBox;
+            // Maximum을 임시로 크게 설정하여 저장값이 잘리지 않도록
+            if (slider != null) { slider.Maximum = 7680; slider.Value = width; }
+            if (box != null) box.Text = ((int)width).ToString();
+            _projectListWidthUpdating = false;
+            _projectListWidth = width;
+            var list = FindName("ProjectList") as System.Windows.Controls.ListBox;
+            if (list != null) list.Width = width;
+        }
+
+        private void ProjectListWidthSlider_Changed(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (_projectListWidthUpdating || !_uiInitialized) return;
+            var width = Math.Round(e.NewValue);
+            _projectListWidthUpdating = true;
+            var box = FindName("ProjectListWidthBox") as System.Windows.Controls.TextBox;
+            if (box != null) box.Text = ((int)width).ToString();
+            _projectListWidthUpdating = false;
+            _projectListWidth = width;
+            if (ScreenMaxWidth > 0 && width > Math.Floor(ScreenMaxWidth * 0.3)) width = Math.Floor(ScreenMaxWidth * 0.3);
+            SaveUiCfg("ProjectListWidth", ((int)width).ToString());
+            var list = FindName("ProjectList") as System.Windows.Controls.ListBox;
+            if (list != null) list.Width = width;
+        }
+
+        private void ProjectListWidthBox_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (_projectListWidthUpdating || !_uiInitialized) return;
+            var box = sender as System.Windows.Controls.TextBox;
+            if (box == null) return;
+            if (!int.TryParse(box.Text, out int val)) return;
+            val = (int)Math.Max(150, Math.Min(ScreenMaxWidth > 0 ? Math.Floor(ScreenMaxWidth * 0.3) : 7680, val));
+            _projectListWidthUpdating = true;
+            var slider = FindName("ProjectListWidthSlider") as System.Windows.Controls.Slider;
+            if (slider != null) slider.Value = val;
+            _projectListWidthUpdating = false;
+            _projectListWidth = val;
+            SaveUiCfg("ProjectListWidth", val.ToString());
+            var list = FindName("ProjectList") as System.Windows.Controls.ListBox;
+            if (list != null) list.Width = val;
+        }
+
+        private void AlwaysOnTop_Changed(object sender, RoutedEventArgs e)
+        {
+            var cb = sender as System.Windows.Controls.CheckBox;
+            if (cb == null) return;
+            var isOn = cb.IsChecked == true;
+            this.Topmost = isOn;
+            SaveUiCfg("AlwaysOnTop", isOn ? "true" : "false");
+        }
+
+        private void ExpandAll_Click(object sender, RoutedEventArgs e)
+        {
+            _allExpanded = !_allExpanded;
+            var btn = FindName("ExpandAllBtn") as Button;
+            foreach (var content in _gameCardContents)
+            {
+                content.Visibility = _allExpanded ? Visibility.Visible : Visibility.Collapsed;
+            }
+            UpdateWindowHeight();
+            // 화살표도 갱신
+            var panel = FindName("GamePathsPanel") as StackPanel;
+            if (panel != null)
+            {
+                foreach (var card in panel.Children.OfType<Border>())
+                {
+                    var stack = card.Child as StackPanel;
+                    if (stack == null) continue;
+                    var header = stack.Children.OfType<Grid>().FirstOrDefault();
+                    if (header == null) continue;
+                    var arrowTb = header.Children.OfType<TextBlock>().FirstOrDefault();
+                    if (arrowTb != null) arrowTb.Text = _allExpanded ? "▼" : "▶";
+                }
+            }
+            // 버튼 텍스트 전환
+            if (btn != null)
+            {
+                var tb = (btn.Content as TextBlock);
+                if (tb != null)
+                    tb.SetResourceReference(TextBlock.TextProperty, _allExpanded
+                        ? "Lang.Options.Labels.CollapseAll"
+                        : "Lang.Options.Labels.ExpandAll");
+            }
+        }
+
+
+        private static readonly Dictionary<string, string> ModGameLangKeyMap = new Dictionary<string, string>
+        {
+            { "TheForest",                "Lang.Downloads.Game.TheForest" },
+            { "TheForestDedicatedServer", "Lang.Downloads.Game.DedicatedServer" },
+            { "TheForestVR",              "Lang.Downloads.Game.VR" },
+            { "Subnautica",               "Lang.Downloads.Game.Subnautica" },
+            { "Raft",                     "Lang.Downloads.Game.Raft" },
+            { "EscapeThePacific",         "Lang.Downloads.Game.EscapeThePacific" },
+            { "GH",                       "Lang.Downloads.Game.GreenHell" },
+        };
+
+        // 지원 게임 고정 순서 (SonsOfTheForest는 IL2CPP이므로 제외)
+        private static readonly List<string> SupportedGameIds = new List<string>
+        {
+            "All",
+            "TheForest",
+            "TheForestDedicatedServer",
+            "TheForestVR",
+            "Subnautica",
+            "Raft",
+            "EscapeThePacific",
+            "GH",
+        };
+
+        private void BuildModGameFilter()
+        {
+            ModGameFilterPanel.Children.Clear();
+
+            foreach (var gameId in SupportedGameIds)
+            {
+                string langKey = null;
+                if (gameId == "All")
+                    langKey = "Lang.Downloads.Game.All";
+                else
+                    ModGameLangKeyMap.TryGetValue(gameId, out langKey);
+
+                var rb = new RadioButton
+                {
+                    GroupName = "ModGameFilter",
+                    IsChecked = gameId == "All",
+                    Margin = new Thickness(0, 2, 0, 2),
+                    FontSize = 12
+                };
+                rb.SetResourceReference(RadioButton.ForegroundProperty, "FluentTextPrimaryBrush");
+                rb.SetResourceReference(RadioButton.FontFamilyProperty, "NormalFont");
+
+                if (langKey != null)
+                    rb.SetResourceReference(RadioButton.ContentProperty, langKey);
+                else
+                    rb.Content = gameId;
+
+                var capturedId = gameId;
+                rb.Checked += (s, e) => { if (Mods != null) Mods.SelectedGameFilter = capturedId; };
+                ModGameFilterPanel.Children.Add(rb);
+            }
+        }
 
         private void GameFilter_Checked(object sender, RoutedEventArgs e)
         {
@@ -1406,7 +2554,31 @@ namespace ModAPI
                 var online = CheckInternetConnection();
                 if (online)
                 {
-                    LoadModsFromWeb();
+                    var sourceLabels = new[]
+                    {
+                        "The Forest", "Dedicated Server", "VR", "Subnautica",
+                        "RAFT", "Escape The Pacific", "Green Hell", "SOTF"
+                    };
+                    var inProgress = "  " + (FindResource("Lang.Downloads.Status.InProgress") as string ?? "진행중");
+                    var sourceIndex = 0;
+                    var currentPercent = 0;
+                    LoadModsFromWeb(targetPercent =>
+                    {
+                        var label = sourceIndex < sourceLabels.Length ? sourceLabels[sourceIndex] : "";
+                        sourceIndex++;
+                        // 현재값에서 목표값까지 1씩 카운트
+                        while (currentPercent < targetPercent)
+                        {
+                            currentPercent++;
+                            var p = currentPercent;
+                            var l = label;
+                            Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                DownloadStatusText.Text = string.Format("  {0}%  ←  {1} {2}", p, l, inProgress);
+                            }));
+                            System.Threading.Thread.Sleep(15);
+                        }
+                    });
                 }
 
                 Dispatcher.BeginInvoke(new Action(() =>
@@ -1482,11 +2654,11 @@ namespace ModAPI
                     {
                         DownloadVersionPlaceholder.Visibility = Visibility.Collapsed;
                         DownloadVersionPanel.Visibility = Visibility.Visible;
-                        DownloadStatusText.Text = string.Format("{0} versions", versions.Count);
+                        DownloadStatusText.Text = string.Format("  {0} versions", versions.Count);
                     }
                     else
                     {
-                        DownloadStatusText.Text = string.Format("HTML:{0} Btn:{1} Ver:{2} DL:{3}", htmlLen, btnCount, verCount, dlLinkCount);
+                        DownloadStatusText.Text = FindResource("Lang.Downloads.Status.NoDownloads") as string ?? "No downloads available.";
                     }
                     DownloadButton.IsEnabled = false;
                 }));
@@ -1513,21 +2685,25 @@ namespace ModAPI
             if (selectedVersion == null) return;
 
             DownloadButton.IsEnabled = false;
-            DownloadStatusText.Text = FindResource("Lang.Downloads.Status.Downloading") as string;
+            DownloadStatusText.Text = "  " + (FindResource("Lang.Downloads.Status.Downloading") as string ?? "Downloading...");
 
             var thread = new Thread(() =>
             {
                 try
                 {
-                    var success = DownloadModFile(selectedVersion.ModId, selectedVersion.FileId, selectedVersion.GameShortName);
+                    // _selectedMod.GameId 우선 사용 — data-game 파싱 실패 시 올바른 폴더에 저장
+                    var gameShortName = (!string.IsNullOrEmpty(_selectedMod?.GameId))
+                        ? _selectedMod.GameId
+                        : selectedVersion.GameShortName;
+                    var success = DownloadModFile(selectedVersion.ModId, selectedVersion.FileId, gameShortName);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         try
                         {
                             DownloadButton.IsEnabled = true;
                             DownloadStatusText.Text = success
-                                ? (FindResource("Lang.Downloads.Status.Complete") as string)
-                                : (FindResource("Lang.Downloads.Status.Error") as string);
+                                ? "  " + (FindResource("Lang.Downloads.Status.Complete") as string ?? "Download complete!")
+                                : "  " + (FindResource("Lang.Downloads.Status.Error") as string ?? "Error occurred.");
                         }
                         catch { }
                     }));
@@ -1539,7 +2715,7 @@ namespace ModAPI
                         try
                         {
                             DownloadButton.IsEnabled = true;
-                            DownloadStatusText.Text = FindResource("Lang.Downloads.Status.Error") as string;
+                            DownloadStatusText.Text = "  " + (FindResource("Lang.Downloads.Status.Error") as string ?? "Error occurred.");
                         }
                         catch { }
                     }));
@@ -1891,7 +3067,12 @@ namespace ModAPI
                     }
 
                     // Determine target folder
-                    var modsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods", gameShortName);
+                    // SonsOfTheForest는 IL2CPP 빌드이므로 ModAPI로 적용 불가
+                    // mods\ 대신 downloads\ 에 저장하여 모드 목록 자동 로딩에서 제외
+                    var isIl2Cpp = string.Equals(gameShortName, "SonsOfTheForest", StringComparison.OrdinalIgnoreCase);
+                    var modsDir = isIl2Cpp
+                        ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "downloads", gameShortName)
+                        : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mods", gameShortName);
                     if (!Directory.Exists(modsDir))
                         Directory.CreateDirectory(modsDir);
 

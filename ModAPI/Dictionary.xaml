@@ -72,7 +72,7 @@
 
     <Style TargetType="{x:Type TreeViewItem}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseTinyFontSize}" />
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect
@@ -86,7 +86,7 @@
     </Style>
     <Style x:Key="NormalLabel" TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="Effect">
             <Setter.Value>
@@ -116,7 +116,7 @@
 
     <Style x:Key="HeaderLabel" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource NormalLabel}">
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseHeaderFontSize}" />
         <Setter Property="Effect">
             <Setter.Value>
             <DropShadowEffect
@@ -285,7 +285,7 @@
     <Style x:Key="PopupTab" TargetType="{x:Type Components:IconTabItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseHeaderFontSize}" />
         <Setter Property="Height" Value="40" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -362,7 +362,7 @@
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
@@ -401,7 +401,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
@@ -409,7 +409,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid Width="16" Height="16" Margin="0,0,5,0" VerticalAlignment="Center">
                             <Ellipse x:Name="OuterCircle" Width="16" Height="16" 
-                                     Stroke="#999999" StrokeThickness="1.5" Fill="Transparent" />
+                                     Stroke="#CCCCCC" StrokeThickness="1.5" Fill="Transparent" />
                             <Ellipse x:Name="InnerDot" Width="8" Height="8" 
                                      Fill="#FFD700" Visibility="Collapsed" />
                         </Grid>
@@ -435,7 +435,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="Foreground" Value="#ffffff" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -501,7 +501,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="Foreground" Value="#333333" />
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseTinyFontSize}" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -745,7 +745,8 @@
         </Grid>
     </ControlTemplate>
     <Style TargetType="{x:Type ComboBoxItem}" x:Key="ComboBoxItem">
-        <Setter Property="Height" Value="32" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="MinHeight" Value="32" />
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Template">
             <Setter.Value>
@@ -894,7 +895,8 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="Height" Value="32" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="MinHeight" Value="32" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -1178,6 +1180,7 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseFontSize}" />
         <Setter Property="AllowsTransparency" Value="True" />
         <Setter Property="WindowStyle" Value="None" />
         <Setter Property="Template">
@@ -1282,8 +1285,8 @@
     </Style>
     <Style TargetType="{x:Type Button}" x:Key="NormalButton">
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseHeaderFontSize}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="Foreground" Value="#ffffff" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Margin" Value="0, 0, 0, 0"/>
@@ -1303,7 +1306,7 @@
                                        VerticalContentAlignment="Center"
                                        ContentOffset="0, 0">
                             <Components:Scale9.InnerContent>
-                                <ContentControl Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{TemplateBinding Content}">
+                                <ContentControl Height="20" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" Content="{TemplateBinding Content}">
                                     <ContentControl.Effect>
                                         <DropShadowEffect
               ShadowDepth="1"
@@ -1768,7 +1771,7 @@
     <Style x:Key="TopTab" TargetType="{x:Type Components:IconTabItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="FontFamily" Value="{StaticResource BigFont}" />
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseLargeFontSize}" />
         <Setter Property="Height" Value="105" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -2913,7 +2916,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="Foreground" Value="#ffffff" />
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseTinyFontSize}" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -3041,14 +3044,14 @@
         <Setter Property="BorderBrush" Value="#40FFFFFF" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
     </Style>
 
     <Style TargetType="{x:Type ListViewItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="Padding" Value="4,2" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
@@ -3080,7 +3083,7 @@
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="6,4" />
         <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{DynamicResource AppBaseSmallFontSize}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Template">
             <Setter.Value>

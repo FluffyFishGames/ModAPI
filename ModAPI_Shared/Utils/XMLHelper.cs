@@ -36,6 +36,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -52,6 +53,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -68,6 +70,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -84,6 +87,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -100,6 +104,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -116,6 +121,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -132,6 +138,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -148,6 +155,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -164,6 +172,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;
@@ -180,6 +189,7 @@ namespace ModAPI.Utils
                 }
                 catch (Exception e)
                 {
+                    Debug.Log("XmlHelper", e.Message, Debug.Type.Warning);
                 }
             }
             return standardValue;

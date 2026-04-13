@@ -32,7 +32,7 @@ using ModAPI.Configurations;
 using ModAPI.Data;
 using ModAPI.Data.Models;
 
-public class ModProjectsViewModel : INotifyPropertyChanged
+public class ModProjectsViewModel : INotifyPropertyChanged, IDisposable
 {
     protected List<ModProject> ModProjects = new List<ModProject>();
     protected DispatcherTimer Timer;
@@ -51,6 +51,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
 
     public void CreateProject(string id)
     {
+        ModAPI.Debug.Log("CreateProject", "Game=" + App.Game?.GameConfiguration?.Id + " Id=" + id);
         ModProjects.Add(new ModProject(App.Game, id));
         FindProjects();
         _SelectedProject = ModProjects.Count;
@@ -61,7 +62,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
     {
         for (var i = 0; i < _Projects.Count; i++)
         {
-            var vm = (ModProjectViewModel) (_Projects[i].DataContext);
+            var vm = (ModProjectViewModel)(_Projects[i].DataContext);
             if (vm.Project == project)
             {
                 _Projects.RemoveAt(i);
@@ -110,7 +111,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
                 var add = true;
                 foreach (var item in _Projects)
                 {
-                    if (((ModProjectViewModel) item.DataContext).Project == project)
+                    if (((ModProjectViewModel)item.DataContext).Project == project)
                     {
                         add = false;
                         break;
@@ -175,7 +176,7 @@ public class ModProjectsViewModel : INotifyPropertyChanged
             for (var i = 0; i < _Projects.Count; i++)
             {
                 var item = _Projects[i];
-                var check = ((ModProjectViewModel) item.DataContext).Project;
+                var check = ((ModProjectViewModel)item.DataContext).Project;
                 if (!ModProjects.Contains(check))
                 {
                     _Projects.RemoveAt(i);
@@ -214,8 +215,18 @@ public class ModProjectsViewModel : INotifyPropertyChanged
             _SelectedProject = value;
             if (_SelectedProject >= 0)
             {
-                MainWindow.Instance.SetProject(((ModProjectViewModel) _Projects[_SelectedProject].DataContext));
+                MainWindow.Instance.SetProject(((ModProjectViewModel)_Projects[_SelectedProject].DataContext));
             }
+        }
+    }
+
+    public void Dispose()
+    {
+        if (Timer != null)
+        {
+            Timer.Stop();
+            Timer.Tick -= Tick;
+            Timer = null;
         }
     }
 }

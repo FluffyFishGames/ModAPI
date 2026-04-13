@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<game id="SonsOfTheForest" extends="GenericUnityGame">
+  <n>Sons Of The Forest</n>
+  <steamAppID>1326470</steamAppID>
+  <selectFile>SonsOfTheForest.exe</selectFile>
+  <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SteamPath%\SteamApps\common\Sons Of The Forest</searchPath>
+  <searchPath>%$REGISTRY:HKEY_CURRENT_USER\Software\Valve\Steam\SourceModInstallPath%\..\common\Sons Of The Forest</searchPath>
+  <copyAssembly>%fileBase%_Data/Managed/mscorlib.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Core.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Configuration.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Security.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/System.Xml.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Mono.Security.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/UnityEngine.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/UnityEngine.UI.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/UnityEngine.Networking.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp.dll</copyAssembly>
+  <copyAssembly>%fileBase%_Data/Managed/Assembly-CSharp-firstpass.dll</copyAssembly>
+</game>

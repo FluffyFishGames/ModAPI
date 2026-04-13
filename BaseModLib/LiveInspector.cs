@@ -253,6 +253,7 @@ public class LiveInspector : MonoBehaviour
             }
             catch (Exception e)
             {
+                UnityEngine.Debug.LogWarning("[LiveInspector] " + e.Message);
             }
         }
 
@@ -266,6 +267,7 @@ public class LiveInspector : MonoBehaviour
             }
             catch (Exception e)
             {
+                UnityEngine.Debug.LogWarning("[LiveInspector] " + e.Message);
             }
         }
 

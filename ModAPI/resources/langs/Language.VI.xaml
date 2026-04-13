@@ -80,9 +80,10 @@
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Cancel">Hủy</s:String>
     <s:String x:Key="Lang.Windows.RemoveModProject.Buttons.Remove">Xóa</s:String>
 
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">Nhập đường dẫn trò chơi</s:String>
-    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">Không tìm thấy trò chơi tự động. Vui lòng nhập đường dẫn trò chơi thủ công.</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Title">Đường dẫn Trò chơi</s:String>
+    <s:String x:Key="Lang.Windows.SpecifyGamePath.Text">Không tìm thấy đường dẫn trò chơi tự động. Vui lòng đặt đường dẫn cài đặt trong tab Settings.</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Browse">Duyệt</s:String>
+        <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.GoToSettings">Đến Cài đặt</s:String>
     <s:String x:Key="Lang.Windows.SpecifyGamePath.Buttons.Continue">Tiếp tục</s:String>
 
     <s:String x:Key="Lang.Windows.SpecifySteamPath.Title">Nhập đường dẫn Steam</s:String>
@@ -138,6 +139,7 @@
     <s:String x:Key="Lang.Languages.PT">Tiếng Bồ Đào Nha</s:String>
 
     <s:String x:Key="Lang.Development.Tab">Phát triển</s:String>
+    <s:String x:Key="Lang.Development.Labels.GameFilter">Bộ lọc trò chơi</s:String>
     <s:String x:Key="Lang.Development.Settings.Tab">Cài đặt</s:String>
     <s:String x:Key="Lang.Development.Keys.Tab">Phím gán</s:String>
     <s:String x:Key="Lang.Development.Projects">Dự án</s:String>
@@ -186,6 +188,7 @@
     <s:String x:Key="Lang.Mods.Labels.AvailableVersions">Phiên bản có sẵn:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Name">Tên:</s:String>
     <s:String x:Key="Lang.Mods.Labels.Description">Mô tả:</s:String>
+    <s:String x:Key="Lang.Mods.Labels.Game">Trò chơi</s:String>
     <s:String x:Key="Lang.Mods.Labels.Buttons">Gán phím</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">Tương thích với:</s:String>
 
@@ -226,15 +229,25 @@
     <s:String x:Key="Lang.Downloads.Status.Downloading">Đang tải xuống...</s:String>
     <s:String x:Key="Lang.Downloads.Status.Complete">Tải xuống hoàn tất!</s:String>
     <s:String x:Key="Lang.Downloads.Status.Error">Đã xảy ra lỗi khi tải xuống.</s:String>
+    <s:String x:Key="Lang.Downloads.Status.InProgress">Đang tiến hành</s:String>
+    <s:String x:Key="Lang.Downloads.Status.LoadComplete">Tải xong</s:String>
+    <s:String x:Key="Lang.Downloads.Status.NoDownloads">Không có tệp tải xuống cho mod này.</s:String>
     <s:String x:Key="Lang.Downloads.Version.Version">Phiên bản</s:String>
     <s:String x:Key="Lang.Downloads.Version.Compatible">Tương thích</s:String>
     <s:String x:Key="Lang.Downloads.Version.Date">Ngày</s:String>
     <s:String x:Key="Lang.Downloads.Version.Size">Kích thước</s:String>
     <s:String x:Key="Lang.Downloads.Version.Select">Chọn mod để xem các phiên bản</s:String>
+    <s:String x:Key="Lang.Downloads.Label.GameFilter">Bộ lọc trò chơi</s:String>
+    <s:String x:Key="Lang.Downloads.Label.ModSelect">Chọn MOD</s:String>
     <s:String x:Key="Lang.Downloads.Game.All">Tất cả</s:String>
     <s:String x:Key="Lang.Downloads.Game.TheForest">The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Game.DedicatedServer">Máy chủ riêng</s:String>
     <s:String x:Key="Lang.Downloads.Game.VR">VR</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Subnautica">Subnautica</s:String>
+    <s:String x:Key="Lang.Downloads.Game.Raft">RAFT</s:String>
+    <s:String x:Key="Lang.Downloads.Game.EscapeThePacific">Escape The Pacific</s:String>
+    <s:String x:Key="Lang.Downloads.Game.GreenHell">Green Hell</s:String>
+    <s:String x:Key="Lang.Downloads.Game.SOTF">Sons Of The Forest</s:String>
     <s:String x:Key="Lang.Downloads.Category.All">Tất cả</s:String>
     <s:String x:Key="Lang.Downloads.Category.Bugfixes">Sửa lỗi</s:String>
     <s:String x:Key="Lang.Downloads.Category.Balancing">Cân bằng</s:String>
@@ -251,16 +264,34 @@
     <s:String x:Key="Lang.Downloads.Buttons.Info">Thông tin</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Title">Không có kết nối Internet</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Text">Không thể kết nối máy chủ mod. Bạn có thể tải mod thủ công từ trang web:</s:String>
-    <s:String x:Key="Lang.Downloads.Offline.Manual">Sau khi tải, đặt tệp .mod vào thư mục "mods/TheForest" trong thư mục ModAPI.</s:String>
+    <s:String x:Key="Lang.Downloads.Offline.Manual">Sau khi tải xuống, đặt các tệp .mod vào thư mục trò chơi tương ứng trong "mods/" của thư mục ModAPI.</s:String>
+        <s:String x:Key="Lang.Downloads.Offline.Manual2">(vd. mods/TheForest, mods/Subnautica, mods/Raft, mods/EscapeThePacific, mods/GH)</s:String>
     <s:String x:Key="Lang.Downloads.Offline.Retry">Thử kết nối lại</s:String>
 
     <s:String x:Key="Lang.Options.Tab">Cài đặt</s:String>
+    <s:String x:Key="Lang.Welcome.Tab">Chào mừng</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">Ngôn ngữ:</s:String>
+    <s:String x:Key="Lang.Options.Labels.FontSize">Cỡ chữ</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Cập nhật bảng phiên bản:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Tìm bản cập nhật:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Kết nối Steam:</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Luôn hiển thị trên cùng</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePaths">Đường dẫn cài đặt trò chơi</s:String>
+    <s:String x:Key="Lang.Options.Labels.GamePathSave">Lưu</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPath">Đường dẫn cài đặt Steam</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Title">Không tìm thấy Steam</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam chưa được cài đặt. Vui lòng cấu hình Steam trong tab Settings.</s:String>
+    <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Options.Labels.Browse">Duyệt</s:String>
+    <s:String x:Key="Lang.Options.Labels.Installed">Đã cài đặt</s:String>
+    <s:String x:Key="Lang.Options.Labels.NotInstalled">Chưa cài đặt</s:String>
+    <s:String x:Key="Lang.Options.Labels.ExpandAll">Mở rộng tất cả</s:String>
+    <s:String x:Key="Lang.Options.Labels.CollapseAll">Thu gọn tất cả</s:String>
 
     <s:String x:Key="Lang.Options.Labels.Theme">Giao diện:</s:String>
+    <s:String x:Key="Lang.Options.Labels.MaxWidth">Chiều rộng tối đa</s:String>
+    <s:String x:Key="Lang.Options.Labels.ModListWidth">Độ rộng danh sách mod</s:String>
+    <s:String x:Key="Lang.Options.Labels.ProjectListWidth">Độ rộng danh sách dự án</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">Giao diện cổ điển</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">Giao diện sáng</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">Giao diện tối</s:String>
@@ -279,6 +310,22 @@
     <s:String x:Key="Lang.Windows.NoProjectWarning.Title">Cảnh báo</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Text">Không tìm thấy dự án. Hãy tạo dự án trước.</s:String>
     <s:String x:Key="Lang.Windows.NoProjectWarning.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Title">Cảnh báo</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Text">Chưa chọn mod nào. Vui lòng chọn mod trước khi bắt đầu trò chơi.</s:String>
+    <s:String x:Key="Lang.Windows.NoModSelected.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Title">Cảnh báo</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Text">Các mod từ các trò chơi khác nhau đang được chọn. Vui lòng chỉ chọn mod của cùng một trò chơi.</s:String>
+    <s:String x:Key="Lang.Windows.MixedGameMods.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Title">Cảnh báo</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Text">Không có trò chơi nào được cài đặt. Vui lòng đặt đường dẫn trò chơi trong tab Settings.</s:String>
+    <s:String x:Key="Lang.Windows.GameNotInstalled.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Title">Chưa đặt đường dẫn trò chơi</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Text">Không có trò chơi nào được cài đặt. Vui lòng đặt đường dẫn trò chơi trong tab Settings.</s:String>
+    <s:String x:Key="Lang.Windows.GamePathNotSet.Buttons.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Title">Không Khớp Trò Chơi</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Text">Trò chơi được cấu hình trong tab Settings không khớp với mod đã cài đặt.
+Vui lòng cấu hình đường dẫn trò chơi trong tab Settings.</s:String>
+    <s:String x:Key="Lang.Windows.GameModsMismatch.Buttons.OK">OK</s:String>
     <s:String x:Key="Lang.Mods.Buttons.Delete">Xóa Mod</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Title">Xóa Mod</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Xóa mod &quot;{0}&quot; và tất cả phiên bản? File .dll cũng sẽ bị xóa khỏi thư mục game.</s:String>

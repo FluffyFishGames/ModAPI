@@ -61,7 +61,7 @@ public class ModsViewModel : INotifyPropertyChanged
     {
         foreach (var li in Mods)
         {
-            var mv = (ModViewModel) li.DataContext;
+            var mv = (ModViewModel)li.DataContext;
             mv.Update();
         }
     }
@@ -91,7 +91,8 @@ public class ModsViewModel : INotifyPropertyChanged
             {
                 return;
             }
-            var path = Path.GetFullPath(Configuration.GetPath("mods") + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id);
+            var modsBase = Path.GetFullPath(Configuration.GetPath("mods"));
+            var path = Path.GetFullPath(modsBase + Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id);
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -108,7 +109,7 @@ public class ModsViewModel : INotifyPropertyChanged
                     Mod.Mods.Remove(id);
                     for (var j = 0; j < _Mods.Count; j++)
                     {
-                        var vm = (ModViewModel) _Mods[j].DataContext;
+                        var vm = (ModViewModel)_Mods[j].DataContext;
                         if (vm.VersionsData.Values.Contains(mod))
                         {
                             vm.VersionsData.Remove(Mod.Header.ParseModVersion(mod.HeaderData.GetVersion()));
@@ -123,7 +124,16 @@ public class ModsViewModel : INotifyPropertyChanged
                 }
             }
 
-            var files = Directory.GetFiles(path);
+            // Collect .mod files from all game subdirectories under modsBase
+            var allFiles = new List<string>();
+            if (Directory.Exists(modsBase))
+            {
+                foreach (var dir in Directory.GetDirectories(modsBase))
+                {
+                    allFiles.AddRange(Directory.GetFiles(dir));
+                }
+            }
+            var files = allFiles.ToArray();
             var toLoad = new List<string>();
             foreach (var file in files)
             {
@@ -138,7 +148,7 @@ public class ModsViewModel : INotifyPropertyChanged
             {
                 Loading = true;
                 var progressHandler = new ProgressHandler();
-                var t = new Thread(delegate() { LoadMods(toLoad, progressHandler); });
+                var t = new Thread(delegate () { LoadMods(toLoad, progressHandler); });
                 progressHandler.Task = "LoadingMods";
                 progressHandler.OnComplete += (s, e) => MainWindow.Instance.Dispatcher.Invoke(delegate { UpdateMods(); });
                 Schedule.AddTask("GUI", "OperationPending", null, new object[] { "LoadingMods", progressHandler, null, true });
@@ -159,7 +169,7 @@ public class ModsViewModel : INotifyPropertyChanged
             ModViewModel alreadyVm = null;
             foreach (var i in _Mods)
             {
-                var vm = ((ModViewModel) i.DataContext);
+                var vm = ((ModViewModel)i.DataContext);
                 if (vm.VersionsData.Values.Contains(kv.Value))
                 {
                     add = false;
@@ -195,14 +205,14 @@ public class ModsViewModel : INotifyPropertyChanged
 
                     var textBlock = new TextBlock();
                     textBlock.SetBinding(TextBlock.TextProperty, "Name");
-                    textBlock.Style = (Style) Application.Current.FindResource("HeaderLabel");
+                    textBlock.Style = (Style)Application.Current.FindResource("HeaderLabel");
 
                     panel.Children.Add(textBlock);
 
                     var textBlock2 = new TextBlock();
                     textBlock2.SetBinding(TextBlock.TextProperty, "Version");
                     textBlock2.FontSize = 12;
-                    textBlock2.Style = (Style) Application.Current.FindResource("NormalLabel");
+                    textBlock2.Style = (Style)Application.Current.FindResource("NormalLabel");
                     panel.Children.Add(textBlock2);
                     outerPanel.Children.Add(panel);
 
@@ -214,9 +224,11 @@ public class ModsViewModel : INotifyPropertyChanged
             }
         }
 
+        OnPropertyChanged("FilteredMods");
+
         foreach (var item in _Mods)
         {
-            var vm = (ModViewModel) item.DataContext;
+            var vm = (ModViewModel)item.DataContext;
             vm.Initialized();
         }
         FirstBatchLoaded = true;
@@ -230,13 +242,13 @@ public class ModsViewModel : INotifyPropertyChanged
     {
         foreach (var item in _Mods)
         {
-            var vm = (ModViewModel) item.DataContext;
+            var vm = (ModViewModel)item.DataContext;
             var v = vm.VersionsData.Keys.ToList();
             v.Sort();
             v.Reverse();
             foreach (var li in vm.Versions)
             {
-                var versionModel = (ModVersionViewModel) li.DataContext;
+                var versionModel = (ModVersionViewModel)li.DataContext;
                 if (Mod.Header.ParseModVersion(versionModel.Mod.HeaderData.GetVersion()) == v[0])
                 {
                     vm.SelectedVersion = li;
@@ -256,7 +268,19 @@ public class ModsViewModel : INotifyPropertyChanged
 
             var id = collection.Groups[1].Captures[0].Value + "-" + collection.Groups[2].Captures[0].Value;
 
-            var mod = new Mod(App.Game, fileName);
+            // 파일 경로에서 GameId 추출하여 올바른 Game 인스턴스 사용
+            var gameId = Path.GetFileName(Path.GetDirectoryName(fileName));
+            ModAPI.Data.Game modGame = App.Game;
+            if (!string.IsNullOrEmpty(gameId) &&
+                !string.Equals(gameId, App.Game?.GameConfiguration?.Id, StringComparison.OrdinalIgnoreCase))
+            {
+                ModAPI.Configurations.Configuration.GameConfiguration cfg = null;
+                if (ModAPI.Configurations.Configuration.Games.ContainsKey(gameId))
+                    cfg = ModAPI.Configurations.Configuration.Games[gameId];
+                if (cfg != null)
+                    modGame = new ModAPI.Data.Game(cfg, true);
+            }
+            var mod = new Mod(modGame, fileName);
             if (Mod.Mods.ContainsKey(id) || mod.Load())
             {
                 LoadedFiles.Add(fileName, mod);
@@ -265,7 +289,7 @@ public class ModsViewModel : INotifyPropertyChanged
                     Mod.Mods.Add(id, mod);
                 }
             }
-            progressHandler.Progress = (i / (float) toLoad.Count) * 100f;
+            progressHandler.Progress = (i / (float)toLoad.Count) * 100f;
         }
         progressHandler.Progress = 100f;
         Loading = false;
@@ -274,6 +298,27 @@ public class ModsViewModel : INotifyPropertyChanged
     protected void Tick(object sender, EventArgs e)
     {
         FindMods();
+    }
+
+    // ── Game Filter ───────────────────────────────────────────────────────
+    private string _selectedGameFilter = "All";
+    public string SelectedGameFilter
+    {
+        get => _selectedGameFilter;
+        set
+        {
+            _selectedGameFilter = value;
+            OnPropertyChanged("SelectedGameFilter");
+            OnPropertyChanged("FilteredMods");
+        }
+    }
+
+    // ── Mod List Width ───────────────────────────────────────────────────
+    private double _modListWidth = 220;
+    public double ModListWidth
+    {
+        get => _modListWidth;
+        set { _modListWidth = value; OnPropertyChanged("ModListWidth"); }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -286,6 +331,45 @@ public class ModsViewModel : INotifyPropertyChanged
     protected ObservableCollection<ListViewItem> _Mods = new ObservableCollection<ListViewItem>();
 
     public ObservableCollection<ListViewItem> Mods => _Mods;
+
+    public ObservableCollection<ListViewItem> FilteredMods
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_selectedGameFilter) || _selectedGameFilter == "All")
+                return _Mods;
+
+            var filtered = new ObservableCollection<ListViewItem>();
+            foreach (var item in _Mods)
+            {
+                var vm = item.DataContext as ModViewModel;
+                if (vm != null && string.Equals(vm.GameId, _selectedGameFilter, StringComparison.OrdinalIgnoreCase))
+                    filtered.Add(item);
+            }
+            return filtered;
+        }
+    }
+
+    private ListViewItem _selectedModItem;
+    public ListViewItem SelectedModItem
+    {
+        get => _selectedModItem;
+        set
+        {
+            _selectedModItem = value;
+            OnPropertyChanged("SelectedModItem");
+            if (value != null)
+            {
+                var vm = value.DataContext as ModViewModel;
+                if (vm != null)
+                    MainWindow.Instance.SetMod(vm);
+            }
+            else
+            {
+                MainWindow.Instance.SetMod(null);
+            }
+        }
+    }
     protected int _SelectedMod = -1;
 
     public int SelectedMod
@@ -296,7 +380,7 @@ public class ModsViewModel : INotifyPropertyChanged
             _SelectedMod = value;
             if (_SelectedMod >= 0)
             {
-                MainWindow.Instance.SetMod(((ModViewModel) _Mods[_SelectedMod].DataContext));
+                MainWindow.Instance.SetMod(((ModViewModel)_Mods[_SelectedMod].DataContext));
             }
         }
     }

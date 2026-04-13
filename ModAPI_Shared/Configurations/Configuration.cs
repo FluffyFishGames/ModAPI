@@ -630,7 +630,7 @@ namespace ModAPI.Configurations
                     {
                         ret = int.Parse(StringValue);
                     }
-                    catch (Exception e)
+                    catch (Exception e) when (e != null)
                     {
                     }
                     return ret;
@@ -673,7 +673,7 @@ namespace ModAPI.Configurations
                             stream.Close();
                             Debug.Log("Language", "Image file \"" + imageFile + "\" loaded for language \"" + Key + "\".");
                         }
-                        catch (Exception e)
+                        catch (Exception e) when (e != null)
                         {
                             Debug.Log("Language", "Could not read image file \"" + imageFile + "\" for language \"" + Key + "\".", Debug.Type.Warning);
                         }
@@ -887,7 +887,7 @@ namespace ModAPI.Configurations
                 {
                     _SelectFile = selectFile.Value;
                 }
-                var name = document.Root.Element("name");
+                var name = document.Root.Element("name") ?? document.Root.Element("n");
                 if (name != null)
                 {
                     _Name = name.Value;
