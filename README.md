@@ -1,18 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](Docs/README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](Docs/README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](Docs/README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](Docs/README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](Docs/README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](Docs/README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](Docs/README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](Docs/README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](Docs/README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](Docs/README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](Docs/README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](Docs/README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9586 - 20260331
+# ModAPI(v1) v2.0.9610 - 20260413
 
 **The Forest Mod Management Tool — Upgraded Edition**
 
@@ -23,208 +23,594 @@
 
 ## Overview
 
-ModAPI is a desktop application for managing mods for The Forest. This upgraded edition includes .NET Framework 4.8 migration, Windows 11 Fluent Design UI, a 3-theme system, enhanced multilingual support, a full Downloads tab implementation, and C# 7.3 mod development support.
+ModAPI is a desktop application for managing mods for **5 officially supported games**. This upgraded edition includes multi-game support, a fully redesigned Settings tab, Steam path configuration, persistent UI settings, a dynamic font size system, game start validation, Debug/Release build split, and numerous crash fixes verified through in-game testing.
 
 ---
 
-## What Changed in v2.0.9586
+## Supported Games
 
-The following issues were identified and resolved after v2.0.9561. All findings are based on in-game testing.
+### The Forest
 
-| # | Category | Issue | Resolution |
-|---|---|---|---|
-| 1 | **Critical** | Black screen on game main menu after applying mods | Confirmed fixed — assembly remapping pipeline now correctly patches PE headers and reference tables |
-| 2 | **Polyfill** | `Portable.System.ValueTuple.dll` included but non-functional | Removed entirely — Mono 2.0's `mscorlib` emits IL referencing `ValueTuple` directly; no polyfill can override it |
-| 3 | **Polyfill** | Wrong filename: `System.Threading.Tasks.dll` | Corrected to `System.Threading.dll` — actual filename from `TaskParallelLibrary 1.0.2856` NuGet |
-| 4 | **Polyfill** | `Game.cs` copy destination bug: files copied to `Managed\polyfills\` instead of `Managed\` | Fixed by using `Path.GetFileName()` to extract filename only for the flat destination path |
-| 5 | **Build** | PostBuild target missing polyfill auto-copy | `BaseModLib.csproj` PostBuild now auto-copies `AsyncBridge.dll` and `System.Threading.dll` to `bin\{Config}\libs\polyfills\` |
-| 6 | **C# 7.3** | Tuple (`ValueTuple`) support attempted and failed | Definitively removed from all configs — tuples are an architectural hard limit on Mono 2.0 |
-| 7 | **C# 7.3** | In-game verification of remaining C# 7.3 features | Confirmed working in real gameplay: pattern matching, string interpolation, `out` variable inline |
+| Item | Value |
+|---|---|
+| Engine | Unity 5 (upgraded from Unity 4) |
+| Latest Version | v1.12 (VR) |
+| Last Update | September 11, 2019 — VR support patch; no further major content updates |
+| Executable | `TheForest.exe` |
+| Data Folder | `TheForest_Data/Managed/` |
+| Mods Folder | `mods/TheForest/` |
+| Projects Folder | `projects/TheForest/` |
+| Steam App ID | `242760` |
+| IL2CPP | ❌ Mono — fully supported |
 
-### C# 7.3 Final Feature Matrix
-
-| Feature | Status | Notes |
-|---|---|---|
-| Pattern matching (`is`, `switch`) | ✅ Confirmed | Tested in-game via `TEST_MOD.log` |
-| String interpolation (`$""`) | ✅ Confirmed | Tested in-game via `TEST_MOD.log` |
-| `out` variable inline | ✅ Confirmed | Tested in-game via `TEST_MOD.log` |
-| Expression-bodied members (`=>`) | ✅ | Compiler-handled, no runtime dependency |
-| Local functions | ✅ | Compiler-handled, no runtime dependency |
-| `nameof` | ✅ | Compiler-handled, no runtime dependency |
-| Null-conditional (`?.`, `??`) | ✅ | Compiler-handled, no runtime dependency |
-| `async`/`await` | ✅ | Via AsyncBridge + System.Threading polyfills |
-| Tuples (`ValueTuple`) | ❌ Hard limit | Mono 2.0 `mscorlib` ABI — no workaround exists |
-
-### Final Polyfill Configuration
-
-| DLL | NuGet Package | Destination | Purpose |
-|---|---|---|---|
-| `AsyncBridge.dll` | AsyncBridge 0.3.1 | `libs/polyfills/` → `Managed/` | `async`/`await` for .NET 3.5 |
-| `System.Threading.dll` | TaskParallelLibrary 1.0.2856 | `libs/polyfills/` → `Managed/` | AsyncBridge dependency |
-| ~~`Portable.System.ValueTuple.dll`~~ | ~~Portable.System.ValueTuple~~ | ~~Removed~~ | ~~Tuple support — non-functional on Mono 2.0~~ |
+The Forest was upgraded from Unity 4 to Unity 5, significantly improving visuals and physics. The September 2019 VR patch was the final major update. The game now remains in a stable, finalized state — ideal for modding.
 
 ---
 
-## Runtime Architecture — .NET / Mono Design Decision
+### Subnautica
 
-ModAPI operates across two distinct runtime environments. Understanding this separation is essential for contributors.
+| Item | Value |
+|---|---|
+| Engine | Unity (integrated codebase, unified with Below Zero in 2022) |
+| Latest Version | 2025 Patch (v18810395) |
+| Last Update | August 12, 2025 — bug fixes and performance improvements alongside mobile release |
+| Executable | `Subnautica.exe` |
+| Data Folder | `Subnautica_Data/Managed/` |
+| Mods Folder | `mods/Subnautica/` |
+| Projects Folder | `projects/Subnautica/` |
+| Steam App ID | `264710` |
+| IL2CPP | ❌ Mono — supported |
+
+Originally built on Unity 5, Subnautica received the 'Living Large' update (v2.0) in late 2022 which merged the engine codebase with Below Zero for improved optimization and stability. Note: the upcoming *Subnautica 2* uses Unreal Engine 5.
+
+> **XML rewritten in v2.0.9610**: `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll` added to `copyAssembly`.
+
+---
+
+### RAFT
+
+| Item | Value |
+|---|---|
+| Engine | Unity |
+| Latest Version | v1.1.02 (Beta) / v1.09 (Stable) |
+| Last Update | March 2026 — voice chat and multiplayer bug fixes via beta branch |
+| Executable | `Raft.exe` |
+| Data Folder | `Raft_Data/Managed/` |
+| Mods Folder | `mods/Raft/` |
+| Projects Folder | `projects/Raft/` |
+| Steam App ID | `648800` |
+| IL2CPP | ❌ Mono — supported |
+| Versions.xml | `1.1.01` (with checksum) |
+
+After the official story conclusion in v1.0: *The Final Chapter*, patches have continued for network code improvements and stability. A beta branch update in March 2026 addressed voice chat and multiplayer issues.
+
+---
+
+### Escape The Pacific
+
+| Item | Value |
+|---|---|
+| Engine | Unity 6 (migrated from Unity 2021/2022 in late 2025) |
+| Latest Version | v0.67.0.0 |
+| Last Update | June 26, 2025 — island distribution rework and engine update; hotfixes ongoing into 2026 |
+| Executable | `EscapeThePacific.exe` |
+| Data Folder | `EscapeThePacific_Data/Managed/` |
+| Mods Folder | `mods/EscapeThePacific/` |
+| Projects Folder | `projects/EscapeThePacific/` |
+| IL2CPP | ❌ Mono — supported |
+
+Completed a major system rebuild and Unity 6 migration in late 2025, enabling more dynamic environments. The game remains in active Early Access development.
+
+> **XML rewritten in v2.0.9610**: `extends="GenericUnityGame"` removed; `includeAssembly` set to `Assembly-CSharp.dll` only — prevents `Assembly-CSharp-firstpass.dll` inheritance errors.
+
+---
+
+### Green Hell
+
+| Item | Value |
+|---|---|
+| Engine | Unity 2019 |
+| Latest Version | v2.9.5 |
+| Last Update | February 4, 2026 — Steam Deck optimization and text readability improvements |
+| Executable | `GH.exe` |
+| Data Folder | `GH_Data/Managed/` |
+| Mods Folder | `mods/GH/` |
+| Projects Folder | `projects/GH/` |
+| Steam App ID | `763790` |
+| IL2CPP | ❌ Mono — supported |
+| Versions.xml | `2.9.5` (with checksum) |
+
+Developed through Unity 2017 → 2018 → 2019 across its lifecycle. The February 2026 hotfix focused on Steam Deck compatibility and UI readability.
+
+> **XML rewritten in v2.0.9610**: `AmplifyBloom.dll`, `AmplifyColor.dll`, `AmplifyMotion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` added; non-existent `DOTweenPro.dll` removed.
+
+---
+
+## Architecture
 
 ### Runtime Split
 
 | Component | Target | Runtime | Reason |
 |---|---|---|---|
-| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | Desktop application, full modern API access |
-| `ModAPI_Shared.dll` | .NET Framework 4.8 | Windows .NET 4.8 | Shared library for ModAPI desktop |
-| `BaseModLib.dll` | .NET Framework 3.5 | Game Mono 2.0 | **Permanently fixed — see below** |
+| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | Desktop application, full modern API |
+| `ModAPI_Shared.dll` | .NET Framework 4.8 | Windows .NET 4.8 | Shared library |
+| `BaseModLib.dll` | .NET Framework 3.5 | Game Mono 2.0 | **Permanently fixed** — PE header must read `v2.0.50727` |
 | Mod DLLs (user) | .NET Framework 4.8 | Game Mono 2.0 (patched) | Built with 4.8, PE header patched at Apply time |
 
-### Why BaseModLib Must Stay at .NET 3.5
+### Debug / Release Build Split
 
-The Forest runs on **Unity 5.6.x**, which embeds **Mono 2.0** (`mono.dll`, CLR Runtime `v2.0.50727`). This runtime is physically embedded in the game executable and cannot be replaced externally.
+All file validation and assembly processing branches on the build configuration via `#if DEBUG` / `#else`.
 
-When a DLL is compiled targeting .NET 4.8, its PE header contains `CLR Runtime v4.0.30319`. Mono 2.0 inspects this header before loading and **refuses to load any DLL with a v4.x PE header**, resulting in a black screen.
+| Location | Debug Build | Release Build |
+|---|---|---|
+| `CheckSteam()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidSteamExe()` — PE header + min 1 MB |
+| `CheckGamePath()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidAssemblyDll()` — PE header + CLR metadata + min 64 KB |
+| `ModLib.Create()` — IncludeAssemblies | `File.Copy()` — skip Cecil parsing | Full Mono.Cecil parse + IL modification + `module.Write()` |
+| `ModLib.Create()` — file not found | Log warning, skip and continue | Log error, abort with popup |
 
-`RemapAllReferences()` (Mono.Cecil) can patch assembly reference versions inside a DLL, but it **cannot modify the PE header CLR Runtime field**. Therefore, BaseModLib must be compiled with .NET 3.5 so its PE header reads `v2.0.50727`, which Mono 2.0 accepts.
+**Debug testing** uses `create_dummy_Debug_games.ps1` to generate 0-byte placeholder files under `bin\Debug\dummy_games\`, `bin\Debug\dummy_steam\`, and `bin\Debug\gamefiles\original\`. These pass `File.Exists()` checks and allow full UI workflow testing without a real game installation.
+
+**Release builds** apply `FileValidator` (PE header + .NET CLR metadata verification) to reject 0-byte files, text files, and arbitrary binaries. Only valid Windows executables and .NET assemblies pass.
+
+### FileValidator — PE Header Verification
+
+`ModAPI_Shared\Utils\FileValidator.cs` — applied in Release builds only.
+
+| Method | Checks | Min Size |
+|---|---|---|
+| `IsValidSteamExe(path)` | MZ signature + PE\0\0 signature | 1 MB |
+| `IsValidGameExe(path)` | MZ signature + PE\0\0 signature | 512 KB |
+| `IsValidAssemblyDll(path)` | MZ + PE\0\0 + CLR metadata header (data directory #14) | 64 KB |
 
 ```
-v3.5 build  →  PE header: CLR Runtime v2.0.50727  ←  Mono 2.0 accepts  ✅
-v4.8 build  →  PE header: CLR Runtime v4.0.30319  ←  Mono 2.0 rejects  ❌  (black screen)
+PE Header layout checked:
+[0x00] 4D 5A          ← "MZ" DOS signature
+[0x3C] XX XX XX XX   ← PE header offset (little-endian)
+[offset] 50 45 00 00 ← "PE\0\0" signature
+[Optional Header → DataDirectory[14]] RVA+Size != 0 ← .NET CLR header present
 ```
-
-### Why Mono 2.0 Cannot Be Upgraded
-
-Unity 5.6.x embeds `Mono/mono.dll` compiled and ABI-linked against its own engine internals. Replacing this DLL with a newer Mono version causes an immediate crash because the Unity engine binary expects the exact ABI of its bundled Mono. The Forest is a released, no-longer-updated game — a Unity engine upgrade is not possible.
 
 ### Assembly Remapping Pipeline
 
-Mod DLLs built with .NET 4.8 go through the following pipeline at Apply time:
-
 ```
 [Mod Developer builds with .NET 4.8]
-  → Mod DLL: PE header v4.0.30319, references mscorlib 4.0.0.0
+  → Mod DLL: PE header v4.0.30319, mscorlib 4.0.0.0
 
 [ModAPI Apply — ModProject.cs]
   → AssemblyVersionMap.RemapAllReferences(modModule)
-      patches reference table: mscorlib 4.0.0.0 → 2.0.0.0, etc.
+      mscorlib 4.0.0.0 → 2.0.0.0, etc.
   → modModule.RuntimeVersion = "v2.0.50727"
-      patches PE header: v4.0.30319 → v2.0.50727
+      PE header: v4.0.30319 → v2.0.50727
 
-[Game runtime — Mono 2.0]
-  → PE header accepted ✅
-  → Assembly references resolved ✅
+[Game Mono 2.0]
+  → PE header accepted ✅  →  References resolved ✅
 ```
 
-### Polyfill Deployment Pipeline
+### Assembly Resolver Fallback
 
 ```
-[BaseModLib PostBuild]
-  New_MODAPI2\libs\polyfills\AsyncBridge.dll
-  New_MODAPI2\libs\polyfills\System.Threading.dll
-    → auto-copied to bin\{Config}\libs\polyfills\
+1. gamefiles/original/{GameId}/{AssemblyPath}   ← backup folder
+2. {ActualGameInstallPath}/{AssemblyPath}        ← game install folder (fallback)
+```
 
-[ModAPI Apply — Game.cs]
-  bin\{Config}\libs\polyfills\AsyncBridge.dll
-  bin\{Config}\libs\polyfills\System.Threading.dll
-    → Path.GetFileName() extracts filename only
-    → flat-copied to TheForest_Data\Managed\AsyncBridge.dll
-    → flat-copied to TheForest_Data\Managed\System.Threading.dll
+### C# 7.3 Feature Support
+
+| Feature | Status | Notes |
+|---|---|---|
+| Pattern matching (`is`, `switch`) | ✅ | In-game verified |
+| String interpolation (`$""`) | ✅ | In-game verified |
+| `out` variable inline | ✅ | In-game verified |
+| `async` / `await` | ✅ | Via AsyncBridge + System.Threading polyfills |
+| Tuples (`ValueTuple`) | ❌ Hard limit | Mono 2.0 `mscorlib` ABI — no workaround |
+
+### Theme System
+
+| Theme | File | Description |
+|---|---|---|
+| Classic | `Dictionary.xaml` | Original ModAPI design (texture background) |
+| Light | `FluentStylesLight.xaml` | Bright tone + blue accent |
+| Dark | `FluentStyles.xaml` | Dark tone + blue accent (default) |
+
+Theme changes require an app restart. `SaveAllSettings()` is called automatically before restart.
+
+### Font Size System
+
+| Resource Key | Base | Description |
+|---|---|---|
+| `AppBaseFontSize` | 13 | Normal text |
+| `AppBaseHeaderFontSize` | 16 | Headers, panel titles |
+| `AppBaseSmallFontSize` | 12 | Secondary labels |
+| `AppBaseTinyFontSize` | 10 | Hint text |
+| `AppBaseLargeFontSize` | 20 | Large display text |
+
+### Persistent UI Configuration — `ui.cfg`
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `ModListWidth` | `150` | Mods tab list width (px) |
+| `ProjectListWidth` | `150` | Development tab project list width (px) |
+| `AppFontSize` | `13` | Global UI font size (px) |
+| `AlwaysOnTop` | `false` | Window always-on-top |
+
+### File Structure
+
+```
+ModAPI/
+├── App.xaml / App.xaml.cs              # Theme load/apply
+├── Dictionary.xaml                      # Classic theme + fallback resources
+├── FluentStyles.xaml                    # Dark theme
+├── FluentStylesLight.xaml               # Light theme
+├── ui.cfg                               # Persistent UI settings
+├── theme.cfg                            # Current theme
+├── Windows/
+│   ├── MainWindow.xaml / .cs            # Main UI — 5 tabs, Settings, Steam path
+│   └── SubWindows/
+│       ├── SpecifyGamePath.xaml / .cs   # Game path popup (dynamic GameNameLabel)
+│       ├── FirstSetup.xaml / .cs        # First-run setup + default initialization
+│       └── (14 other SubWindows)
+├── Data/
+│   ├── Game.cs                          # Assembly patching, null guards, resolver fallback
+│   ├── ModLib.cs                        # BaseModLib generation + remapping (#if DEBUG split)
+│   ├── Models/
+│   │   └── ModProject.cs                # Project create/build/apply + null guards
+│   ├── ViewModels/
+│   │   ├── ModsViewModel.cs             # FilteredMods, SelectedModItem, SelectedGameFilter
+│   │   ├── ModViewModel.cs              # GameId from folder path
+│   │   ├── ModProjectsViewModel.cs      # Dispose() for DispatcherTimer
+│   │   └── SettingsViewModel.cs         # Default true for UseSteam/AutoUpdate/UpdateVersions
+│   └── AssemblyVersionMap.cs            # Mono 2.0 assembly version mapping (20 assemblies)
+├── Utils/
+│   ├── CustomAssemblyResolver.cs        # Name-based resolver with caching
+│   └── MonoHelper.cs                    # Mono.Cecil IL helper utilities
+├── resources/langs/                     # 13 language files
+└── configs/
+    ├── games/
+    │   ├── TheForest.xml
+    │   ├── Subnautica.xml               # Full rewrite v2.0.9610
+    │   ├── Raft.xml
+    │   ├── EscapeThePacific.xml         # Full rewrite v2.0.9610
+    │   ├── GH.xml                       # Full rewrite v2.0.9610
+    │   ├── SonsOfTheForest.xml          # IL2CPP — not supported
+    │   └── {GameId}/Versions.xml        # Raft, GH, Subnautica
+    └── UserConfiguration.xml
+
+ModAPI_Shared/
+├── Data/
+│   ├── Game.cs                          # Lightweight constructor + ModLibrary init fix
+│   └── ModLib.cs                        # #if DEBUG split for Cecil parsing
+└── Utils/
+    └── FileValidator.cs                 # PE header + CLR metadata validation (Release only)
+
+BaseModLib/
+├── BaseModLib.csproj                    # .NET 3.5 + LangVersion 7.3
+└── libs/polyfills/
+    ├── AsyncBridge.dll
+    └── System.Threading.dll
+
+bin\Debug\                               # Debug testing only
+├── create_dummy_Debug_games.ps1         # Generates dummy game/steam structure
+├── dummy_games\{GameId}\               # Dummy game install paths
+├── dummy_steam\Steam.exe               # Dummy Steam executable
+└── gamefiles\original\{GameId}\        # Dummy backup paths for ModLib
 ```
 
 ---
 
-## Key Changes
+## Installation & Setup
 
-### Phase 1 — .NET Framework 4.8 Upgrade
+### Step 1 — Prerequisites
 
-- Migrated all projects (5) from `.NET Framework 4.5` → `4.8`
-- Updated `TargetFrameworkVersion`, `App.config`, `packages.config` across all projects
-- Unified assembly version
+| Item | Required |
+|---|---|
+| Windows 10 / 11 | ✅ |
+| .NET Framework 4.8 | ✅ (pre-installed on Windows 11; [download](https://dotnet.microsoft.com/download/dotnet-framework/net48) for Windows 10) |
+| Steam | Required — must be configured in Settings tab |
+| At least one supported game | Required — must be configured in Settings tab |
 
-### Phase 2 — Build Environment & Fluent Design Foundation
+### Step 2 — Install ModAPI
 
-- Introduced **ModernWpf 0.9.6** NuGet package
-- Created **FluentStyles.xaml** — Windows 11 Fluent Design override layer
-  - Fluent color palette, typography, buttons, tabs, comboboxes, scrollbar styles
-  - Window, SubWindow, SplashScreen templates
-- Compiled **UnityEngine stub DLL**
-  - Added missing types: `WWW`, `Event`, `TextEditor`, `Physics`, etc.
-- Fixed dependency references and confirmed successful build
+1. Download the latest release from GitHub
+2. Extract to any folder (e.g. `C:\ModAPI\`)
+3. Run `ModAPI.exe`
+4. On first launch the **Welcome** screen appears — configure preferences and click **Continue**
 
-### Phase 3 — UI Redesign & Theme System
+### Step 3 — Configure Steam Path (Settings Tab)
 
-#### 3-Theme System
+1. Go to the **Settings** tab
+2. Find **Steam Installation Path**
+3. Click **Browse** → select `Steam.exe`
+4. Click **Save**
 
-| Theme | Style File | Description |
-|-------|-----------|-------------|
-| Classic | Dictionary.xaml only | Original ModAPI design (texture background) |
-| Light | FluentStylesLight.xaml | Bright tone + blue accent |
-| Dark | FluentStyles.xaml | Dark tone + blue accent (default) |
+### Step 4 — Configure Game Paths (Settings Tab)
 
-- Added **Theme Selector ComboBox** in Settings tab
-- Theme change triggers **confirmation popup** → **auto restart**
-- Theme setting saved/loaded via `theme.cfg` file
+1. Click a game card header to expand it
+2. Click **Browse** → select the game root folder (where the `.exe` is located)
+3. Click **Save**
 
-### Phase 4 — Code Cleanup & Legacy Removal
+| Game | Executable | Example Path |
+|---|---|---|
+| The Forest | `TheForest.exe` | `C:\Steam\steamapps\common\The Forest\` |
+| Subnautica | `Subnautica.exe` | `C:\Steam\steamapps\common\Subnautica\` |
+| RAFT | `Raft.exe` | `C:\Steam\steamapps\common\Raft\` |
+| Escape The Pacific | `EscapeThePacific.exe` | `C:\Steam\steamapps\common\Escape The Pacific\` |
+| Green Hell | `GH.exe` | `C:\Steam\steamapps\common\Green Hell\` |
 
-- Removed login system (server no longer operational)
-- Modernized update mechanism
-- Cleaned up unused code
-- Fixed SubWindow UI (game path dialogs, etc.)
+### Step 5 — Download Mods (Downloads Tab)
 
-### Phase 5 — Multilingual Support Expansion (13 Languages)
+1. Go to the **Downloads** tab
+2. Select a game from the game filter
+3. Browse or search for a mod and click **Download**
 
-| Language | File | Language | File |
-|----------|------|----------|------|
-| Korean | Language.KR.xaml | Italian | Language.IT.xaml |
-| English | Language.EN.xaml | Japanese | Language.JA.xaml |
-| German | Language.DE.xaml | Portuguese | Language.PT.xaml |
-| Spanish | Language.ES.xaml | Vietnamese | Language.VI.xaml |
-| French | Language.FR.xaml | Chinese (Simplified) | Language.ZH.xaml |
-| Polish | Language.PL.xaml | Chinese (Traditional) | Language.ZH-TW.xaml |
-| Russian | Language.RU.xaml | | |
+> **Offline**: Download `.mod` files manually from `modapi.survivetheforest.net` and place them in the corresponding folder:
 
-### Phase 5-1 — Downloads Tab & Theme Completion
+| Game | Folder |
+|---|---|
+| The Forest | `mods/TheForest/` |
+| Subnautica | `mods/Subnautica/` |
+| RAFT | `mods/Raft/` |
+| Escape The Pacific | `mods/EscapeThePacific/` |
+| Green Hell | `mods/GH/` |
 
-- Loads mod list from 3 sources (`mods.json`, `versions.xml`, HTML parsing)
-- Search functionality (filter by mod name/description/author)
-- **Game filter** (All / The Forest / Dedicated Server / VR)
-- **Category filter** (All / Bugfixes / Balancing / Cheats, etc. — 12 categories)
-- Direct `.mod` file download → game folder installation
-- All button PNG icons → **Segoe MDL2 Assets** font icons
+### Step 6 — Apply Mods & Start Game (Mods Tab)
 
-### Phase 5-5 — Assembly Resolution Restoration
+1. Go to the **Mods** tab
+2. Select a game from **Game Filter** (Col 0)
+3. Check mods to activate in **Mod List** (Col 1)
+4. Click **Start Game**
 
-- **`AssemblyVersionMap.cs`** — new shared utility mapping 20 system assemblies to correct Mono 2.0 versions and public key tokens
-- **`CustomAssemblyResolver.cs`** — rewritten with name-based matching and Dictionary caching
-- **`ModLib.cs`** — removed Silverlight hardcoding, replaced with `AssemblyVersionMap.RemapAllReferences()`
-- **`Game.cs`** — replaced `@HOTFIX` loop with `RemapAllReferences()` + `RemoveDuplicateReferences()`
-- **`ModProject.cs`** — updated with v3.5→v4.8 template, `UpgradeProjectFile()`, system assembly filtering
-- Fixed `CS0723` build error: `ModAPI.Version` shadowing `System.Version`
+The following checks run automatically before launch:
 
-### Phase 5-6 — C# 7.3 Mod Development Support
+| # | Check | Failure Popup |
+|---|---|---|
+| 1 | Steam path configured and valid | SteamNotFound |
+| 2 | `mods/` folder game matches Settings game path | GameModsMismatch |
+| 3 | At least one mod selected | NoModSelected |
+| 4 | No mixed-game mods in selection | MixedGameMods |
+| 5 | Game path configured and executable exists | GamePathNotSet / GameNotInstalled |
 
-- **`BaseModLib.csproj`**: `.NET 3.5` permanently fixed + `<LangVersion>7.3</LangVersion>` added
-- **`ModProject.cs`**: `modModule.RuntimeVersion = "v2.0.50727"` added after `RemapAllReferences()`
-- **`Game.cs`**: polyfill DLL auto-deployment to `TheForest_Data/Managed/` during Apply
-- **`BaseModLib.csproj` PostBuild**: polyfill DLLs auto-copied from `libs/polyfills/` to ModAPI libs folder on build
+---
 
-### Phase 5-6B — Black Screen Fix & Polyfill Pipeline Finalization
+## Tab Overview
 
-- **Black screen resolved**: assembly remapping pipeline confirmed working end-to-end in real gameplay
-- **`Portable.System.ValueTuple.dll` removed**: Mono 2.0 `mscorlib` ABI makes tuple polyfill impossible — definitive architectural conclusion
-- **`System.Threading.dll` filename corrected**: was incorrectly named `System.Threading.Tasks.dll`
-- **`Game.cs` copy path bug fixed**: destination now uses `Path.GetFileName()` for flat copy into `Managed/`
-- **C# 7.3 in-game verification completed**: pattern matching, string interpolation, `out` variable inline all confirmed via `TEST_MOD.log`
+### Welcome Tab
+First-run setup screen (tab index 0). Configure AutoUpdate, Steam connection, and VersionsData table preferences. On subsequent launches this tab provides community links and release notes.
+
+### Mods Tab
+Primary mod management workflow — 3-column layout:
+
+| Column | Content |
+|---|---|
+| Col 0 | Game Filter — radio buttons for 5 supported games |
+| Col 1 | Mod List — installed mods with version picker and activation checkbox |
+| Col 2 | Information — selected mod details, description, version history |
+
+### Downloads Tab
+Browse and download mods from `modapi.survivetheforest.net`.
+
+- **Game filter**: TheForest / DedicatedServer / VR / Subnautica / RAFT / EscapeThePacific / GH
+- **Category filter**: 12 categories (Bugfixes, Balancing, Cheats, …)
+- **Search**: by mod name, description, or author
+- **Offline mode**: displays folder instructions for all 5 supported games
+
+### Development Tab
+Mod development workflow — game filter panel (Col 0) covers all 5 supported games.
+
+- Create, build, and apply mod projects per game
+- Language resource management
+- ModLib generation with 3-step validation (Steam → project → game path)
+- Safe game switching via lightweight `Game` constructor (no `Verify()` call)
+
+### Settings Tab
+Centralized configuration — 4 rows:
+
+| Row | Content |
+|---|---|
+| 0 | Language / Font Size / Theme / Max Width / Mod List Width / Project List Width |
+| 1 | Keep VersionsData / Auto Update / Steam Connection / Always On Top |
+| 2 | Steam Installation Path (TextBox + Browse + Save) |
+| 3 | Game Installation Paths — expandable card per game (TextBox + Browse + Save) |
+
+---
+
+## What Changed in v2.0.9610
+
+### Added
+
+#### Game XML & Versions Configuration
+
+| # | File | Change |
+|---|------|--------|
+| 1 | `GH.xml` | Full rewrite — removed non-existent `DOTweenPro.dll`; added `AmplifyBloom/Color/Motion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` |
+| 2 | `Subnautica.xml` | Full rewrite — removed `extends="GenericUnityGame"`; added `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll` |
+| 3 | `EscapeThePacific.xml` | Full rewrite — removed `extends="GenericUnityGame"`; `includeAssembly` → `Assembly-CSharp.dll` only |
+| 4 | `Raft/Versions.xml` | Created — version `1.1.01` with checksum |
+| 5 | `GH/Versions.xml` | Created — version `2.9.5` with checksum |
+| 6 | `Subnautica/Versions.xml` | Created — no checksum (updates too frequently) |
+
+#### Critical Bug Fixes
+
+| # | Type | Issue | Fix |
+|---|------|-------|-----|
+| 1 | Hang | `extends="GenericUnityGame"` caused `Assembly-CSharp-firstpass.dll` inheritance → `CreateModLibrary` stalled | Removed `extends` from all non-TheForest XML |
+| 2 | Crash | `ResolutionException: XGamingRuntime.XUserGamertagComponent` during Subnautica apply | Added `XGamingRuntime.dll`, `XblPCSandbox.dll` to `copyAssembly` |
+| 3 | Crash | Resolver failed on DLLs added to `copyAssembly` after backup created | `Game.cs`: actual install folder added as resolver fallback |
+| 4 | Crash | `IOException`: `BaseModLib.dll` file-lock between `CreateModLibrary` and `ApplyMods` | Retry loop: max 10 × 500ms read + max 30 × 500ms existence wait |
+| 5 | Crash | `NullReferenceException` — `typesMap` entry.Value null (game not installed) | Added `if (entry.Value == null) continue` |
+| 6 | Crash | `NullReferenceException` — lightweight `Game` constructor missing `ModLibrary = new ModLib(this)` → `CreateModLibrary()` crash | Added `ModLibrary = new ModLib(this)` to lightweight constructor |
+| 7 | Crash | `SwitchDevGame()` — `App.Game.GamePath` empty after lightweight constructor → `CreateModLibrary` crash | Set `App.Game.GamePath = savedPath` after lightweight constructor |
+| 8 | Wrong Game | `EscapeThePacific` mods classified as TheForest | `ModsViewModel`: `GameId` extracted from folder path |
+| 9 | Wrong Path | `GetGameFolder()` → `""` → resolves to drive root (e.g. `E:\`) | Null/empty guard at all 6 call sites |
+
+#### Debug / Release Build Split
+
+- **`FileValidator.cs`** — new file `ModAPI_Shared\Utils\FileValidator.cs`; registered in `ModAPI_Shared.csproj`
+  - `IsValidSteamExe()` — PE header (MZ + PE\0\0) + minimum 1 MB
+  - `IsValidGameExe()` — PE header + minimum 512 KB
+  - `IsValidAssemblyDll()` — PE header + .NET CLR metadata header + minimum 64 KB
+- **`CheckSteam()`** — `#if DEBUG`: `File.Exists()` only / `#else`: `FileValidator.IsValidSteamExe()`
+- **`CheckGamePath()`** — `#if DEBUG`: `File.Exists()` only / `#else`: `FileValidator.IsValidAssemblyDll()`
+- **`ModLib.Create()` IncludeAssemblies** — `#if DEBUG`: `File.Copy()` skip Cecil / `#else`: full Cecil parse + IL modification
+- **`ModLib.Create()` file not found** — `#if DEBUG`: log warning, skip / `#else`: log error, abort
+
+#### Debug Testing
+
+- **`create_dummy_Debug_games.ps1`** — PowerShell script for `bin\Debug\`; creates 0-byte placeholder files for all 5 games under `dummy_games\`, `dummy_steam\`, and `gamefiles\original\` — enables full UI workflow testing without real game installation
+
+#### Settings Tab
+
+- **Steam path card** — integrated into Game Installation Paths card; `InitSteamPath()`, `SteamBrowse_Click()`, `SteamSave_Click()`
+- **Game paths panel** — `BuildGamePathsPanel()` with per-game expandable cards; TextBox uses `HorizontalAlignment=Stretch`
+- **Expand All / Collapse All** button
+- **AlwaysOnTop** checkbox (saved to `ui.cfg`)
+- **Mod/Project List Width** sliders — start at minimum `150`; saved to `ui.cfg`
+- **Font Size** ComboBox — FHD 10–16, 4K 10–22, 8K 10–28
+- **Checkbox sync** — `SettingsCheckboxes.DataContext = SettingsVm`; AutoUpdate / UseSteam / UpdateVersions now sync correctly
+- **`_uiInitialized` flag** — prevents premature `ui.cfg` writes during WPF startup
+
+#### Mods Tab — Start Game Validation
+
+Five-step validation runs on every Start Game click, regardless of mod list state:
+
+| Step | Check | Popup |
+|---|---|---|
+| 1 | Settings tab Steam path valid (`Steam.exe` exists) | SteamNotFound |
+| 2 | `mods/{GameId}/` folder game matches Settings configured game | GameModsMismatch |
+| 3 | At least one mod selected | NoModSelected |
+| 4 | No mixed-game mods in selection | MixedGameMods |
+| 5 | Game path configured + executable exists | GamePathNotSet / GameNotInstalled |
+
+#### Development Tab — ModLib Validation
+
+Three-step validation on Mod Library Regeneration click:
+
+| Step | Check | Popup |
+|---|---|---|
+| 1 | Settings tab Steam path valid | SteamNotFound |
+| 2 | At least one project exists | NoProjectWarning |
+| 3 | `App.Game.GamePath` set | GamePathNotSet |
+
+#### Downloads Tab
+- Debug string replaced with `Lang.Downloads.Status.NoDownloads`
+- Consistent padding for all status messages
+- Offline manual text updated for 5 supported games; line-break via two TextBlocks
+
+#### First Setup & Game Path System
+- `FirstSetup.Check()` — default `true` for `UseSteam`, `AutoUpdate`, `UpdateVersions`
+- `FirstSetupDone()` — creates `mods/` and `projects/` folders for all 5 games
+- `SpecifyGamePath` — `GameNameLabel` shows which game; `NavigateToSettings()` routes to Settings tab
+
+#### New / Updated Language Keys
+
+| Key | English Value |
+|-----|---------------|
+| `Lang.Downloads.Status.NoDownloads` | No downloadable files for this mod. |
+| `Lang.Options.Labels.ModListWidth` | Mod List Width |
+| `Lang.Options.Labels.ProjectListWidth` | Project List Width |
+| `Lang.Options.Labels.FontSize` | Font Size |
+| `Lang.Options.Labels.MaxWidth` | Max Width |
+| `Lang.Development.Labels.GameFilter` | Game Filter |
+| `Lang.Options.Labels.SteamPath` | Steam Installation Path |
+| `Lang.Windows.SteamNotFound.Title` | Steam Not Found |
+| `Lang.Windows.SteamNotFound.Text` | Steam is not installed. Please configure Steam in the Settings tab. |
+| `Lang.Windows.GameModsMismatch.Title` | Game Mismatch |
+| `Lang.Windows.GameModsMismatch.Text` | The game in the mods folder does not match the game configured in the Settings tab. |
+| `Lang.Downloads.Offline.Manual2` | (e.g. mods/TheForest, mods/Subnautica, …) |
+
+### Not Included
+
+| Feature | Reason |
+|---|---|
+| Auto-update (keep latest version) | Server-side infrastructure not available |
+| Update search | Server-side infrastructure not available |
+
+### Removed
+
+| Item | Reason |
+|---|---|
+| `SpecifyGamePath` popup on startup | All paths configured in Settings tab |
+| `SpecifySteamPath` popup on startup | Steam path configured in Settings tab |
+| Login system | Original server no longer operational (removed in v2.0.9400) |
+| `Portable.System.ValueTuple.dll` | Non-functional on Mono 2.0 (removed in v2.0.9586) |
+| `UseSteam` condition on Steam check | Steam is now always validated first on Start Game and Mod Library Regeneration |
+
+---
+
+## Planned for Future Releases
+
+| # | Feature | Description |
+|---|---|---|
+| 1 | ModAPI Auto-Update | Automatically download and apply new ModAPI releases |
+| 2 | ModAPI VersionsData Table Update | Automatically update the game VersionsData table when new game patches are released |
+
+---
+
+## What Changed in v2.0.9600
+
+### Added
+
+- **Downloads tab**: 5 game filters (TheForest, Subnautica, RAFT, EscapeThePacific, GH)
+- **Welcome tab**: added at leftmost position (index 0)
+- **Mods tab**: 3-column layout (WrapPanel → vertical list); automatic width adjustment; mod name wrapping
+- **`ModsViewModel`**: game-specific filtering, `ResolveGame()` for correct `Game` instance per mod
+- **`Game.cs`**: lightweight constructor `new Game(config, true)` — identification only, no `Verify()`
+- **Build**: 4 game XML files registered in `ModAPI.csproj` with `CopyToOutputDirectory=Always`
+- **Build**: warnings cleaned — CS0168, CS0618, CS0252
+- **Game XML**: TheForest, Raft, GH DLL lists corrected
+- **Language flags**: image sizes standardized across all 13 language badges
+
+### Removed
+
+| Item | Reason |
+|---|---|
+| `extends="GenericUnityGame"` in game XML files | Caused `Assembly-CSharp-firstpass.dll` to be incorrectly inherited — removed from Subnautica, Raft, EscapeThePacific, GH |
+| `WrapPanel` layout in Mods tab | Replaced with 3-column Grid layout (Game Filter / Mod List / Information) |
+
+---
+
+## Key Changes by Phase
+
+### Phase 1 *(v2.0.9200)* — .NET 4.8 Migration
+All 5 projects migrated from .NET 4.5 → 4.8.
+
+### Phase 2 *(v2.0.9300)* — Build Environment & Fluent Design
+ModernWpf 0.9.6, `FluentStyles.xaml`, UnityEngine stub DLL.
+
+### Phase 3 *(v2.0.9500)* — UI Redesign & Theme System
+3-theme system, `theme.cfg`, window drag fix, hyperlink support.
+
+### Phase 4 *(v2.0.9400)* — Code Cleanup
+Login system removed, update mechanism modernized.
+
+### Phase 5-1 *(v2.0.9552)* — Downloads Tab & 13 Languages
+Downloads tab, Segoe MDL2 Assets icons, 13-language support.
+
+### Phase 5-5 *(v2.0.9561)* — Assembly Resolution
+`AssemblyVersionMap.cs`, `CustomAssemblyResolver.cs`, PE header patching.
+
+### Phase 5-6B *(v2.0.9586)* — C# 7.3 & Polyfill
+Black screen fixed, `ValueTuple` removed, C# 7.3 in-game verified.
+
+### Phase 6-1 *(v2.0.9600)* — Multi-Game & Mods Redesign
+5 game filters, 3-column Mods tab, lightweight `Game` constructor, XML registered.
+
+### Phase 6-2 *(v2.0.9610)* — Settings, Safety, Crash Fixes & Debug/Release Split
+XML corrected, Steam path, game path safety, Start Game 5-step validation, ModLib 3-step validation, `FileValidator` PE header verification, `#if DEBUG` build split, `create_dummy_Debug_games.ps1`, lightweight constructor `ModLibrary` fix, `SwitchDevGame` GamePath fix, 5-game folder creation, crash fixes.
 
 ---
 
 ## Version History
 
+### v2.0.9610 — 2026-04-13
+Multi-game XML corrected (GH, Subnautica, EscapeThePacific), Versions.xml added, Settings tab redesigned (Steam path, game paths panel, width sliders, font size, checkbox sync), game path null safety (6 sites), startup popups replaced by Settings tab, Mods tab 5-step Start Game validation (Steam always first), Dev tab 3-step ModLib validation, GameModsMismatch popup added, lightweight constructor ModLibrary null fix, SwitchDevGame GamePath fix, FileValidator PE header verification (Release), #if DEBUG build split (CheckSteam / CheckGamePath / ModLib.Create), create_dummy_Debug_games.ps1, persistent ui.cfg, 5-key font system, multiple crash fixes, language keys updated
+
+### v2.0.9600 — 2026-04-09
+5 game filters, Mods tab 3-column layout, auto width, lightweight `Game` constructor, `ModsViewModel` game filtering, 4 XML files registered, build warnings cleaned, Welcome tab, language flags standardized
+
 ### v2.0.9586 — 2026-03-31
-Black screen fix confirmed, polyfill pipeline finalized, ValueTuple removed, filename/path bugs fixed, C# 7.3 in-game verified
+Black screen fixed, polyfill finalized, ValueTuple removed, C# 7.3 verified
 
 ### v2.0.9561 — 2026-03-06
-C# 7.3 mod dev support, PE header patching, polyfill pipeline, assembly resolution restoration
+C# 7.3 support, PE header patching, polyfill pipeline, assembly resolution restored
 
 ### v2.0.9552 — 2026-02-25
 Downloads tab, icon modernization, theme unification, 13-language support
@@ -246,57 +632,15 @@ Original FluffyFish release
 
 ---
 
-## File Structure
-
-```
-ModAPI/
-├── App.xaml / App.xaml.cs              # Theme load/save/apply
-├── Dictionary.xaml                      # Original styles + toggle/radio/fallback resources
-├── FluentStyles.xaml                    # Dark theme + ComboBox/CheckBox/RadioButton
-├── FluentStylesLight.xaml               # Light theme + ComboBox/CheckBox/RadioButton
-├── Windows/
-│   ├── MainWindow.xaml / .cs            # Main UI + Downloads tab + theme selector
-│   └── SubWindows/                      # 16 SubWindows (all with font icons)
-├── Data/
-│   ├── Game.cs                          # Game assembly patching + polyfill deployment
-│   ├── ModLib.cs                        # BaseModLib generation + assembly remapping
-│   ├── Models/
-│   │   └── ModProject.cs                # Mod project create/build/apply + PE header patch
-│   └── AssemblyVersionMap.cs            # Mono 2.0 assembly version mapping (20 assemblies)
-├── Utils/
-│   ├── CustomAssemblyResolver.cs        # Name-based assembly resolver with caching
-│   └── MonoHelper.cs                    # Mono.Cecil IL helper utilities
-├── resources/
-│   ├── langs/                           # 13 language files
-│   └── textures/Icons/flags/            # Flag icons (16x11 PNG)
-└── libs/
-    ├── UnityEngine.dll                  # Stub DLL for BaseModLib compilation
-    └── polyfills/                       # C# 7.3 runtime polyfills
-        ├── AsyncBridge.dll              # async/await for .NET 3.5
-        └── System.Threading.dll         # AsyncBridge dependency
-
-BaseModLib/
-├── BaseModLib.csproj                    # .NET 3.5 + LangVersion 7.3 + PostBuild polyfill copy
-├── Attributes/                          # ModAPI attributes (ExecuteOnGameStart, Priority, etc.)
-├── Mod.cs / Mods.cs                     # Mod base classes
-├── Log.cs / Input.cs / Interface.cs     # ModAPI runtime APIs
-└── libs/
-    └── polyfills/                       # Source polyfill DLLs (copied by PostBuild)
-        ├── AsyncBridge.dll
-        └── System.Threading.dll
-```
-
----
-
 ## Build Requirements
 
 | Requirement | Version | Notes |
 |---|---|---|
 | Visual Studio | 2022 | |
-| .NET Framework SDK | 4.8 | For ModAPI projects |
-| .NET Framework SDK | 3.5 | For BaseModLib only |
+| .NET Framework SDK | 4.8 | ModAPI projects |
+| .NET Framework SDK | 3.5 | BaseModLib only |
 | ModernWpf | 0.9.6 | NuGet |
-| AsyncBridge | 0.3.1 | NuGet — place in `libs/polyfills/` |
+| AsyncBridge | 0.3.1 | NuGet — `libs/polyfills/` |
 | TaskParallelLibrary | 1.0.2856 | NuGet — `System.Threading.dll` in `libs/polyfills/` |
 
 ---
