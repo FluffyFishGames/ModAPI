@@ -213,6 +213,15 @@ PE Header layout checked:
 
 Theme changes require an app restart. `SaveAllSettings()` is called automatically before restart.
 
+## 1. Classic Theme
+<img width="1586" height="820" alt="Image" src="https://github.com/user-attachments/assets/792d1eb0-f57d-4927-989f-2a72d937a287" />
+
+## 2. Light Theme
+<img width="1790" height="820" alt="Image" src="https://github.com/user-attachments/assets/d33e5cde-45f2-404e-ac47-a4030216aebd" />
+
+## 3. Dark Theme
+<img width="1790" height="820" alt="Image" src="https://github.com/user-attachments/assets/900042c2-fb14-4f67-9048-eeddc716de74" />
+
 ### Font Size System
 
 | Resource Key | Base | Description |
