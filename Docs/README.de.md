@@ -12,7 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9610 - 20260413
+# ModAPI(v1) v2.0.9618 - 20260425
 
 **The Forest Mod-Verwaltungstool — Upgrade-Edition**
 
@@ -29,138 +29,148 @@ ModAPI ist eine Desktop-Anwendung zur Verwaltung von Mods für **5 offiziell unt
 
 ## Unterstützte Spiele
 
-### The Forest
+| Spiel | Engine | Version | Steam ID | Ausführbare Datei |
+|---|---|---|---|---|
+| The Forest | Unity 5 | v1.12 (VR) | 242760 | `TheForest.exe` |
+| Subnautica | Unity | 2025 Patch | 264710 | `Subnautica.exe` |
+| RAFT | Unity | v1.1.02 (Beta) | 648800 | `Raft.exe` |
+| Escape The Pacific | Unity 6 | v0.67.0.0 | 655290 | `EscapeThePacific.exe` |
+| Green Hell | Unity 2019 | v2.9.5 | 763790 | `GH.exe` |
 
-| Item | Value |
+<details>
+<summary><b>The Forest</b></summary>
+
+| Element | Wert |
 |---|---|
-| Engine | Unity 5 (upgraded from Unity 4) |
-| Latest Version | v1.12 (VR) |
-| Last Update | September 11, 2019 — VR support patch; no further major content updates |
-| Executable | `TheForest.exe` |
-| Data Folder | `TheForest_Data/Managed/` |
-| Mods Folder | `mods/TheForest/` |
-| Projects Folder | `projects/TheForest/` |
+| Engine | Unity 5 (Upgrade von Unity 4) |
+| Neueste Version | v1.12 (VR) |
+| Letztes Update | 11. September 2019 — VR-Support-Patch; keine weiteren größeren Inhaltsupdates |
+| Ausführbare Datei | `TheForest.exe` |
+| Datenordner | `TheForest_Data/Managed/` |
+| Mods-Ordner | `mods/TheForest/` |
+| Projektordner | `projects/TheForest/` |
 | Steam App ID | `242760` |
-| IL2CPP | ❌ Mono — fully supported |
+| IL2CPP | ❌ Mono — vollständig unterstützt |
 
-The Forest was upgraded from Unity 4 to Unity 5, significantly improving visuals and physics. The September 2019 VR patch was the final major update. The game now remains in a stable, finalized state — ideal for modding.
+The Forest wurde von Unity 4 auf Unity 5 aktualisiert, was Grafik und Physik erheblich verbesserte. Der VR-Patch im September 2019 war das letzte größere Update. Das Spiel befindet sich in einem stabilen, finalisierten Zustand — ideal für Modding.
+</details>
 
----
+<details>
+<summary><b>Subnautica</b></summary>
 
-### Subnautica
-
-| Item | Value |
+| Element | Wert |
 |---|---|
-| Engine | Unity (integrated codebase, unified with Below Zero in 2022) |
-| Latest Version | 2025 Patch (v18810395) |
-| Last Update | August 12, 2025 — bug fixes and performance improvements alongside mobile release |
-| Executable | `Subnautica.exe` |
-| Data Folder | `Subnautica_Data/Managed/` |
-| Mods Folder | `mods/Subnautica/` |
-| Projects Folder | `projects/Subnautica/` |
+| Engine | Unity (integrierte Codebasis, vereinheitlicht mit Below Zero 2022) |
+| Neueste Version | 2025 Patch (v18810395) |
+| Letztes Update | 12. August 2025 — Fehlerbehebungen und Leistungsverbesserungen neben der Mobilveröffentlichung |
+| Ausführbare Datei | `Subnautica.exe` |
+| Datenordner | `Subnautica_Data/Managed/` |
+| Mods-Ordner | `mods/Subnautica/` |
+| Projektordner | `projects/Subnautica/` |
 | Steam App ID | `264710` |
-| IL2CPP | ❌ Mono — supported |
+| IL2CPP | ❌ Mono — unterstützt |
 
-Originally built on Unity 5, Subnautica received the 'Living Large' update (v2.0) in late 2022 which merged the engine codebase with Below Zero for improved optimization and stability. Note: the upcoming *Subnautica 2* uses Unreal Engine 5.
+Ursprünglich auf Unity 5 aufgebaut, erhielt Subnautica Ende 2022 das 'Living Large'-Update (v2.0), das die Engine-Codebasis mit Below Zero für verbesserte Optimierung und Stabilität zusammenführte. Hinweis: Das kommende *Subnautica 2* verwendet Unreal Engine 5.
 
-> **XML rewritten in v2.0.9610**: `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll` added to `copyAssembly`.
+> **XML in v2.0.9610 neu geschrieben**: `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll` zu `copyAssembly` hinzugefügt.
+</details>
 
----
+<details>
+<summary><b>RAFT</b></summary>
 
-### RAFT
-
-| Item | Value |
+| Element | Wert |
 |---|---|
 | Engine | Unity |
-| Latest Version | v1.1.02 (Beta) / v1.09 (Stable) |
-| Last Update | March 2026 — voice chat and multiplayer bug fixes via beta branch |
-| Executable | `Raft.exe` |
-| Data Folder | `Raft_Data/Managed/` |
-| Mods Folder | `mods/Raft/` |
-| Projects Folder | `projects/Raft/` |
+| Neueste Version | v1.1.02 (Beta) / v1.09 (Stabil) |
+| Letztes Update | März 2026 — Voice-Chat und Multiplayer-Fehlerbehebungen über Beta-Branch |
+| Ausführbare Datei | `Raft.exe` |
+| Datenordner | `Raft_Data/Managed/` |
+| Mods-Ordner | `mods/Raft/` |
+| Projektordner | `projects/Raft/` |
 | Steam App ID | `648800` |
-| IL2CPP | ❌ Mono — supported |
-| Versions.xml | `1.1.01` (with checksum) |
+| IL2CPP | ❌ Mono — unterstützt |
+| Versions.xml | `1.1.01` (mit Prüfsumme) |
 
-After the official story conclusion in v1.0: *The Final Chapter*, patches have continued for network code improvements and stability. A beta branch update in March 2026 addressed voice chat and multiplayer issues.
+Nach dem offiziellen Story-Abschluss in v1.0: *The Final Chapter* wurden weiterhin Patches für Netzwerk-Code-Verbesserungen und Stabilität veröffentlicht.
+</details>
 
----
+<details>
+<summary><b>Escape The Pacific</b></summary>
 
-### Escape The Pacific
-
-| Item | Value |
+| Element | Wert |
 |---|---|
-| Engine | Unity 6 (migrated from Unity 2021/2022 in late 2025) |
-| Latest Version | v0.67.0.0 |
-| Last Update | June 26, 2025 — island distribution rework and engine update; hotfixes ongoing into 2026 |
-| Executable | `EscapeThePacific.exe` |
-| Data Folder | `EscapeThePacific_Data/Managed/` |
-| Mods Folder | `mods/EscapeThePacific/` |
-| Projects Folder | `projects/EscapeThePacific/` |
-| IL2CPP | ❌ Mono — supported |
+| Engine | Unity 6 (migriert von Unity 2021/2022 Ende 2025) |
+| Neueste Version | v0.67.0.0 |
+| Letztes Update | 26. Juni 2025 — Überarbeitung der Inselverteilung und Engine-Update; laufende Hotfixes bis 2026 |
+| Ausführbare Datei | `EscapeThePacific.exe` |
+| Datenordner | `EscapeThePacific_Data/Managed/` |
+| Mods-Ordner | `mods/EscapeThePacific/` |
+| Projektordner | `projects/EscapeThePacific/` |
+| IL2CPP | ❌ Mono — unterstützt |
 
-Completed a major system rebuild and Unity 6 migration in late 2025, enabling more dynamic environments. The game remains in active Early Access development.
+Ende 2025 wurde ein umfassender Systemumbau mit Unity 6-Migration abgeschlossen, der dynamischere Umgebungen ermöglicht. Das Spiel befindet sich weiterhin in aktiver Early-Access-Entwicklung.
 
-> **XML rewritten in v2.0.9610**: `extends="GenericUnityGame"` removed; `includeAssembly` set to `Assembly-CSharp.dll` only — prevents `Assembly-CSharp-firstpass.dll` inheritance errors.
+> **XML in v2.0.9610 neu geschrieben**: `extends="GenericUnityGame"` entfernt; `includeAssembly` auf nur `Assembly-CSharp.dll` gesetzt — verhindert `Assembly-CSharp-firstpass.dll` Vererbungsfehler.
+</details>
 
----
+<details>
+<summary><b>Green Hell</b></summary>
 
-### Green Hell
-
-| Item | Value |
+| Element | Wert |
 |---|---|
 | Engine | Unity 2019 |
-| Latest Version | v2.9.5 |
-| Last Update | February 4, 2026 — Steam Deck optimization and text readability improvements |
-| Executable | `GH.exe` |
-| Data Folder | `GH_Data/Managed/` |
-| Mods Folder | `mods/GH/` |
-| Projects Folder | `projects/GH/` |
+| Neueste Version | v2.9.5 |
+| Letztes Update | 4. Februar 2026 — Steam Deck-Optimierung und Textlesbarkeitsverbesserungen |
+| Ausführbare Datei | `GH.exe` |
+| Datenordner | `GH_Data/Managed/` |
+| Mods-Ordner | `mods/GH/` |
+| Projektordner | `projects/GH/` |
 | Steam App ID | `763790` |
-| IL2CPP | ❌ Mono — supported |
-| Versions.xml | `2.9.5` (with checksum) |
+| IL2CPP | ❌ Mono — unterstützt |
+| Versions.xml | `2.9.5` (mit Prüfsumme) |
 
-Developed through Unity 2017 → 2018 → 2019 across its lifecycle. The February 2026 hotfix focused on Steam Deck compatibility and UI readability.
+Während der Entwicklung wurde die Engine schrittweise von Unity 2017 → 2018 → 2019 aktualisiert. Der Hotfix im Februar 2026 konzentrierte sich auf Steam Deck-Kompatibilität und UI-Textlesbarkeit.
 
-> **XML rewritten in v2.0.9610**: `AmplifyBloom.dll`, `AmplifyColor.dll`, `AmplifyMotion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` added; non-existent `DOTweenPro.dll` removed.
+> **XML in v2.0.9610 neu geschrieben**: `AmplifyBloom.dll`, `AmplifyColor.dll`, `AmplifyMotion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` hinzugefügt; nicht existierende `DOTweenPro.dll` entfernt.
+</details>
 
 ---
 
 ## Architektur
 
-### Runtime Split
+### Laufzeit-Aufteilung
 
-| Component | Target | Runtime | Reason |
+| Komponente | Ziel | Laufzeit | Grund |
 |---|---|---|---|
-| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | Desktop application, full modern API |
-| `ModAPI_Shared.dll` | .NET Framework 4.8 | Windows .NET 4.8 | Shared library |
-| `BaseModLib.dll` | .NET Framework 3.5 | Game Mono 2.0 | **Permanently fixed** — PE header must read `v2.0.50727` |
-| Mod DLLs (user) | .NET Framework 4.8 | Game Mono 2.0 (patched) | Built with 4.8, PE header patched at Apply time |
+| `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | Desktop-Anwendung, vollständige moderne API |
+| `ModAPI_Shared.dll` | .NET Framework 4.8 | Windows .NET 4.8 | Gemeinsame Bibliothek |
+| `BaseModLib.dll` | .NET Framework 3.5 | Game Mono 2.0 | **Dauerhaft festgelegt** — PE-Header muss `v2.0.50727` enthalten |
+| Mod-DLLs (Benutzer) | .NET Framework 4.8 | Game Mono 2.0 (gepatcht) | Mit 4.8 erstellt, PE-Header wird beim Anwenden gepatcht |
 
-### Debug / Release Build Split
+### Debug / Release Build-Aufteilung
 
-All file validation and assembly processing branches on the build configuration via `#if DEBUG` / `#else`.
+Alle Dateivalidierungen und Assembly-Verarbeitungen verzweigen über `#if DEBUG` / `#else` basierend auf der Build-Konfiguration.
 
-| Location | Debug Build | Release Build |
+| Stelle | Debug-Build | Release-Build |
 |---|---|---|
-| `CheckSteam()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidSteamExe()` — PE header + min 1 MB |
-| `CheckGamePath()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidAssemblyDll()` — PE header + CLR metadata + min 64 KB |
-| `ModLib.Create()` — IncludeAssemblies | `File.Copy()` — skip Cecil parsing | Full Mono.Cecil parse + IL modification + `module.Write()` |
-| `ModLib.Create()` — file not found | Log warning, skip and continue | Log error, abort with popup |
+| `CheckSteam()` | Nur `File.Exists()` — Dummy-Dateien bestehen | `FileValidator.IsValidSteamExe()` — PE-Header + min. 1 MB |
+| `CheckGamePath()` | Nur `File.Exists()` — Dummy-Dateien bestehen | `FileValidator.IsValidAssemblyDll()` — PE-Header + CLR-Metadaten + min. 64 KB |
+| `ModLib.Create()` — IncludeAssemblies | `File.Copy()` — Cecil-Parsing wird übersprungen | Vollständiges Mono.Cecil-Parsing + IL-Modifikation + `module.Write()` |
+| `ModLib.Create()` — Datei nicht gefunden | Warnung protokollieren, überspringen und fortfahren | Fehler protokollieren, mit Popup abbrechen |
 
-**Debug testing** uses `create_dummy_Debug_games.ps1` to generate 0-byte placeholder files under `bin\Debug\dummy_games\`, `bin\Debug\dummy_steam\`, and `bin\Debug\gamefiles\original\`. These pass `File.Exists()` checks and allow full UI workflow testing without a real game installation.
+**Debug-Tests** verwenden `create_dummy_Debug_games.ps1`, um 0-Byte-Platzhalterdateien unter `bin\Debug\dummy_games\`, `bin\Debug\dummy_steam\` und `bin\Debug\gamefiles\original\` zu generieren. Diese bestehen `File.Exists()`-Prüfungen und ermöglichen vollständige UI-Workflow-Tests ohne echte Spielinstallation.
 
-**Release builds** apply `FileValidator` (PE header + .NET CLR metadata verification) to reject 0-byte files, text files, and arbitrary binaries. Only valid Windows executables and .NET assemblies pass.
+**Release-Builds** wenden `FileValidator` (PE-Header + .NET CLR-Metadaten-Verifizierung) an, um 0-Byte-Dateien, Textdateien und beliebige Binärdateien abzulehnen. Nur gültige Windows-Executables und .NET-Assemblies bestehen.
 
-### FileValidator — PE Header Verification
+### FileValidator — PE-Header-Verifizierung
 
-`ModAPI_Shared\Utils\FileValidator.cs` — applied in Release builds only.
+`ModAPI_Shared\Utils\FileValidator.cs` — wird nur in Release-Builds angewendet.
 
-| Method | Checks | Min Size |
+| Methode | Prüfungen | Min. Größe |
 |---|---|---|
-| `IsValidSteamExe(path)` | MZ signature + PE\0\0 signature | 1 MB |
-| `IsValidGameExe(path)` | MZ signature + PE\0\0 signature | 512 KB |
-| `IsValidAssemblyDll(path)` | MZ + PE\0\0 + CLR metadata header (data directory #14) | 64 KB |
+| `IsValidSteamExe(path)` | MZ-Signatur + PE\0\0-Signatur | 1 MB |
+| `IsValidGameExe(path)` | MZ-Signatur + PE\0\0-Signatur | 512 KB |
+| `IsValidAssemblyDll(path)` | MZ + PE\0\0 + CLR-Metadaten-Header (Datenverzeichnis #14) | 64 KB |
 
 ```
 PE Header layout checked:
@@ -170,7 +180,7 @@ PE Header layout checked:
 [Optional Header → DataDirectory[14]] RVA+Size != 0 ← .NET CLR header present
 ```
 
-### Assembly Remapping Pipeline
+### Assembly-Remapping-Pipeline
 
 ```
 [Mod Developer builds with .NET 4.8]
@@ -186,100 +196,144 @@ PE Header layout checked:
   → PE header accepted ✅  →  References resolved ✅
 ```
 
-### Assembly Resolver Fallback
+### Assembly-Resolver-Fallback
 
 ```
 1. gamefiles/original/{GameId}/{AssemblyPath}   ← backup folder
 2. {ActualGameInstallPath}/{AssemblyPath}        ← game install folder (fallback)
 ```
 
-### C# 7.3 Feature Support
+### C# 7.3 Feature-Unterstützung
 
-| Feature | Status | Notes |
+| Feature | Status | Hinweise |
 |---|---|---|
-| Pattern matching (`is`, `switch`) | ✅ | In-game verified |
-| String interpolation (`$""`) | ✅ | In-game verified |
-| `out` variable inline | ✅ | In-game verified |
-| `async` / `await` | ✅ | Via AsyncBridge + System.Threading polyfills |
-| Tuples (`ValueTuple`) | ❌ Hard limit | Mono 2.0 `mscorlib` ABI — no workaround |
+| Pattern Matching (`is`, `switch`) | ✅ | Im Spiel verifiziert |
+| String-Interpolation (`$""`) | ✅ | Im Spiel verifiziert |
+| Inline-`out`-Variable | ✅ | Im Spiel verifiziert |
+| `async` / `await` | ✅ | Über AsyncBridge + System.Threading Polyfills |
+| Tupel (`ValueTuple`) | ❌ Hartes Limit | Mono 2.0 `mscorlib` ABI — keine Umgehung möglich |
 
 ### Theme System
 
-| Theme | File | Description |
+Ab v2.0.9613 wurde die Theme-Auswahl aus dem Settings-Tab in einen eigenen **Themes-Tab** verschoben. Zum Hinzufügen eines neuen Themes genügt eine Zeile im `App.xaml.cs`-Dictionary.
+
+| Index | ID | Datei | Palette |
+|---|---|---|---|
+| 0 | `classic` | Nur `Dictionary.xaml` | Originales ModAPI-Texturhintergrund |
+| 1 | `light` | `FluentStylesLight.xaml` | Heller Ton + blauer Akzent |
+| 2 | `dark` | `FluentStyles.xaml` | Dunkler Ton + blauer Akzent (Standard) |
+| 3 | `diablo` | `FluentStylesDiablo.xaml` | Rot + Schwarz |
+| 4 | `nebula` | `FluentStylesNebula.xaml` | Dunkler Weltraum |
+| 5 | `sunset` | `FluentStylesSunset.xaml` | Heller Sonnenuntergang |
+| 6 | `ocean` | `FluentStylesOcean.xaml` | Dunkler Ozean |
+| 7 | `nordic` | `FluentStylesNordic.xaml` | Helles Nordisch |
+| 8 | `citrus` | `FluentStylesCitrus.xaml` | Helles Zitrus |
+| 9 | `bloom` | `FluentStylesBloom.xaml` | Helles Blühen |
+
+Theme-Änderungen lösen einen automatischen App-Neustart aus. (gespeichert in `theme.cfg`)
+
+| Theme | Theme |
+| :---: | :---: |
+|**01. Classic theme**|**02. Light theme**|
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
+|**03. Dark theme**|**04. Diablo theme**|
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
+|**05. Nebula theme**|**06. Sunset theme**|
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
+|**07. Ocean theme**|**08. Nordic theme**|
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
+|**09. Citrus theme**|**10. Bloom theme**|
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
+
+### Hintergrundtextur
+
+Wählen Sie im **Background Texture**-Bereich des Themes-Tabs ein Bild aus, um es als App-weiten Hintergrund zu verwenden. Unterstützte Formate: `.png` / `.jpg` / `.jpeg`, max 50MB, 4K oder niedriger. Das Bild wird als JPEG Q75 komprimiert, mit einem 16-Byte Magic-Header versehen und als `resources\textures\ui_bg\bg.dat` (Hidden-Attribut) gespeichert. SHA-256-Hash zur Integritätsprüfung; bei Manipulation automatisches Zurücksetzen + Warnungs-Popup.
+
+Bei aktiviertem Hintergrund wird die UI-Transparenz in zwei Schichten verarbeitet: Layer 1 (MergedDictionaries-Overlay) für `{DynamicResource}`-Panels, Layer 2 (WalkStyleBackgrounds) für `{StaticResource}`-basierte Panels mit Halbtransparenz.
+
+### Schriftgrößensystem
+
+| Ressourcen-Schlüssel | Basis | Beschreibung |
 |---|---|---|
-| Classic | `Dictionary.xaml` | Original ModAPI design (texture background) |
-| Light | `FluentStylesLight.xaml` | Bright tone + blue accent |
-| Dark | `FluentStyles.xaml` | Dark tone + blue accent (default) |
+| `AppBaseFontSize` | 13 | Normaler Text |
+| `AppBaseHeaderFontSize` | 16 | Überschriften, Panel-Titel |
+| `AppBaseSmallFontSize` | 12 | Sekundäre Beschriftungen |
+| `AppBaseTinyFontSize` | 10 | Hinweistext |
+| `AppBaseLargeFontSize` | 20 | Großer Anzeigetext |
 
-Theme changes require an app restart. `SaveAllSettings()` is called automatically before restart.
+### Persistente UI-Konfiguration — `ui.cfg`
 
-### Font Size System
-
-| Resource Key | Base | Description |
-|---|---|---|
-| `AppBaseFontSize` | 13 | Normal text |
-| `AppBaseHeaderFontSize` | 16 | Headers, panel titles |
-| `AppBaseSmallFontSize` | 12 | Secondary labels |
-| `AppBaseTinyFontSize` | 10 | Hint text |
-| `AppBaseLargeFontSize` | 20 | Large display text |
-
-### Persistent UI Configuration — `ui.cfg`
-
-| Key | Default | Description |
+| Schlüssel | Standard | Beschreibung |
 |-----|---------|-------------|
-| `ModListWidth` | `150` | Mods tab list width (px) |
-| `ProjectListWidth` | `150` | Development tab project list width (px) |
-| `AppFontSize` | `13` | Global UI font size (px) |
-| `AlwaysOnTop` | `false` | Window always-on-top |
+| `ModListWidth` | `150` | Mods-Tab Listenbreite (px) |
+| `ProjectListWidth` | `150` | Entwicklungs-Tab Projektlistenbreite (px) |
+| `AppFontSize` | `13` | Globale UI-Schriftgröße (px) |
+| `AlwaysOnTop` | `false` | Fenster immer im Vordergrund |
+| `TexturePath` | *(keine)* | Originaldateiname der Hintergrundtextur (nur Anzeige) |
+| `TextureHash` | *(keine)* | SHA-256-Hash der Hintergrundtextur |
+| `TextureActive` | `false` | Aktivierungsstatus der Hintergrundtextur |
+| `GamePathReset_{GameId}` | *(keine)* | Spielpfad-Reset-Flag |
+| `SteamPathReset` | *(keine)* | Steam-Pfad-Reset-Flag |
 
-### File Structure
+### Dateistruktur
 
 ```
 ModAPI/
-├── App.xaml / App.xaml.cs              # Theme load/apply
-├── Dictionary.xaml                      # Classic theme + fallback resources
-├── FluentStyles.xaml                    # Dark theme
-├── FluentStylesLight.xaml               # Light theme
-├── ui.cfg                               # Persistent UI settings
-├── theme.cfg                            # Current theme
+├── App.xaml / App.xaml.cs              # Theme-Registrierung, Theme-IDs, Theme-Anwendung
+├── ui.cfg                               # Persistente UI-Einstellungen
+├── theme.cfg                            # Aktuelles Theme
 ├── Windows/
-│   ├── MainWindow.xaml / .cs            # Main UI — 5 tabs, Settings, Steam path
+│   ├── MainWindow.xaml / .cs            # Haupt-UI — 6 Tabs, Themes, Einstellungen, Steam-Pfad
 │   └── SubWindows/
-│       ├── SpecifyGamePath.xaml / .cs   # Game path popup (dynamic GameNameLabel)
-│       ├── FirstSetup.xaml / .cs        # First-run setup + default initialization
-│       └── (14 other SubWindows)
+│       ├── SpecifyGamePath.xaml / .cs   # Spielpfad-Popup (dynamisches GameNameLabel)
+│       ├── FirstSetup.xaml / .cs        # Ersteinrichtung + Standardinitialisierung
+│       └── (14 weitere SubWindows)
+├── Themes/
+│   ├── Dictionary.xaml                  # Classic-Theme
+│   ├── FluentStyles.xaml                # Dark-Theme
+│   ├── FluentStylesLight.xaml           # Light-Theme
+│   ├── FluentStylesDiablo.xaml          # Diablo-Theme
+│   ├── FluentStylesNebula.xaml          # Nebula-Theme
+│   ├── FluentStylesSunset.xaml          # Sunset-Theme
+│   ├── FluentStylesOcean.xaml           # Ocean-Theme
+│   ├── FluentStylesNordic.xaml          # Nordic-Theme
+│   ├── FluentStylesCitrus.xaml          # Citrus-Theme
+│   └── FluentStylesBloom.xaml           # Bloom-Theme
 ├── Data/
-│   ├── Game.cs                          # Assembly patching, null guards, resolver fallback
-│   ├── ModLib.cs                        # BaseModLib generation + remapping (#if DEBUG split)
+│   ├── Game.cs                          # Assembly-Patching, Null-Schutz, Resolver-Fallback
+│   ├── ModLib.cs                        # BaseModLib-Generierung + Remapping (#if DEBUG Aufteilung)
 │   ├── Models/
-│   │   └── ModProject.cs                # Project create/build/apply + null guards
+│   │   └── ModProject.cs                # Projekt erstellen/bauen/anwenden + Null-Schutz
 │   ├── ViewModels/
-│   │   ├── ModsViewModel.cs             # FilteredMods, SelectedModItem, SelectedGameFilter
-│   │   ├── ModViewModel.cs              # GameId from folder path
-│   │   ├── ModProjectsViewModel.cs      # Dispose() for DispatcherTimer
-│   │   └── SettingsViewModel.cs         # Default true for UseSteam/AutoUpdate/UpdateVersions
-│   └── AssemblyVersionMap.cs            # Mono 2.0 assembly version mapping (20 assemblies)
+│   │   ├── ModsViewModel.cs             # Gefilterte Mods, ausgewählter Mod, ausgewählter Spielfilter
+│   │   ├── ModViewModel.cs              # GameId aus Ordnerpfad
+│   │   ├── ModProjectsViewModel.cs      # Dispose() für DispatcherTimer
+│   │   └── SettingsViewModel.cs         # Standard true für UseSteam/AutoUpdate/UpdateVersions
+│   └── AssemblyVersionMap.cs            # Mono 2.0 Assembly-Versionszuordnung (20 Assemblies)
 ├── Utils/
-│   ├── CustomAssemblyResolver.cs        # Name-based resolver with caching
-│   └── MonoHelper.cs                    # Mono.Cecil IL helper utilities
-├── resources/langs/                     # 13 language files
+│   ├── CustomAssemblyResolver.cs        # Namensbasierter Resolver mit Caching
+│   └── MonoHelper.cs                    # Mono.Cecil IL-Hilfsprogramme
+├── resources/
+│   ├── langs/                           # 13 Sprachdateien
+│   └── textures/ui_bg/
+│       └── bg.dat                       # Komprimiertes und gesichertes Hintergrundbild (zur Laufzeit generiert)
 └── configs/
     ├── games/
     │   ├── TheForest.xml
-    │   ├── Subnautica.xml               # Full rewrite v2.0.9610
+    │   ├── Subnautica.xml               # Vollständige Neufassung v2.0.9610
     │   ├── Raft.xml
-    │   ├── EscapeThePacific.xml         # Full rewrite v2.0.9610
-    │   ├── GH.xml                       # Full rewrite v2.0.9610
-    │   ├── SonsOfTheForest.xml          # IL2CPP — not supported
-    │   └── {GameId}/Versions.xml        # Raft, GH, Subnautica
+    │   ├── EscapeThePacific.xml         # Vollständige Neufassung v2.0.9610
+    │   ├── GH.xml                       # Vollständige Neufassung v2.0.9610
+    │   ├── SonsOfTheForest.xml          # IL2CPP — nicht unterstützt
+    │   └── {GameId}/Versions.xml        # Raft, GH, Subnautica, EscapeThePacific
     └── UserConfiguration.xml
 
 ModAPI_Shared/
 ├── Data/
-│   ├── Game.cs                          # Lightweight constructor + ModLibrary init fix
-│   └── ModLib.cs                        # #if DEBUG split for Cecil parsing
+│   ├── Game.cs                          # Leichtgewichtiger Konstruktor + ModLibrary-Initialisierungsfix
+│   └── ModLib.cs                        # #if DEBUG Aufteilung für Cecil-Parsing
 └── Utils/
-    └── FileValidator.cs                 # PE header + CLR metadata validation (Release only)
+    └── FileValidator.cs                 # PE-Header + CLR-Metadaten-Validierung (nur Release)
 
 BaseModLib/
 ├── BaseModLib.csproj                    # .NET 3.5 + LangVersion 7.3
@@ -287,47 +341,50 @@ BaseModLib/
     ├── AsyncBridge.dll
     └── System.Threading.dll
 
+VersionTool/
+└── MODAPI_VersionTool.csproj            # Eigenständiges WPF-Versionsaktualisierungstool
+
 bin\Debug\                               # Debug testing only
-├── create_dummy_Debug_games.ps1         # Generates dummy game/steam structure
-├── dummy_games\{GameId}\               # Dummy game install paths
-├── dummy_steam\Steam.exe               # Dummy Steam executable
-└── gamefiles\original\{GameId}\        # Dummy backup paths for ModLib
+├── create_dummy_Debug_games.ps1         # Generiert Dummy-Spiel/Steam-Struktur
+├── dummy_games\{GameId}\               # Dummy-Spielinstallationspfade
+├── dummy_steam\Steam.exe               # Dummy-Steam-Ausführbare Datei
+└── gamefiles\original\{GameId}\        # Dummy-Sicherungspfade für ModLib
 ```
 
 ---
 
 ## Installation & Einrichtung
 
-### Step 1 — Prerequisites
+### Schritt 1 — Voraussetzungen
 
-| Item | Required |
+| Element | Erforderlich |
 |---|---|
 | Windows 10 / 11 | ✅ |
-| .NET Framework 4.8 | ✅ (pre-installed on Windows 11; [download](https://dotnet.microsoft.com/download/dotnet-framework/net48) for Windows 10) |
-| Steam | Required — must be configured in Settings tab |
-| At least one supported game | Required — must be configured in Settings tab |
+| .NET Framework 4.8 | ✅ (unter Windows 11 vorinstalliert; [Download](https://dotnet.microsoft.com/download/dotnet-framework/net48) für Windows 10) |
+| Steam | Erforderlich — muss im Settings-Tab konfiguriert werden |
+| Mindestens ein unterstütztes Spiel | Erforderlich — muss im Settings-Tab konfiguriert werden |
 
-### Step 2 — Install ModAPI
+### Schritt 2 — ModAPI installieren
 
-1. Download the latest release from GitHub
-2. Extract to any folder (e.g. `C:\ModAPI\`)
-3. Run `ModAPI.exe`
-4. On first launch the **Welcome** screen appears — configure preferences and click **Continue**
+1. Neueste Version von GitHub herunterladen
+2. In einen beliebigen Ordner entpacken (z.B. `C:\ModAPI\`)
+3. `ModAPI.exe` ausführen
+4. Beim ersten Start erscheint der **Welcome**-Bildschirm — Einstellungen konfigurieren und **Continue** klicken
 
-### Step 3 — Configure Steam Path (Settings Tab)
+### Schritt 3 — Steam-Pfad konfigurieren (Settings-Tab)
 
-1. Go to the **Settings** tab
-2. Find **Steam Installation Path**
-3. Click **Browse** → select `Steam.exe`
-4. Click **Save**
+1. Zum **Settings**-Tab wechseln
+2. **Steam Installation Path** suchen
+3. **Browse** klicken → `Steam.exe` auswählen
+4. **Save** klicken
 
-### Step 4 — Configure Game Paths (Settings Tab)
+### Schritt 4 — Spielpfade konfigurieren (Settings-Tab)
 
-1. Click a game card header to expand it
-2. Click **Browse** → select the game root folder (where the `.exe` is located)
-3. Click **Save**
+1. Auf den Header einer Spielkarte klicken, um sie aufzuklappen
+2. **Browse** klicken → den Spielstammordner auswählen (wo sich die `.exe` befindet)
+3. **Save** klicken
 
-| Game | Executable | Example Path |
+| Spiel | Ausführbare Datei | Beispielpfad |
 |---|---|---|
 | The Forest | `TheForest.exe` | `C:\Steam\steamapps\common\The Forest\` |
 | Subnautica | `Subnautica.exe` | `C:\Steam\steamapps\common\Subnautica\` |
@@ -335,15 +392,15 @@ bin\Debug\                               # Debug testing only
 | Escape The Pacific | `EscapeThePacific.exe` | `C:\Steam\steamapps\common\Escape The Pacific\` |
 | Green Hell | `GH.exe` | `C:\Steam\steamapps\common\Green Hell\` |
 
-### Step 5 — Download Mods (Downloads Tab)
+### Schritt 5 — Mods herunterladen (Downloads-Tab)
 
-1. Go to the **Downloads** tab
-2. Select a game from the game filter
-3. Browse or search for a mod and click **Download**
+1. Zum **Downloads**-Tab wechseln
+2. Ein Spiel aus dem Spielfilter auswählen
+3. Nach einem Mod suchen und **Download** klicken
 
-> **Offline**: Download `.mod` files manually from `modapi.survivetheforest.net` and place them in the corresponding folder:
+> **Offline**: `.mod`-Dateien manuell von `modapi.survivetheforest.net` herunterladen und im entsprechenden Ordner ablegen:
 
-| Game | Folder |
+| Spiel | Ordner |
 |---|---|
 | The Forest | `mods/TheForest/` |
 | Subnautica | `mods/Subnautica/` |
@@ -351,157 +408,531 @@ bin\Debug\                               # Debug testing only
 | Escape The Pacific | `mods/EscapeThePacific/` |
 | Green Hell | `mods/GH/` |
 
-### Step 6 — Apply Mods & Start Game (Mods Tab)
+### Schritt 6 — Mods anwenden & Spiel starten (Mods-Tab)
 
-1. Go to the **Mods** tab
-2. Select a game from **Game Filter** (Col 0)
-3. Check mods to activate in **Mod List** (Col 1)
-4. Click **Start Game**
+1. Zum **Mods**-Tab wechseln
+2. Ein Spiel aus dem **Spielfilter** (Spalte 0) auswählen
+3. Mods in der **Mod-Liste** (Spalte 1) aktivieren
+4. **Start Game** klicken
 
-The following checks run automatically before launch:
+Folgende Prüfungen werden automatisch vor dem Start ausgeführt:
 
-| # | Check | Failure Popup |
+| # | Prüfung | Fehler-Popup |
 |---|---|---|
-| 1 | Steam path configured and valid | SteamNotFound |
-| 2 | `mods/` folder game matches Settings game path | GameModsMismatch |
-| 3 | At least one mod selected | NoModSelected |
-| 4 | No mixed-game mods in selection | MixedGameMods |
-| 5 | Game path configured and executable exists | GamePathNotSet / GameNotInstalled |
+| 1 | Steam-Pfad konfiguriert und gültig | SteamNotFound |
+| 2 | `mods/`-Ordner-Spiel stimmt mit Settings-Spielpfad überein | GameModsMismatch |
+| 3 | Mindestens ein Mod ausgewählt | NoModSelected |
+| 4 | Keine gemischten Spiel-Mods in der Auswahl | MixedGameMods |
+| 5 | Spielpfad konfiguriert und Ausführbare Datei existiert | GamePathNotSet / GameNotInstalled |
 
 ---
 
 ## Tab-Übersicht
 
-### Welcome Tab
-First-run setup screen (tab index 0). Configure AutoUpdate, Steam connection, and VersionsData table preferences. On subsequent launches this tab provides community links and release notes.
+### Welcome-Tab
+Ersteinrichtungsbildschirm (Tab-Index 0). Konfiguration von AutoUpdate, Steam-Verbindung und VersionsData-Tabelleneinstellungen. Bei nachfolgenden Starts bietet dieser Tab Community-Links und Versionshinweise.
 
-### Mods Tab
-Primary mod management workflow — 3-column layout:
+### Mods-Tab
+Primärer Mod-Verwaltungs-Workflow — 3-Spalten-Layout:
 
-| Column | Content |
+| Spalte | Inhalt |
 |---|---|
-| Col 0 | Game Filter — radio buttons for 5 supported games |
-| Col 1 | Mod List — installed mods with version picker and activation checkbox |
-| Col 2 | Information — selected mod details, description, version history |
+| Spalte 0 | Spielfilter — Radiobuttons für 5 unterstützte Spiele |
+| Spalte 1 | Mod-Liste — installierte Mods mit Versionsauswahl und Aktivierungscheckbox |
+| Spalte 2 | Information — Details zum ausgewählten Mod, Beschreibung, Versionshistorie |
 
-### Downloads Tab
-Browse and download mods from `modapi.survivetheforest.net`.
+### Downloads-Tab
+Mods von `modapi.survivetheforest.net` durchsuchen und herunterladen.
 
-- **Game filter**: TheForest / DedicatedServer / VR / Subnautica / RAFT / EscapeThePacific / GH
-- **Category filter**: 12 categories (Bugfixes, Balancing, Cheats, …)
-- **Search**: by mod name, description, or author
-- **Offline mode**: displays folder instructions for all 5 supported games
+- **Spielfilter**: TheForest / DedicatedServer / VR / Subnautica / RAFT / EscapeThePacific / GH
+- **Kategoriefilter**: 12 Kategorien (Bugfixes, Balancing, Cheats, …)
+- **Suche**: nach Mod-Name, Beschreibung oder Autor
+- **Offline-Modus**: zeigt Ordneranweisungen für alle 5 unterstützten Spiele an
 
-### Development Tab
-Mod development workflow — game filter panel (Col 0) covers all 5 supported games.
+### Development-Tab
+Mod-Entwicklungs-Workflow — Spielfilter-Panel (Spalte 0) deckt alle 5 unterstützten Spiele ab.
 
-- Create, build, and apply mod projects per game
-- Language resource management
-- ModLib generation with 3-step validation (Steam → project → game path)
-- Safe game switching via lightweight `Game` constructor (no `Verify()` call)
+- Mod-Projekte pro Spiel erstellen, bauen und anwenden
+- Sprachressourcen-Verwaltung
+- ModLib-Generierung mit 3-Stufen-Validierung (Steam → Projekt → Spielpfad)
+- Sicherer Spielwechsel über leichtgewichtigen `Game`-Konstruktor (kein `Verify()`-Aufruf)
 
-### Settings Tab
-Centralized configuration — 4 rows:
+### Themes-Tab
+Theme-Auswahl und Hintergrundtextur-Verwaltung.
 
-| Row | Content |
+- **Theme-Auswahl**: 10 Themes (Classic, Light, Dark, Diablo, Nebula, Sunset, Ocean, Nordic, Citrus, Bloom)
+- **Hintergrundtextur**: Bild als App-weiten Hintergrund auswählen (JPEG-Kompression + Sicherheitsverarbeitung)
+- Bei aktiver Hintergrundtextur wird die Theme-Auswahl gesperrt
+
+### Settings-Tab
+Zentralisierte Konfiguration — 4 Zeilen:
+
+| Zeile | Inhalt |
 |---|---|
-| 0 | Language / Font Size / Theme / Max Width / Mod List Width / Project List Width |
-| 1 | Keep VersionsData / Auto Update / Steam Connection / Always On Top |
-| 2 | Steam Installation Path (TextBox + Browse + Save) |
-| 3 | Game Installation Paths — expandable card per game (TextBox + Browse + Save) |
+| 0 | Sprache / Schriftgröße / Theme / Maximale Breite / Mod-Listenbreite / Projektlistenbreite |
+| 1 | VersionsData beibehalten / Auto-Update / Steam-Verbindung / Immer im Vordergrund |
+| 2 | Steam-Installationspfad (TextBox + Durchsuchen + Speichern + Zurücksetzen) |
+| 3 | Spielinstallationspfade — aufklappbare Karte pro Spiel (TextBox + Durchsuchen + Speichern + Zurücksetzen) |
+
+---
+
+## Änderungen in v2.0.9618
+
+### Version Update Tool (MODAPI_VersionTool)
+
+Ein eigenständiges WPF-Tool zum Aktualisieren der Versionsnummer mit einem Klick.
+
+**Speicherort**: `VersionTool\MODAPI_VersionTool.csproj`
+
+## Version Tool
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
+
+**Funktionen**
+- Zeigt automatisch die aktuelle Version an (gelesen aus `App.xaml.cs`)
+- Neue Version eingeben und **Apply Version** klicken — beide Dateien werden gleichzeitig aktualisiert
+- Formatvalidierung: nur `X.X.XXXX`-Format akzeptiert
+
+**Geänderte Dateien**
+
+| Datei | Pfad | Änderung |
+|---|---|---|
+| `AssemblyInfo.cs` | `ModAPI\Properties\` | `AssemblyVersion`, `AssemblyFileVersion` |
+| `App.xaml.cs` | `ModAPI\` | `public static string Version` |
+
+**Verwendung**
+1. `MODAPI_VersionTool.exe` ausführen
+2. Neue Version eingeben (z.B. `2.0.9619`)
+3. **Apply Version** klicken
+4. ModAPI-Lösung in Visual Studio neu erstellen
+
+### StatusBar-Versionsanzeige behoben
+
+- `VersionLabel.Text` referenziert jetzt `App.Version` statt dem hartcodierten `Version.Descriptor`
+- Nach Versionsänderung mit VersionTool und Neuerstellung wird die StatusBar sofort aktualisiert
+
+---
+
+## Änderungen in v2.0.9617
+
+### Settings Tab — Pfad-Reset-Buttons hinzugefügt
+
+Ein **Reset**-Button wurde zum Steam-Installationspfad und zu jeder Spielinstallationspfad-Zeile hinzugefügt.
+
+**Steam-Pfad-Zeile**
+```
+[TextBox] [Browse] [Save] [Reset]
+```
+
+**Spielpfad-Zeile (pro Spiel)**
+```
+[TextBox] [Browse] [Save] [Reset]
+```
+
+**Reset-Verhalten**
+- Leert die Pfad-TextBox sofort
+- Speichert ein Reset-Flag in `ui.cfg` (`GamePathReset_{GameId}=1`, `SteamPathReset=1`)
+- TextBox bleibt nach Neustart leer
+- Umgeht die Einschränkung, dass Configuration XML keine leeren Strings speichert
+
+**Browse Auto-Speicherung**
+- Vorher: Nach Browse musste separat der Save-Button geklickt werden
+- Nachher: Automatische Speicherung bei Dateiauswahl — wird auch nach Wechsel zum Mods-Tab übernommen
+
+**Neuer Sprachschlüssel**
+
+| Schlüssel | Wert |
+|---|---|
+| `Lang.Options.Labels.PathReset` | Zurücksetzen |
+
+---
+
+## Änderungen in v2.0.9616
+
+### Versions.xml — 4 Spiele hinzugefügt / aktualisiert
+
+| Spiel | Dateipfad | BuildID | Bemerkung |
+|---|---|---|---|
+| Subnautica | `configs/games/Subnautica/Versions.xml` | `20241558` | Neu erstellt |
+| Raft | `configs/games/Raft/Versions.xml` | `22312909` | Prüfsumme aktualisiert |
+| EscapeThePacific | `configs/games/EscapeThePacific/Versions.xml` | `19000490` | Neu erstellt |
+| GH | `configs/games/GH/Versions.xml` | `21698250` | Prüfsumme aktualisiert |
+
+### Prüfsummen-Zusammensetzungsregeln
+
+Das Prüfsummenformat unterscheidet sich je nachdem, ob `Assembly-CSharp-firstpass.dll` für jedes Spiel existiert.
+
+| Spiel | firstpass.dll | Prüfsummenformat |
+|---|---|---|
+| GH | ✅ Vorhanden | `firstpass MD5` + `Assembly-CSharp MD5` verkettet (64 Zeichen) |
+| Subnautica | ✅ Vorhanden | `firstpass MD5` + `Assembly-CSharp MD5` verkettet (64 Zeichen) |
+| EscapeThePacific | ✅ Vorhanden | `firstpass MD5` + `Assembly-CSharp MD5` verkettet (64 Zeichen) |
+| Raft | ❌ Nicht vorhanden | Nur `Assembly-CSharp MD5` (32 Zeichen) |
+
+### Versions.xml-Aktualisierungsverfahren bei Spiel-Update
+
+Einen neuen `<version>`-Eintrag hinzufügen, ohne bestehende Einträge zu entfernen.
+
+**Step 1 — Neue BuildID finden**
+```powershell
+Get-Content "C:\Program Files (x86)\Steam\steamapps\appmanifest_{AppID}.acf" | Select-String "buildid"
+```
+
+| Spiel | AppID |
+|---|---|
+| Subnautica | 264710 |
+| Raft | 648800 |
+| EscapeThePacific | 655290 |
+| GH | 815370 |
+
+**Step 2 — Neue Prüfsumme extrahieren**
+```powershell
+# Spiele mit firstpass.dll (GH, Subnautica, EscapeThePacific)
+Get-FileHash "...\Assembly-CSharp-firstpass.dll" -Algorithm MD5
+Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
+# → Beide Hash-Werte in Reihenfolge verketten (firstpass zuerst)
+
+# Spiele ohne firstpass.dll (Raft)
+Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
+```
+
+**Step 3 — Eintrag zu Versions.xml hinzufügen**
+```xml
+<version id="{neue BuildID}">
+    <checksum>{neue Prüfsumme}</checksum>
+</version>
+```
+
+---
+
+## Änderungen in v2.0.9615
+
+### Settings Tab Spielpfad-Aufklappen behoben
+
+- **Karten-Aufklapphöhe**: Der untere Fensterrand wächst jetzt exakt um die Höhe des Eingabefelds beim Aufklappen einer Spielpfad-Karte
+- **`UpdateWindowHeight()` verbessert**: Ruft `UpdateLayout()` vor der `SizeToContent.Height`-Messung auf; setzt `TextureLayer1` temporär auf `Collapsed` bei aktiver Hintergrundtextur, um zu verhindern, dass die 4K-Bildoriginalgröße die Höhenberechnung beeinflusst
+- **Innere Grid Row-Korrektur**: Letzte Row des Spielpfad-Panels von `Height="*"` auf `Height="Auto"` geändert — entfernt unnötigen unteren Leerraum
+
+---
+
+## Änderungen in v2.0.9614
+
+### Maximieren-Button-Verhalten behoben
+
+- **Maximieren**: Verwendet `SystemParameters.WorkArea` für manuelle Maximierung statt `WindowState.Maximized` — passt exakt an die aktuelle Bildschirmauflösung ohne Taskleisten-Überlappung
+- **Wiederherstellen**: Speichert `Left`, `Top`, `Width`, `Height` und `MaxWidth` vor dem Maximieren und stellt sie beim Klick auf den Wiederherstellen-Button wieder her
+- **`MaxWidth`-Behandlung**: Auf `∞` beim Maximieren gesetzt, gespeicherter Wert beim Normalisieren wiederhergestellt
+
+---
+
+## Änderungen in v2.0.9613
+
+### Neuer Themes-Tab
+
+Tab-Reihenfolge ist jetzt:
+
+```
+Welcome → Mods → Downloads → Development → Themes → Settings
+```
+
+Die Theme-Auswahl-UI wurde vom Settings-Tab in einen eigenen **Themes-Tab** verschoben.
+Symbol: Segoe MDL2 Assets `&#xE790;` (Palette)
+
+### Theme Registry (Datengesteuerte Struktur)
+
+Ein neues Theme hinzuzufügen erfordert nur **eine Zeile** im `App.xaml.cs`-Dictionary.
+Alle Switch-Anweisungen wurden entfernt — keine Code-Änderungen an anderer Stelle nötig.
+
+```csharp
+// App.xaml.cs
+public static readonly Dictionary<string, string> ThemeRegistry = new Dictionary<string, string>
+{
+    { "classic", null },
+    { "light",   "FluentStylesLight.xaml" },
+    { "dark",    "FluentStyles.xaml" },
+    { "diablo",  "FluentStylesDiablo.xaml" },
+    { "nebula",  "FluentStylesNebula.xaml" },
+    { "sunset",  "FluentStylesSunset.xaml" },
+    { "ocean",   "FluentStylesOcean.xaml" },
+    { "nordic",  "FluentStylesNordic.xaml" },
+    { "citrus",  "FluentStylesCitrus.xaml" },
+    { "bloom",   "FluentStylesBloom.xaml" },
+};
+
+public static readonly List<string> ThemeIds = new List<string>(new[]
+{
+    "classic", "light", "dark", "diablo",
+    "nebula", "sunset", "ocean", "nordic", "citrus", "bloom"
+});
+```
+
+`ThemeSelector` ComboBox-Einträge werden automatisch aus der `ThemeIds`-Schleife generiert.
+Sprachschlüssel-Konvention: `Lang.Options.Theme.{PascalCase}` (z.B. `Lang.Options.Theme.Nebula`)
+
+### Unterstützte Themes
+
+| Index | ID | Datei | Palette |
+|---|---|---|---|
+| 0 | `classic` | `Dictionary.xaml` allein | Originales ModAPI-Texturhintergrund |
+| 1 | `light` | `FluentStylesLight.xaml` | Heller Ton + blauer Akzent |
+| 2 | `dark` | `FluentStyles.xaml` | Dunkler Ton + blauer Akzent (Standard) |
+| 3 | `diablo` | `FluentStylesDiablo.xaml` | Rot + Schwarz |
+| 4 | `nebula` | `FluentStylesNebula.xaml` | Dunkler Weltraum |
+| 5 | `sunset` | `FluentStylesSunset.xaml` | Heller Sonnenuntergang |
+| 6 | `ocean` | `FluentStylesOcean.xaml` | Dunkler Ozean |
+| 7 | `nordic` | `FluentStylesNordic.xaml` | Helles Nordisch |
+| 8 | `citrus` | `FluentStylesCitrus.xaml` | Helles Zitrus |
+| 9 | `bloom` | `FluentStylesBloom.xaml` | Helles Blühen |
+
+Theme-Änderungen lösen einen automatischen App-Neustart aus. (gespeichert in `theme.cfg`)
+
+### Hintergrundtextur-Feature
+
+Wählen Sie ein Bild im **Background Texture**-Bereich des Themes-Tabs aus, um es als App-weiten Hintergrund zu verwenden. Funktioniert mit jedem ausgewählten Theme.
+
+**Unterstützte Eingabeformate**: `.png` / `.jpg` / `.jpeg`, bis zu 50MB, 4K-Auflösung oder niedriger
+
+**Bildverarbeitungs-Pipeline**
+
+```
+Vom Benutzer ausgewähltes Bild (.png / .jpg / .jpeg, max 50MB, 4K oder niedriger)
+  ↓
+JPEG Q75 Kompression (Speicherpuffer)
+  ↓
+16-Byte Magic-Header eingefügt
+  "MODAPI" + "BG" + Version + Padding (FF 00 FE 00)
+  ↓
+Gespeichert als resources\textures\ui_bg\bg.dat (Hidden-Attribut)
+  ↓
+SHA-256 Hash → in ui.cfg als TextureHash gespeichert
+```
+
+**Sicherheitsschichten**
+
+| Schicht | Methode | Wirkung |
+|---|---|---|
+| Magic-Header | 16 Bytes vor JPEG-Signatur (FF D8 FF) eingefügt | Externe Viewer können die Datei nicht erkennen |
+| Hidden-Attribut | `FileAttributes.Hidden` | Im Explorer standardmäßig ausgeblendet |
+| SHA-256 Integrität | Hash beim Laden verifiziert | Manipulation löst automatisches Zurücksetzen + Warnungs-Popup aus |
+
+**Verhalten bei Manipulationserkennung**
+1. `bg.dat` gelöscht
+2. `ui.cfg`-Schlüssel `TexturePath`, `TextureHash`, `TextureActive` zurückgesetzt
+3. TextBox und Toggle zurückgesetzt
+4. `Lang.Windows.TextureTampered`-Popup angezeigt
+
+**ui.cfg-Schlüssel**
+
+| Schlüssel | Wert | Beschreibung |
+|---|---|---|
+| `TexturePath` | Dateiname (nur Anzeige) | Originaldateiname in TextBox angezeigt |
+| `TextureHash` | SHA-256 hex | Integritätsprüfungs-Hash |
+| `TextureActive` | `true` / `false` | Aktivierungsstatus |
+
+**Transparenzverarbeitung**
+
+Bei aktivem Hintergrundbild werden UI-Hintergründe in zwei Schichten verarbeitet.
+
+- **Layer 1 — MergedDictionaries-Overlay**: Panels, die `{DynamicResource FluentBgBrush}` etc. referenzieren, werden automatisch transparent gemacht. Wiederherstellung durch einen einzelnen `Remove()`-Aufruf bei Deaktivierung.
+
+  Zielschlüssel: `FluentBgBrush`, `FluentBgSecondaryBrush`, `FluentBgTertiaryBrush`, `FluentSurfaceBrush`, `FluentCardBrush`, `FluentTabBarBrush`, `FluentBorderBrush`
+
+- **Layer 2 — Visueller Baum-Durchlauf (`WalkStyleBackgrounds`)**: `{StaticResource}`-Elemente in Fluent-Themes werden von Layer 1 nicht beeinflusst, daher wird der visuelle Baum direkt durchlaufen, um halbtransparente Pinsel basierend auf Originalfarben anzuwenden.
+
+  ```
+  MakeSemiTransparent(originalBrush, alpha: 100)
+  // alpha 0=vollständig transparent, 255=undurchsichtig → 100 ≈ 39% undurchsichtig
+  ```
+
+  Verarbeitet: `Panel` (außer Grid), `Border`, `ListBox` / `ListView`
+
+  Ausgeschlossen: `Grid` (Hintergrund beibehalten, Kinder durchlaufen), `TabPanel` (Tab-Header-Schutz), `ButtonBase` / `ComboBox`, `Collapsed`-Elemente
+
+  Wiederherstellung: Style Setter-Quelle → `ClearValue()`, XAML-Lokalwert-Quelle → Original-Pinsel direkt wiederherstellen
+
+**Tab-Wechsel**
+
+WPF TabControl lädt Tab-Inhalte verzögert, daher wird `WalkStyleBackgrounds(this)` bei Tab-Wechsel mit `ContextIdle`-Priorität erneut ausgeführt. Bereits verarbeitete Elemente werden per `ContainsKey`-Check übersprungen.
+
+**ThemeSelector-Sperre**
+
+Bei aktiver Hintergrundtextur wird ein `ThemeSelectorOverlay`-Border über dem Theme-Selector angezeigt, um Interaktion zu blockieren.
+
+- XAML: `ThemeSelectorOverlay`-Border über ThemeSelector hinzugefügt (`IsHitTestVisible=True`)
+- Aktiv: `ThemeSelectorOverlay.Visibility = Visible`
+- Inaktiv: `ThemeSelectorOverlay.Visibility = Collapsed`
+- `ThemeSelector_SelectionChanged` ebenfalls durch `_textureActive`-Flag geschützt
+
+**UI-Zustandsfluss**
+
+```
+Bild ausgewählt (Browse)
+  → bg.dat erstellt → Toggle entsperrt → automatisch aktiviert → TextureLayer1 angezeigt
+  → SaveAndClearBrushes() → ThemeSelectorOverlay angezeigt
+
+Toggle deaktiviert
+  → RestoreThemeState() → RestoreBrushes() → ThemeSelectorOverlay ausgeblendet
+  → TextureLayer1 ausgeblendet
+
+Clear-Button
+  → bg.dat gelöscht → Toggle gesperrt → TextureLayer1 ausgeblendet → Pinsel wiederhergestellt
+  → GC.Collect() (gibt 4K-Bildspeicher frei)
+```
+
+**Neue Sprachschlüssel**
+
+| Schlüssel | Beschreibung |
+|---|---|
+| `Lang.Options.Theme.Diablo` ~ `Lang.Options.Theme.Bloom` | 7 neue Theme-Namen |
+| `Lang.Options.Labels.TextureBackground` | Hintergrundtextur-Label |
+| `Lang.Options.Labels.TextureEnable` | Aktivieren-Label |
+| `Lang.Options.Labels.TextureClear` | Zurücksetzen-Button |
+| `Lang.Windows.TextureTooLarge` | Dateigröße überschritten Warnung |
+| `Lang.Windows.TextureTampered` | Manipulation erkannt Warnung |
+
+**Dateistruktur**
+
+```
+ModAPI\
+├── App.xaml.cs                    # Theme-Registrierung, Theme-IDs, Theme-Anwendung
+├── Windows\
+│   ├── MainWindow.xaml            # Themes-Tab, ThemeSelectorOverlay, TextureLayer1
+│   └── MainWindow.xaml.cs         # Theme- & Textur-Logik
+├── Themes\
+│   ├── Dictionary.xaml            # Classic Theme
+│   ├── FluentStyles.xaml          # Dark Theme
+│   ├── FluentStylesLight.xaml     # Light Theme
+│   ├── FluentStylesDiablo.xaml    # Diablo Theme
+│   ├── FluentStylesNebula.xaml    # Nebula Theme
+│   ├── FluentStylesSunset.xaml    # Sunset Theme
+│   ├── FluentStylesOcean.xaml     # Ocean Theme
+│   ├── FluentStylesNordic.xaml    # Nordic Theme
+│   ├── FluentStylesCitrus.xaml    # Citrus Theme
+│   └── FluentStylesBloom.xaml     # Bloom Theme
+└── resources\
+    └── textures\
+        └── ui_bg\
+            └── bg.dat             # Komprimiertes & gesichertes Hintergrundbild (Laufzeit-generiert)
+```
+
+**Bekannte Designeinschränkungen**
+
+| Element | Details |
+|---|---|
+| `IsEnabled=false` bei ComboBox | Verursacht `ElementNotEnabledException`-Crash → `IsHitTestVisible`-Overlay-Ansatz verwendet |
+| Direkter `MergedDictionaries`-Schlüsselaustausch | Crash während Layout-Pass → nur `Add`/`Remove`-Muster |
+| Überschreiben versteckter Dateien | `Access Denied` → muss `FileAttributes.Normal` vor dem Schreiben zurücksetzen |
+| `{StaticResource}`-Hintergründe | Nicht von Layer 1 betroffen → erfordert WalkStyleBackgrounds (Layer 2) |
+
+---
+
+## Änderungen in v2.0.9612
+
+### Theme-Modul-Trennung
+
+- **Neuer `Themes/`-Ordner**: `Dictionary.xaml`, `FluentStyles.xaml`, `FluentStylesLight.xaml` und `FluentStylesClassic.xaml` nach `ModAPI\Themes\` verschoben
+- **`App.xaml.cs`**: `ApplyTheme()` — Classic-Theme verwendet nur `Dictionary.xaml`; Light/Dark/andere Fluent-Themes laden entsprechendes XAML
+- **`ModAPI.csproj`**: Theme-XAML-Pfade auf `Themes\`-Unterverzeichnis aktualisiert; `FluentStylesClassic.xaml` registriert
+
+---
+
+## Änderungen in v2.0.9611
+
+### Fehlerbehebung
+
+- **Mod-Listenbreite nach Theme-Wechsel nicht angewendet**: Problem behoben, bei dem die Mod-Listenbreite nach Wechsel zwischen Light/Dark-Themes und Neustart nicht angewendet wurde — `ApplyModListWidth(width)`-Aufruf in `InitModListWidth()` hinzugefügt
 
 ---
 
 ## Änderungen in v2.0.9610
 
-### Added
+### Hinzugefügt
 
-#### Game XML & Versions Configuration
+#### Spiel-XML & Versionskonfiguration
 
-| # | File | Change |
+| # | Datei | Änderung |
 |---|------|--------|
-| 1 | `GH.xml` | Full rewrite — removed non-existent `DOTweenPro.dll`; added `AmplifyBloom/Color/Motion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` |
-| 2 | `Subnautica.xml` | Full rewrite — removed `extends="GenericUnityGame"`; added `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll` |
-| 3 | `EscapeThePacific.xml` | Full rewrite — removed `extends="GenericUnityGame"`; `includeAssembly` → `Assembly-CSharp.dll` only |
-| 4 | `Raft/Versions.xml` | Created — version `1.1.01` with checksum |
-| 5 | `GH/Versions.xml` | Created — version `2.9.5` with checksum |
-| 6 | `Subnautica/Versions.xml` | Created — no checksum (updates too frequently) |
+| 1 | `GH.xml` | Vollständig neu geschrieben — nicht existierende `DOTweenPro.dll` entfernt; `AmplifyBloom/Color/Motion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` hinzugefügt |
+| 2 | `Subnautica.xml` | Vollständig neu geschrieben — `extends="GenericUnityGame"` entfernt; `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll` hinzugefügt |
+| 3 | `EscapeThePacific.xml` | Vollständig neu geschrieben — `extends="GenericUnityGame"` entfernt; `includeAssembly` → nur `Assembly-CSharp.dll` |
+| 4 | `Raft/Versions.xml` | Erstellt — Version `1.1.01` mit Prüfsumme |
+| 5 | `GH/Versions.xml` | Erstellt — Version `2.9.5` mit Prüfsumme |
+| 6 | `Subnautica/Versions.xml` | Erstellt — keine Prüfsumme (zu häufige Updates) |
 
-#### Critical Bug Fixes
+#### Kritische Fehlerbehebungen
 
-| # | Type | Issue | Fix |
+| # | Typ | Problem | Lösung |
 |---|------|-------|-----|
-| 1 | Hang | `extends="GenericUnityGame"` caused `Assembly-CSharp-firstpass.dll` inheritance → `CreateModLibrary` stalled | Removed `extends` from all non-TheForest XML |
-| 2 | Crash | `ResolutionException: XGamingRuntime.XUserGamertagComponent` during Subnautica apply | Added `XGamingRuntime.dll`, `XblPCSandbox.dll` to `copyAssembly` |
-| 3 | Crash | Resolver failed on DLLs added to `copyAssembly` after backup created | `Game.cs`: actual install folder added as resolver fallback |
-| 4 | Crash | `IOException`: `BaseModLib.dll` file-lock between `CreateModLibrary` and `ApplyMods` | Retry loop: max 10 × 500ms read + max 30 × 500ms existence wait |
-| 5 | Crash | `NullReferenceException` — `typesMap` entry.Value null (game not installed) | Added `if (entry.Value == null) continue` |
-| 6 | Crash | `NullReferenceException` — lightweight `Game` constructor missing `ModLibrary = new ModLib(this)` → `CreateModLibrary()` crash | Added `ModLibrary = new ModLib(this)` to lightweight constructor |
-| 7 | Crash | `SwitchDevGame()` — `App.Game.GamePath` empty after lightweight constructor → `CreateModLibrary` crash | Set `App.Game.GamePath = savedPath` after lightweight constructor |
-| 8 | Wrong Game | `EscapeThePacific` mods classified as TheForest | `ModsViewModel`: `GameId` extracted from folder path |
-| 9 | Wrong Path | `GetGameFolder()` → `""` → resolves to drive root (e.g. `E:\`) | Null/empty guard at all 6 call sites |
+| 1 | Hänger | `extends="GenericUnityGame"` verursachte `Assembly-CSharp-firstpass.dll`-Vererbung → `CreateModLibrary` hing fest | `extends` aus allen Nicht-TheForest-XML entfernt |
+| 2 | Absturz | `ResolutionException: XGamingRuntime.XUserGamertagComponent` beim Subnautica-Anwenden | `XGamingRuntime.dll`, `XblPCSandbox.dll` zu `copyAssembly` hinzugefügt |
+| 3 | Absturz | Resolver schlug bei nach Backup hinzugefügten DLLs in `copyAssembly` fehl | `Game.cs`: tatsächlicher Installationsordner als Resolver-Fallback hinzugefügt |
+| 4 | Absturz | `IOException`: `BaseModLib.dll`-Dateisperre zwischen `CreateModLibrary` und `ApplyMods` | Wiederholungsschleife: max 10 × 500ms Lesen + max 30 × 500ms Existenzprüfung |
+| 5 | Absturz | `NullReferenceException` — `typesMap` entry.Value null (Spiel nicht installiert) | `if (entry.Value == null) continue` hinzugefügt |
+| 6 | Absturz | `NullReferenceException` — leichtgewichtiger `Game`-Konstruktor ohne `ModLibrary = new ModLib(this)` → `CreateModLibrary()`-Absturz | `ModLibrary = new ModLib(this)` zum leichtgewichtigen Konstruktor hinzugefügt |
+| 7 | Absturz | `SwitchDevGame()` — `App.Game.GamePath` leer nach leichtgewichtigem Konstruktor → `CreateModLibrary`-Absturz | `App.Game.GamePath = savedPath` nach leichtgewichtigem Konstruktor gesetzt |
+| 8 | Falsches Spiel | `EscapeThePacific`-Mods als TheForest klassifiziert | `ModsViewModel`: `GameId` aus Ordnerpfad extrahiert |
+| 9 | Falscher Pfad | `GetGameFolder()` → `""` → löst zum Laufwerksstamm auf (z.B. `E:\`) | Null/Leer-Prüfung an allen 6 Aufrufstellen |
 
-#### Debug / Release Build Split
+#### Debug / Release Build-Aufteilung
 
-- **`FileValidator.cs`** — new file `ModAPI_Shared\Utils\FileValidator.cs`; registered in `ModAPI_Shared.csproj`
-  - `IsValidSteamExe()` — PE header (MZ + PE\0\0) + minimum 1 MB
-  - `IsValidGameExe()` — PE header + minimum 512 KB
-  - `IsValidAssemblyDll()` — PE header + .NET CLR metadata header + minimum 64 KB
-- **`CheckSteam()`** — `#if DEBUG`: `File.Exists()` only / `#else`: `FileValidator.IsValidSteamExe()`
-- **`CheckGamePath()`** — `#if DEBUG`: `File.Exists()` only / `#else`: `FileValidator.IsValidAssemblyDll()`
-- **`ModLib.Create()` IncludeAssemblies** — `#if DEBUG`: `File.Copy()` skip Cecil / `#else`: full Cecil parse + IL modification
-- **`ModLib.Create()` file not found** — `#if DEBUG`: log warning, skip / `#else`: log error, abort
+- **`FileValidator.cs`** — neue Datei `ModAPI_Shared\Utils\FileValidator.cs`; registriert in `ModAPI_Shared.csproj`
+  - `IsValidSteamExe()` — PE-Header (MZ + PE\0\0) + mindestens 1 MB
+  - `IsValidGameExe()` — PE-Header + mindestens 512 KB
+  - `IsValidAssemblyDll()` — PE-Header + .NET CLR-Metadaten-Header + mindestens 64 KB
+- **`CheckSteam()`** — `#if DEBUG`: nur `File.Exists()` / `#else`: `FileValidator.IsValidSteamExe()`
+- **`CheckGamePath()`** — `#if DEBUG`: nur `File.Exists()` / `#else`: `FileValidator.IsValidAssemblyDll()`
+- **`ModLib.Create()` IncludeAssemblies** — `#if DEBUG`: `File.Copy()` ohne Cecil / `#else`: vollständiges Cecil-Parsing + IL-Modifikation
+- **`ModLib.Create()` Datei nicht gefunden** — `#if DEBUG`: Warnung protokollieren, überspringen / `#else`: Fehler protokollieren, abbrechen
 
-#### Debug Testing
+#### Debug-Tests
 
-- **`create_dummy_Debug_games.ps1`** — PowerShell script for `bin\Debug\`; creates 0-byte placeholder files for all 5 games under `dummy_games\`, `dummy_steam\`, and `gamefiles\original\` — enables full UI workflow testing without real game installation
+- **`create_dummy_Debug_games.ps1`** — PowerShell-Skript für `bin\Debug\`; erstellt 0-Byte-Platzhalterdateien für alle 5 Spiele unter `dummy_games\`, `dummy_steam\` und `gamefiles\original\` — ermöglicht vollständige UI-Workflow-Tests ohne echte Spielinstallation
 
-#### Settings Tab
+#### Settings-Tab
 
-- **Steam path card** — integrated into Game Installation Paths card; `InitSteamPath()`, `SteamBrowse_Click()`, `SteamSave_Click()`
-- **Game paths panel** — `BuildGamePathsPanel()` with per-game expandable cards; TextBox uses `HorizontalAlignment=Stretch`
-- **Expand All / Collapse All** button
-- **AlwaysOnTop** checkbox (saved to `ui.cfg`)
-- **Mod/Project List Width** sliders — start at minimum `150`; saved to `ui.cfg`
-- **Font Size** ComboBox — FHD 10–16, 4K 10–22, 8K 10–28
-- **Checkbox sync** — `SettingsCheckboxes.DataContext = SettingsVm`; AutoUpdate / UseSteam / UpdateVersions now sync correctly
-- **`_uiInitialized` flag** — prevents premature `ui.cfg` writes during WPF startup
+- **Steam-Pfad-Karte** — in die Spielinstallationspfade-Karte integriert; `InitSteamPath()`, `SteamBrowse_Click()`, `SteamSave_Click()`
+- **Spielpfade-Panel** — `BuildGamePathsPanel()` mit aufklappbaren Karten pro Spiel; TextBox verwendet `HorizontalAlignment=Stretch`
+- **Alle aufklappen / Alle zuklappen**-Button
+- **ImmerImVordergrund**-Checkbox (gespeichert in `ui.cfg`)
+- **Mod-/Projektlistenbreite**-Schieberegler — Start bei Minimum `150`; gespeichert in `ui.cfg`
+- **Schriftgröße**-ComboBox — FHD 10–16, 4K 10–22, 8K 10–28
+- **Checkbox-Synchronisierung** — `SettingsCheckboxes.DataContext = SettingsVm`; AutoUpdate / UseSteam / UpdateVersions werden jetzt korrekt synchronisiert
+- **`_uiInitialized`-Flag** — verhindert vorzeitige `ui.cfg`-Schreibvorgänge während des WPF-Starts
 
-#### Mods Tab — Start Game Validation
+#### Mods-Tab — Spielstart-Validierung
 
-Five-step validation runs on every Start Game click, regardless of mod list state:
+Fünf-Stufen-Validierung bei jedem Spielstart-Klick, unabhängig vom Mod-Listenstatus:
 
-| Step | Check | Popup |
+| Schritt | Prüfung | Popup |
 |---|---|---|
-| 1 | Settings tab Steam path valid (`Steam.exe` exists) | SteamNotFound |
-| 2 | `mods/{GameId}/` folder game matches Settings configured game | GameModsMismatch |
-| 3 | At least one mod selected | NoModSelected |
-| 4 | No mixed-game mods in selection | MixedGameMods |
-| 5 | Game path configured + executable exists | GamePathNotSet / GameNotInstalled |
+| 1 | Steam-Pfad im Settings-Tab gültig (`Steam.exe` existiert) | SteamNotFound |
+| 2 | `mods/{GameId}/`-Ordner-Spiel stimmt mit konfiguriertem Spiel in den Einstellungen überein | GameModsMismatch |
+| 3 | Mindestens ein Mod ausgewählt | NoModSelected |
+| 4 | Keine gemischten Spiel-Mods in der Auswahl | MixedGameMods |
+| 5 | Spielpfad konfiguriert + Ausführbare Datei existiert | GamePathNotSet / GameNotInstalled |
 
-#### Development Tab — ModLib Validation
+#### Development-Tab — ModLib-Validierung
 
-Three-step validation on Mod Library Regeneration click:
+Drei-Stufen-Validierung beim Klick auf Mod-Bibliothek-Regenerierung:
 
-| Step | Check | Popup |
+| Schritt | Prüfung | Popup |
 |---|---|---|
-| 1 | Settings tab Steam path valid | SteamNotFound |
-| 2 | At least one project exists | NoProjectWarning |
-| 3 | `App.Game.GamePath` set | GamePathNotSet |
+| 1 | Steam-Pfad im Settings-Tab gültig | SteamNotFound |
+| 2 | Mindestens ein Projekt existiert | NoProjectWarning |
+| 3 | `App.Game.GamePath` gesetzt | GamePathNotSet |
 
-#### Downloads Tab
-- Debug string replaced with `Lang.Downloads.Status.NoDownloads`
-- Consistent padding for all status messages
-- Offline manual text updated for 5 supported games; line-break via two TextBlocks
+#### Downloads-Tab
+- Debug-String durch `Lang.Downloads.Status.NoDownloads` ersetzt
+- Einheitliches Padding für alle Statusmeldungen
+- Offline-Handbuchtext für 5 unterstützte Spiele aktualisiert; Zeilenumbruch über zwei TextBlocks
 
-#### First Setup & Game Path System
-- `FirstSetup.Check()` — default `true` for `UseSteam`, `AutoUpdate`, `UpdateVersions`
-- `FirstSetupDone()` — creates `mods/` and `projects/` folders for all 5 games
-- `SpecifyGamePath` — `GameNameLabel` shows which game; `NavigateToSettings()` routes to Settings tab
+#### Ersteinrichtung & Spielpfadsystem
+- `FirstSetup.Check()` — Standard `true` für `UseSteam`, `AutoUpdate`, `UpdateVersions`
+- `FirstSetupDone()` — erstellt `mods/`- und `projects/`-Ordner für alle 5 Spiele
+- `SpecifyGamePath` — `GameNameLabel` zeigt welches Spiel; `NavigateToSettings()` leitet zum Settings-Tab weiter
 
-#### New / Updated Language Keys
+#### Neue / Aktualisierte Sprachschlüssel
 
-| Key | English Value |
+| Schlüssel | Englischer Wert |
 |-----|---------------|
 | `Lang.Downloads.Status.NoDownloads` | No downloadable files for this mod. |
 | `Lang.Options.Labels.ModListWidth` | Mod List Width |
@@ -516,28 +947,28 @@ Three-step validation on Mod Library Regeneration click:
 | `Lang.Windows.GameModsMismatch.Text` | The game in the mods folder does not match the game configured in the Settings tab. |
 | `Lang.Downloads.Offline.Manual2` | (e.g. mods/TheForest, mods/Subnautica, …) |
 
-### Not Included
+### Nicht enthalten
 
-| Feature | Reason |
+| Feature | Grund |
 |---|---|
-| Auto-update (keep latest version) | Server-side infrastructure not available |
-| Update search | Server-side infrastructure not available |
+| Auto-Update (neueste Version beibehalten) | Serverseitige Infrastruktur nicht verfügbar |
+| Update-Suche | Serverseitige Infrastruktur nicht verfügbar |
 
-### Removed
+### Entfernt
 
-| Item | Reason |
+| Element | Grund |
 |---|---|
-| `SpecifyGamePath` popup on startup | All paths configured in Settings tab |
-| `SpecifySteamPath` popup on startup | Steam path configured in Settings tab |
-| Login system | Original server no longer operational (removed in v2.0.9400) |
-| `Portable.System.ValueTuple.dll` | Non-functional on Mono 2.0 (removed in v2.0.9586) |
-| `UseSteam` condition on Steam check | Steam is now always validated first on Start Game and Mod Library Regeneration |
+| `SpecifyGamePath`-Popup beim Start | Alle Pfade im Settings-Tab konfiguriert |
+| `SpecifySteamPath`-Popup beim Start | Steam-Pfad im Settings-Tab konfiguriert |
+| Login-System | Original-Server nicht mehr in Betrieb (entfernt in v2.0.9400) |
+| `Portable.System.ValueTuple.dll` | Nicht funktionsfähig auf Mono 2.0 (entfernt in v2.0.9586) |
+| `UseSteam`-Bedingung bei Steam-Prüfung | Steam wird jetzt bei Spielstart und Mod-Bibliothek-Regenerierung immer zuerst validiert |
 
 ---
 
 ## Geplante zukünftige Versionen
 
-| # | Feature | Description |
+| # | Feature | Beschreibung |
 |---|---|---|
 | 1 | ModAPI Auto-Update | Neue ModAPI-Versionen automatisch herunterladen und anwenden |
 | 2 | ModAPI VersionsData-Tabelle Update | VersionsData-Tabelle automatisch aktualisieren, wenn neue Spiel-Patches erscheinen |
@@ -546,59 +977,86 @@ Three-step validation on Mod Library Regeneration click:
 
 ## Änderungen in v2.0.9600
 
-### Added
+### Hinzugefügt
 
-- **Downloads tab**: 5 game filters (TheForest, Subnautica, RAFT, EscapeThePacific, GH)
-- **Welcome tab**: added at leftmost position (index 0)
-- **Mods tab**: 3-column layout (WrapPanel → vertical list); automatic width adjustment; mod name wrapping
-- **`ModsViewModel`**: game-specific filtering, `ResolveGame()` for correct `Game` instance per mod
-- **`Game.cs`**: lightweight constructor `new Game(config, true)` — identification only, no `Verify()`
-- **Build**: 4 game XML files registered in `ModAPI.csproj` with `CopyToOutputDirectory=Always`
-- **Build**: warnings cleaned — CS0168, CS0618, CS0252
-- **Game XML**: TheForest, Raft, GH DLL lists corrected
-- **Language flags**: image sizes standardized across all 13 language badges
+- **Downloads-Tab**: 5 Spielfilter (TheForest, Subnautica, RAFT, EscapeThePacific, GH)
+- **Welcome-Tab**: an der linken Position hinzugefügt (Index 0)
+- **Mods-Tab**: 3-Spalten-Layout (WrapPanel → vertikale Liste); automatische Breitenanpassung; Mod-Name-Umbruch
+- **`ModsViewModel`**: spielspezifische Filterung, `ResolveGame()` für korrekte `Game`-Instanz pro Mod
+- **`Game.cs`**: leichtgewichtiger Konstruktor `new Game(config, true)` — nur Identifikation, kein `Verify()`
+- **Build**: 4 Spiel-XML-Dateien registriert in `ModAPI.csproj` mit `CopyToOutputDirectory=Always`
+- **Build**: Warnungen bereinigt — CS0168, CS0618, CS0252
+- **Spiel-XML**: TheForest, Raft, GH DLL-Listen korrigiert
+- **Sprach-Flags**: Bildgrößen über alle 13 Sprachbadges standardisiert
 
-### Removed
+### Entfernt
 
-| Item | Reason |
+| Element | Grund |
 |---|---|
-| `extends="GenericUnityGame"` in game XML files | Caused `Assembly-CSharp-firstpass.dll` to be incorrectly inherited — removed from Subnautica, Raft, EscapeThePacific, GH |
-| `WrapPanel` layout in Mods tab | Replaced with 3-column Grid layout (Game Filter / Mod List / Information) |
+| `extends="GenericUnityGame"` in Spiel-XML-Dateien | Verursachte fehlerhafte Vererbung von `Assembly-CSharp-firstpass.dll` — entfernt aus Subnautica, Raft, EscapeThePacific, GH |
+| `WrapPanel`-Layout im Mods-Tab | Ersetzt durch 3-Spalten-Grid-Layout (Spielfilter / Mod-Liste / Information) |
 
 ---
 
 ## Wichtige Änderungen nach Phase
 
 ### Phase 1 *(v2.0.9200)* — .NET 4.8 Migration
-All 5 projects migrated from .NET 4.5 → 4.8.
+Alle 5 Projekte von .NET 4.5 → 4.8 migriert.
 
-### Phase 2 *(v2.0.9300)* — Build Environment & Fluent Design
-ModernWpf 0.9.6, `FluentStyles.xaml`, UnityEngine stub DLL.
+### Phase 2 *(v2.0.9300)* — Build-Umgebung & Fluent Design
+ModernWpf 0.9.6, `FluentStyles.xaml`, UnityEngine-Stub-DLL.
 
-### Phase 3 *(v2.0.9500)* — UI Redesign & Theme System
-3-theme system, `theme.cfg`, window drag fix, hyperlink support.
+### Phase 3 *(v2.0.9500)* — UI-Redesign & Theme-System
+3-Theme-System, `theme.cfg`, Fenster-Drag-Fix, Hyperlink-Unterstützung.
 
-### Phase 4 *(v2.0.9400)* — Code Cleanup
-Login system removed, update mechanism modernized.
+### Phase 4 *(v2.0.9400)* — Code-Bereinigung
+Login-System entfernt, Update-Mechanismus modernisiert.
 
-### Phase 5-1 *(v2.0.9552)* — Downloads Tab & 13 Languages
-Downloads tab, Segoe MDL2 Assets icons, 13-language support.
+### Phase 5-1 *(v2.0.9552)* — Downloads-Tab & 13 Sprachen
+Downloads-Tab, Segoe MDL2 Assets Icons, 13-Sprachen-Unterstützung.
 
-### Phase 5-5 *(v2.0.9561)* — Assembly Resolution
-`AssemblyVersionMap.cs`, `CustomAssemblyResolver.cs`, PE header patching.
+### Phase 5-5 *(v2.0.9561)* — Assembly-Auflösung
+`AssemblyVersionMap.cs`, `CustomAssemblyResolver.cs`, PE-Header-Patching.
 
 ### Phase 5-6B *(v2.0.9586)* — C# 7.3 & Polyfill
-Black screen fixed, `ValueTuple` removed, C# 7.3 in-game verified.
+Schwarzer Bildschirm behoben, `ValueTuple` entfernt, C# 7.3 im Spiel verifiziert.
 
-### Phase 6-1 *(v2.0.9600)* — Multi-Game & Mods Redesign
-5 game filters, 3-column Mods tab, lightweight `Game` constructor, XML registered.
+### Phase 6-1 *(v2.0.9600)* — Multi-Spiel & Mods-Redesign
+5 Spielfilter, 3-Spalten-Mods-Tab, leichtgewichtiger `Game`-Konstruktor, XML registriert.
 
-### Phase 6-2 *(v2.0.9610)* — Settings, Safety, Crash Fixes & Debug/Release Split
-XML corrected, Steam path, game path safety, Start Game 5-step validation, ModLib 3-step validation, `FileValidator` PE header verification, `#if DEBUG` build split, `create_dummy_Debug_games.ps1`, lightweight constructor `ModLibrary` fix, `SwitchDevGame` GamePath fix, 5-game folder creation, crash fixes.
+### Phase 6-2 *(v2.0.9610)* — Settings, Sicherheit, Absturzbehebungen & Debug/Release-Aufteilung
+XML korrigiert, Steam-Pfad, Spielpfad-Sicherheit, Spielstart 5-Stufen-Validierung, ModLib 3-Stufen-Validierung, `FileValidator` PE-Header-Verifizierung, `#if DEBUG` Build-Aufteilung, `create_dummy_Debug_games.ps1`, leichtgewichtiger Konstruktor `ModLibrary`-Fix, `SwitchDevGame` GamePath-Fix, 5-Spiele-Ordner-Erstellung, Absturzbehebungen.
+
+### Phase 6-3 *(v2.0.9611 ~ v2.0.9618)* — Theme-System-Erweiterung, Settings-Verbesserungen & Werkzeuge
+Themes-Tab hinzugefügt, 10 Themes + Hintergrundtextur-Feature, Themes/-Ordner-Trennung, Maximieren-Button-Fix, Spielpfad-Aufklapp-Fix, Versions.xml 4-Spiele-Update, Pfad-Reset-Buttons, Browse Auto-Speicherung, MODAPI_VersionTool.
 
 ---
 
 ## Versionshistorie
+
+### v2.0.9618 — 2026-04-25
+MODAPI_VersionTool hinzugefügt (eigenständiges WPF-Versions-Update-Tool), StatusBar-Versionsanzeige mit App.Version verknüpft
+
+### v2.0.9617 — 2026-04-24
+Steam/Spielpfad-Reset-Buttons im Settings-Tab hinzugefügt, Browse Auto-Speicherung, Reset-Status über ui.cfg-Flag erhalten
+
+### v2.0.9616 — 2026-04-18
+Versions.xml für 4 Spiele erstellt/aktualisiert (Subnautica, Raft, EscapeThePacific, GH), Prüfsummen-Zusammensetzungsregeln festgelegt, Spiel-Update-Verfahren dokumentiert
+
+### v2.0.9615 — 2026-04-18
+Settings-Tab Spielpfad-Karten-Aufklapphöhe behoben, UpdateWindowHeight Hintergrundtextur-Interferenz verhindert
+
+### v2.0.9614 — 2026-04-18
+Maximieren-Button WorkArea-basierte manuelle Maximierung, vorherige Größe/Position Speicherung und Wiederherstellung
+
+### v2.0.9613 — 2026-04-18
+Themes-Tab hinzugefügt, Theme-Registry datengesteuerte Struktur, 10 Themes unterstützt, Hintergrundtextur-Feature (Kompression, Sicherheit, 2-Schicht-Transparenz), ThemeSelector-Sperr-Overlay, 12 neue Sprachschlüssel
+
+### v2.0.9612 — 2026-04-18
+Themes/-Ordner-Trennung, Theme-XAML-Modularisierung
+
+### v2.0.9611 — 2026-04-18
+Mod-Listenbreite nach Theme-Wechsel nicht angewendet behoben
 
 ### v2.0.9610 — 2026-04-13
 Multi-game XML corrected (GH, Subnautica, EscapeThePacific), Versions.xml added, Settings tab redesigned (Steam path, game paths panel, width sliders, font size, checkbox sync), game path null safety (6 sites), startup popups replaced by Settings tab, Mods tab 5-step Start Game validation (Steam always first), Dev tab 3-step ModLib validation, GameModsMismatch popup added, lightweight constructor ModLibrary null fix, SwitchDevGame GamePath fix, FileValidator PE header verification (Release), #if DEBUG build split (CheckSteam / CheckGamePath / ModLib.Create), create_dummy_Debug_games.ps1, persistent ui.cfg, 5-key font system, multiple crash fixes, language keys updated
@@ -634,11 +1092,11 @@ Original FluffyFish release
 
 ## Build-Anforderungen
 
-| Requirement | Version | Notes |
+| Anforderung | Version | Hinweise |
 |---|---|---|
 | Visual Studio | 2022 | |
-| .NET Framework SDK | 4.8 | ModAPI projects |
-| .NET Framework SDK | 3.5 | BaseModLib only |
+| .NET Framework SDK | 4.8 | ModAPI-Projekte |
+| .NET Framework SDK | 3.5 | Nur BaseModLib |
 | ModernWpf | 0.9.6 | NuGet |
 | AsyncBridge | 0.3.1 | NuGet — `libs/polyfills/` |
 | TaskParallelLibrary | 1.0.2856 | NuGet — `System.Threading.dll` in `libs/polyfills/` |

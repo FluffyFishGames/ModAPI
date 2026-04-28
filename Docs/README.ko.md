@@ -12,7 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9610 - 20260413
+# ModAPI(v1) v2.0.9618 - 20260425
 
 **The Forest 모드 관리 도구 — 업그레이드 에디션**
 
@@ -23,13 +23,22 @@
 
 ## 개요
 
-ModAPI는 **정식 지원 5종 게임**의 모드를 관리하는 데스크톱 애플리케이션입니다. 이번 업그레이드 에디션은 멀티 게임 지원, Settings 탭 전면 재설계, 스팀 경로 설정, 영구 UI 설정 저장, 동적 폰트 크기 시스템, 게임 시작 검증, Debug/Release 빌드 분기, 실게임 테스트로 확인된 다수의 크래시 수정을 포함합니다.
+ModAPI는 **정식 지원 5종 게임**의 모드를 관리하는 데스크톱 애플리케이션입니다. 이번 업그레이드 에디션은 멀티 게임 지원, Settings 탭 전면 재설계, 스팀 경로 설정, 영구 UI 설정 저장, 동적 폰트 크기 시스템, 게임 시작 검증, Debug/Release 빌드 분기, 실게임 테스트로 확인된 다수의 충돌 수정을 포함합니다.
 
 ---
 
 ## 지원 게임
 
-### The Forest (더 포레스트)
+| 게임 | 엔진 | 버전 | Steam ID | 실행 파일 |
+|---|---|---|---|---|
+| The Forest | Unity 5 | v1.12 (VR) | 242760 | `TheForest.exe` |
+| Subnautica | Unity | 2025 Patch | 264710 | `Subnautica.exe` |
+| RAFT | Unity | v1.1.02 (베타) | 648800 | `Raft.exe` |
+| Escape The Pacific | Unity 6 | v0.67.0.0 | 655290 | `EscapeThePacific.exe` |
+| Green Hell | Unity 2019 | v2.9.5 | 763790 | `GH.exe` |
+
+<details>
+<summary><b>The Forest (더 포레스트)</b></summary>
 
 | 항목 | 값 |
 |---|---|
@@ -44,10 +53,10 @@ ModAPI는 **정식 지원 5종 게임**의 모드를 관리하는 데스크톱 �
 | IL2CPP | ❌ Mono — 완전 지원 |
 
 Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효과를 대폭 개선했습니다. 2019년 9월 VR 지원 패치를 마지막으로 주요 콘텐츠 업데이트는 종료되었으며, 안정적인 정식 버전 상태를 유지하고 있어 모딩에 최적화된 환경입니다.
+</details>
 
----
-
-### Subnautica (서브노티카)
+<details>
+<summary><b>Subnautica (서브노티카)</b></summary>
 
 | 항목 | 값 |
 |---|---|
@@ -64,10 +73,10 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 원래 Unity 5 계열을 사용했으나 2022년 말 'Living Large' 업데이트(v2.0)를 통해 후속작 Below Zero의 엔진 코드를 통합하며 최적화 및 안정성을 강화했습니다. 차기작 *Subnautica 2*는 Unreal Engine 5를 사용합니다.
 
 > **v2.0.9610 XML 재작성**: `XGamingRuntime.dll`, `XblPCSandbox.dll`, `FMODUnity.dll`, `Newtonsoft.Json.dll`, `Unity.InputSystem.dll`, `Unity.Collections.dll`, `Unity.Burst.dll`을 `copyAssembly`에 추가.
+</details>
 
----
-
-### RAFT (래프트)
+<details>
+<summary><b>RAFT (래프트)</b></summary>
 
 | 항목 | 값 |
 |---|---|
@@ -83,10 +92,10 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 | Versions.xml | `1.1.01` (체크섬 포함) |
 
 공식 스토리 완결 버전인 v1.0: *The Final Chapter* 이후에도 네트워크 코드 개선 및 안정화를 위한 패치가 지속되고 있습니다.
+</details>
 
----
-
-### Escape The Pacific (이스케이프 더 퍼시픽)
+<details>
+<summary><b>Escape The Pacific (이스케이프 더 퍼시픽)</b></summary>
 
 | 항목 | 값 |
 |---|---|
@@ -102,10 +111,10 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 2025년 말 대규모 시스템 리빌딩과 함께 Unity 6 마이그레이션을 완료하여 더욱 다이내믹한 환경을 구현했습니다. 얼리 액세스 개발이 지속되고 있습니다.
 
 > **v2.0.9610 XML 재작성**: `extends="GenericUnityGame"` 제거; `includeAssembly`를 `Assembly-CSharp.dll` 단독으로 설정 — `Assembly-CSharp-firstpass.dll` 상속 오류 방지.
+</details>
 
----
-
-### Green Hell (그린 헬)
+<details>
+<summary><b>Green Hell (그린 헬)</b></summary>
 
 | 항목 | 값 |
 |---|---|
@@ -123,6 +132,7 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 개발 과정에서 Unity 2017 → 2018 → 2019로 엔진을 단계적으로 업그레이드했습니다. 2026년 2월 최신 핫픽스는 스팀 덱 호환성과 UI 텍스트 가독성 향상에 초점을 맞췄습니다.
 
 > **v2.0.9610 XML 재작성**: `AmplifyBloom.dll`, `AmplifyColor.dll`, `AmplifyMotion.dll`, `com.rlabrecque.steamworks.net.dll`, `Unity.ProBuilder.dll`, `Unity.Postprocessing.Runtime.dll` 추가; 존재하지 않는 `DOTweenPro.dll` 제거.
+</details>
 
 ---
 
@@ -130,7 +140,7 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 
 ### 런타임 분리
 
-| 컴포넌트 | 대상 | 런타임 | 이유 |
+| 구성 요소 | 대상 | 런타임 | 이유 |
 |---|---|---|---|
 | `ModAPI.exe` | .NET Framework 4.8 | Windows .NET 4.8 | 데스크톱 앱, 최신 API 전체 접근 |
 | `ModAPI_Shared.dll` | .NET Framework 4.8 | Windows .NET 4.8 | 공유 라이브러리 |
@@ -148,7 +158,7 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 | `ModLib.Create()` — IncludeAssemblies | `File.Copy()` — Cecil 파싱 생략 | 전체 Mono.Cecil 파싱 + IL 수정 + `module.Write()` |
 | `ModLib.Create()` — 파일 없음 | 경고 로그 후 건너뜀 | 오류 로그 후 중단 |
 
-**디버그 테스트**는 `create_dummy_Debug_games.ps1`로 `bin\Debug\dummy_games\`, `bin\Debug\dummy_steam\`, `bin\Debug\gamefiles\original\` 아래에 0바이트 더미 파일을 생성합니다. `File.Exists()` 검사를 통과하므로 실제 게임 설치 없이 전체 UI 워크플로우 테스트가 가능합니다.
+**디버그 테스트**는 `create_dummy_Debug_games.ps1`로 `bin\Debug\dummy_games\`, `bin\Debug\dummy_steam\`, `bin\Debug\gamefiles\original\` 아래에 0바이트 더미 파일을 생성합니다. `File.Exists()` 검사를 통과하므로 실제 게임 설치 없이 전체 UI 작업 흐름 테스트가 가능합니다.
 
 **릴리즈 빌드**에서는 `FileValidator`(PE 헤더 + .NET CLR 메타데이터 검증)가 적용되어 0바이트 파일, 텍스트 파일, 임의 바이너리는 모두 차단됩니다. 실제 Windows 실행 파일과 .NET 어셈블리만 통과합니다.
 
@@ -158,11 +168,11 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 
 | 메서드 | 검사 항목 | 최소 크기 |
 |---|---|---|
-| `IsValidSteamExe(path)` | MZ 시그니처 + PE\0\0 시그니처 | 1 MB |
-| `IsValidGameExe(path)` | MZ 시그니처 + PE\0\0 시그니처 | 512 KB |
+| `IsValidSteamExe(path)` | MZ 서명 + PE\0\0 서명 | 1 MB |
+| `IsValidGameExe(path)` | MZ 서명 + PE\0\0 서명 | 512 KB |
 | `IsValidAssemblyDll(path)` | MZ + PE\0\0 + .NET CLR 메타데이터 헤더 (데이터 디렉토리 #14) | 64 KB |
 
-### 어셈블리 리매핑 파이프라인
+### 어셈블리 재매핑 처리 과정
 
 ```
 [모드 개발자가 .NET 4.8로 빌드]
@@ -176,7 +186,7 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
   → PE 헤더 수락 ✅  →  참조 해결 ✅
 ```
 
-### 어셈블리 리졸버 폴백
+### 어셈블리 해석기 대체 경로
 
 ```
 1. gamefiles/original/{GameId}/{AssemblyPath}   ← 백업 폴더
@@ -191,17 +201,45 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 | 문자열 보간 (`$""`) | ✅ | 실게임 검증 완료 |
 | `out` 변수 인라인 | ✅ | 실게임 검증 완료 |
 | `async` / `await` | ✅ | AsyncBridge + System.Threading 폴리필 경유 |
-| 튜플 (`ValueTuple`) | ❌ 하드 리밋 | Mono 2.0 `mscorlib` ABI — 우회 불가 |
+| 튜플 (`ValueTuple`) | ❌ 절대 제한 | Mono 2.0 `mscorlib` ABI — 우회 불가 |
 
-### 테마 시스템
+### 테마 시스템 [상세정보](v2.0.9613_themes_ko.md)
 
-| 테마 | 파일 | 설명 |
-|---|---|---|
-| Classic | `Dictionary.xaml` | 원작 ModAPI 디자인 (텍스처 배경) |
-| Light | `FluentStylesLight.xaml` | 밝은 톤 + 파란색 강조 |
-| Dark | `FluentStyles.xaml` | 어두운 톤 + 파란색 강조 (기본값) |
+v2.0.9613에서 Settings 탭의 테마 UI를 별도 **Themes 탭**으로 분리했습니다. 새 테마 추가 시 `App.xaml.cs` 사전에 한 줄만 추가하면 됩니다.
 
-테마 변경 시 앱 재시작이 필요합니다. 재시작 전 `SaveAllSettings()`가 자동 호출됩니다.
+| 번호 | ID | 파일 | 색상 |
+|---|---|---|---|
+| 0 | `classic` | `Dictionary.xaml` 단독 | 원작 ModAPI 텍스처 배경 |
+| 1 | `light` | `FluentStylesLight.xaml` | 밝은 톤 + 파랑 강조 |
+| 2 | `dark` | `FluentStyles.xaml` | 어두운 톤 + 파랑 강조 (기본값) |
+| 3 | `diablo` | `FluentStylesDiablo.xaml` | 적색 + 검정 |
+| 4 | `nebula` | `FluentStylesNebula.xaml` | 어두운 우주 |
+| 5 | `sunset` | `FluentStylesSunset.xaml` | 밝은 노을 |
+| 6 | `ocean` | `FluentStylesOcean.xaml` | 어두운 바다 |
+| 7 | `nordic` | `FluentStylesNordic.xaml` | 밝은 북유럽 |
+| 8 | `citrus` | `FluentStylesCitrus.xaml` | 밝은 감귤 |
+| 9 | `bloom` | `FluentStylesBloom.xaml` | 밝은 꽃 |
+
+테마 변경 시 앱이 자동 재시작됩니다. (`theme.cfg`에 저장)
+
+| Theme | Theme |
+| :---: | :---: |
+|**01. Classic theme**|**02. Light theme**|
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
+|**03. Dark theme**|**04. Diablo theme**|
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
+|**05. Nebula theme**|**06. Sunset theme**|
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
+|**07. Ocean theme**|**08. Nordic theme**|
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
+|**09. Citrus theme**|**10. Bloom theme**|
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
+
+### 배경 텍스처
+
+Themes 탭의 **Background Texture** 카드에서 이미지를 선택하면 앱 전체 배경으로 적용됩니다. 지원 입력 형식: `.png` / `.jpg` / `.jpeg`, 최대 50MB, 4K 이하. 이미지는 JPEG Q75 압축 후 매직 헤더(16바이트)가 삽입되어 `resources\textures\ui_bg\bg.dat`에 Hidden 속성으로 저장됩니다. SHA-256 해시로 무결성을 검증하며, 변조 감지 시 자동 초기화 + 경고 팝업이 표시됩니다.
+
+배경 활성화 시 두 계층으로 UI를 투명화합니다: Layer 1(MergedDictionaries 덮개층)은 `{DynamicResource}` 패널을, Layer 2(WalkStyleBackgrounds)는 `{StaticResource}` 패널을 반투명 처리합니다.
 
 ### 폰트 크기 시스템
 
@@ -221,25 +259,38 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 | `ProjectListWidth` | `150` | 개발 탭 프로젝트 목록 너비 (px) |
 | `AppFontSize` | `13` | 전체 UI 폰트 크기 (px) |
 | `AlwaysOnTop` | `false` | 창 항상 위에 상태 |
+| `TexturePath` | *(없음)* | 배경 텍스처 원본 파일명 (표시용) |
+| `TextureHash` | *(없음)* | 배경 텍스처 SHA-256 해시 |
+| `TextureActive` | `false` | 배경 텍스처 활성화 상태 |
+| `GamePathReset_{GameId}` | *(없음)* | 게임 경로 초기화 플래그 |
+| `SteamPathReset` | *(없음)* | 스팀 경로 초기화 플래그 |
 
 ### 파일 구조
 
 ```
 ModAPI/
-├── App.xaml / App.xaml.cs              # 테마 로드/적용
-├── Dictionary.xaml                      # Classic 테마 + 폴백 리소스
-├── FluentStyles.xaml                    # Dark 테마
-├── FluentStylesLight.xaml               # Light 테마
+├── App.xaml / App.xaml.cs              # ThemeRegistry, ThemeIds, ApplyTheme()
 ├── ui.cfg                               # 영구 UI 설정
 ├── theme.cfg                            # 현재 테마
 ├── Windows/
-│   ├── MainWindow.xaml / .cs            # 메인 UI — 5개 탭, Settings, 스팀 경로
+│   ├── MainWindow.xaml / .cs            # 메인 UI — 6개 탭, Themes, Settings, 스팀 경로
 │   └── SubWindows/
 │       ├── SpecifyGamePath.xaml / .cs   # 게임 경로 팝업 (동적 GameNameLabel)
 │       ├── FirstSetup.xaml / .cs        # 최초 실행 설정 + 기본값 초기화
 │       └── (기타 14개 SubWindow)
+├── Themes/
+│   ├── Dictionary.xaml                  # Classic 테마
+│   ├── FluentStyles.xaml                # Dark 테마
+│   ├── FluentStylesLight.xaml           # Light 테마
+│   ├── FluentStylesDiablo.xaml          # Diablo 테마
+│   ├── FluentStylesNebula.xaml          # Nebula 테마
+│   ├── FluentStylesSunset.xaml          # Sunset 테마
+│   ├── FluentStylesOcean.xaml           # Ocean 테마
+│   ├── FluentStylesNordic.xaml          # Nordic 테마
+│   ├── FluentStylesCitrus.xaml          # Citrus 테마
+│   └── FluentStylesBloom.xaml           # Bloom 테마
 ├── Data/
-│   ├── Game.cs                          # 패칭, null 가드, 리졸버 폴백
+│   ├── Game.cs                          # 패칭, null 가드, 해석기 대체
 │   ├── ModLib.cs                        # BaseModLib 생성 + 리매핑 (#if DEBUG 분기)
 │   ├── Models/
 │   │   └── ModProject.cs                # 프로젝트 생성/빌드/적용 + null 가드
@@ -252,7 +303,10 @@ ModAPI/
 ├── Utils/
 │   ├── CustomAssemblyResolver.cs        # 이름 기반 리졸버 + 캐싱
 │   └── MonoHelper.cs                    # Mono.Cecil IL 헬퍼
-├── resources/langs/                     # 13개 언어 파일
+├── resources/
+│   ├── langs/                           # 13개 언어 파일
+│   └── textures/ui_bg/
+│       └── bg.dat                       # 압축·보안 처리된 배경 이미지 (런타임 생성)
 └── configs/
     ├── games/
     │   ├── TheForest.xml
@@ -261,7 +315,7 @@ ModAPI/
     │   ├── EscapeThePacific.xml         # v2.0.9610 전면 재작성
     │   ├── GH.xml                       # v2.0.9610 전면 재작성
     │   ├── SonsOfTheForest.xml          # IL2CPP — 미지원
-    │   └── {GameId}/Versions.xml        # Raft, GH, Subnautica
+    │   └── {GameId}/Versions.xml        # Raft, GH, Subnautica, EscapeThePacific
     └── UserConfiguration.xml
 
 ModAPI_Shared/
@@ -276,6 +330,9 @@ BaseModLib/
 └── libs/polyfills/
     ├── AsyncBridge.dll
     └── System.Threading.dll
+
+VersionTool/
+└── MODAPI_VersionTool.csproj            # 버전 업데이트 전용 WPF 도구
 
 bin\Debug\                               # 디버그 테스트 전용
 ├── create_dummy_Debug_games.ps1         # 더미 게임/스팀 구조 생성 스크립트
@@ -355,10 +412,10 @@ bin\Debug\                               # 디버그 테스트 전용
 ## 탭 개요
 
 ### 환영 탭 (Welcome)
-최초 실행 설정 화면 (탭 인덱스 0). AutoUpdate, 스팀 연결, VersionsData 테이블 업데이트 여부를 설정합니다. 이후 실행에서는 커뮤니티 링크 및 릴리즈 노트를 제공합니다.
+최초 실행 설정 화면 (탭 번호 0). AutoUpdate, 스팀 연결, VersionsData 테이블 업데이트 여부를 설정합니다. 이후 실행에서는 커뮤니티 링크 및 릴리즈 노트를 제공합니다.
 
 ### Mods 탭
-모드 사용의 주 워크플로우 — 3-컬럼 레이아웃:
+모드 사용의 주 작업 흐름 — 3-컬럼 레이아웃:
 
 | 컬럼 | 내용 |
 |---|---|
@@ -381,6 +438,13 @@ bin\Debug\                               # 디버그 테스트 전용
 - ModLib 재생성 3단계 검증 (스팀 → 프로젝트 → 게임 경로)
 - 경량 `Game` 생성자로 안전한 게임 전환
 
+### 테마 탭 (Themes)
+테마 선택 및 배경 텍스처 관리 화면.
+
+- **테마 선택**: 10종 테마 (Classic, Light, Dark, Diablo, Nebula, Sunset, Ocean, Nordic, Citrus, Bloom)
+- **배경 텍스처**: 이미지를 선택하여 앱 전체 배경으로 적용 (JPEG 압축 + 보안 처리)
+- 배경 텍스처 활성화 시 테마 선택 잠금
+
 ### 설정 탭 (Settings)
 통합 환경설정 — 4행 구성:
 
@@ -388,8 +452,382 @@ bin\Debug\                               # 디버그 테스트 전용
 |---|---|
 | 0 | 언어 / 폰트 크기 / 테마 / 최대 너비 / 모드목록 너비 / 프로젝트목록 너비 |
 | 1 | VersionsData 유지 / 자동업데이트 / 스팀 연결 / 항상 위에 |
-| 2 | 스팀 설치 경로 (TextBox + 찾아보기 + 저장) |
-| 3 | 게임 설치 경로 — 게임별 접기/펼치기 카드 (TextBox + 찾아보기 + 저장) |
+| 2 | 스팀 설치 경로 (TextBox + 찾아보기 + 저장 + 초기화) |
+| 3 | 게임 설치 경로 — 게임별 접기/펼치기 카드 (TextBox + 찾아보기 + 저장 + 초기화) |
+
+---
+
+## v2.0.9618 변경사항
+
+### 버전 업데이트 도구 (MODAPI_VersionTool)
+
+버전 번호를 손쉽게 업데이트할 수 있는 독립 WPF 도구를 추가했습니다.
+
+**위치**: `VersionTool\MODAPI_VersionTool.csproj`
+
+## Version Tool
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
+
+**기능**
+- 현재 버전 자동 표시 (`App.xaml.cs`에서 읽어옴)
+- 새 버전 직접 입력 후 **Apply Version** 클릭 한 번으로 두 파일 동시 수정
+- 형식 검증: `X.X.XXXX` 형식만 허용
+
+**수정 대상 파일**
+
+| 파일 | 경로 | 수정 내용 |
+|---|---|---|
+| `AssemblyInfo.cs` | `ModAPI\Properties\` | `AssemblyVersion`, `AssemblyFileVersion` |
+| `App.xaml.cs` | `ModAPI\` | `public static string Version` |
+
+**사용 순서**
+1. `MODAPI_VersionTool.exe` 실행
+2. 새 버전 입력 (예: `2.0.9619`)
+3. **Apply Version** 클릭
+4. Visual Studio에서 ModAPI 솔루션 다시 빌드
+
+### StatusBar 버전 표시 수정
+
+- `VersionLabel.Text`가 하드코딩된 `Version.Descriptor` 대신 `App.Version`을 참조하도록 수정
+- 이제 VersionTool로 버전을 변경하고 빌드하면 StatusBar에 즉시 반영됨
+
+---
+
+## v2.0.9617 변경사항
+
+### 설정 탭 — 경로 초기화 버튼 추가
+
+Steam 설치 경로와 게임 설치 경로 각각에 **초기화** 버튼을 추가했습니다.
+
+**Steam 경로 행**
+```
+[TextBox] [Browse] [저장] [초기화]
+```
+
+**게임 경로 행 (게임별)**
+```
+[TextBox] [Browse] [저장] [초기화]
+```
+
+**초기화 동작**
+- 경로 TextBox 즉시 클리어
+- `ui.cfg`에 초기화 플래그 저장 (`GamePathReset_{GameId}=1`, `SteamPathReset=1`)
+- 재시작 후에도 TextBox 비어있음 유지
+- Configuration XML이 빈 문자열을 저장하지 않는 한계를 `ui.cfg` 플래그로 보완
+
+**Browse 자동 저장**
+- 이전: Browse 선택 후 저장 버튼을 별도로 눌러야 했음
+- 이후: Browse에서 파일 선택 즉시 자동 저장 — Mods탭으로 이동해도 경로 반영됨
+
+**추가된 언어 키**
+
+| 키 | 한국어 |
+|---|---|
+| `Lang.Options.Labels.PathReset` | 초기화 |
+
+---
+
+## v2.0.9616 변경사항
+
+### Versions.xml — 4개 게임 신규 추가 및 체크섬 업데이트
+
+| 게임 | 파일 경로 | BuildID | 비고 |
+|---|---|---|---|
+| Subnautica | `configs/games/Subnautica/Versions.xml` | `20241558` | 신규 생성 |
+| Raft | `configs/games/Raft/Versions.xml` | `22312909` | 체크섬 업데이트 |
+| EscapeThePacific | `configs/games/EscapeThePacific/Versions.xml` | `19000490` | 신규 생성 |
+| GH | `configs/games/GH/Versions.xml` | `21698250` | 체크섬 업데이트 |
+
+### 체크섬 구성 규칙
+
+게임별 `Assembly-CSharp-firstpass.dll` 존재 여부에 따라 체크섬 구성 방식이 다릅니다.
+
+| 게임 | firstpass.dll | 체크섬 구성 |
+|---|---|---|
+| GH | ✅ 있음 | `firstpass MD5` + `Assembly-CSharp MD5` 연결 (64자) |
+| Subnautica | ✅ 있음 | `firstpass MD5` + `Assembly-CSharp MD5` 연결 (64자) |
+| EscapeThePacific | ✅ 있음 | `firstpass MD5` + `Assembly-CSharp MD5` 연결 (64자) |
+| Raft | ❌ 없음 | `Assembly-CSharp MD5` 단독 (32자) |
+
+### 게임 업데이트 시 Versions.xml 갱신 절차
+
+기존 항목은 삭제하지 않고 새 `<version>` 항목만 추가합니다.
+
+**Step 1 — 새 BuildID 확인**
+```powershell
+Get-Content "C:\Program Files (x86)\Steam\steamapps\appmanifest_{AppID}.acf" | Select-String "buildid"
+```
+
+| 게임 | AppID |
+|---|---|
+| Subnautica | 264710 |
+| Raft | 648800 |
+| EscapeThePacific | 655290 |
+| GH | 815370 |
+
+**Step 2 — 새 체크섬 추출**
+```powershell
+# firstpass.dll 있는 게임 (GH, Subnautica, EscapeThePacific)
+Get-FileHash "...\Assembly-CSharp-firstpass.dll" -Algorithm MD5
+Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
+# → 두 Hash 값을 순서대로 이어붙임 (firstpass 먼저)
+
+# firstpass.dll 없는 게임 (Raft)
+Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
+```
+
+**Step 3 — Versions.xml에 항목 추가**
+```xml
+<version id="{새 BuildID}">
+    <checksum>{새 체크섬}</checksum>
+</version>
+```
+
+---
+
+## v2.0.9615 변경사항
+
+### 설정 탭 게임 경로 펼침 동작 수정
+
+- **카드 펼침 시 높이**: 게임 설치 경로 카드를 펼칠 때 창 하단이 입력필드 높이만큼만 정확히 늘어나도록 수정
+- **`UpdateWindowHeight()` 개선**: `SizeToContent.Height` 측정 전 `UpdateLayout()` 호출, 배경 텍스처 활성 시 `TextureLayer1`을 일시 `Collapsed` 처리하여 4K 이미지 원본 크기가 높이 계산에 영향을 주지 않도록 수정
+- **내부 Grid Row 수정**: 게임 경로 패널 내부 Grid의 마지막 Row `Height="*"` → `Height="Auto"` 변경 — 불필요한 하단 공백 제거
+
+---
+
+## v2.0.9614 변경사항
+
+### 최대화 버튼 동작 수정
+
+- **최대화**: `WindowState.Maximized` 대신 `SystemParameters.WorkArea` 기준으로 수동 최대화 — 작업표시줄을 침범하지 않고 현재 화면 해상도에 정확히 맞춤
+- **복원**: 최대화 전 `Left`, `Top`, `Width`, `Height`, `MaxWidth` 5개 값을 저장하고 복원 버튼 클릭 시 원래 크기/위치로 복원
+- **`MaxWidth` 처리**: 최대화 시 `MaxWidth = ∞`로 해제, 복원 시 저장된 값 재적용
+
+---
+
+## v2.0.9613 변경사항
+
+### Themes 탭 신설
+
+탭 순서가 아래와 같이 변경되었습니다.
+
+```
+Welcome → Mods → Downloads → Development → Themes → Settings
+```
+
+기존 Settings 탭 내부의 테마 선택 UI를 별도 **Themes 탭**으로 분리했습니다.
+아이콘: Segoe MDL2 Assets `&#xE790;` (색상표)
+
+### 테마 등록부 구조 (데이터 기반)
+
+새 테마 추가 시 `App.xaml.cs` 사전에 **한 줄**만 추가하면 됩니다.
+`MainWindow.xaml.cs`의 switch 문이 완전히 제거되어 코드 수정이 불필요합니다.
+
+```csharp
+// App.xaml.cs
+public static readonly Dictionary<string, string> ThemeRegistry = new Dictionary<string, string>
+{
+    { "classic", null },
+    { "light",   "FluentStylesLight.xaml" },
+    { "dark",    "FluentStyles.xaml" },
+    { "diablo",  "FluentStylesDiablo.xaml" },
+    { "nebula",  "FluentStylesNebula.xaml" },
+    { "sunset",  "FluentStylesSunset.xaml" },
+    { "ocean",   "FluentStylesOcean.xaml" },
+    { "nordic",  "FluentStylesNordic.xaml" },
+    { "citrus",  "FluentStylesCitrus.xaml" },
+    { "bloom",   "FluentStylesBloom.xaml" },
+};
+
+public static readonly List<string> ThemeIds = new List<string>(new[]
+{
+    "classic", "light", "dark", "diablo",
+    "nebula", "sunset", "ocean", "nordic", "citrus", "bloom"
+});
+```
+
+`ThemeSelector` ComboBox 항목은 `ThemeIds` 루프로 자동 생성됩니다.
+언어 키 규칙: `Lang.Options.Theme.{첫글자대문자 + 나머지}` (예: `Lang.Options.Theme.Nebula`)
+
+### 지원 테마 목록
+
+| 번호 | ID | 파일 | 색상 |
+|---|---|---|---|
+| 0 | `classic` | `Dictionary.xaml` 단독 | 원본 ModAPI 텍스처 배경 |
+| 1 | `light` | `FluentStylesLight.xaml` | 밝은 톤 + 파랑 강조 |
+| 2 | `dark` | `FluentStyles.xaml` | 어두운 톤 + 파랑 강조 (기본값) |
+| 3 | `diablo` | `FluentStylesDiablo.xaml` | 적색 + 검정 |
+| 4 | `nebula` | `FluentStylesNebula.xaml` | 어두운 우주 |
+| 5 | `sunset` | `FluentStylesSunset.xaml` | 밝은 노을 |
+| 6 | `ocean` | `FluentStylesOcean.xaml` | 어두운 바다 |
+| 7 | `nordic` | `FluentStylesNordic.xaml` | 밝은 북유럽 |
+| 8 | `citrus` | `FluentStylesCitrus.xaml` | 밝은 감귤 |
+| 9 | `bloom` | `FluentStylesBloom.xaml` | 밝은 꽃 |
+
+테마 변경 시 앱이 자동 재시작됩니다. (`theme.cfg`에 저장)
+
+### 배경 텍스처 기능
+
+Themes 탭의 **Background Texture** 카드에서 이미지를 선택하면 앱 전체 배경으로 적용됩니다.
+어떤 테마가 선택되어 있어도 동일하게 작동합니다.
+
+**지원 입력 형식**: `.png` / `.jpg` / `.jpeg`, 최대 50MB, 4K 이하 해상도
+
+**이미지 처리 과정**
+
+```
+사용자 선택 (.png / .jpg / .jpeg, 최대 50MB, 4K 이하)
+  ↓
+JPEG Q75 압축 (메모리 버퍼)
+  ↓
+매직 헤더 16바이트 삽입
+  "MODAPI" + "BG" + version + padding (FF 00 FE 00)
+  ↓
+resources\textures\ui_bg\bg.dat 저장 (Hidden 속성)
+  ↓
+SHA-256 해시 → ui.cfg 의 TextureHash 키 저장
+```
+
+**보안 계층**
+
+| 계층 | 방법 | 효과 |
+|---|---|---|
+| 매직 헤더 | JPEG 서명(FF D8 FF) 앞에 16바이트 삽입 | 확장자 변경 시 외부 뷰어 인식 불가 |
+| Hidden 속성 | `FileAttributes.Hidden` | 탐색기 기본 설정에서 미표시 |
+| SHA-256 무결성 | 로드 시 해시 비교 | 변조 감지 시 자동 초기화 + 경고 팝업 |
+
+**변조 감지 시 동작**
+1. `bg.dat` 삭제
+2. `ui.cfg`의 `TexturePath`, `TextureHash`, `TextureActive` 초기화
+3. TextBox, 토글 초기화
+4. `Lang.Windows.TextureTampered` 팝업 표시
+
+**ui.cfg 저장 키**
+
+| 키 | 값 | 설명 |
+|---|---|---|
+| `TexturePath` | 파일명 (표시용) | TextBox에 표시할 원본 파일명 |
+| `TextureHash` | SHA-256 hex | 무결성 검증용 해시 |
+| `TextureActive` | `true` / `false` | 활성화 상태 |
+
+**투명화 처리 구조**
+
+배경 이미지가 활성화되면 두 계층으로 UI 배경을 투명화합니다.
+
+- **Layer 1 — MergedDictionaries 덮개층**: `{DynamicResource FluentBgBrush}` 등을 참조하는 패널이 자동으로 투명화됩니다. 비활성화 시 `Remove()` 한 줄로 복원됩니다.
+
+  대상 키: `FluentBgBrush`, `FluentBgSecondaryBrush`, `FluentBgTertiaryBrush`, `FluentSurfaceBrush`, `FluentCardBrush`, `FluentTabBarBrush`, `FluentBorderBrush`
+
+- **Layer 2 — 비주얼 트리 순회 (`WalkStyleBackgrounds`)**: Fluent 테마의 `{StaticResource}` 참조 요소는 Layer 1의 영향을 받지 않으므로 비주얼 트리를 직접 순회해서 원본 색상 기반 반투명 브러시를 적용합니다.
+
+  ```
+  MakeSemiTransparent(originalBrush, alpha: 100)
+  // alpha 0=완전투명, 255=불투명 → 100 ≒ 39% 불투명
+  ```
+
+  처리 대상: `Panel` (Grid 제외), `Border`, `ListBox` / `ListView`
+
+  처리 제외: `Grid` (배경 유지, 자식 순회 계속), `TabPanel` (탭 헤더 버튼 보호), `ButtonBase` / `ComboBox`, `Collapsed` 요소
+
+  복원 방식: Style Setter 출처 → `ClearValue()`, XAML 로컬값 출처 → 원본 브러시 직접 복원
+
+**탭 전환 처리**
+
+WPF TabControl은 탭 콘텐츠를 지연 로드하므로 탭 전환 시 새 콘텐츠에 대해 `ContextIdle` 우선순위로 `WalkStyleBackgrounds(this)`를 재실행합니다. 이미 처리된 요소는 `ContainsKey` 체크로 건너뜁니다.
+
+**ThemeSelector 잠금**
+
+배경 텍스처가 활성화되면 테마 선택박스를 선택할 수 없도록 잠금 처리합니다.
+
+- XAML: ThemeSelector 위에 `ThemeSelectorOverlay` Border (`IsHitTestVisible=True`) 추가
+- 활성화 시: `ThemeSelectorOverlay.Visibility = Visible`
+- 비활성화 시: `ThemeSelectorOverlay.Visibility = Collapsed`
+- `ThemeSelector_SelectionChanged`에서 `_textureActive` 가드로 이중 차단
+
+**UI 상태 흐름**
+
+```
+이미지 선택 (Browse)
+  → bg.dat 생성 → 토글 잠금 해제 → 자동 활성화 → TextureLayer1 표시
+  → SaveAndClearBrushes() → ThemeSelectorOverlay 표시
+
+토글 비활성화
+  → RestoreThemeState() → RestoreBrushes() → ThemeSelectorOverlay 숨김
+  → TextureLayer1 숨김
+
+Clear 버튼
+  → bg.dat 삭제 → 토글 잠금 → TextureLayer1 숨김 → 브러시 복원
+  → GC.Collect() (4K 이미지 메모리 반환)
+```
+
+**추가된 언어 키**
+
+| 키 | 한국어 값 |
+|---|---|
+| `Lang.Options.Theme.Diablo` | 디아블로 |
+| `Lang.Options.Theme.Nebula` | 네뷸라 |
+| `Lang.Options.Theme.Sunset` | 선셋 |
+| `Lang.Options.Theme.Ocean` | 오션 |
+| `Lang.Options.Theme.Nordic` | 노르딕 |
+| `Lang.Options.Theme.Citrus` | 감귤 |
+| `Lang.Options.Theme.Bloom` | 블룸 |
+| `Lang.Options.Labels.TextureBackground` | 배경 텍스처 |
+| `Lang.Options.Labels.TextureEnable` | 활성화 |
+| `Lang.Options.Labels.TextureClear` | 초기화 |
+| `Lang.Windows.TextureTooLarge` | 이미지 용량 초과 경고 |
+| `Lang.Windows.TextureTampered` | 텍스처 변조 감지 경고 |
+
+**파일 구조**
+
+```
+ModAPI\
+├── App.xaml.cs                    # ThemeRegistry, ThemeIds, ApplyTheme()
+├── Windows\
+│   ├── MainWindow.xaml            # Themes 탭, ThemeSelectorOverlay, TextureLayer1
+│   └── MainWindow.xaml.cs         # 테마·텍스처 전체 로직
+├── Themes\
+│   ├── Dictionary.xaml            # Classic 테마
+│   ├── FluentStyles.xaml          # Dark 테마
+│   ├── FluentStylesLight.xaml     # Light 테마
+│   ├── FluentStylesDiablo.xaml    # Diablo 테마
+│   ├── FluentStylesNebula.xaml    # Nebula 테마
+│   ├── FluentStylesSunset.xaml    # Sunset 테마
+│   ├── FluentStylesOcean.xaml     # Ocean 테마
+│   ├── FluentStylesNordic.xaml    # Nordic 테마
+│   ├── FluentStylesCitrus.xaml    # Citrus 테마
+│   └── FluentStylesBloom.xaml     # Bloom 테마
+└── resources\
+    └── textures\
+        └── ui_bg\
+            └── bg.dat             # 압축·보안 처리된 배경 이미지 (런타임 생성)
+```
+
+**알려진 설계 제약**
+
+| 항목 | 내용 |
+|---|---|
+| `IsEnabled=false` on ComboBox | `ElementNotEnabledException` 충돌 → `IsHitTestVisible` 덮개층 방식 사용 |
+| `MergedDictionaries` 키 직접 교체 | 레이아웃 패스 중 충돌 → `Add`/`Remove` 방식만 사용 |
+| Hidden 파일 덮어쓰기 | `Access Denied` → 쓰기 전 `FileAttributes.Normal` 초기화 필수 |
+| `{StaticResource}` 배경 | Layer 1 미적용 → WalkStyleBackgrounds(Layer 2) 별도 처리 필요 |
+
+---
+
+## v2.0.9612 변경사항
+
+### 테마 모듈 분리
+
+- **`Themes/` 폴더 신설**: `Dictionary.xaml`, `FluentStyles.xaml`, `FluentStylesLight.xaml`, `FluentStylesClassic.xaml`을 `ModAPI\Themes\` 디렉터리로 이동
+- **`App.xaml.cs`**: `ApplyTheme()` — Classic 테마는 `Dictionary.xaml` 단독, Light/Dark/기타 Fluent 테마는 해당 XAML 로드
+- **`ModAPI.csproj`**: 테마 XAML 경로 `Themes\` 하위로 업데이트, `FluentStylesClassic.xaml` 신규 등록
+
+---
+
+## v2.0.9611 변경사항
+
+### 버그 수정
+
+- **Mods 탭 너비 미적용 버그 수정**: Light/Dark 테마 전환 후 재시작 시 Mod 목록 너비가 적용되지 않던 문제 수정 — `InitModListWidth()`에 `ApplyModListWidth(width)` 호출 추가
 
 ---
 
@@ -413,12 +851,12 @@ bin\Debug\                               # 디버그 테스트 전용
 | # | 유형 | 현상 | 수정 내용 |
 |---|------|------|-----------|
 | 1 | 무한대기 | `extends="GenericUnityGame"` → `Assembly-CSharp-firstpass.dll` 상속 → `CreateModLibrary` 중단 | 모든 비-TheForest XML에서 `extends` 제거 |
-| 2 | 크래시 | `ResolutionException: XGamingRuntime.XUserGamertagComponent` — Subnautica 적용 중 | `XGamingRuntime.dll`, `XblPCSandbox.dll`을 `copyAssembly`에 추가 |
-| 3 | 크래시 | 백업 생성 이후 추가된 DLL을 리졸버가 찾지 못함 | 실제 게임 설치 폴더를 리졸버 폴백으로 추가 |
-| 4 | 크래시 | `BaseModLib.dll` 파일 잠금 충돌 | 재시도 루프: 읽기 최대 10회 × 500ms + 생성 대기 최대 30회 × 500ms |
-| 5 | 크래시 | `NullReferenceException` — `typesMap` entry.Value null | `if (entry.Value == null) continue` 추가 |
-| 6 | 크래시 | 경량 생성자에 `ModLibrary = new ModLib(this)` 누락 → `CreateModLibrary()` 즉시 강제 종료 | 경량 생성자에 `ModLibrary = new ModLib(this)` 추가 |
-| 7 | 크래시 | `SwitchDevGame()` 후 `App.Game.GamePath` 비어있어 `CreateModLibrary` 강제 종료 | 경량 생성자 후 `App.Game.GamePath = savedPath` 설정 |
+| 2 | 충돌 | `ResolutionException: XGamingRuntime.XUserGamertagComponent` — Subnautica 적용 중 | `XGamingRuntime.dll`, `XblPCSandbox.dll`을 `copyAssembly`에 추가 |
+| 3 | 충돌 | 백업 생성 이후 추가된 DLL을 해석기가 찾지 못함 | 실제 게임 설치 폴더를 해석기 대체 경로로 추가 |
+| 4 | 충돌 | `BaseModLib.dll` 파일 잠금 충돌 | 재시도 루프: 읽기 최대 10회 × 500ms + 생성 대기 최대 30회 × 500ms |
+| 5 | 충돌 | `NullReferenceException` — `typesMap` entry.Value null | `if (entry.Value == null) continue` 추가 |
+| 6 | 충돌 | 경량 생성자에 `ModLibrary = new ModLib(this)` 누락 → `CreateModLibrary()` 즉시 강제 종료 | 경량 생성자에 `ModLibrary = new ModLib(this)` 추가 |
+| 7 | 충돌 | `SwitchDevGame()` 후 `App.Game.GamePath` 비어있어 `CreateModLibrary` 강제 종료 | 경량 생성자 후 `App.Game.GamePath = savedPath` 설정 |
 | 8 | 오분류 | `EscapeThePacific` 모드가 TheForest로 분류됨 | `ModsViewModel`: 폴더 경로에서 `GameId` 추출 |
 | 9 | 잘못된 경로 | `GetGameFolder()` → `""` → 드라이브 루트로 해석 | `GetGameFolder()` 6곳 전체에 null/empty 가드 추가 |
 
@@ -435,7 +873,7 @@ bin\Debug\                               # 디버그 테스트 전용
 
 #### 디버그 테스트
 
-- **`create_dummy_Debug_games.ps1`** — `bin\Debug\`용 PowerShell 스크립트; 5종 게임 전체의 더미 파일을 `dummy_games\`, `dummy_steam\`, `gamefiles\original\` 아래에 생성 — 실제 게임 설치 없이 전체 UI 워크플로우 테스트 가능
+- **`create_dummy_Debug_games.ps1`** — `bin\Debug\`용 PowerShell 스크립트; 5종 게임 전체의 더미 파일을 `dummy_games\`, `dummy_steam\`, `gamefiles\original\` 아래에 생성 — 실제 게임 설치 없이 전체 UI 작업 흐름 테스트 가능
 
 #### Mods 탭 — 게임 시작 검증 전면 재작성
 
@@ -526,7 +964,7 @@ Mod 라이브러리 재생성 버튼 클릭 시 3단계 검증:
 ### 추가된 항목
 
 - **다운로드 탭**: 게임 필터 5종 추가 (TheForest, Subnautica, RAFT, EscapeThePacific, GH)
-- **Welcome 탭**: 탭 목록 맨 앞(인덱스 0) 배치
+- **Welcome 탭**: 탭 목록 맨 앞(번호 0) 배치
 - **Mods 탭**: 3-컬럼 레이아웃(WrapPanel → 세로 목록), 너비 자동 조절, 모드명 줄바꿈
 - **`ModsViewModel`**: 게임별 필터링, `ResolveGame()`으로 올바른 `Game` 인스턴스 생성
 - **`Game.cs`**: 경량 생성자 `new Game(config, true)` — 식별 전용, `Verify()` 생략
@@ -569,24 +1007,51 @@ ModernWpf 0.9.6, `FluentStyles.xaml`, UnityEngine 스텁 DLL.
 ### Phase 6-1 *(v2.0.9600)* — 멀티 게임 & Mods 재설계
 5종 게임 필터, 3-컬럼 Mods 탭, 경량 생성자, XML 등록.
 
-### Phase 6-2 *(v2.0.9610)* — Settings, 경로 안전화, 크래시 수정 & Debug/Release 분기
-XML 전면 수정, 스팀 경로, 5단계 게임 시작 검증, 3단계 ModLib 검증, `FileValidator` PE 헤더 검증, `#if DEBUG` 빌드 분기, `create_dummy_Debug_games.ps1`, 경량 생성자 ModLibrary 수정, SwitchDevGame GamePath 수정, 5종 폴더 생성, 다수 크래시 수정.
+### Phase 6-2 *(v2.0.9610)* — Settings, 경로 안전화, 충돌 수정 & Debug/Release 분기
+XML 전면 수정, 스팀 경로, 5단계 게임 시작 검증, 3단계 ModLib 검증, `FileValidator` PE 헤더 검증, `#if DEBUG` 빌드 분기, `create_dummy_Debug_games.ps1`, 경량 생성자 ModLibrary 수정, SwitchDevGame GamePath 수정, 5종 폴더 생성, 다수 충돌 수정.
+
+### Phase 6-3 *(v2.0.9611 ~ v2.0.9618)* — 테마 시스템 확장, 설정 개선 & 도구 추가
+Themes 탭 신설, 10개 테마 + 배경 텍스처 기능, Themes/ 폴더 분리, 최대화 버튼 수정, 게임 경로 펼침 수정, Versions.xml 4개 게임 업데이트, 경로 초기화 버튼, Browse 자동 저장, MODAPI_VersionTool.
 
 ---
 
 ## 버전 히스토리
 
+### v2.0.9618 — 2026-04-25
+MODAPI_VersionTool 추가 (버전 업데이트 전용 WPF 도구), StatusBar 버전 표시 App.Version 연동
+
+### v2.0.9617 — 2026-04-24
+설정 탭 Steam/게임 경로 초기화 버튼 추가, Browse 자동 저장, 초기화 상태 ui.cfg 플래그 보존
+
+### v2.0.9616 — 2026-04-18
+Versions.xml 4개 게임 신규/업데이트 (Subnautica, Raft, EscapeThePacific, GH), 체크섬 구성 규칙 정립, 게임 업데이트 시 갱신 절차 문서화
+
+### v2.0.9615 — 2026-04-18
+설정 탭 게임 경로 카드 펼침 높이 정확도 수정, UpdateWindowHeight 배경 텍스처 간섭 방지
+
+### v2.0.9614 — 2026-04-18
+최대화 버튼 WorkArea 기반 수동 최대화, 이전 크기/위치 저장 및 복원
+
+### v2.0.9613 — 2026-04-18
+Themes 탭 신설, 테마 등록부 데이터 기반 구조, 10개 테마 지원, 배경 텍스처 기능 (압축·보안·투명화 2계층), ThemeSelector 잠금 덮개층, 언어 키 12개 추가
+
+### v2.0.9612 — 2026-04-18
+Themes/ 폴더 분리, 테마 XAML 모듈화
+
+### v2.0.9611 — 2026-04-18
+테마 전환 후 Mod 목록 너비 미적용 버그 수정
+
 ### v2.0.9610 — 2026-04-13
-멀티 게임 XML 전면 수정(GH, Subnautica, EscapeThePacific), Versions.xml 추가, Settings 탭 전면 재설계(스팀 경로 카드, 게임 경로 패널, 너비 슬라이더, 폰트 크기, 체크박스 동기화), 게임 경로 null 안전화(6곳), 시작 팝업 제거(Settings 탭 방식), Mods 탭 5단계 게임 시작 검증(스팀 항상 첫 번째), 개발 탭 3단계 ModLib 검증, GameModsMismatch 팝업 추가, 경량 생성자 ModLibrary null 수정, SwitchDevGame GamePath 수정, FileValidator PE 헤더 검증(Release), #if DEBUG 빌드 분기(CheckSteam / CheckGamePath / ModLib.Create), create_dummy_Debug_games.ps1, 영구 ui.cfg, 5-키 폰트 시스템, 다수 크래시 수정, 언어 키 업데이트
+멀티 게임 XML 전면 수정(GH, Subnautica, EscapeThePacific), Versions.xml 추가, Settings 탭 전면 재설계(스팀 경로 카드, 게임 경로 패널, 너비 슬라이더, 폰트 크기, 체크박스 동기화), 게임 경로 null 안전화(6곳), 시작 팝업 제거(Settings 탭 방식), Mods 탭 5단계 게임 시작 검증(스팀 항상 첫 번째), 개발 탭 3단계 ModLib 검증, GameModsMismatch 팝업 추가, 경량 생성자 ModLibrary null 수정, SwitchDevGame GamePath 수정, FileValidator PE 헤더 검증(Release), #if DEBUG 빌드 분기(CheckSteam / CheckGamePath / ModLib.Create), create_dummy_Debug_games.ps1, 영구 ui.cfg, 5-키 폰트 시스템, 다수 충돌 수정, 언어 키 업데이트
 
 ### v2.0.9600 — 2026-04-09
 다운로드 탭 게임 필터 5종, Mods 탭 3-컬럼 레이아웃, 너비 자동 조절, 경량 생성자, ModsViewModel 게임별 필터링, 4개 XML 등록, 빌드 경고 정리, Welcome 탭 추가, 언어 국기 이미지 크기 통일
 
 ### v2.0.9586 — 2026-03-31
-블랙 스크린 수정, 폴리필 파이프라인 확정, ValueTuple 제거, C# 7.3 실게임 검증
+블랙 스크린 수정, 폴리필 처리 과정 확정, ValueTuple 제거, C# 7.3 실게임 검증
 
 ### v2.0.9561 — 2026-03-06
-C# 7.3 모드 개발 지원, PE 헤더 패칭, 폴리필 파이프라인, 어셈블리 해결 복원
+C# 7.3 모드 개발 지원, PE 헤더 패칭, 폴리필 처리 과정, 어셈블리 해결 복원
 
 ### v2.0.9552 — 2026-02-25
 다운로드 탭, 아이콘 현대화, 테마 통합, 13개 언어 지원
