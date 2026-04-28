@@ -278,6 +278,7 @@
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Sempre in primo piano</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Percorsi di installazione del gioco</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Salva</s:String>
+    <s:String x:Key="Lang.Options.Labels.PathReset">Reimposta</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Percorso di installazione Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steam non trovato</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam non è installato. Configura Steam nella scheda Settings.</s:String>
@@ -288,13 +289,23 @@
     <s:String x:Key="Lang.Options.Labels.ExpandAll">Espandi tutto</s:String>
     <s:String x:Key="Lang.Options.Labels.CollapseAll">Comprimi tutto</s:String>
 
-    <s:String x:Key="Lang.Options.Labels.Theme">Tema:</s:String>
+    <s:String x:Key="Lang.Options.Labels.Theme">Tema</s:String>
     <s:String x:Key="Lang.Options.Labels.MaxWidth">Largh. massima</s:String>
     <s:String x:Key="Lang.Options.Labels.ModListWidth">Larghezza lista mod</s:String>
     <s:String x:Key="Lang.Options.Labels.ProjectListWidth">Larghezza lista progetti</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureBackground">Texture di sfondo</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureEnable">Abilita</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureClear">Cancella</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">Tema classico</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">Tema chiaro</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">Tema scuro</s:String>
+    <s:String x:Key="Lang.Options.Theme.Diablo">Tema Diablo</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nebula">Tema Nebulosa</s:String>
+    <s:String x:Key="Lang.Options.Theme.Sunset">Tema Tramonto</s:String>
+    <s:String x:Key="Lang.Options.Theme.Ocean">Tema Oceano</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nordic">Tema Nordico</s:String>
+    <s:String x:Key="Lang.Options.Theme.Citrus">Tema Agrume</s:String>
+    <s:String x:Key="Lang.Options.Theme.Bloom">Tema Fiore</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartTitle">Tema modificato</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartText">Riavvia l'applicazione per applicare il tema.</s:String>
 
@@ -331,4 +342,6 @@ Configura il percorso del gioco nella scheda Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Eliminare il mod &quot;{0}&quot; e tutte le versioni? Questo rimuoverà anche il .dll dalla cartella del gioco.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Sì</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">No</s:String>
+    <s:String x:Key="Lang.Windows.TextureTooLarge">L'immagine selezionata supera il limite di 500 KB. Scegliere un file più piccolo.</s:String>
+    <s:String x:Key="Lang.Windows.TextureTampered">Il file della texture di sfondo è stato modificato o danneggiato. La texture è stata reimpostata.</s:String>
 </ResourceDictionary>

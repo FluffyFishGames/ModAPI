@@ -278,6 +278,7 @@
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Luôn hiển thị trên cùng</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Đường dẫn cài đặt trò chơi</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Lưu</s:String>
+    <s:String x:Key="Lang.Options.Labels.PathReset">Đặt lại</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Đường dẫn cài đặt Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Không tìm thấy Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam chưa được cài đặt. Vui lòng cấu hình Steam trong tab Settings.</s:String>
@@ -288,13 +289,23 @@
     <s:String x:Key="Lang.Options.Labels.ExpandAll">Mở rộng tất cả</s:String>
     <s:String x:Key="Lang.Options.Labels.CollapseAll">Thu gọn tất cả</s:String>
 
-    <s:String x:Key="Lang.Options.Labels.Theme">Giao diện:</s:String>
+    <s:String x:Key="Lang.Options.Labels.Theme">Giao diện</s:String>
     <s:String x:Key="Lang.Options.Labels.MaxWidth">Chiều rộng tối đa</s:String>
     <s:String x:Key="Lang.Options.Labels.ModListWidth">Độ rộng danh sách mod</s:String>
     <s:String x:Key="Lang.Options.Labels.ProjectListWidth">Độ rộng danh sách dự án</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureBackground">Kết cấu nền</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureEnable">Kích hoạt</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureClear">Xóa</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">Giao diện cổ điển</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">Giao diện sáng</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">Giao diện tối</s:String>
+    <s:String x:Key="Lang.Options.Theme.Diablo">Giao diện Diablo</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nebula">Giao diện Tinh Vân</s:String>
+    <s:String x:Key="Lang.Options.Theme.Sunset">Giao diện Hoàng Hôn</s:String>
+    <s:String x:Key="Lang.Options.Theme.Ocean">Giao diện Đại Dương</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nordic">Giao diện Bắc Âu</s:String>
+    <s:String x:Key="Lang.Options.Theme.Citrus">Giao diện Cam Quýt</s:String>
+    <s:String x:Key="Lang.Options.Theme.Bloom">Giao diện Hoa</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartTitle">Đã đổi giao diện</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartText">Khởi động lại ứng dụng để áp dụng giao diện.</s:String>
 
@@ -331,4 +342,6 @@ Vui lòng cấu hình đường dẫn trò chơi trong tab Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Xóa mod &quot;{0}&quot; và tất cả phiên bản? File .dll cũng sẽ bị xóa khỏi thư mục game.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Có</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Không</s:String>
+    <s:String x:Key="Lang.Windows.TextureTooLarge">Hình ảnh đã chọn vượt quá giới hạn 500 KB. Vui lòng chọn tệp nhỏ hơn.</s:String>
+    <s:String x:Key="Lang.Windows.TextureTampered">Tệp kết cấu nền đã bị thay đổi hoặc bị hỏng. Kết cấu đã được đặt lại.</s:String>
 </ResourceDictionary>

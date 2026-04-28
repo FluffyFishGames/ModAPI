@@ -275,6 +275,7 @@
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">항상 위에</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">게임 설치 경로</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">저장</s:String>
+    <s:String x:Key="Lang.Options.Labels.PathReset">초기화</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">스팀 설치 경로</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">스팀을 찾을 수 없음</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">설치된 스팀이 없습니다. Settings탭에서 스팀을 설정해주십시오.</s:String>
@@ -285,13 +286,23 @@
     <s:String x:Key="Lang.Options.Labels.ExpandAll">모두 펼치기</s:String>
     <s:String x:Key="Lang.Options.Labels.CollapseAll">모두 접기</s:String>
 
-    <s:String x:Key="Lang.Options.Labels.Theme">테마 선택:</s:String>
+    <s:String x:Key="Lang.Options.Labels.Theme">테마</s:String>
     <s:String x:Key="Lang.Options.Labels.MaxWidth">최대 너비</s:String>
     <s:String x:Key="Lang.Options.Labels.ModListWidth">모드목록 너비</s:String>
     <s:String x:Key="Lang.Options.Labels.ProjectListWidth">프로젝트목록 너비</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureBackground">배경 텍스처</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureEnable">활성화</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureClear">초기화</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">기본 테마</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">화이트 테마</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">다크 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Diablo">디아블로 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nebula">네뷸라 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Sunset">선셋 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Ocean">오션 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nordic">노르딕 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Citrus">시트러스 테마</s:String>
+    <s:String x:Key="Lang.Options.Theme.Bloom">블룸 테마</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartTitle">테마 변경</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartText">테마를 적용하려면 프로그램을 다시 시작해주세요.</s:String>
 
@@ -328,5 +339,7 @@ Settings탭에서 해당 게임의 경로를 설정해주십시오.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">모드 &quot;{0}&quot;의 모든 버전을 삭제하시겠습니까? 게임 폴더에 배포된 .dll 파일도 함께 삭제됩니다.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">예</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">아니오</s:String>
+    <s:String x:Key="Lang.Windows.TextureTooLarge">선택한 이미지가 500 KB 용량 제한을 초과합니다. 더 작은 파일을 선택해 주세요.</s:String>
+    <s:String x:Key="Lang.Windows.TextureTampered">배경 텍스처 파일이 변조되었거나 손상되었습니다. 텍스처가 초기화되었습니다.</s:String>
 </ResourceDictionary>
     

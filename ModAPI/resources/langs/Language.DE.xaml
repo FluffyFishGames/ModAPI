@@ -422,6 +422,7 @@
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Immer im Vordergrund</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Spielinstallationspfade</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Speichern</s:String>
+    <s:String x:Key="Lang.Options.Labels.PathReset">Zurücksetzen</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Steam-Installationspfad</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steam nicht gefunden</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam ist nicht installiert. Bitte konfigurieren Sie Steam im Settings-Tab.</s:String>
@@ -432,13 +433,23 @@
     <s:String x:Key="Lang.Options.Labels.ExpandAll">Alle erweitern</s:String>
     <s:String x:Key="Lang.Options.Labels.CollapseAll">Alle schließen</s:String>
 
-    <s:String x:Key="Lang.Options.Labels.Theme">Design:</s:String>
+    <s:String x:Key="Lang.Options.Labels.Theme">Design</s:String>
     <s:String x:Key="Lang.Options.Labels.MaxWidth">Max. Breite</s:String>
     <s:String x:Key="Lang.Options.Labels.ModListWidth">Modlisten-Breite</s:String>
     <s:String x:Key="Lang.Options.Labels.ProjectListWidth">Projektlisten-Breite</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureBackground">Hintergrundtextur</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureEnable">Aktivieren</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureClear">Zurücksetzen</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">Klassisches Design</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">Helles Design</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">Dunkles Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Diablo">Diablo-Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nebula">Nebula-Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Sunset">Sunset-Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Ocean">Ozean-Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nordic">Nordik-Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Citrus">Citrus-Design</s:String>
+    <s:String x:Key="Lang.Options.Theme.Bloom">Blüte-Design</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartTitle">Design geändert</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartText">Bitte starten Sie die Anwendung neu, um das Design anzuwenden.</s:String>
 
@@ -475,5 +486,7 @@ Bitte konfigurieren Sie den Spielpfad im Settings-Tab.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Mod &quot;{0}&quot; und alle Versionen löschen? Die installierte .dll wird ebenfalls aus dem Spielordner entfernt.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Ja</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Nein</s:String>
+    <s:String x:Key="Lang.Windows.TextureTooLarge">Das ausgewählte Bild überschreitet das 500-KB-Limit. Bitte wählen Sie eine kleinere Datei.</s:String>
+    <s:String x:Key="Lang.Windows.TextureTampered">Die Hintergrundtextur-Datei wurde geändert oder beschädigt. Die Textur wurde zurückgesetzt.</s:String>
 </ResourceDictionary>
     

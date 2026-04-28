@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VersionsData>
 	<files>
+		<file>%fileBase%_Data/Managed/Assembly-CSharp-firstpass.dll</file>
 		<file>%fileBase%_Data/Managed/Assembly-CSharp.dll</file>
 	</files>
+	<version id="19000490">
+		<checksum>10B8C41F55C90779ADA862082FC214E7318A8AD67953F0411F0C024F07CF9812</checksum>
+	</version>
 </VersionsData>

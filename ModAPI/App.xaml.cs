@@ -1,4 +1,4 @@
-﻿/*  
+/*  
  *  ModAPI
  *  Copyright (C) 2015 FluffyFish / Philipp Mohrenstecher
  *
@@ -18,10 +18,11 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
+using ModAPI.Data;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using ModAPI.Data;
 
 namespace ModAPI
 {
@@ -30,7 +31,7 @@ namespace ModAPI
     /// </summary>
     public partial class App : Application
     {
-        public static string Version = "2.0.0";
+        public static string Version = "2.0.9618";
         public static bool DevMode;
 
         public ResourceDictionary LanguageDictionary;
@@ -95,11 +96,38 @@ namespace ModAPI
             ApplyTheme();
         }
 
+        // ── 테마 레지스트리 ─────────────────────────────────────────────────────
+        // 새 테마 추가 시: 이 딕셔너리에 한 줄만 추가하면 됩니다.
+        // key   = theme.cfg에 저장되는 ID (소문자)
+        // value = Themes/ 하위 XAML 파일명 (null = Classic: Dictionary.xaml만 사용)
+        public static readonly Dictionary<string, string> ThemeRegistry =
+            new Dictionary<string, string>
+            {
+                { "classic", null },
+                { "light",   "FluentStylesLight.xaml" },
+                { "dark",    "FluentStyles.xaml" },
+                { "diablo",  "FluentStylesDiablo.xaml" },
+                { "nebula",  "FluentStylesNebula.xaml" },
+                { "sunset",  "FluentStylesSunset.xaml" },
+                { "ocean",   "FluentStylesOcean.xaml" },
+                { "nordic",  "FluentStylesNordic.xaml" },
+                { "citrus",  "FluentStylesCitrus.xaml" },
+                { "bloom",   "FluentStylesBloom.xaml" },
+            };
+
+        // 순서가 보장된 테마 ID 목록 (ThemeSelector 인덱스와 1:1 대응)
+        public static readonly List<string> ThemeIds =
+            new List<string>(new[]
+            {
+                "classic", "light", "dark", "diablo",
+                "nebula", "sunset", "ocean", "nordic", "citrus", "bloom"
+            });
+
         private void ApplyTheme()
         {
             var theme = GetCurrentTheme();
-            if (theme == "dark") return; // FluentStyles.xaml already loaded via App.xaml
 
+            // App.xaml 기본 로드된 FluentStyles* 제거
             ResourceDictionary toRemove = null;
             foreach (var dict in Resources.MergedDictionaries)
             {
@@ -110,19 +138,18 @@ namespace ModAPI
                 }
             }
             if (toRemove != null)
-            {
                 Resources.MergedDictionaries.Remove(toRemove);
-            }
 
-            if (theme == "light")
+            // 레지스트리에서 파일명 조회 후 로드
+            string fileName;
+            if (ThemeRegistry.TryGetValue(theme, out fileName) && fileName != null)
             {
-                var lightTheme = new ResourceDictionary
+                Resources.MergedDictionaries.Add(new ResourceDictionary
                 {
-                    Source = new Uri("pack://application:,,,/ModAPI;component/FluentStylesLight.xaml")
-                };
-                Resources.MergedDictionaries.Add(lightTheme);
+                    Source = new Uri("pack://application:,,,/ModAPI;component/Themes/" + fileName)
+                });
             }
-            // classic: Dictionary.xaml only (original ModAPI design) + fallback resources
+            // classic / 미등록 테마: Dictionary.xaml 단독 사용 (추가 로드 없음)
         }
 
         public static string GetCurrentTheme()

@@ -43,6 +43,12 @@
         </Grid.RowDefinitions>
 
         <!-- ============================================================ -->
+        <!-- Background Texture Layers (behind all content) -->
+        <!-- ============================================================ -->
+        <Image x:Name="TextureLayer1" Grid.RowSpan="2" Stretch="UniformToFill"
+               Opacity="0.13" Visibility="Collapsed" IsHitTestVisible="False" />
+
+        <!-- ============================================================ -->
         <!-- Main Tab Control -->
         <!-- ============================================================ -->
         <Components:TabControlEx x:Name="Tabs" Grid.Row="0" SnapsToDevicePixels="True" 
@@ -780,6 +786,99 @@
                 </Components:IconTabItem>
 
                 <!-- ======================================== -->
+                <!-- TAB: Themes -->
+                <!-- ======================================== -->
+                <Components:IconTabItem SnapsToDevicePixels="True"
+                    Label="{DynamicResource Lang.Options.Labels.Theme}"
+                    IconSource="/resources/textures/Icons/IconTab_Settings.png"
+                    SelectedIconSource="/resources/textures/Icons/IconTab_Settings_Selected.png"
+                    Style="{StaticResource TopTab}">
+
+                    <Grid Margin="16" VerticalAlignment="Top">
+                        <Components:PopupPanel Title="{DynamicResource Lang.Options.Labels.Theme}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Row 0: ThemeSelector 카드 -->
+                                <ContentControl Grid.Row="0" Style="{StaticResource PanelButtons}">
+                                    <Border CornerRadius="6" Padding="16,10"
+                                            Background="{DynamicResource FluentCardBrush}"
+                                            BorderThickness="1" BorderBrush="{DynamicResource FluentBorderBrush}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Margin="0,0,0,6" Text="{DynamicResource Lang.Options.Labels.Theme}" Style="{StaticResource NormalLabel}" />
+                                                <Grid>
+                                                    <ComboBox x:Name="ThemeSelector" Style="{StaticResource ComboBox}" Height="40" MinWidth="200"
+                                                              Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True"
+                                                              HorizontalAlignment="Left"
+                                                              SelectionChanged="ThemeSelector_SelectionChanged" />
+                                                    <!-- 배경텍스처 활성 시 ThemeSelector 잠금 오버레이 -->
+                                                    <Border x:Name="ThemeSelectorOverlay"
+                                                            Background="#60000000"
+                                                            IsHitTestVisible="True"
+                                                            Visibility="Collapsed"
+                                                            CornerRadius="4" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </ContentControl>
+
+                                <!-- Row 1: Background Texture 카드 -->
+                                <ContentControl Grid.Row="1" Style="{StaticResource PanelButtons}">
+                                    <Border CornerRadius="6" Padding="16,12"
+                                            Background="{DynamicResource FluentCardBrush}"
+                                            BorderThickness="1" BorderBrush="{DynamicResource FluentBorderBrush}">
+                                        <StackPanel Orientation="Vertical">
+                                            <!-- 헤더 + 활성화 토글 -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
+                                                <TextBlock Style="{StaticResource HeaderLabel}"
+                                                           Text="{DynamicResource Lang.Options.Labels.TextureBackground}"
+                                                           VerticalAlignment="Center" Margin="0,0,16,0" />
+                                                <CheckBox x:Name="TextureActiveCheckBox" VerticalAlignment="Center" Margin="0,0,8,0"
+                                                          IsEnabled="False"
+                                                          Checked="TextureActive_Changed" Unchecked="TextureActive_Changed" />
+                                                <TextBlock Text="{DynamicResource Lang.Options.Labels.TextureEnable}"
+                                                           Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <!-- Slot -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox x:Name="TexturePathBox" Grid.Column="0" IsReadOnly="True"
+                                                         VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <Button Grid.Column="1" Style="{StaticResource NormalButton}"
+                                                        Click="TextureBrowse_Click" Padding="10,4" Margin="0,0,8,0">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{DynamicResource Lang.Options.Labels.Browse}" Style="{StaticResource NormalLabel}" />
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button x:Name="TextureClearBtn" Grid.Column="2"
+                                                        Style="{StaticResource NormalButton}"
+                                                        Click="TextureClear_Click" Padding="10,4"
+                                                        IsEnabled="False">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{DynamicResource Lang.Options.Labels.TextureClear}" Style="{StaticResource NormalLabel}" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </ContentControl>
+                            </Grid>
+                        </Components:PopupPanel>
+                    </Grid>
+                </Components:IconTabItem>
+
+                <!-- ======================================== -->
                 <!-- TAB: Options -->
                 <!-- ======================================== -->
                 <Components:IconTabItem SnapsToDevicePixels="True" 
@@ -798,7 +897,7 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <!-- Row 0: 언어 + 테마 카드 -->
+                                <!-- Row 0: 언어 + 폰트 + 너비 카드 -->
                                 <ContentControl Grid.Row="0" Style="{StaticResource PanelButtons}">
                                     <Border CornerRadius="6" Padding="16,10"
                                             Background="{DynamicResource FluentCardBrush}"
@@ -816,13 +915,6 @@
                                                  <ComboBox x:Name="FontSizeSelector" Style="{StaticResource ComboBox}" Height="40" MinWidth="120"
                                                            HorizontalAlignment="Left"
                                                            SelectionChanged="FontSizeSelector_Changed" />
-                                             </StackPanel>
-                                             <StackPanel Orientation="Vertical">
-                                                 <TextBlock Margin="0,0,0,6" Text="{DynamicResource Lang.Options.Labels.Theme}" Style="{StaticResource NormalLabel}" />
-                                                 <ComboBox x:Name="ThemeSelector" Style="{StaticResource ComboBox}" Height="40" MinWidth="200"
-                                                           Components:ComboBoxWidthFromItemsBehavior.ComboBoxWidthFromItems="True"
-                                                           HorizontalAlignment="Left"
-                                                           SelectionChanged="ThemeSelector_SelectionChanged" />
                                              </StackPanel>
                                              <StackPanel Orientation="Vertical" Margin="32,0,0,0" VerticalAlignment="Center">
                                                  <TextBlock Text="{DynamicResource Lang.Options.Labels.MaxWidth}" Style="{StaticResource NormalLabel}"
@@ -906,6 +998,7 @@
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <TextBox x:Name="SteamPathBox" Grid.Column="0"
                                                      VerticalAlignment="Center" IsReadOnly="True"
@@ -918,10 +1011,17 @@
                                                 </StackPanel>
                                             </Button>
                                             <Button Grid.Column="2" Style="{StaticResource NormalButton}"
-                                                    Click="SteamSave_Click" Padding="10,4">
+                                                    Click="SteamSave_Click" Padding="10,4" Margin="0,0,8,0">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" />
                                                     <TextBlock Text="{DynamicResource Lang.Options.Labels.GamePathSave}" Style="{StaticResource NormalLabel}" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Grid.Column="3" Style="{StaticResource NormalButton}"
+                                                    Click="SteamReset_Click" Padding="10,4">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{DynamicResource Lang.Options.Labels.PathReset}" Style="{StaticResource NormalLabel}" />
                                                 </StackPanel>
                                             </Button>
                                         </Grid>

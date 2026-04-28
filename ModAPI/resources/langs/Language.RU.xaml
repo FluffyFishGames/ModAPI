@@ -278,6 +278,7 @@
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Всегда поверх окон</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Пути установки игры</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Сохранить</s:String>
+    <s:String x:Key="Lang.Options.Labels.PathReset">Сбросить</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Путь установки Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steam не найден</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam не установлен. Пожалуйста, настройте Steam на вкладке Settings.</s:String>
@@ -288,13 +289,23 @@
     <s:String x:Key="Lang.Options.Labels.ExpandAll">Развернуть все</s:String>
     <s:String x:Key="Lang.Options.Labels.CollapseAll">Свернуть все</s:String>
 
-    <s:String x:Key="Lang.Options.Labels.Theme">Тема:</s:String>
+    <s:String x:Key="Lang.Options.Labels.Theme">Тема</s:String>
     <s:String x:Key="Lang.Options.Labels.MaxWidth">Макс. ширина</s:String>
     <s:String x:Key="Lang.Options.Labels.ModListWidth">Ширина списка модов</s:String>
     <s:String x:Key="Lang.Options.Labels.ProjectListWidth">Ширина списка проектов</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureBackground">Текстура фона</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureEnable">Включить</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureClear">Очистить</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">Классическая тема</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">Светлая тема</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">Тёмная тема</s:String>
+    <s:String x:Key="Lang.Options.Theme.Diablo">Тема Дьябло</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nebula">Тема Туманность</s:String>
+    <s:String x:Key="Lang.Options.Theme.Sunset">Тема Закат</s:String>
+    <s:String x:Key="Lang.Options.Theme.Ocean">Тема Океан</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nordic">Тема Норвегия</s:String>
+    <s:String x:Key="Lang.Options.Theme.Citrus">Тема Цитрус</s:String>
+    <s:String x:Key="Lang.Options.Theme.Bloom">Тема Цветок</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartTitle">Тема изменена</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartText">Перезапустите приложение для применения темы.</s:String>
 
@@ -331,4 +342,6 @@
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">Удалить мод &quot;{0}&quot; и все версии? Это также удалит .dll из папки игры.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">Да</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Нет</s:String>
+    <s:String x:Key="Lang.Windows.TextureTooLarge">Выбранное изображение превышает лимит 500 КБ. Выберите файл меньшего размера.</s:String>
+    <s:String x:Key="Lang.Windows.TextureTampered">Файл фоновой текстуры был изменён или повреждён. Текстура была сброшена.</s:String>
 </ResourceDictionary>

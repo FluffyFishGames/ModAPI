@@ -158,6 +158,7 @@ namespace ModAPI
             _uiInitialized = true;
             UpdateListWidthSliderMax();
             UpdateMinWindowWidth();
+            InitTexture();
             // FirstSetup에서 저장된 값을 Settings 탭에 반영
             SettingsVm?.Changed();
 
@@ -545,46 +546,29 @@ namespace ModAPI
         {
             _themeInitializing = true;
 
-            var classicItem = new ComboBoxItem
+            // ThemeIds 순서대로 ComboBoxItem 자동 생성 — 새 테마 추가 시 코드 변경 불필요
+            foreach (var id in App.ThemeIds)
             {
-                Style = Application.Current.FindResource("ComboBoxItem") as Style
-            };
-            var classicText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = 16, Padding = new Thickness(0, 0, 10, 0) };
-            classicText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Theme.Classic");
-            classicItem.Content = classicText;
-            ThemeSelector.Items.Add(classicItem);
-
-            var lightItem = new ComboBoxItem
-            {
-                Style = Application.Current.FindResource("ComboBoxItem") as Style
-            };
-            var lightText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = 16, Padding = new Thickness(0, 0, 10, 0) };
-            lightText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Theme.Light");
-            lightItem.Content = lightText;
-            ThemeSelector.Items.Add(lightItem);
-
-            var darkItem = new ComboBoxItem
-            {
-                Style = Application.Current.FindResource("ComboBoxItem") as Style
-            };
-            var darkText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = 16, Padding = new Thickness(0, 0, 10, 0) };
-            darkText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Theme.Dark");
-            darkItem.Content = darkText;
-            ThemeSelector.Items.Add(darkItem);
+                var item = new ComboBoxItem
+                {
+                    Style = Application.Current.FindResource("ComboBoxItem") as Style
+                };
+                var text = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = 16,
+                    Padding = new Thickness(0, 0, 10, 0)
+                };
+                // 언어 키 규칙: Lang.Options.Theme.{첫글자대문자 + 나머지}
+                var langKey = "Lang.Options.Theme." + char.ToUpper(id[0]) + id.Substring(1);
+                text.SetResourceReference(TextBlock.TextProperty, langKey);
+                item.Content = text;
+                ThemeSelector.Items.Add(item);
+            }
 
             var currentTheme = App.GetCurrentTheme();
-            switch (currentTheme)
-            {
-                case "light":
-                    ThemeSelector.SelectedIndex = 1;
-                    break;
-                case "dark":
-                    ThemeSelector.SelectedIndex = 2;
-                    break;
-                default: // classic
-                    ThemeSelector.SelectedIndex = 0;
-                    break;
-            }
+            var idx = App.ThemeIds.IndexOf(currentTheme);
+            ThemeSelector.SelectedIndex = idx >= 0 ? idx : 0;
 
             _themeInitializing = false;
         }
@@ -663,7 +647,28 @@ namespace ModAPI
             if (aotCb != null)
                 SaveUiCfg("AlwaysOnTop", aotCb.IsChecked == true ? "true" : "false");
 
+            // Background Texture
+            SaveUiCfg("TexturePath", _texturePath ?? "");
+            SaveUiCfg("TextureActive", _textureActive ? "true" : "false");
+
+            // 스팀 경로 — TextBox 값 저장 (빈 값도 저장해서 초기화 상태 유지)
+            var steamBox = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
+            if (steamBox != null)
+            {
+                if (!string.IsNullOrWhiteSpace(steamBox.Text))
+                {
+                    SaveUiCfg("SteamPathReset", "0");
+                    Configuration.SetPath("Steam", steamBox.Text, true);
+                }
+                else
+                {
+                    // 비어있으면 초기화 플래그 유지
+                    Configuration.SetPath("Steam", "", true);
+                }
+            }
+
             // 게임 경로 — GamePathsPanel 내 TextBox 값 모두 저장
+            // 빈 TextBox 도 저장 — 초기화 상태를 XML 에 반영 (공백 경로 유지 불가 시 플래그로 보완)
             var pathsPanel = FindName("GamePathsPanel") as StackPanel;
             if (pathsPanel != null)
             {
@@ -672,10 +677,20 @@ namespace ModAPI
                     var card = child as System.Windows.Controls.Border;
                     if (card?.Tag is string gameId)
                     {
-                        // 각 카드 내부 TextBox 찾아 경로 저장
                         var tb = FindVisualChild<System.Windows.Controls.TextBox>(card);
-                        if (tb != null && !string.IsNullOrWhiteSpace(tb.Text))
-                            Configuration.SetPath("Games." + gameId, tb.Text, true);
+                        if (tb != null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(tb.Text))
+                            {
+                                Configuration.SetPath("Games." + gameId, tb.Text, true);
+                                SaveUiCfg("GamePathReset_" + gameId, "0");
+                            }
+                            else
+                            {
+                                // 비어있으면 초기화 플래그 유지 (resetBtn 에서 이미 "1" 저장)
+                                Configuration.SetPath("Games." + gameId, "", true);
+                            }
+                        }
                     }
                 }
             }
@@ -698,22 +713,14 @@ namespace ModAPI
         private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_themeInitializing) return;
+            // 배경 텍스처 활성 중일 때는 테마 전환 차단
+            if (_textureActive) return;
 
-            string theme;
-            switch (ThemeSelector.SelectedIndex)
-            {
-                case 1:
-                    theme = "light";
-                    break;
-                case 2:
-                    theme = "dark";
-                    break;
-                default:
-                    theme = "classic";
-                    break;
-            }
+            var idx = ThemeSelector.SelectedIndex;
+            if (idx < 0 || idx >= App.ThemeIds.Count) return;
+            var theme = App.ThemeIds[idx];
 
-            // If same theme, do nothing
+            // 현재 테마와 동일하면 무시
             if (theme == App.GetCurrentTheme()) return;
 
             var selectedTheme = theme;
@@ -738,21 +745,11 @@ namespace ModAPI
                 }
                 else
                 {
-                    // Revert selection
+                    // Revert selection — ThemeIds.IndexOf 로 인덱스 조회
                     _themeInitializing = true;
                     var currentTheme = App.GetCurrentTheme();
-                    switch (currentTheme)
-                    {
-                        case "light":
-                            ThemeSelector.SelectedIndex = 1;
-                            break;
-                        case "dark":
-                            ThemeSelector.SelectedIndex = 2;
-                            break;
-                        default:
-                            ThemeSelector.SelectedIndex = 0;
-                            break;
-                    }
+                    var revertIdx = App.ThemeIds.IndexOf(currentTheme);
+                    ThemeSelector.SelectedIndex = revertIdx >= 0 ? revertIdx : 0;
                     _themeInitializing = false;
                 }
             };
@@ -846,7 +843,7 @@ namespace ModAPI
             this.Width = this.MinWidth;
             this.Left = (screenW - this.Width) / 2;
 
-            VersionLabel.Text = Version.Descriptor + " [" + Version.BuildDate + "]";
+            VersionLabel.Text = App.Version + " [" + Version.BuildDate + "]";
 
             // Welcome 탭을 기본 선택 (index 0 — 맨 앞)
             Tabs.SelectedIndex = 0;
@@ -872,16 +869,44 @@ namespace ModAPI
 
         private void Normalize(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Normal;
+            // 저장된 원래 크기/위치 복원
+            if (_prevWidth > 0)
+            {
+                this.Left = _prevLeft;
+                this.Top = _prevTop;
+                this.Width = _prevWidth;
+                this.Height = _prevHeight;
+                this.MaxWidth = _prevMaxWidth;
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+            }
             ((Button)FindName("MaximizeButton")).Visibility = Visibility.Visible;
             ((Button)FindName("MaximizeButton")).Width = 24;
             ((Button)FindName("NormalizeButton")).Visibility = Visibility.Hidden;
             ((Button)FindName("NormalizeButton")).Width = 0;
         }
 
+        // 최대화 전 원래 상태 저장용 필드
+        private double _prevLeft, _prevTop, _prevWidth, _prevHeight, _prevMaxWidth;
+
         private void Maximize(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Maximized;
+            // 현재 상태 저장
+            _prevLeft = this.Left;
+            _prevTop = this.Top;
+            _prevWidth = this.Width;
+            _prevHeight = this.Height;
+            _prevMaxWidth = this.MaxWidth;
+
+            // MaxWidth 제한 해제 후 현재 화면 WorkArea 에 맞춰 최대화
+            this.MaxWidth = double.PositiveInfinity;
+            var workArea = System.Windows.SystemParameters.WorkArea;
+            this.Left = workArea.Left;
+            this.Top = workArea.Top;
+            this.Width = workArea.Width;
+            this.Height = workArea.Height;
             ((Button)FindName("MaximizeButton")).Visibility = Visibility.Hidden;
             ((Button)FindName("MaximizeButton")).Width = 0;
             ((Button)FindName("NormalizeButton")).Visibility = Visibility.Visible;
@@ -1726,7 +1751,26 @@ namespace ModAPI
         {
             var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
             if (box == null) return;
+            // 초기화 플래그 확인 — XML 이 빈 문자열을 저장하지 않는 경우 대비
+            var resetFlag = LoadUiCfg("SteamPathReset") ?? "0";
+            if (resetFlag == "1")
+            {
+                box.Text = "";
+                return;
+            }
             var saved = Configuration.GetPath("Steam");
+            // App.RootPath 와 같으면 미설정으로 간주 (GetFullPath("") 방어)
+            if (!string.IsNullOrEmpty(saved))
+            {
+                try
+                {
+                    var full = System.IO.Path.GetFullPath(saved);
+                    if (string.Equals(full.TrimEnd('\\'), App.RootPath.TrimEnd('\\'),
+                        StringComparison.OrdinalIgnoreCase))
+                        saved = "";
+                }
+                catch { saved = ""; }
+            }
             box.Text = string.IsNullOrEmpty(saved) ? "" : saved;
         }
 
@@ -1739,9 +1783,14 @@ namespace ModAPI
             };
             if (dialog.ShowDialog() == true)
             {
+                var folder = System.IO.Path.GetDirectoryName(dialog.FileName);
                 var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
-                if (box != null)
-                    box.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+                if (box != null) box.Text = folder;
+                // 경로 저장 시 초기화 플래그 제거
+                SaveUiCfg("SteamPathReset", "0");
+                Configuration.SetPath("Steam", folder, true);
+                Configuration.Save();
+                Debug.Log("Steam", "Path saved (browse): " + folder);
             }
         }
 
@@ -1749,9 +1798,22 @@ namespace ModAPI
         {
             var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
             if (box == null) return;
+            // 경로 저장 시 초기화 플래그 제거
+            SaveUiCfg("SteamPathReset", "0");
             Configuration.SetPath("Steam", box.Text, true);
             Configuration.Save();
             Debug.Log("Steam", "Path saved: " + box.Text);
+        }
+
+        private void SteamReset_Click(object sender, RoutedEventArgs e)
+        {
+            // 초기화 플래그 저장 — XML 은 빈 문자열 미저장으로 신뢰 불가
+            SaveUiCfg("SteamPathReset", "1");
+            Configuration.SetPath("Steam", "", true);
+            Configuration.Save();
+            var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
+            if (box != null) box.Text = "";
+            Debug.Log("Steam", "Path reset.");
         }
 
         private void BuildGamePathsPanel()
@@ -1779,28 +1841,28 @@ namespace ModAPI
 
                 var gameName = !string.IsNullOrEmpty(config.Name) ? config.Name : config.Id;
                 // 경로 정규화 — 구분자를 백슬래시로 통일
-                var rawPath = Configuration.GetPath("Games." + gameId);
-                var savedPath = string.IsNullOrEmpty(rawPath)
-                    ? ""
-                    : System.IO.Path.GetFullPath(rawPath.Replace('/', '\\'));
-
-                // 경로 미설정 시 FindGamePath()로 자동 탐색
-                if (string.IsNullOrEmpty(savedPath))
+                var rawPath = (Configuration.GetPath("Games." + gameId) ?? "").Trim();
+                // ui.cfg 초기화 플래그 확인 — Configuration XML 이 빈 문자열을 저장하지 않는 경우 대비
+                var resetFlag = LoadUiCfg("GamePathReset_" + gameId) ?? "0";
+                bool wasReset = resetFlag == "1";
+                // rawPath 가 App.RootPath 와 같으면 경로 미설정으로 간주 (GetFullPath("") 방어)
+                string savedPath;
+                if (wasReset || string.IsNullOrEmpty(rawPath))
                 {
-                    try
-                    {
-                        var tempGame = new ModAPI.Data.Game(config, true);
-                        var detected = tempGame.FindGamePath();
-                        if (!string.IsNullOrEmpty(detected))
-                        {
-                            savedPath = System.IO.Path.GetFullPath(detected.Replace('/', '\\'));
-                            Configuration.SetPath("Games." + gameId, savedPath, true);
-                            Configuration.Save();
-                            Debug.Log("BuildGamePathsPanel", "Auto-detected: " + gameId + " → " + savedPath);
-                        }
-                    }
-                    catch { }
+                    savedPath = "";
                 }
+                else
+                {
+                    var fullPath = System.IO.Path.GetFullPath(rawPath.Replace('/', '\\'));
+                    savedPath = string.Equals(fullPath.TrimEnd('\\'),
+                        App.RootPath.TrimEnd('\\'),
+                        StringComparison.OrdinalIgnoreCase)
+                        ? ""
+                        : fullPath;
+                }
+
+                // 경로 미설정 시 빈 상태로 유지 — 자동 탐색은 최초 설정(FirstSetupDone)에서만 수행
+                // Settings 탭은 저장된 값을 그대로 표시
                 // 설치 여부 확인 — 경로 비어있거나 exe 없으면 미설치
                 var exeName = config.SelectFile;
                 var isInstalled = !string.IsNullOrEmpty(savedPath)
@@ -1904,6 +1966,20 @@ namespace ModAPI
                 saveBtnText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Labels.GamePathSave");
                 saveBtn.Content = saveBtnText;
 
+                var resetBtn = new Button
+                {
+                    Height = 32,
+                    Margin = new Thickness(6, 0, 0, 0),
+                    Style = (Style)FindResource("NormalButton"),
+                };
+                var resetBtnIcon = new TextBlock { Text = "\uE72C", FontFamily = new System.Windows.Media.FontFamily("Segoe MDL2 Assets"), FontSize = 14, Margin = new Thickness(0, 0, 5, 0), VerticalAlignment = VerticalAlignment.Center };
+                var resetBtnText = new TextBlock { Style = (Style)FindResource("NormalLabel") };
+                resetBtnText.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Labels.PathReset");
+                var resetBtnContent = new StackPanel { Orientation = Orientation.Horizontal };
+                resetBtnContent.Children.Add(resetBtnIcon);
+                resetBtnContent.Children.Add(resetBtnText);
+                resetBtn.Content = resetBtnContent;
+
                 browseBtn.Click += (s, e) =>
                 {
                     var dlg = new Microsoft.Win32.OpenFileDialog
@@ -1928,6 +2004,8 @@ namespace ModAPI
 
                 saveBtn.Click += (s, e) =>
                 {
+                    // 경로 저장 시 초기화 플래그 제거
+                    SaveUiCfg("GamePathReset_" + capturedId, "0");
                     Configuration.SetPath("Games." + capturedId, pathBox.Text, true);
                     Configuration.Save();
                     saveBtn.IsEnabled = false;
@@ -1939,16 +2017,30 @@ namespace ModAPI
                             : "Lang.Options.Labels.NotInstalled");
                 };
 
+                resetBtn.Click += (s, e) =>
+                {
+                    // ui.cfg 에 초기화 플래그 저장 — Configuration XML 은 빈 문자열 미저장으로 신뢰 불가
+                    SaveUiCfg("GamePathReset_" + capturedId, "1");
+                    Configuration.SetPath("Games." + capturedId, "", true);
+                    Configuration.Save();
+                    pathBox.Text = "";
+                    saveBtn.IsEnabled = false;
+                    pathSummary.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Labels.NotInstalled");
+                };
+
                 var pathRow = new Grid { Margin = new Thickness(12, 0, 12, 10) };
                 pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 pathRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 Grid.SetColumn(pathBox, 0);
                 Grid.SetColumn(browseBtn, 1);
                 Grid.SetColumn(saveBtn, 2);
+                Grid.SetColumn(resetBtn, 3);
                 pathRow.Children.Add(pathBox);
                 pathRow.Children.Add(browseBtn);
                 pathRow.Children.Add(saveBtn);
+                pathRow.Children.Add(resetBtn);
 
                 var content = new StackPanel { Orientation = Orientation.Vertical, Visibility = Visibility.Collapsed };
                 content.Children.Add(pathRow);
@@ -1967,6 +2059,18 @@ namespace ModAPI
                     capturedContent.Visibility = isVisible ? Visibility.Collapsed : Visibility.Visible;
                     capturedArrow.Text = isVisible ? "▶" : "▼";
                     UpdateWindowHeight();
+
+                    // 하나라도 펼쳐져 있으면 '모두접기', 모두 접혀있으면 '모두펼치기'
+                    _allExpanded = _gameCardContents.Any(c => c.Visibility == Visibility.Visible);
+                    var btn = FindName("ExpandAllBtn") as Button;
+                    if (btn != null)
+                    {
+                        var tb = btn.Content as TextBlock;
+                        if (tb != null)
+                            tb.SetResourceReference(TextBlock.TextProperty, _allExpanded
+                                ? "Lang.Options.Labels.CollapseAll"
+                                : "Lang.Options.Labels.ExpandAll");
+                    }
                 };
 
                 _gameCardBorders.Add(card);
@@ -2164,15 +2268,26 @@ namespace ModAPI
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                // 배경 텍스처 활성 시 TextureLayer1 의 이미지 원본 크기(4K 등)가
+                // SizeToContent.Height 측정에 포함되어 창 높이가 비정상적으로 커지는 것 방지
+                // → 측정 구간에서만 Collapsed 처리 (Source 는 건드리지 않음)
+                // → Dispatcher 콜백 내 동기 처리이므로 화면 깜빡임 없음
+                var layer = FindName("TextureLayer1") as System.Windows.Controls.Image;
+                bool wasVisible = layer != null && layer.Visibility == Visibility.Visible;
+                if (wasVisible) layer.Visibility = Visibility.Collapsed;
+
+                this.UpdateLayout();
                 this.SizeToContent = SizeToContent.Height;
                 this.SizeToContent = SizeToContent.Manual;
+
+                if (wasVisible) layer.Visibility = Visibility.Visible;
             }), System.Windows.Threading.DispatcherPriority.Render);
         }
 
         public void NavigateToSettings()
         {
-            // Settings 탭 인덱스: Welcome(0), Mods(1), Downloads(2), Development(3), Settings(4)
-            Tabs.SelectedIndex = 4;
+            // Settings 탭 인덱스: Welcome(0), Mods(1), Downloads(2), Development(3), Themes(4), Settings(5)
+            Tabs.SelectedIndex = 5;
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -2248,6 +2363,7 @@ namespace ModAPI
             if (slider != null) { slider.Maximum = 7680; slider.Value = width; }
             if (box != null) box.Text = ((int)width).ToString();
             _modListWidthUpdating = false;
+            ApplyModListWidth(width);
             Debug.Log("InitModListWidth", "Set slider.Value=" + width);
         }
 
@@ -2357,6 +2473,527 @@ namespace ModAPI
             var isOn = cb.IsChecked == true;
             this.Topmost = isOn;
             SaveUiCfg("AlwaysOnTop", isOn ? "true" : "false");
+        }
+
+        // ── Background Texture ───────────────────────────────────────────────
+        private const long TextureMaxInputBytes = 50L * 1024 * 1024; // 50MB 입력 한도 (4K 이미지 허용)
+        private const string TextureStoreName = "bg.dat";            // 위장 확장자로 저장
+        private const int TextureJpegQuality = 75;                   // JPEG 압축 품질 (0~100)
+
+        // 파일 앞에 삽입하는 커스텀 매직 헤더
+        private static readonly byte[] TextureMagic = new byte[]
+        {
+            0x4D, 0x4F, 0x44, 0x41, 0x50, 0x49,  // "MODAPI"
+            0x42, 0x47, 0x00, 0x01, 0x00, 0x00,  // "BG" + version
+            0xFF, 0x00, 0xFE, 0x00                // padding noise
+        };
+
+        private string _texturePath = "";
+        private bool _textureActive = false;
+
+        private string GetTextureStorePath()
+        {
+            var dir = System.IO.Path.Combine(App.RootPath, "resources", "textures", "ui_bg");
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            return System.IO.Path.Combine(dir, TextureStoreName);
+        }
+
+        private static string ComputeFileHash(string path)
+        {
+            using (var sha = System.Security.Cryptography.SHA256.Create())
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var hash = sha.ComputeHash(fs);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            }
+        }
+
+        private bool VerifyTextureHash(string storePath)
+        {
+            var savedHash = LoadUiCfg("TextureHash") ?? "";
+            if (string.IsNullOrEmpty(savedHash)) return false;
+            try
+            {
+                var actual = ComputeFileHash(storePath);
+                return string.Equals(actual, savedHash, StringComparison.OrdinalIgnoreCase);
+            }
+            catch { return false; }
+        }
+
+        private bool HasTextureMagic(byte[] data)
+        {
+            if (data.Length < TextureMagic.Length) return false;
+            for (int i = 0; i < TextureMagic.Length; i++)
+                if (data[i] != TextureMagic[i]) return false;
+            return true;
+        }
+
+        private void InvalidateTexture(string storePath)
+        {
+            Debug.Log("Texture", "bg.dat tampered or corrupted. Clearing texture.", Debug.Type.Warning);
+            try
+            {
+                if (File.Exists(storePath))
+                {
+                    File.SetAttributes(storePath, FileAttributes.Normal);
+                    File.Delete(storePath);
+                }
+            }
+            catch { }
+            _texturePath = "";
+            SaveUiCfg("TexturePath", "");
+            SaveUiCfg("TextureHash", "");
+            SaveUiCfg("TextureActive", "false");
+            _textureActive = false;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var box = FindName("TexturePathBox") as System.Windows.Controls.TextBox;
+                if (box != null) box.Text = "";
+                SetTextureControlState(false, false);
+                RestoreThemeState();
+                var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.TextureTampered");
+                win.ShowSubWindow();
+                win.Show();
+            }));
+        }
+
+        // ── 배경 투명화 (두 계층) ──────────────────────────────────────────────
+        // 계층 1: MergedDictionaries 오버레이 → {DynamicResource} 참조 패널 자동 투명화
+        // 계층 2: 비주얼 트리 순회 → Panel(Grid 제외)/Border 투명화
+        //   제외: Grid, ButtonBase, ComboBox (배경 원본 유지)
+
+        private ResourceDictionary _bgOverlay;
+        private static readonly string[] TextureBgBrushKeys = new[]
+        {
+            "FluentBgBrush", "FluentBgSecondaryBrush", "FluentBgTertiaryBrush",
+            "FluentSurfaceBrush", "FluentCardBrush", "FluentTabBarBrush",
+            "FluentBorderBrush"
+        };
+        // 반투명화 전 원본 브러시 저장 (element → (brush, usesClearValue))
+        // usesClearValue=true: Style/TemplatedParent 출처 → ClearValue 로 복원
+        // usesClearValue=false: XAML 로컬값 출처 → 직접 복원
+        private readonly Dictionary<DependencyObject,
+            Tuple<System.Windows.Media.Brush, bool>> _styleBackgrounds
+            = new Dictionary<DependencyObject,
+                Tuple<System.Windows.Media.Brush, bool>>();
+
+        // 원본 색상 기반 반투명 브러시 생성
+        private static System.Windows.Media.Brush MakeSemiTransparent(
+            System.Windows.Media.Brush original, byte alpha = 100)
+        {
+            var solid = original as System.Windows.Media.SolidColorBrush;
+            var c = solid != null ? solid.Color : System.Windows.Media.Colors.Black;
+            return new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromArgb(alpha, c.R, c.G, c.B));
+        }
+
+        // 비주얼 트리 순회 → Panel(Grid 제외)/Border 를 반투명으로 설정
+        // 제외: ButtonBase, ComboBox (배경 원본 유지, 내부 순회 중단)
+        // Grid 는 배경 유지, 자식은 계속 순회
+        private void WalkStyleBackgrounds(Visual visual)
+        {
+            if (visual is System.Windows.Controls.Primitives.ButtonBase
+                || visual is System.Windows.Controls.ComboBox)
+                return;
+
+            // 탭 헤더 패널은 완전히 건너뜀 — 탭 버튼 배경 수정 방지
+            if (visual is System.Windows.Controls.Primitives.TabPanel)
+                return;
+
+            // Collapsed 요소는 건너뜀
+            var fe = visual as FrameworkElement;
+            if (fe != null && fe.Visibility == Visibility.Collapsed)
+                return;
+
+            bool isGrid = visual is System.Windows.Controls.Grid;
+
+            if (!isGrid && visual is System.Windows.Controls.Panel panel)
+            {
+                var bg = panel.Background;
+                if (bg != null
+                    && bg != System.Windows.Media.Brushes.Transparent
+                    && !_styleBackgrounds.ContainsKey(panel))
+                {
+                    var src = DependencyPropertyHelper.GetValueSource(
+                        panel, System.Windows.Controls.Panel.BackgroundProperty);
+                    bool clearVal = src.BaseValueSource == BaseValueSource.Style
+                        || src.BaseValueSource == BaseValueSource.DefaultStyle;
+                    _styleBackgrounds[panel] = Tuple.Create(bg, clearVal);
+                    panel.Background = MakeSemiTransparent(bg);
+                }
+            }
+            else if (visual is Border border)
+            {
+                var bg = border.Background;
+                if (bg != null
+                    && bg != System.Windows.Media.Brushes.Transparent
+                    && !_styleBackgrounds.ContainsKey(border))
+                {
+                    var src = DependencyPropertyHelper.GetValueSource(
+                        border, Border.BackgroundProperty);
+                    bool clearVal = src.BaseValueSource == BaseValueSource.Style
+                        || src.BaseValueSource == BaseValueSource.DefaultStyle;
+                    _styleBackgrounds[border] = Tuple.Create(bg, clearVal);
+                    border.Background = MakeSemiTransparent(bg);
+                }
+            }
+            else if (visual is System.Windows.Controls.ListBox lb)
+            {
+                // ListView/ListBox 는 Control 이므로 Panel/Border 분기에 걸리지 않음
+                // 배경이 있으면 반투명 처리
+                var bg = lb.Background;
+                if (bg != null
+                    && bg != System.Windows.Media.Brushes.Transparent
+                    && !_styleBackgrounds.ContainsKey(lb))
+                {
+                    var src = DependencyPropertyHelper.GetValueSource(
+                        lb, System.Windows.Controls.Control.BackgroundProperty);
+                    bool clearVal = src.BaseValueSource == BaseValueSource.Style
+                        || src.BaseValueSource == BaseValueSource.DefaultStyle;
+                    _styleBackgrounds[lb] = Tuple.Create(bg, clearVal);
+                    lb.Background = MakeSemiTransparent(bg);
+                }
+            }
+
+            int count = VisualTreeHelper.GetChildrenCount(visual);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(visual, i) as Visual;
+                if (child != null) WalkStyleBackgrounds(child);
+            }
+        }
+
+        private void SaveAndClearBrushes()
+        {
+            if (_bgOverlay != null || _styleBackgrounds.Count > 0) return; // 이중 호출 방지
+
+            // 계층 1: DynamicResource 참조 패널 투명화
+            _bgOverlay = new ResourceDictionary();
+            foreach (var key in TextureBgBrushKeys)
+                _bgOverlay[key] = System.Windows.Media.Brushes.Transparent;
+            Application.Current.Resources.MergedDictionaries.Add(_bgOverlay);
+
+            // 계층 2: 비주얼 트리 Panel/Border 반투명화 (동기 실행)
+            WalkStyleBackgrounds(this);
+        }
+
+        private void RestoreBrushes()
+        {
+            // 계층 1 복원: 오버레이 제거 → DynamicResource 자동 복원
+            if (_bgOverlay != null)
+            {
+                var merged = Application.Current.Resources.MergedDictionaries;
+                if (merged.Contains(_bgOverlay))
+                    merged.Remove(_bgOverlay);
+                _bgOverlay = null;
+            }
+
+            // 계층 2 복원
+            // ClearValue: Style/TemplatedParent 출처 → Style 트리거 재활성화
+            // 직접 복원: XAML 로컬값(StaticResource/DynamicResource) 출처
+            foreach (var kv in _styleBackgrounds)
+            {
+                var useClear = kv.Value.Item2;
+                var original = kv.Value.Item1;
+                if (kv.Key is System.Windows.Controls.Panel p)
+                {
+                    if (useClear) p.ClearValue(System.Windows.Controls.Panel.BackgroundProperty);
+                    else p.Background = original;
+                }
+                else if (kv.Key is Border b)
+                {
+                    if (useClear) b.ClearValue(Border.BackgroundProperty);
+                    else b.Background = original;
+                }
+                else if (kv.Key is System.Windows.Controls.ListBox lb)
+                {
+                    if (useClear) lb.ClearValue(System.Windows.Controls.Control.BackgroundProperty);
+                    else lb.Background = original;
+                }
+            }
+            _styleBackgrounds.Clear();
+        }
+
+        private void SetThemeSelectorLock(bool locked)
+        {
+            var overlay = FindName("ThemeSelectorOverlay") as System.Windows.Controls.Border;
+            if (overlay != null)
+                overlay.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
+            // Opacity 는 보조 수단으로 유지 (테마에 따라 동작 여부 다름)
+            ThemeSelector.Opacity = locked ? 0.4 : 1.0;
+        }
+
+        // ThemeSelector Opacity 복원 + 비주얼 트리 배경 복원 + TextureLayer ZIndex 초기화
+        private void RestoreThemeState()
+        {
+            var layer = FindName("TextureLayer1") as System.Windows.Controls.Image;
+            if (layer != null)
+            {
+                layer.Source = null;
+                layer.Opacity = 0.13;
+                layer.Visibility = Visibility.Collapsed;
+            }
+            RestoreBrushes();
+            var themeSelector = FindName("ThemeSelector") as System.Windows.Controls.ComboBox;
+            SetThemeSelectorLock(false);
+        }
+
+        // Toggle + ClearBtn 활성/비활성 일괄 처리
+        private void SetTextureControlState(bool hasFile, bool isActive)
+        {
+            var toggle = FindName("TextureActiveCheckBox") as System.Windows.Controls.CheckBox;
+            var clearBtn = FindName("TextureClearBtn") as System.Windows.Controls.Button;
+            if (toggle != null)
+            {
+                toggle.IsEnabled = hasFile;
+                if (!hasFile) toggle.IsChecked = false;
+            }
+            if (clearBtn != null) clearBtn.IsEnabled = hasFile;
+        }
+
+        private void InitTexture()
+        {
+            _texturePath = LoadUiCfg("TexturePath") ?? "";
+            _textureActive = (LoadUiCfg("TextureActive") ?? "false").ToLower() == "true";
+
+            var box = FindName("TexturePathBox") as System.Windows.Controls.TextBox;
+            if (box != null) box.Text = _texturePath;
+
+            // bg.dat 존재 여부로 토글/ClearBtn 잠금 결정
+            var storePath = GetTextureStorePath();
+            bool hasValidFile = File.Exists(storePath);
+            if (!hasValidFile) _textureActive = false;
+            SetTextureControlState(hasValidFile, _textureActive);
+            var toggle = FindName("TextureActiveCheckBox") as System.Windows.Controls.CheckBox;
+            if (toggle != null) toggle.IsChecked = hasValidFile && _textureActive;
+
+            // ContextIdle 이후 실행 — 모든 테마 Style·ControlTemplate 완전 적용 후 투명화 처리
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Tabs.SelectionChanged += OnTabsSelectionChangedForTexture;
+                ApplyTexture();
+                SetThemeSelectorLock(_textureActive);
+
+                // 초기 탭 콘텐츠 재처리 — ContextIdle 시점에 미처리된 요소 보완
+                // ApplicationIdle 은 ContextIdle 보다 낮은 우선순위 → 렌더링 완전 완료 후 실행
+                if (_textureActive)
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        WalkStyleBackgrounds(this);
+                    }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                }
+            }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+        }
+
+        // 탭 전환 시 새로 로드된 탭 콘텐츠를 투명화 처리
+        private void OnTabsSelectionChangedForTexture(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_textureActive) return;
+
+            // ContextIdle: 모든 렌더링·템플릿 적용 완료 후 실행
+            // Loaded 우선순위는 ControlTemplate 내부 요소가 아직 비주얼 트리에 없는 경우 있음
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!_textureActive) return;
+                WalkStyleBackgrounds(this);
+            }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+        }
+
+        private void ApplyTexture()
+        {
+            var layer = FindName("TextureLayer1") as System.Windows.Controls.Image;
+            if (layer == null) return;
+
+            var storePath = GetTextureStorePath();
+
+            if (_textureActive && File.Exists(storePath))
+            {
+                // 무결성 검증
+                if (!VerifyTextureHash(storePath))
+                {
+                    InvalidateTexture(storePath);
+                    return;
+                }
+
+                var raw = File.ReadAllBytes(storePath);
+
+                // 매직 헤더 검증
+                if (!HasTextureMagic(raw))
+                {
+                    InvalidateTexture(storePath);
+                    return;
+                }
+
+                try
+                {
+                    var jpegData = new byte[raw.Length - TextureMagic.Length];
+                    Array.Copy(raw, TextureMagic.Length, jpegData, 0, jpegData.Length);
+
+                    var bmp = new System.Windows.Media.Imaging.BitmapImage();
+                    bmp.BeginInit();
+                    bmp.StreamSource = new System.IO.MemoryStream(jpegData);
+                    bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                    bmp.EndInit();
+                    bmp.Freeze();
+
+                    layer.Source = bmp;
+                    layer.Opacity = 1.0;
+                    layer.Visibility = Visibility.Visible;
+
+                    SaveAndClearBrushes();
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("Texture", "ApplyTexture failed: " + ex.Message, Debug.Type.Warning);
+                    layer.Source = null;
+                    layer.Opacity = 0.13;
+                    layer.Visibility = Visibility.Collapsed;
+                    RestoreBrushes();
+                }
+
+                // ThemeSelector Opacity — Render 이후 지연 설정
+                // WalkStyleBackgrounds 실행 후 WPF Style 재적용으로 Opacity 가 1.0 으로 초기화되는 것 방지
+                SetThemeSelectorLock(_textureActive);
+            }
+            else
+            {
+                layer.Source = null;
+                layer.Opacity = 0.13;
+                layer.Visibility = Visibility.Collapsed;
+                RestoreThemeState();
+            }
+        }
+
+        private void TextureBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg",
+                Title = "Select Texture Image",
+                RestoreDirectory = true
+            };
+
+            if (dialog.ShowDialog() != true) return;
+
+            var info = new FileInfo(dialog.FileName);
+            if (info.Length > TextureMaxInputBytes)
+            {
+                var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.TextureTooLarge");
+                win.ShowSubWindow();
+                win.Show();
+                return;
+            }
+
+            try
+            {
+                var src = new System.Windows.Media.Imaging.BitmapImage();
+                src.BeginInit();
+                src.UriSource = new Uri(dialog.FileName, UriKind.Absolute);
+                src.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                src.EndInit();
+                src.Freeze();
+
+                var encoder = new System.Windows.Media.Imaging.JpegBitmapEncoder
+                {
+                    QualityLevel = TextureJpegQuality
+                };
+                encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(src));
+
+                byte[] jpegBytes;
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    encoder.Save(ms);
+                    jpegBytes = ms.ToArray();
+                }
+
+                var storePath = GetTextureStorePath();
+
+                // Hidden 속성이 있으면 덮어쓰기 전에 Normal로 초기화 (Hidden 파일 덮어쓰기 거부 방지)
+                if (File.Exists(storePath))
+                    File.SetAttributes(storePath, FileAttributes.Normal);
+
+                using (var fs = new FileStream(storePath, FileMode.Create, FileAccess.Write))
+                {
+                    fs.Write(TextureMagic, 0, TextureMagic.Length);
+                    fs.Write(jpegBytes, 0, jpegBytes.Length);
+                }
+
+                // 저장 완료 후 Hidden 재적용
+                File.SetAttributes(storePath, FileAttributes.Hidden);
+
+                var hash = ComputeFileHash(storePath);
+                SaveUiCfg("TextureHash", hash);
+
+                _texturePath = System.IO.Path.GetFileName(dialog.FileName);
+                var box = FindName("TexturePathBox") as System.Windows.Controls.TextBox;
+                if (box != null) box.Text = _texturePath;
+                SaveUiCfg("TexturePath", _texturePath);
+
+                // 이미지 선택 완료 → 토글 잠금 해제 + 자동 활성화
+                _textureActive = true;
+                SaveUiCfg("TextureActive", "true");
+                SetTextureControlState(true, true);
+
+                // 토글 체크 상태 UI 반영
+                var toggle = FindName("TextureActiveCheckBox") as System.Windows.Controls.CheckBox;
+                // 토글 이벤트 억제 후 IsChecked 설정 — TextureActive_Changed 이중 발화 방지
+                if (toggle != null)
+                {
+                    toggle.Checked -= TextureActive_Changed;
+                    toggle.IsChecked = true;
+                    toggle.Checked += TextureActive_Changed;
+                }
+
+                ApplyTexture();
+            }
+            catch (Exception ex)
+            {
+                SetTextureControlState(false, false);
+                Debug.Log("Texture", "Failed to load/compress image: " + ex.Message, Debug.Type.Warning);
+            }
+        }
+
+        private void TextureClear_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var storePath = GetTextureStorePath();
+                if (File.Exists(storePath))
+                {
+                    // Hidden 파일은 삭제 전 Normal로 초기화
+                    File.SetAttributes(storePath, FileAttributes.Normal);
+                    File.Delete(storePath);
+                }
+            }
+            catch { }
+
+            _texturePath = "";
+            _textureActive = false;
+            var box = FindName("TexturePathBox") as System.Windows.Controls.TextBox;
+            if (box != null) box.Text = "";
+            SaveUiCfg("TexturePath", "");
+            SaveUiCfg("TextureHash", "");
+            SaveUiCfg("TextureActive", "false");
+
+            SetTextureControlState(false, false);
+            RestoreThemeState();
+
+            // Window.Background 해제 → GC 가 이전 ImageBrush 수집
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+            GC.WaitForPendingFinalizers();
+        }
+
+        private void TextureActive_Changed(object sender, RoutedEventArgs e)
+        {
+            var cb = sender as System.Windows.Controls.CheckBox;
+            if (cb == null) return;
+            _textureActive = cb.IsChecked == true;
+            SaveUiCfg("TextureActive", _textureActive ? "true" : "false");
+            ApplyTexture();
+
+            // ApplyTexture 내부 Dispatcher 지연보다 늦게 실행되도록 확실히 보장
+            SetThemeSelectorLock(_textureActive);
         }
 
         private void ExpandAll_Click(object sender, RoutedEventArgs e)

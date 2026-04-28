@@ -278,6 +278,7 @@
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">總在最前</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">遊戲安裝路徑</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">儲存</s:String>
+    <s:String x:Key="Lang.Options.Labels.PathReset">重設</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Steam安裝路徑</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">未找到Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">未安裝Steam。請在Settings標籤中配置Steam。</s:String>
@@ -288,13 +289,23 @@
     <s:String x:Key="Lang.Options.Labels.ExpandAll">全部展開</s:String>
     <s:String x:Key="Lang.Options.Labels.CollapseAll">全部折疊</s:String>
 
-    <s:String x:Key="Lang.Options.Labels.Theme">主題:</s:String>
+    <s:String x:Key="Lang.Options.Labels.Theme">主題</s:String>
     <s:String x:Key="Lang.Options.Labels.MaxWidth">最大寬度</s:String>
     <s:String x:Key="Lang.Options.Labels.ModListWidth">模組列表寬度</s:String>
     <s:String x:Key="Lang.Options.Labels.ProjectListWidth">專案列表寬度</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureBackground">背景紋理</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureEnable">啟用</s:String>
+    <s:String x:Key="Lang.Options.Labels.TextureClear">清除</s:String>
     <s:String x:Key="Lang.Options.Theme.Classic">經典主題</s:String>
     <s:String x:Key="Lang.Options.Theme.Light">淺色主題</s:String>
     <s:String x:Key="Lang.Options.Theme.Dark">深色主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Diablo">暗黑破壞神主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nebula">星雲主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Sunset">日落主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Ocean">海洋主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Nordic">北歐主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Citrus">柑橘主題</s:String>
+    <s:String x:Key="Lang.Options.Theme.Bloom">花開主題</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartTitle">主題已變更</s:String>
     <s:String x:Key="Lang.Options.Theme.RestartText">請重新啟動應用程式以套用主題。</s:String>
 
@@ -331,4 +342,6 @@
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Text">刪除模組 &quot;{0}&quot; 及其所有版本？ 這也將從遊戲資料夾中刪除已部署的 .dll 檔案。</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.Yes">是</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">否</s:String>
+    <s:String x:Key="Lang.Windows.TextureTooLarge">所選圖片超過500KB限制，請選擇較小的檔案。</s:String>
+    <s:String x:Key="Lang.Windows.TextureTampered">背景紋理檔案已被修改或損毀。紋理已被重設。</s:String>
 </ResourceDictionary>
