@@ -341,5 +341,8 @@ Skonfiguruj ścieżkę gry w zakładce Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Nie</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">Wybrany obraz przekracza limit 500 KB. Wybierz mniejszy plik.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">Plik tekstury tła został zmodyfikowany lub uszkodzony. Tekstura została zresetowana.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Pobieranie nie powiodło się</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Pobrany plik moda jest pusty (0 bajtów). Plik może nie istnieć na serwerze.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>
     

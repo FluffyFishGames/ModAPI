@@ -344,5 +344,8 @@ Please configure the game path in the Settings tab.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">No</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">The selected image exceeds the 500 KB size limit. Please choose a smaller file.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">The background texture file has been modified or corrupted. The texture has been reset.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Download Failed</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">The downloaded mod file is empty (0 bytes). The file may not exist on the server.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>
     

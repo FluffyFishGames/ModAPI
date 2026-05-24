@@ -344,4 +344,7 @@ Configura il percorso del gioco nella scheda Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">No</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">L'immagine selezionata supera il limite di 500 KB. Scegliere un file più piccolo.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">Il file della texture di sfondo è stato modificato o danneggiato. La texture è stata reimpostata.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Download fallito</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Il file mod scaricato è vuoto (0 byte). Il file potrebbe non esistere sul server.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>

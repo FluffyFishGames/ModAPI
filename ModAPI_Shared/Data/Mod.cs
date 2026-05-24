@@ -233,13 +233,28 @@ namespace ModAPI.Data
                 {
                     header += parts[i] + "\n";
                     headerSize += parts[i].Length + 1;
-                    if (parts[i].EndsWith("</Mod>\r"))
+                    if (parts[i].TrimEnd('\r', ' ').EndsWith("</Mod>"))
                     {
                         break;
                     }
                     if (i == parts.Length - 1)
                     {
-                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". File-header is corrupted.", Debug.Type.Warning);
+                        // Debug: show first 3 lines and last line to diagnose parsing failure
+                        var debugLines = new System.Text.StringBuilder();
+                        debugLines.Append("Lines=" + parts.Length + " | ");
+                        for (var d = 0; d < Math.Min(3, parts.Length); d++)
+                        {
+                            var escaped = parts[d].Replace("\r", "\\r").Replace("\t", "\\t");
+                            if (escaped.Length > 80) escaped = escaped.Substring(0, 80) + "...";
+                            debugLines.Append("[" + d + "]=\"" + escaped + "\" ");
+                        }
+                        if (parts.Length > 3)
+                        {
+                            var lastEscaped = parts[parts.Length - 1].Replace("\r", "\\r").Replace("\t", "\\t");
+                            if (lastEscaped.Length > 80) lastEscaped = lastEscaped.Substring(0, 80) + "...";
+                            debugLines.Append("[last]=\"" + lastEscaped + "\"");
+                        }
+                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Can't load the mod at \"" + FileName + "\". File-header is corrupted. " + debugLines.ToString(), Debug.Type.Warning);
                         return false;
                     }
                 }

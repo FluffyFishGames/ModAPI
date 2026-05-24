@@ -341,5 +341,8 @@ Veuillez configurer le chemin du jeu dans l'onglet Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Non</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">L'image sélectionnée dépasse la limite de 500 Ko. Veuillez choisir un fichier plus petit.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">Le fichier de texture de fond a été modifié ou corrompu. La texture a été réinitialisée.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Échec du téléchargement</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Le fichier de mod téléchargé est vide (0 octet). Le fichier n'existe peut-être pas sur le serveur.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>
     

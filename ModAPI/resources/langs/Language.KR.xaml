@@ -341,5 +341,8 @@ Settings탭에서 해당 게임의 경로를 설정해주십시오.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">아니오</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">선택한 이미지가 500 KB 용량 제한을 초과합니다. 더 작은 파일을 선택해 주세요.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">배경 텍스처 파일이 변조되었거나 손상되었습니다. 텍스처가 초기화되었습니다.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">다운로드 실패</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">다운로드된 모드 파일이 비어 있습니다 (0 바이트). 서버에 파일이 존재하지 않을 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">확인</s:String>
 </ResourceDictionary>
     

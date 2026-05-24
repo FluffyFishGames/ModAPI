@@ -22,7 +22,7 @@ namespace ModAPI.Utils
         // ── 최소 파일 크기 ────────────────────────────────────────────────
         private const long MinSteamExeBytes = 1 * 1024 * 1024;  // 1 MB
         private const long MinGameExeBytes = 512 * 1024;        // 512 KB
-        private const long MinAssemblyBytes = 64 * 1024;         // 64 KB
+        private const long MinAssemblyBytes = 8 * 1024;           // 8 KB — Unity 소형 DLL (예: Assembly-UnityScript-firstpass.dll ≈ 21 KB) 허용
 
         // ── 공개 API ──────────────────────────────────────────────────────
 

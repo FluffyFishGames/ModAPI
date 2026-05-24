@@ -345,5 +345,8 @@ Por favor, configure la ruta del juego en la pestaña Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">No</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">La imagen seleccionada supera el límite de 500 KB. Elija un archivo más pequeño.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">El archivo de textura de fondo ha sido modificado o dañado. La textura ha sido restablecida.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Descarga fallida</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">El archivo de mod descargado está vacío (0 bytes). Es posible que el archivo no exista en el servidor.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">Aceptar</s:String>
 </ResourceDictionary>
 <!-- Traducción: Nicolás F. y Martin A. de www.TheForest-ES.COM -->

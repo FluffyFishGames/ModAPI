@@ -209,6 +209,32 @@ namespace ModAPI.Data
                     searchFolders.Add(folder);
                 }
             }
+
+            // Fallback: also add actual game install path folders to assembly resolver
+            if (!string.IsNullOrEmpty(Game.GamePath))
+            {
+                for (var i = 0; i < Game.GameConfiguration.IncludeAssemblies.Count; i++)
+                {
+                    var gameFolderPath = Game.GamePath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
+                    var folder = Path.GetDirectoryName(gameFolderPath);
+                    if (!string.IsNullOrEmpty(folder) && !searchFolders.Contains(folder))
+                    {
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added game install folder \"" + folder + "\" to assembly resolver (fallback).");
+                        searchFolders.Add(folder);
+                    }
+                }
+                for (var i = 0; i < Game.GameConfiguration.CopyAssemblies.Count; i++)
+                {
+                    var gameFolderPath = Game.GamePath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.CopyAssemblies[i]);
+                    var folder = Path.GetDirectoryName(gameFolderPath);
+                    if (!string.IsNullOrEmpty(folder) && !searchFolders.Contains(folder))
+                    {
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added game install folder \"" + folder + "\" to assembly resolver (fallback).");
+                        searchFolders.Add(folder);
+                    }
+                }
+            }
+
             for (var i = 0; i < searchFolders.Count; i++)
             {
                 assemblyResolver.AddPath(searchFolders[i]);
@@ -218,6 +244,17 @@ namespace ModAPI.Data
             {
                 var assemblyPath = Configuration.GetPath("OriginalGameFiles") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id +
                                    Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
+
+                // Fallback: if backup path doesn't exist, try actual game install path
+                if (!File.Exists(assemblyPath) && !string.IsNullOrEmpty(Game.GamePath))
+                {
+                    var fallbackPath = Game.GamePath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
+                    if (File.Exists(fallbackPath))
+                    {
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Backup not found, using game install fallback: \"" + fallbackPath + "\"");
+                        assemblyPath = fallbackPath;
+                    }
+                }
 
                 Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================");
                 Debug.Log("ModLib: " + Game.GameConfiguration.Id, "========================     NEW ASSEMBLY     ========================");
@@ -360,6 +397,18 @@ namespace ModAPI.Data
             {
                 var copyFrom = Configuration.GetPath("OriginalGameFiles") + Path.DirectorySeparatorChar + Game.GameConfiguration.Id +
                                Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.CopyAssemblies[i]);
+
+                // Fallback: if backup path doesn't exist, try actual game install path
+                if (!File.Exists(copyFrom) && !string.IsNullOrEmpty(Game.GamePath))
+                {
+                    var fallbackPath = Game.GamePath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.CopyAssemblies[i]);
+                    if (File.Exists(fallbackPath))
+                    {
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Backup not found, using game install fallback for copy: \"" + fallbackPath + "\"");
+                        copyFrom = fallbackPath;
+                    }
+                }
+
                 var copyTo = Path.GetFullPath(libraryPath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.CopyAssemblies[i]));
 
                 if (File.Exists(copyFrom))

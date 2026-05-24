@@ -504,18 +504,56 @@ namespace ModAPI.Data
 
                 var Assemblies = new Dictionary<string, ModuleDefinition>();
 
+                // If backup folder doesn't exist, create it from game install folder before reading.
+                // This ensures all subsequent reads come from backup — no file locks on game folder.
+                var backupBase = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id + System.IO.Path.DirectorySeparatorChar);
+                if (!Directory.Exists(backupBase) && !string.IsNullOrEmpty(GamePath))
+                {
+                    var _gf = GetGameFolder();
+                    if (!string.IsNullOrEmpty(_gf))
+                    {
+                        Debug.Log("ModLoader: " + GameConfiguration.Id, "Backup folder does not exist. Creating from game install: " + _gf);
+                        foreach (var n in GameConfiguration.IncludeAssemblies)
+                        {
+                            var srcPath = System.IO.Path.GetFullPath(_gf + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                            var dstPath = System.IO.Path.GetFullPath(backupBase + ParsePath(n));
+                            if (File.Exists(srcPath))
+                            {
+                                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstPath));
+                                File.Copy(srcPath, dstPath, true);
+                                Debug.Log("ModLoader: " + GameConfiguration.Id, "Backed up: " + srcPath);
+                            }
+                        }
+                        foreach (var n in GameConfiguration.CopyAssemblies)
+                        {
+                            var srcPath = System.IO.Path.GetFullPath(_gf + System.IO.Path.DirectorySeparatorChar + ParsePath(n));
+                            var dstPath = System.IO.Path.GetFullPath(backupBase + ParsePath(n));
+                            if (File.Exists(srcPath))
+                            {
+                                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstPath));
+                                File.Copy(srcPath, dstPath, true);
+                                Debug.Log("ModLoader: " + GameConfiguration.Id, "Backed up: " + srcPath);
+                            }
+                        }
+                    }
+                }
+
                 var assemblyResolver = new CustomAssemblyResolver();
                 assemblyResolver.AddPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                          System.IO.Path.DirectorySeparatorChar);
 
-                // 실제 게임 폴더도 추가 — 백업에 없는 DLL(신규 copyAssembly 등)을 폴백으로 검색
-                var _gameFolder = GetGameFolder();
-                if (string.IsNullOrEmpty(_gameFolder)) return;
-                var actualManagedPath = System.IO.Path.GetFullPath(_gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.AssemblyPath));
-                if (Directory.Exists(actualManagedPath))
+                // 실제 게임 폴더는 백업이 없을 때만 추가 — 백업이 있으면 불필요하며
+                // Cecil이 게임 폴더 DLL에 file lock을 유지하여 DirectoryCopy 시 IOException 발생
+                if (!Directory.Exists(backupBase))
                 {
-                    assemblyResolver.AddPath(actualManagedPath);
-                    Debug.Log("ModLib: " + GameConfiguration.Id, "Added actual game folder to resolver: " + actualManagedPath);
+                    var _gameFolder = GetGameFolder();
+                    if (string.IsNullOrEmpty(_gameFolder)) return;
+                    var actualManagedPath = System.IO.Path.GetFullPath(_gameFolder + System.IO.Path.DirectorySeparatorChar + ParsePath(GameConfiguration.AssemblyPath));
+                    if (Directory.Exists(actualManagedPath))
+                    {
+                        assemblyResolver.AddPath(actualManagedPath);
+                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added actual game folder to resolver (no backup): " + actualManagedPath);
+                    }
                 }
 
                 var searchFolders = new List<string>();
@@ -550,6 +588,18 @@ namespace ModAPI.Data
                 {
                     var path = System.IO.Path.GetFullPath(Configuration.GetPath("OriginalGameFiles") + System.IO.Path.DirectorySeparatorChar + GameConfiguration.Id +
                                                           System.IO.Path.DirectorySeparatorChar + ParsePath(p));
+
+                    // Fallback: if backup path doesn't exist, try actual game install path
+                    if (!File.Exists(path) && !string.IsNullOrEmpty(GamePath))
+                    {
+                        var fallbackPath = System.IO.Path.GetFullPath(GamePath + System.IO.Path.DirectorySeparatorChar + ParsePath(p));
+                        if (File.Exists(fallbackPath))
+                        {
+                            Debug.Log("ModLoader: " + GameConfiguration.Id, "Backup not found, using game install fallback: \"" + fallbackPath + "\"");
+                            path = fallbackPath;
+                        }
+                    }
+
                     var key = System.IO.Path.GetFileNameWithoutExtension(path);
 
                     var module = ModuleDefinition.ReadModule(path, new ReaderParameters

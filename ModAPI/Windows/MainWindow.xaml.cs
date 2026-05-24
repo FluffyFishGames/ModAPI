@@ -163,7 +163,7 @@ namespace ModAPI
             SettingsVm?.Changed();
 
             // AlwaysOnTop 상태 복원
-            if ((LoadUiCfg("AlwaysOnTop") ?? Configuration.GetString("AlwaysOnTop")).ToLower() == "true")
+            if ((LoadUiCfg("AlwaysOnTop") ?? Configuration.GetString("AlwaysOnTop", silent: true)).ToLower() == "true")
             {
                 this.Topmost = true;
                 var cb = FindName("AlwaysOnTopCheckBox") as System.Windows.Controls.CheckBox;
@@ -1311,7 +1311,7 @@ namespace ModAPI
                 if (!hasMods) continue;
 
                 // Settings 탭에 해당 게임 경로가 설정되어 있고 실행파일이 존재하는지
-                var gamePath = ModAPI.Configurations.Configuration.GetPath("Games." + gid);
+                var gamePath = ModAPI.Configurations.Configuration.GetPath("Games." + gid, silent: true);
                 if (string.IsNullOrEmpty(gamePath)) continue;
                 if (!Configuration.Games.ContainsKey(gid)) continue;
                 var exeName = Configuration.Games[gid].SelectFile;
@@ -1397,7 +1397,7 @@ namespace ModAPI
                     {
                         // 경량 Game으로 FindGamePath() 자동 탐색 시도
                         var tempGame = new Game(gameConfig, true);
-                        var savedPath = Configuration.GetPath("Games." + gameConfig.Id);
+                        var savedPath = Configuration.GetPath("Games." + gameConfig.Id, silent: true);
 
                         if (string.IsNullOrEmpty(savedPath))
                         {
@@ -1758,7 +1758,7 @@ namespace ModAPI
                 box.Text = "";
                 return;
             }
-            var saved = Configuration.GetPath("Steam");
+            var saved = Configuration.GetPath("Steam", silent: true);
             // App.RootPath 와 같으면 미설정으로 간주 (GetFullPath("") 방어)
             if (!string.IsNullOrEmpty(saved))
             {
@@ -1841,7 +1841,7 @@ namespace ModAPI
 
                 var gameName = !string.IsNullOrEmpty(config.Name) ? config.Name : config.Id;
                 // 경로 정규화 — 구분자를 백슬래시로 통일
-                var rawPath = (Configuration.GetPath("Games." + gameId) ?? "").Trim();
+                var rawPath = (Configuration.GetPath("Games." + gameId, silent: true) ?? "").Trim();
                 // ui.cfg 초기화 플래그 확인 — Configuration XML 이 빈 문자열을 저장하지 않는 경우 대비
                 var resetFlag = LoadUiCfg("GamePathReset_" + gameId) ?? "0";
                 bool wasReset = resetFlag == "1";
@@ -2129,7 +2129,7 @@ namespace ModAPI
             if (App.Game != null && string.Equals(App.Game.GameConfiguration.Id, gameId, StringComparison.OrdinalIgnoreCase))
                 return;
 
-            var savedPath = Configuration.GetPath("Games." + gameId);
+            var savedPath = Configuration.GetPath("Games." + gameId, silent: true);
             if (string.IsNullOrEmpty(savedPath))
                 Debug.Log("DevGameFilter", "Game path not set for: " + gameId + ". Please set in Settings tab.", Debug.Type.Warning);
 
@@ -2184,7 +2184,7 @@ namespace ModAPI
             }
 
             // 저장된 값 또는 기본값 선택 (클램프 없이 그대로)
-            var saved = LoadUiCfg("AppFontSize") ?? Configuration.GetString("AppFontSize");
+            var saved = LoadUiCfg("AppFontSize") ?? Configuration.GetString("AppFontSize", silent: true);
             double current = DefaultFontSize;
             if (!string.IsNullOrEmpty(saved) && double.TryParse(saved, out double s))
                 current = s;
@@ -2344,11 +2344,12 @@ namespace ModAPI
         // ── Mod List Width ──────────────────────────────────────────────────
         private bool _modListWidthUpdating = false;
         private double _modListWidth = 220;
+        private DispatcherTimer _modListWidthSaveTimer;
 
         private void InitModListWidth()
         {
             var uiCfgVal = LoadUiCfg("ModListWidth");
-            var configVal = Configuration.GetString("ModListWidth");
+            var configVal = Configuration.GetString("ModListWidth", silent: true);
             Debug.Log("InitModListWidth", "ui.cfg=" + (uiCfgVal ?? "null") + " config=" + (configVal ?? "null") + " path=" + GetUiCfgPath());
             var saved = uiCfgVal ?? configVal;
             double defaultWidth = 150; // 저장값 없을 때 슬라이더 최솟값으로 시작
@@ -2377,7 +2378,6 @@ namespace ModAPI
 
         private void ModListWidthSlider_Changed(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
         {
-            Debug.Log("ModListWidth", "Slider changed: " + e.NewValue + " updating=" + _modListWidthUpdating + " initialized=" + _uiInitialized);
             if (_modListWidthUpdating || !_uiInitialized) return;
             var width = Math.Round(e.NewValue);
             _modListWidthUpdating = true;
@@ -2386,8 +2386,20 @@ namespace ModAPI
             _modListWidthUpdating = false;
             if (ScreenMaxWidth > 0 && width > Math.Floor(ScreenMaxWidth * 0.3)) width = Math.Floor(ScreenMaxWidth * 0.3);
             ApplyModListWidth(width);
-            SaveUiCfg("ModListWidth", ((int)width).ToString());
-            Debug.Log("ModListWidth", "Saved: " + ((int)width));
+
+            // Debounce: save 500ms after last drag movement
+            if (_modListWidthSaveTimer == null)
+            {
+                _modListWidthSaveTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+                _modListWidthSaveTimer.Tick += (s, ev) =>
+                {
+                    _modListWidthSaveTimer.Stop();
+                    SaveUiCfg("ModListWidth", ((int)_modListWidth).ToString());
+                    Debug.Log("ModListWidth", "Saved (debounced): " + ((int)_modListWidth));
+                };
+            }
+            _modListWidthSaveTimer.Stop();
+            _modListWidthSaveTimer.Start();
         }
 
         private void ModListWidthBox_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -2408,6 +2420,7 @@ namespace ModAPI
         // ── Project List Width ───────────────────────────────────────────────
         private bool _projectListWidthUpdating = false;
         private double _projectListWidth = 180;
+        private DispatcherTimer _projectListWidthSaveTimer;
         public double ProjectListWidth
         {
             get => _projectListWidth;
@@ -2416,7 +2429,7 @@ namespace ModAPI
 
         private void InitProjectListWidth()
         {
-            var saved = LoadUiCfg("ProjectListWidth") ?? Configuration.GetString("ProjectListWidth");
+            var saved = LoadUiCfg("ProjectListWidth") ?? Configuration.GetString("ProjectListWidth", silent: true);
             double defaultWidth = 150; // 저장값 없을 때 슬라이더 최솟값으로 시작
             double width = defaultWidth;
             if (!string.IsNullOrEmpty(saved) && double.TryParse(saved, out double w))
@@ -2444,9 +2457,21 @@ namespace ModAPI
             _projectListWidthUpdating = false;
             _projectListWidth = width;
             if (ScreenMaxWidth > 0 && width > Math.Floor(ScreenMaxWidth * 0.3)) width = Math.Floor(ScreenMaxWidth * 0.3);
-            SaveUiCfg("ProjectListWidth", ((int)width).ToString());
             var list = FindName("ProjectList") as System.Windows.Controls.ListBox;
             if (list != null) list.Width = width;
+
+            // Debounce: save 500ms after last drag movement
+            if (_projectListWidthSaveTimer == null)
+            {
+                _projectListWidthSaveTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+                _projectListWidthSaveTimer.Tick += (s, ev) =>
+                {
+                    _projectListWidthSaveTimer.Stop();
+                    SaveUiCfg("ProjectListWidth", ((int)_projectListWidth).ToString());
+                };
+            }
+            _projectListWidthSaveTimer.Stop();
+            _projectListWidthSaveTimer.Start();
         }
 
         private void ProjectListWidthBox_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -3724,6 +3749,21 @@ namespace ModAPI
                         {
                             fileStream.Write(buffer, 0, bytesRead);
                         }
+                    }
+
+                    // Verify downloaded file is not empty
+                    var tempFileInfo = new FileInfo(tempPath);
+                    if (tempFileInfo.Length == 0)
+                    {
+                        Debug.Log("Downloads", "Downloaded file is empty (0 bytes): " + fileName, Debug.Type.Warning);
+                        try { File.Delete(tempPath); } catch { }
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.DownloadEmpty");
+                            win.ShowSubWindow();
+                            win.Show();
+                        }));
+                        return false;
                     }
 
                     // Rename temp file to final name (atomic for FindMods timer)

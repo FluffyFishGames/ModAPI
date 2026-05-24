@@ -344,4 +344,7 @@ Settingsタブでゲームパスを設定してください。</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">いいえ</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">選択した画像は500KBの上限を超えています。より小さなファイルを選択してください。</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">背景テクスチャファイルが変更または破損しています。テクスチャがリセットされました。</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">ダウンロード失敗</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">ダウンロードされたModファイルが空です（0バイト）。サーバーにファイルが存在しない可能性があります。</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>

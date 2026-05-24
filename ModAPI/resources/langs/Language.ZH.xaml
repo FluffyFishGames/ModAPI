@@ -344,4 +344,7 @@
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">否</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">所选图片超过500KB限制，请选择较小的文件。</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">背景纹理文件已被修改或损坏。纹理已被重置。</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">下载失败</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">下载的模组文件为空（0字节）。该文件可能不存在于服务器上。</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">确定</s:String>
 </ResourceDictionary>

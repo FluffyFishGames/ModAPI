@@ -488,5 +488,8 @@ Bitte konfigurieren Sie den Spielpfad im Settings-Tab.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Nein</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">Das ausgewählte Bild überschreitet das 500-KB-Limit. Bitte wählen Sie eine kleinere Datei.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">Die Hintergrundtextur-Datei wurde geändert oder beschädigt. Die Textur wurde zurückgesetzt.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Download fehlgeschlagen</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Die heruntergeladene Mod-Datei ist leer (0 Bytes). Die Datei existiert möglicherweise nicht auf dem Server.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>
     

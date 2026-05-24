@@ -289,6 +289,11 @@ public class ModsViewModel : INotifyPropertyChanged
                     Mod.Mods.Add(id, mod);
                 }
             }
+            else
+            {
+                // Load failed (corrupted header, etc.) — register to prevent infinite retry
+                LoadedFiles.Add(fileName, mod);
+            }
             progressHandler.Progress = (i / (float)toLoad.Count) * 100f;
         }
         progressHandler.Progress = 100f;

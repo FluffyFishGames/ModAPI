@@ -31,7 +31,7 @@ namespace ModAPI
     /// </summary>
     public partial class App : Application
     {
-        public static string Version = "2.0.9618";
+        public static string Version = "2.0.9619";
         public static bool DevMode;
 
         public ResourceDictionary LanguageDictionary;

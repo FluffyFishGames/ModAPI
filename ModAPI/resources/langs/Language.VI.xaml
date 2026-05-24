@@ -344,4 +344,7 @@ Vui lòng cấu hình đường dẫn trò chơi trong tab Settings.</s:String>
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Không</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">Hình ảnh đã chọn vượt quá giới hạn 500 KB. Vui lòng chọn tệp nhỏ hơn.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">Tệp kết cấu nền đã bị thay đổi hoặc bị hỏng. Kết cấu đã được đặt lại.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Tải xuống thất bại</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Tệp mod đã tải xuống trống (0 byte). Tệp có thể không tồn tại trên máy chủ.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>

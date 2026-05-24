@@ -344,4 +344,7 @@
     <s:String x:Key="Lang.Windows.DeleteModConfirm.Buttons.No">Нет</s:String>
     <s:String x:Key="Lang.Windows.TextureTooLarge">Выбранное изображение превышает лимит 500 КБ. Выберите файл меньшего размера.</s:String>
     <s:String x:Key="Lang.Windows.TextureTampered">Файл фоновой текстуры был изменён или повреждён. Текстура была сброшена.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Ошибка загрузки</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Загруженный файл мода пуст (0 байт). Возможно, файл не существует на сервере.</s:String>
+    <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
 </ResourceDictionary>

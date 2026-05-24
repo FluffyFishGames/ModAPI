@@ -77,7 +77,7 @@ namespace ModAPI.Configurations
             }
         }
 
-        public static string GetString(string key)
+        public static string GetString(string key, bool silent = false)
         {
             key = key.ToLower();
             if (UserConfigData.ContainsKey(key))
@@ -88,11 +88,12 @@ namespace ModAPI.Configurations
             {
                 return ConfigDataInst[key].StringValue;
             }
-            Debug.Log("Configuration", "Configuration key \"" + key + "\" does not exist..");
+            if (!silent)
+                Debug.Log("Configuration", "Configuration key \"" + key + "\" does not exist..");
             return "";
         }
 
-        public static int GetInt(string key)
+        public static int GetInt(string key, bool silent = false)
         {
             key = key.ToLower();
             if (UserConfigData.ContainsKey(key))
@@ -103,7 +104,8 @@ namespace ModAPI.Configurations
             {
                 return ConfigDataInst[key].IntValue;
             }
-            Debug.Log("Configuration", "Configuration key \"" + key + "\" does not exist..");
+            if (!silent)
+                Debug.Log("Configuration", "Configuration key \"" + key + "\" does not exist..");
             return 0;
         }
 
@@ -565,7 +567,7 @@ namespace ModAPI.Configurations
             }
         }
 
-        public static string GetPath(string name)
+        public static string GetPath(string name, bool silent = false)
         {
             var key = name.ToLower();
             if (UserPaths.ContainsKey(key))
@@ -586,9 +588,12 @@ namespace ModAPI.Configurations
                 return Path.GetFullPath(RootPath + Path.DirectorySeparatorChar + Paths[key]);
             }
 
-            var stackTrace = new StackTrace();
-            var method = stackTrace.GetFrame(1).GetMethod();
-            Debug.Log("Configuration", "Path \"" + name + "\" is not present. (called by: " + method.DeclaringType.FullName + "::" + method.Name + ")", Debug.Type.Warning);
+            if (!silent)
+            {
+                var stackTrace = new StackTrace();
+                var method = stackTrace.GetFrame(1).GetMethod();
+                Debug.Log("Configuration", "Path \"" + name + "\" is not present. (called by: " + method.DeclaringType.FullName + "::" + method.Name + ")", Debug.Type.Warning);
+            }
             return "";
         }
 
