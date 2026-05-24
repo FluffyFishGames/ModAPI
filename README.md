@@ -12,7 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](Docs/README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](Docs/README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9618 - 20260425
+# ModAPI(v1) v2.0.9619 - 20260525
 
 **The Forest Mod Management Tool — Upgraded Edition**
 
@@ -154,7 +154,7 @@ All file validation and assembly processing branches on the build configuration 
 | Location | Debug Build | Release Build |
 |---|---|---|
 | `CheckSteam()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidSteamExe()` — PE header + min 1 MB |
-| `CheckGamePath()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidAssemblyDll()` — PE header + CLR metadata + min 64 KB |
+| `CheckGamePath()` | `File.Exists()` only — dummy files pass | `FileValidator.IsValidAssemblyDll()` — PE header + CLR metadata + min 8 KB |
 | `ModLib.Create()` — IncludeAssemblies | `File.Copy()` — skip Cecil parsing | Full Mono.Cecil parse + IL modification + `module.Write()` |
 | `ModLib.Create()` — file not found | Log warning, skip and continue | Log error, abort with popup |
 
@@ -170,7 +170,7 @@ All file validation and assembly processing branches on the build configuration 
 |---|---|---|
 | `IsValidSteamExe(path)` | MZ signature + PE\0\0 signature | 1 MB |
 | `IsValidGameExe(path)` | MZ signature + PE\0\0 signature | 512 KB |
-| `IsValidAssemblyDll(path)` | MZ + PE\0\0 + CLR metadata header (data directory #14) | 64 KB |
+| `IsValidAssemblyDll(path)` | MZ + PE\0\0 + CLR metadata header (data directory #14) | 8 KB |
 
 ```
 PE Header layout checked:
@@ -283,7 +283,8 @@ ModAPI/
 ├── ui.cfg                               # Persistent UI settings
 ├── theme.cfg                            # Current theme
 ├── Windows/
-│   ├── MainWindow.xaml / .cs            # Main UI — 6 tabs, Themes, Settings, Steam path
+│   ├── MainWindow.xaml / .cs            # Main UI — 6 tabs, Themes, Settings, Steam path,
+│   │                                    #   0-byte download guard, slider debounce, silent config reads
 │   └── SubWindows/
 │       ├── SpecifyGamePath.xaml / .cs   # Game path popup (dynamic GameNameLabel)
 │       ├── FirstSetup.xaml / .cs        # First-run setup + default initialization
@@ -300,12 +301,13 @@ ModAPI/
 │   ├── FluentStylesCitrus.xaml          # Citrus theme
 │   └── FluentStylesBloom.xaml           # Bloom theme
 ├── Data/
-│   ├── Game.cs                          # Assembly patching, null guards, resolver fallback
+│   ├── Mod.cs                           # Mod file loading, LF/CRLF header parsing, diagnostic log
 │   ├── ModLib.cs                        # BaseModLib generation + remapping (#if DEBUG split)
 │   ├── Models/
 │   │   └── ModProject.cs                # Project create/build/apply + null guards
 │   ├── ViewModels/
-│   │   ├── ModsViewModel.cs             # FilteredMods, SelectedModItem, SelectedGameFilter
+│   │   ├── ModsViewModel.cs             # FilteredMods, SelectedModItem, SelectedGameFilter,
+│   │   │                                #   corrupted mod retry prevention
 │   │   ├── ModViewModel.cs              # GameId from folder path
 │   │   ├── ModProjectsViewModel.cs      # Dispose() for DispatcherTimer
 │   │   └── SettingsViewModel.cs         # Default true for UseSteam/AutoUpdate/UpdateVersions
@@ -314,7 +316,7 @@ ModAPI/
 │   ├── CustomAssemblyResolver.cs        # Name-based resolver with caching
 │   └── MonoHelper.cs                    # Mono.Cecil IL helper utilities
 ├── resources/
-│   ├── langs/                           # 13 language files
+│   ├── langs/                           # 13 language files (DownloadEmpty keys added v2.0.9619)
 │   └── textures/ui_bg/
 │       └── bg.dat                       # Compressed & secured background image (runtime-generated)
 └── configs/
@@ -329,11 +331,14 @@ ModAPI/
     └── UserConfiguration.xml
 
 ModAPI_Shared/
+├── Configurations/
+│   └── Configuration.cs                 # GetPath/GetString/GetInt with silent parameter
 ├── Data/
-│   ├── Game.cs                          # Lightweight constructor + ModLibrary init fix
-│   └── ModLib.cs                        # #if DEBUG split for Cecil parsing
+│   ├── Game.cs                          # ApplyMods backup auto-creation, conditional resolver,
+│   │                                    #   game folder fallback, lightweight constructor + ModLib init fix
+│   └── ModLib.cs                        # #if DEBUG split, game folder fallback for IncludeAssemblies/CopyAssemblies
 └── Utils/
-    └── FileValidator.cs                 # PE header + CLR metadata validation (Release only)
+    └── FileValidator.cs                 # PE header + CLR metadata validation (Release only, min 8 KB)
 
 BaseModLib/
 ├── BaseModLib.csproj                    # .NET 3.5 + LangVersion 7.3
@@ -476,7 +481,50 @@ Centralized configuration — 4 rows:
 
 ---
 
-## What Changed in v2.0.9618
+## What Changed in v2.0.9619
+
+### Bug Fixes
+
+- **Mod apply hang with empty backup folder**: `gamefiles\original\` empty → automatic backup creation from game install path before assembly reading
+- **File lock (IOException) on game DLLs**: Assembly resolver conditionally excludes game folder when backup exists — prevents Cecil from holding file locks during `DirectoryCopy`
+- **Corrupted mod infinite retry loop**: Failed `.mod` files (corrupted header) caused 1-second re-scan loop — now registered in `LoadedFiles` to prevent re-scan
+- **LF line-ending mod files rejected**: Header parser `EndsWith("</Mod>\r")` failed for Unix-style `.mod` files — now uses `TrimEnd` to handle both CRLF and LF
+- **Small DLL validation failure**: `Assembly-UnityScript-firstpass.dll` (21 KB) rejected by `FileValidator` — minimum assembly size lowered from 64 KB to 8 KB
+- **Unnecessary WARNING logs**: Unconfigured game paths and first-run config keys generated noise — `silent` parameter added to `GetPath`/`GetString`/`GetInt`
+
+### Improvements
+
+- **Zero-byte download detection**: Popup alert + temp file cleanup when server returns empty `.mod` file (`Lang.Windows.DownloadEmpty`)
+- **Slider save debounce**: `ModListWidth` / `ProjectListWidth` save to `ui.cfg` only once (500 ms after drag ends) instead of every pixel change
+- **Conditional game folder creation**: `mods/` and `projects/` folders created only for games with configured paths — not all 5 unconditionally
+- **Header parsing diagnostic log**: Shows line count and content preview on `.mod` file parse failure for troubleshooting
+
+### New Language Keys (13 languages)
+
+| Key | English Value |
+|-----|---------------|
+| `Lang.Windows.DownloadEmpty.Title` | Download Failed |
+| `Lang.Windows.DownloadEmpty.Text` | The downloaded mod file is empty (0 bytes). The file may not exist on the server. |
+| `Lang.Windows.DownloadEmpty.Buttons.OK` | OK |
+
+### Files Modified
+
+| File | Path | Change |
+|---|---|---|
+| `Game.cs` | `ModAPI_Shared\Data\` | Backup auto-creation, conditional resolver, game folder fallback |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | Game folder fallback for IncludeAssemblies/CopyAssemblies |
+| `FileValidator.cs` | `ModAPI_Shared\Utils\` | MinAssemblyBytes 64 KB → 8 KB |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | `silent` parameter on GetPath/GetString/GetInt |
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | 0-byte download guard, slider debounce, silent config reads, conditional folder creation |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | Corrupted mod retry prevention |
+| `Mod.cs` | `ModAPI\Data\` | LF/CRLF header parsing, diagnostic log |
+| 13× `Language.XX.xaml` | `resources\langs\` | `DownloadEmpty` popup keys |
+
+---
+
+<details>
+<summary><b>What Changed in v2.0.9618</b></summary>
+
 
 ### Version Update Tool (MODAPI_VersionTool)
 
@@ -512,7 +560,11 @@ A standalone WPF tool for updating the version number with a single click.
 
 ---
 
-## What Changed in v2.0.9617
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9617</b></summary>
+
 
 ### Settings Tab — Path Reset Buttons Added
 
@@ -546,7 +598,10 @@ A **Reset** button has been added to the Steam installation path and each game i
 
 ---
 
-## What Changed in v2.0.9616
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9616</b></summary>
 
 ### Versions.xml — 4 Games Added / Updated
 
@@ -604,7 +659,10 @@ Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
 
 ---
 
-## What Changed in v2.0.9615
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9615</b></summary>
 
 ### Settings Tab Game Path Expand Fixed
 
@@ -614,7 +672,10 @@ Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
 
 ---
 
-## What Changed in v2.0.9614
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9614</b></summary>
 
 ### Maximize Button Behavior Fixed
 
@@ -624,7 +685,10 @@ Get-FileHash "...\Assembly-CSharp.dll" -Algorithm MD5
 
 ---
 
-## What Changed in v2.0.9613
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9613</b></summary>
 
 ### New Themes Tab
 
@@ -825,7 +889,10 @@ ModAPI\
 
 ---
 
-## What Changed in v2.0.9612
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9612</b></summary>
 
 ### Theme Module Separation
 
@@ -835,7 +902,10 @@ ModAPI\
 
 ---
 
-## What Changed in v2.0.9611
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9611</b></summary>
 
 ### Bug Fix
 
@@ -843,7 +913,10 @@ ModAPI\
 
 ---
 
-## What Changed in v2.0.9610
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9610</b></summary>
 
 ### Added
 
@@ -975,7 +1048,10 @@ Three-step validation on Mod Library Regeneration click:
 
 ---
 
-## What Changed in v2.0.9600
+</details>
+
+<details>
+<summary><b>What Changed in v2.0.9600</b></summary>
 
 ### Added
 
@@ -998,41 +1074,15 @@ Three-step validation on Mod Library Regeneration click:
 
 ---
 
-## Key Changes by Phase
-
-### Phase 1 *(v2.0.9200)* — .NET 4.8 Migration
-All 5 projects migrated from .NET 4.5 → 4.8.
-
-### Phase 2 *(v2.0.9300)* — Build Environment & Fluent Design
-ModernWpf 0.9.6, `FluentStyles.xaml`, UnityEngine stub DLL.
-
-### Phase 3 *(v2.0.9500)* — UI Redesign & Theme System
-3-theme system, `theme.cfg`, window drag fix, hyperlink support.
-
-### Phase 4 *(v2.0.9400)* — Code Cleanup
-Login system removed, update mechanism modernized.
-
-### Phase 5-1 *(v2.0.9552)* — Downloads Tab & 13 Languages
-Downloads tab, Segoe MDL2 Assets icons, 13-language support.
-
-### Phase 5-5 *(v2.0.9561)* — Assembly Resolution
-`AssemblyVersionMap.cs`, `CustomAssemblyResolver.cs`, PE header patching.
-
-### Phase 5-6B *(v2.0.9586)* — C# 7.3 & Polyfill
-Black screen fixed, `ValueTuple` removed, C# 7.3 in-game verified.
-
-### Phase 6-1 *(v2.0.9600)* — Multi-Game & Mods Redesign
-5 game filters, 3-column Mods tab, lightweight `Game` constructor, XML registered.
-
-### Phase 6-2 *(v2.0.9610)* — Settings, Safety, Crash Fixes & Debug/Release Split
-XML corrected, Steam path, game path safety, Start Game 5-step validation, ModLib 3-step validation, `FileValidator` PE header verification, `#if DEBUG` build split, `create_dummy_Debug_games.ps1`, lightweight constructor `ModLibrary` fix, `SwitchDevGame` GamePath fix, 5-game folder creation, crash fixes.
-
-### Phase 6-3 *(v2.0.9611 ~ v2.0.9618)* — Theme System Expansion, Settings Improvements & Tools
-Themes tab added, 10 themes + background texture feature, Themes/ folder separation, maximize button fix, game path expand fix, Versions.xml 4-game update, path reset buttons, Browse auto-save, MODAPI_VersionTool.
+</details>
 
 ---
 
 ## Version History
+
+### Phase 6-3 — Theme System Expansion, Settings Improvements, Stability & Tools
+v2.0.9619 — 2026-05-25
+> Backup auto-creation from game install path, file lock fix (conditional resolver), corrupted mod infinite retry prevention, LF line-ending mod compatibility, 0-byte download detection with popup, slider save debounce (500 ms), conditional game folder creation, FileValidator min assembly size 64 KB → 8 KB, silent parameter on GetPath/GetString/GetInt, header parsing diagnostic log, DownloadEmpty language keys (13 languages)
 
 ### v2.0.9618 — 2026-04-25
 Added MODAPI_VersionTool (standalone WPF version update tool), StatusBar version display linked to App.Version
@@ -1058,32 +1108,41 @@ Themes/ folder separation, theme XAML modularization
 ### v2.0.9611 — 2026-04-18
 Fixed Mod list width not applied after theme switch
 
-### v2.0.9610 — 2026-04-13
-Multi-game XML corrected (GH, Subnautica, EscapeThePacific), Versions.xml added, Settings tab redesigned (Steam path, game paths panel, width sliders, font size, checkbox sync), game path null safety (6 sites), startup popups replaced by Settings tab, Mods tab 5-step Start Game validation (Steam always first), Dev tab 3-step ModLib validation, GameModsMismatch popup added, lightweight constructor ModLibrary null fix, SwitchDevGame GamePath fix, FileValidator PE header verification (Release), #if DEBUG build split (CheckSteam / CheckGamePath / ModLib.Create), create_dummy_Debug_games.ps1, persistent ui.cfg, 5-key font system, multiple crash fixes, language keys updated
+### Phase 6-2 — Settings, Safety, Crash Fixes & Debug/Release Split
+v2.0.9610 — 2026-04-13
+> Multi-game XML corrected (GH, Subnautica, EscapeThePacific), Versions.xml added, Settings tab redesigned (Steam path, game paths panel, width sliders, font size, checkbox sync), game path null safety (6 sites), startup popups replaced by Settings tab, Mods tab 5-step Start Game validation (Steam always first), Dev tab 3-step ModLib validation, GameModsMismatch popup added, lightweight constructor ModLibrary null fix, SwitchDevGame GamePath fix, FileValidator PE header verification (Release), #if DEBUG build split (CheckSteam / CheckGamePath / ModLib.Create), create_dummy_Debug_games.ps1, persistent ui.cfg, 5-key font system, multiple crash fixes, language keys updated
 
-### v2.0.9600 — 2026-04-09
-5 game filters, Mods tab 3-column layout, auto width, lightweight `Game` constructor, `ModsViewModel` game filtering, 4 XML files registered, build warnings cleaned, Welcome tab, language flags standardized
+### Phase 6-1 — Multi-Game & Mods Redesign
+v2.0.9600 — 2026-04-09
+> 5 game filters, Mods tab 3-column layout, auto width, lightweight `Game` constructor, `ModsViewModel` game filtering, 4 XML files registered, build warnings cleaned, Welcome tab, language flags standardized
 
-### v2.0.9586 — 2026-03-31
-Black screen fixed, polyfill finalized, ValueTuple removed, C# 7.3 verified
+### Phase 5-6B — C# 7.3 & Polyfill
+v2.0.9586 — 2026-03-31
+> Black screen fixed, polyfill finalized, ValueTuple removed, C# 7.3 verified
 
-### v2.0.9561 — 2026-03-06
-C# 7.3 support, PE header patching, polyfill pipeline, assembly resolution restored
+### Phase 5-5 — Assembly Resolution
+v2.0.9561 — 2026-03-06
+> C# 7.3 support, PE header patching, polyfill pipeline, assembly resolution restored
 
-### v2.0.9552 — 2026-02-25
-Downloads tab, icon modernization, theme unification, 13-language support
+### Phase 5-1 — Downloads Tab & 13 Languages
+v2.0.9552 — 2026-02-25
+> Downloads tab, icon modernization, theme unification, 13-language support
 
-### v2.0.9500
-Theme system (Classic/Light/Dark), Fluent Design UI, SubWindow system
+### Phase 3 — UI Redesign & Theme System
+v2.0.9500
+> Theme system (Classic/Light/Dark), Fluent Design UI, SubWindow system
 
-### v2.0.9400
-Code cleanup, login removal, legacy modernization
+### Phase 4 — Code Cleanup
+v2.0.9400
+> Code cleanup, login removal, legacy modernization
 
-### v2.0.9300
-Build environment, UnityEngine stub DLL, ModernWpf integration
+### Phase 2 — Build Environment & Fluent Design
+v2.0.9300
+> Build environment, UnityEngine stub DLL, ModernWpf integration
 
-### v2.0.9200
-.NET Framework 4.8 migration
+### Phase 1 — .NET 4.8 Migration
+v2.0.9200
+> .NET Framework 4.8 migration
 
 ### v1.x
 Original FluffyFish release
