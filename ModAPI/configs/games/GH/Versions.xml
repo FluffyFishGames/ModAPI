@@ -4,7 +4,58 @@
 		<file>%fileBase%_Data/Managed/Assembly-CSharp-firstpass.dll</file>
 		<file>%fileBase%_Data/Managed/Assembly-CSharp.dll</file>
 	</files>
-	<version id="21698250">
-		<checksum>ED9DE9E5A0AE7CA138082E2F85316430C05C409954154B4544EBED5ABA287B36</checksum>
+	<version id="0.1.2">
+		<checksum>f93c608145b7015832d66e6772596eea45d49200d4c213953d206c5b5ad8dff9</checksum>
+	</version>
+	<version id="0.1.3">
+		<checksum>26b7d1db873df96c9059a196041c601d0f82511016397c6f1ac711fd02233594</checksum>
+	</version>
+	<version id="0.1.5">
+		<checksum>f93c608145b7015832d66e6772596eeac4ac749a3cb289fba20f31e222e10042</checksum>
+	</version>
+	<version id="0.3.3">
+		<checksum>f93c608145b7015832d66e6772596eea11b76eb6fcb21a5909f055f0a6ee2865</checksum>
+	</version>
+	<version id="1.0.1">
+		<checksum>6c765f51d53d958af4c9019aacb6e104befaff9c564b008fffbdb172691cc763</checksum>
+	</version>
+	<version id="1.0.2">
+		<checksum>01f7eb0b7390c3290b51fe820b123b07823f821e5eb347958d834db22ac18dc7</checksum>
+	</version>
+	<version id="1.6.1">
+		<checksum>87b2c96b163e832672f60c2c9e2bde60d770b6b612c5764436e2029b64415ec7</checksum>
+	</version>
+	<version id="1.8.0">
+		<checksum>7222ce0edf3cd55498d61459622e3364b33fe734e129078fa918991e288af1b4</checksum>
+	</version>
+	<version id="2.1.0">
+		<checksum>76f7af560c9c4e2b552f5c17361c999cf145c8bc7976ef6dee18aa7a26409ef4</checksum>
+	</version>
+	<version id="2.1.2">
+		<checksum>e67dcbfd275bc105c280db5f698f95994f08df0144fbbfd77255ca397e7bbabe</checksum>
+	</version>
+	<version id="2.2.1">
+		<checksum>d45db86d192d7f913b2b6c74afb642d3fca43bfd6ce29f976e9ddc266ef9be21</checksum>
+	</version>
+	<version id="2.3.1">
+		<checksum>38cb793979b758ce56e82c88eb19f04fb95919eef06b106a5a7dfea1d1b22dd7</checksum>
+	</version>
+	<version id="2.3.5">
+		<checksum>faed061d3c182b5e60747acd15a661a25f95f255cd2bcd2e7f751dc4a60bc111</checksum>
+	</version>
+	<version id="2.4.2">
+		<checksum>1e6fba11fe9aff5a0871d2d8d6d04b9b18b1f825076088aa9f05bfa194e53863</checksum>
+	</version>
+	<version id="2.5.3">
+		<checksum>a9d52a2f074e09ebc244d3d95faaf89b8cda064b968f96843a52633792517406</checksum>
+	</version>
+	<version id="2.6.0">
+		<checksum>978e974934a281d4757e193d3d25b251085bbde54004d0afc5e5ae16ffef454a</checksum>
+	</version>
+	<version id="2.7.2">
+		<checksum>262696186a80924e564a77c7cf3b34b60ef6549f1bbf1eefd0c603d87d9638ba</checksum>
+	</version>
+	<version id="2.9.5b114117">
+		<checksum>ed9de9e5a0ae7ca138082e2f85316430ee1d919cdb7be313fa9c6c370b0f441c</checksum>
 	</version>
 </VersionsData>
