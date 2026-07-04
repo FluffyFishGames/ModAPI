@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ModAPI v2.0.9619 — Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2234;
+  --bg-card-hover: #1f2a40;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #22d3ee;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-purple: #a78bfa;
+  --accent-pink: #f472b6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #1e293b;
+  --border-accent: #334155;
+  --glow-blue: rgba(59, 130, 246, 0.15);
+  --glow-cyan: rgba(34, 211, 238, 0.15);
+  --glow-green: rgba(16, 185, 129, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-cyan), transparent);
+}
+
+.header h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.header .version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  color: var(--accent-cyan);
+  opacity: 0.8;
+}
+
+.header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 56px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.section-title .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.section-title .icon.blue { background: var(--glow-blue); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.2); }
+.section-title .icon.cyan { background: var(--glow-cyan); color: var(--accent-cyan); border: 1px solid rgba(34,211,238,0.2); }
+.section-title .icon.green { background: var(--glow-green); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.2); }
+
+/* ── Runtime Cards ── */
+.runtime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.rt-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.rt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.rt-card.app::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+.rt-card.shared::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+.rt-card.basemod::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+.rt-card.moddll::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+
+.rt-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+
+.rt-card .name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rt-card .target {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.rt-card .desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.net48 { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+.badge.net35 { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+.badge.mono { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+.badge.fixed { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+
+/* ── Flow Diagram ── */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.flow-step {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  position: relative;
+}
+
+.flow-line {
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.flow-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 0 2px var(--accent-blue);
+  flex-shrink: 0;
+  z-index: 2;
+  margin-top: 18px;
+}
+
+.flow-dot.green { background: var(--accent-green); box-shadow: 0 0 0 2px var(--accent-green); }
+.flow-dot.orange { background: var(--accent-orange); box-shadow: 0 0 0 2px var(--accent-orange); }
+.flow-dot.red { background: var(--accent-red); box-shadow: 0 0 0 2px var(--accent-red); }
+.flow-dot.cyan { background: var(--accent-cyan); box-shadow: 0 0 0 2px var(--accent-cyan); }
+.flow-dot.purple { background: var(--accent-purple); box-shadow: 0 0 0 2px var(--accent-purple); }
+
+.flow-connector {
+  width: 2px;
+  flex-grow: 1;
+  background: linear-gradient(180deg, var(--border-accent), var(--border));
+}
+
+.flow-content {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 8px 0;
+  transition: border-color 0.3s;
+}
+
+.flow-content:hover { border-color: var(--border-accent); }
+
+.flow-content .step-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flow-content .step-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.flow-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  background: rgba(59,130,246,0.1);
+  color: var(--accent-cyan);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── Decision Diamond ── */
+.decision-box {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(239,68,68,0.08));
+  border: 1px dashed var(--accent-orange);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 8px 0;
+}
+
+.decision-box .step-title { color: var(--accent-orange); }
+
+.decision-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.decision-option {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+
+.decision-option .label {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.decision-option .label.yes { color: var(--accent-green); }
+.decision-option .label.no { color: var(--accent-red); }
+.decision-option .text { color: var(--text-secondary); font-size: 0.82rem; }
+
+/* ── Two Column ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; }
+  .decision-row { grid-template-columns: 1fr; }
+  .header h1 { font-size: 2rem; }
+}
+
+/* ── Debug/Release Table ── */
+.split-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.split-table th {
+  background: var(--bg-card);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.split-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.split-table tr:last-child td { border-bottom: none; }
+.split-table tr:hover td { background: rgba(59,130,246,0.03); }
+
+.split-table .loc { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--accent-cyan); }
+
+.col-debug { color: var(--accent-orange); }
+.col-release { color: var(--accent-green); }
+
+/* ── Validator Card ── */
+.validator-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) { .validator-grid { grid-template-columns: 1fr; } }
+
+.v-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.v-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+
+.v-card .method {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+  margin-bottom: 12px;
+}
+
+.v-card .checks {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.v-card .min-size {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.v-card .min-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* ── Resolve Fallback ── */
+.resolve-chain {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.resolve-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  text-align: center;
+  min-width: 200px;
+}
+
+.resolve-node .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.resolve-node .path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+}
+
+.resolve-node .note {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.resolve-arrow {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  padding: 0 12px;
+  flex-shrink: 0;
+}
+
+.resolve-node.primary { border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(59,130,246,0.08); }
+.resolve-node.fallback { border-color: var(--accent-orange); border-style: dashed; }
+.resolve-node.error { border-color: var(--accent-red); border-style: dashed; }
+
+/* ── PE Layout ── */
+.pe-layout {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  overflow-x: auto;
+}
+
+.pe-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.pe-row:last-child { border-bottom: none; }
+
+.pe-offset {
+  color: var(--text-muted);
+  min-width: 120px;
+}
+
+.pe-bytes {
+  color: var(--accent-orange);
+  min-width: 140px;
+}
+
+.pe-desc {
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+}
+
+.pe-arrow { color: var(--accent-cyan); }
+
+/* ── Separator ── */
+.sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+  margin: 48px 0;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.footer a { color: var(--accent-blue); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>ModAPI Architecture</h1>
+    <div class="version">v2.0.9619 — 2026-05-25</div>
+    <div class="subtitle">The Forest Mod Management Tool — Runtime, Build & Apply Pipeline</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. Runtime Split -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon blue">⚡</div>
+      Runtime Split
+    </div>
+    <div class="runtime-grid">
+      <div class="rt-card app">
+        <div class="name">ModAPI.exe</div>
+        <div class="target"><span class="badge net48">.NET 4.8</span> Windows Desktop</div>
+        <div class="desc">Main WPF application. 6-tab UI, theme engine, mod management, download system.</div>
+      </div>
+      <div class="rt-card shared">
+        <div class="name">ModAPI_Shared.dll</div>
+        <div class="target"><span class="badge net48">.NET 4.8</span> Shared Library</div>
+        <div class="desc">Configuration, Game logic, ModLib generation, FileValidator, Assembly resolution.</div>
+      </div>
+      <div class="rt-card basemod">
+        <div class="name">BaseModLib.dll</div>
+        <div class="target"><span class="badge net35">.NET 3.5</span> <span class="badge fixed">FIXED</span> <span class="badge mono">Mono 2.0</span></div>
+        <div class="desc">Permanently fixed at .NET 3.5. PE header must read <code>v2.0.50727</code>. Upgrading causes black screen in Unity 5.6.x / Mono 2.0.</div>
+      </div>
+      <div class="rt-card moddll">
+        <div class="name">Mod DLLs (user)</div>
+        <div class="target"><span class="badge net48">.NET 4.8</span> → <span class="badge mono">Mono 2.0</span> patched</div>
+        <div class="desc">Built with .NET 4.8 by mod developers. PE header patched to <code>v2.0.50727</code> at Apply time.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 2. Mod Apply Pipeline -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon cyan">🔧</div>
+      Mod Apply Pipeline — ApplyMods() Flow
+    </div>
+
+    <div class="flow">
+      <!-- Step 1: Backup Check -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="decision-box" style="flex:1;">
+          <div class="step-title">◆ Backup Exists?</div>
+          <div class="step-desc">Check <code>gamefiles/original/{GameId}/</code></div>
+          <div class="decision-row">
+            <div class="decision-option">
+              <div class="label yes">✓ YES</div>
+              <div class="text">Read assemblies from backup. Game folder untouched — no file lock risk.</div>
+            </div>
+            <div class="decision-option">
+              <div class="label no">✗ NO</div>
+              <div class="text">Auto-create backup from <code>{GamePath}</code>. Copy all IncludeAssemblies + CopyAssemblies. <em>(v2.0.9619)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Assembly Resolver -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot cyan"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">🔍 Assembly Resolver Setup</div>
+          <div class="step-desc">
+            <code>CustomAssemblyResolver</code> search paths from backup folders only.<br>
+            Game install folder added <strong>only</strong> when backup doesn't exist — prevents Cecil file locks on game DLLs. <em>(v2.0.9619)</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Read & Parse -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot green"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">📖 Read Assemblies (Cecil)</div>
+          <div class="step-desc">
+            <code>ModuleDefinition.ReadModule()</code> from <code>gamefiles/original/</code>.<br>
+            IncludeAssemblies: full IL parse + modification.<br>
+            CopyAssemblies: resolve mscorlib / UnityEngine references.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: IL Modification -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot purple"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">✏️ IL Modification</div>
+          <div class="step-desc">
+            Inject mod code into game assemblies: <code>InjectInto</code>, <code>AddMethod</code>, <code>AddField</code>, <code>AddClass</code>.<br>
+            Add <code>BaseModLib</code> assembly reference.<br>
+            Remap all references via <code>AssemblyVersionMap</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Write to modded -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot orange"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">💾 Write to Staging</div>
+          <div class="step-desc">
+            Modified assemblies written to <code>gamefiles/modded/{GameId}/</code>.<br>
+            PE header patched: <code>v4.0.30319</code> → <code>v2.0.50727</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: DirectoryCopy -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot green"></div>
+          <div class="flow-connector" style="background: transparent;"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">📦 Deploy to Game Folder</div>
+          <div class="step-desc">
+            <code>DirectoryCopy()</code>: <code>gamefiles/modded/</code> → actual game install path.<br>
+            No file lock conflicts because all reads came from backup folder.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. Assembly Remapping -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon green">🔄</div>
+      Assembly Remapping Pipeline
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="step-title">👤 Mod Developer builds with .NET 4.8</div>
+          <div class="step-desc">Mod DLL: PE header <code>v4.0.30319</code>, references <code>mscorlib 4.0.0.0</code></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot orange"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="step-title">🔧 ModAPI Apply — ModProject.cs</div>
+          <div class="step-desc">
+            <code>AssemblyVersionMap.RemapAllReferences()</code>: <code>mscorlib 4.0.0.0 → 2.0.0.0</code>, etc. (20 assemblies)<br>
+            <code>modModule.RuntimeVersion = "v2.0.50727"</code>: PE header rewritten
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector" style="background:transparent"></div></div>
+        <div class="flow-content">
+          <div class="step-title">🎮 Game Mono 2.0 Runtime</div>
+          <div class="step-desc">PE header accepted ✅ → References resolved ✅ → Mod runs in-game</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 4. Assembly Resolver Fallback -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon blue">🔗</div>
+      Assembly Resolver Fallback Chain
+    </div>
+
+    <div class="resolve-chain">
+      <div class="resolve-node primary">
+        <div class="num">① PRIMARY</div>
+        <div class="path">gamefiles/original/{GameId}/</div>
+        <div class="note">Backup folder — always preferred</div>
+      </div>
+      <div class="resolve-arrow">→</div>
+      <div class="resolve-node fallback">
+        <div class="num">② FALLBACK</div>
+        <div class="path">{GameInstallPath}/</div>
+        <div class="note">Only when backup missing (v2.0.9619)</div>
+      </div>
+      <div class="resolve-arrow">→</div>
+      <div class="resolve-node error">
+        <div class="num">③ ERROR</div>
+        <div class="path">File not found</div>
+        <div class="note">Abort with popup (Release) / Skip (Debug)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 5. Debug / Release Build Split -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon cyan">🔀</div>
+      Debug / Release Build Split
+    </div>
+
+    <table class="split-table">
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th class="col-debug">Debug Build</th>
+          <th class="col-release">Release Build</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="loc">CheckSteam()</td>
+          <td>File.Exists() only — dummy files pass</td>
+          <td>FileValidator.IsValidSteamExe() — PE + min 1 MB</td>
+        </tr>
+        <tr>
+          <td class="loc">CheckGamePath()</td>
+          <td>File.Exists() only — dummy files pass</td>
+          <td>FileValidator.IsValidAssemblyDll() — PE + CLR + min 8 KB</td>
+        </tr>
+        <tr>
+          <td class="loc">ModLib.Create() — IncludeAssemblies</td>
+          <td>File.Copy() — skip Cecil parsing</td>
+          <td>Full Mono.Cecil parse + IL modification</td>
+        </tr>
+        <tr>
+          <td class="loc">ModLib.Create() — file not found</td>
+          <td>Log warning, skip and continue</td>
+          <td>Log error, abort with popup</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 6. FileValidator — PE Header Verification -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon green">🛡️</div>
+      FileValidator — PE Header Verification
+    </div>
+
+    <div class="validator-grid">
+      <div class="v-card">
+        <div class="method">IsValidSteamExe()</div>
+        <div class="checks">MZ signature<br>PE\0\0 signature</div>
+        <div class="min-size">1 MB</div>
+        <div class="min-label">minimum size</div>
+      </div>
+      <div class="v-card">
+        <div class="method">IsValidGameExe()</div>
+        <div class="checks">MZ signature<br>PE\0\0 signature</div>
+        <div class="min-size">512 KB</div>
+        <div class="min-label">minimum size</div>
+      </div>
+      <div class="v-card">
+        <div class="method">IsValidAssemblyDll()</div>
+        <div class="checks">MZ + PE\0\0<br>CLR metadata (DataDir #14)</div>
+        <div class="min-size">8 KB</div>
+        <div class="min-label">minimum size (v2.0.9619)</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="pe-layout">
+        <div class="pe-row">
+          <span class="pe-offset">[0x00]</span>
+          <span class="pe-bytes">4D 5A</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">"MZ" DOS signature</span>
+        </div>
+        <div class="pe-row">
+          <span class="pe-offset">[0x3C]</span>
+          <span class="pe-bytes">XX XX XX XX</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">PE header offset (little-endian)</span>
+        </div>
+        <div class="pe-row">
+          <span class="pe-offset">[offset]</span>
+          <span class="pe-bytes">50 45 00 00</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">"PE\0\0" signature</span>
+        </div>
+        <div class="pe-row">
+          <span class="pe-offset">[DataDir #14]</span>
+          <span class="pe-bytes">RVA + Size ≠ 0</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">.NET CLR header present</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 7. Download Guard -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon blue">⬇️</div>
+      Mod Download Guard — v2.0.9619
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="step-title">📥 Download from Server</div>
+          <div class="step-desc">Write to temp file: <code>{filename}.tmp</code></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot orange"></div><div class="flow-connector"></div></div>
+        <div class="decision-box" style="flex:1;">
+          <div class="step-title">◆ File Size > 0?</div>
+          <div class="decision-row">
+            <div class="decision-option">
+              <div class="label yes">✓ YES</div>
+              <div class="text">Rename <code>.tmp</code> → final <code>.mod</code>. FindMods timer picks it up.</div>
+            </div>
+            <div class="decision-option">
+              <div class="label no">✗ NO (0 bytes)</div>
+              <div class="text">Delete temp file. Show <code>DownloadEmpty</code> popup. Return false.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector" style="background:transparent"></div></div>
+        <div class="flow-content">
+          <div class="step-title">📂 Mod Loading (FindMods timer — 1s)</div>
+          <div class="step-desc">
+            <code>Mod.Load()</code> parses header (LF/CRLF compatible).<br>
+            Failed loads registered in <code>LoadedFiles</code> — no infinite retry. <em>(v2.0.9619)</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    ModAPI v2.0.9619 Architecture Diagram — <a href="https://github.com/FluffyFishGames/ModAPI">github.com/FluffyFishGames/ModAPI</a><br>
+    Original: FluffyFish · Upgrade: zzangae
+  </div>
+
+</div>
+
+</body>
+</html>

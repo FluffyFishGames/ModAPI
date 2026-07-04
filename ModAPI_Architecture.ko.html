@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ModAPI v2.0.9619 — 아키텍처</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2234;
+  --bg-card-hover: #1f2a40;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #22d3ee;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-purple: #a78bfa;
+  --accent-pink: #f472b6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #1e293b;
+  --border-accent: #334155;
+  --glow-blue: rgba(59, 130, 246, 0.15);
+  --glow-cyan: rgba(34, 211, 238, 0.15);
+  --glow-green: rgba(16, 185, 129, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Noto Sans KR', 'Outfit', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-cyan), transparent);
+}
+
+.header h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.header .version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  color: var(--accent-cyan);
+  opacity: 0.8;
+}
+
+.header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 56px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.section-title .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.section-title .icon.blue { background: var(--glow-blue); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.2); }
+.section-title .icon.cyan { background: var(--glow-cyan); color: var(--accent-cyan); border: 1px solid rgba(34,211,238,0.2); }
+.section-title .icon.green { background: var(--glow-green); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.2); }
+
+/* ── Runtime Cards ── */
+.runtime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.rt-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.rt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.rt-card.app::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); }
+.rt-card.shared::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+.rt-card.basemod::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+.rt-card.moddll::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+
+.rt-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+
+.rt-card .name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rt-card .target {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.rt-card .desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.net48 { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+.badge.net35 { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+.badge.mono { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+.badge.fixed { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+
+/* ── Flow Diagram ── */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.flow-step {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  position: relative;
+}
+
+.flow-line {
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.flow-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 0 2px var(--accent-blue);
+  flex-shrink: 0;
+  z-index: 2;
+  margin-top: 18px;
+}
+
+.flow-dot.green { background: var(--accent-green); box-shadow: 0 0 0 2px var(--accent-green); }
+.flow-dot.orange { background: var(--accent-orange); box-shadow: 0 0 0 2px var(--accent-orange); }
+.flow-dot.red { background: var(--accent-red); box-shadow: 0 0 0 2px var(--accent-red); }
+.flow-dot.cyan { background: var(--accent-cyan); box-shadow: 0 0 0 2px var(--accent-cyan); }
+.flow-dot.purple { background: var(--accent-purple); box-shadow: 0 0 0 2px var(--accent-purple); }
+
+.flow-connector {
+  width: 2px;
+  flex-grow: 1;
+  background: linear-gradient(180deg, var(--border-accent), var(--border));
+}
+
+.flow-content {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 8px 0;
+  transition: border-color 0.3s;
+}
+
+.flow-content:hover { border-color: var(--border-accent); }
+
+.flow-content .step-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flow-content .step-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.flow-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  background: rgba(59,130,246,0.1);
+  color: var(--accent-cyan);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── Decision Diamond ── */
+.decision-box {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(239,68,68,0.08));
+  border: 1px dashed var(--accent-orange);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 8px 0;
+}
+
+.decision-box .step-title { color: var(--accent-orange); }
+
+.decision-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.decision-option {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+
+.decision-option .label {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.decision-option .label.yes { color: var(--accent-green); }
+.decision-option .label.no { color: var(--accent-red); }
+.decision-option .text { color: var(--text-secondary); font-size: 0.82rem; }
+
+/* ── Two Column ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; }
+  .decision-row { grid-template-columns: 1fr; }
+  .header h1 { font-size: 2rem; }
+}
+
+/* ── Debug/Release Table ── */
+.split-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.split-table th {
+  background: var(--bg-card);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.split-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.split-table tr:last-child td { border-bottom: none; }
+.split-table tr:hover td { background: rgba(59,130,246,0.03); }
+
+.split-table .loc { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--accent-cyan); }
+
+.col-debug { color: var(--accent-orange); }
+.col-release { color: var(--accent-green); }
+
+/* ── Validator Card ── */
+.validator-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) { .validator-grid { grid-template-columns: 1fr; } }
+
+.v-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.v-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+
+.v-card .method {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+  margin-bottom: 12px;
+}
+
+.v-card .checks {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.v-card .min-size {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.v-card .min-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* ── Resolve Fallback ── */
+.resolve-chain {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.resolve-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  text-align: center;
+  min-width: 200px;
+}
+
+.resolve-node .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.resolve-node .path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+}
+
+.resolve-node .note {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.resolve-arrow {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  padding: 0 12px;
+  flex-shrink: 0;
+}
+
+.resolve-node.primary { border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(59,130,246,0.08); }
+.resolve-node.fallback { border-color: var(--accent-orange); border-style: dashed; }
+.resolve-node.error { border-color: var(--accent-red); border-style: dashed; }
+
+/* ── PE Layout ── */
+.pe-layout {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  overflow-x: auto;
+}
+
+.pe-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.pe-row:last-child { border-bottom: none; }
+
+.pe-offset {
+  color: var(--text-muted);
+  min-width: 120px;
+}
+
+.pe-bytes {
+  color: var(--accent-orange);
+  min-width: 140px;
+}
+
+.pe-desc {
+  color: var(--text-secondary);
+  font-family: 'Noto Sans KR', 'Outfit', sans-serif;
+}
+
+.pe-arrow { color: var(--accent-cyan); }
+
+/* ── Separator ── */
+.sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+  margin: 48px 0;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.footer a { color: var(--accent-blue); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>ModAPI 아키텍처</h1>
+    <div class="version">v2.0.9619 — 2026-05-25</div>
+    <div class="subtitle">The Forest Mod Management Tool — Runtime, Build & Apply Pipeline</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. 런타임 구조 -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon blue">⚡</div>
+      런타임 구조
+    </div>
+    <div class="runtime-grid">
+      <div class="rt-card app">
+        <div class="name">ModAPI.exe</div>
+        <div class="target"><span class="badge net48">.NET 4.8</span> Windows 데스크톱</div>
+        <div class="desc">WPF 메인 애플리케이션. 6개 탭 UI, 테마 엔진, 모드 관리, 다운로드 시스템.</div>
+      </div>
+      <div class="rt-card shared">
+        <div class="name">ModAPI_Shared.dll</div>
+        <div class="target"><span class="badge net48">.NET 4.8</span> 공유 라이브러리</div>
+        <div class="desc">설정, 게임 로직, ModLib 생성, FileValidator, 어셈블리 해석.</div>
+      </div>
+      <div class="rt-card basemod">
+        <div class="name">BaseModLib.dll</div>
+        <div class="target"><span class="badge net35">.NET 3.5</span> <span class="badge fixed">FIXED</span> <span class="badge mono">Mono 2.0</span></div>
+        <div class="desc">.NET 3.5 영구 고정. PE 헤더는 반드시 <code>v2.0.50727</code>이어야 합니다. 업그레이드 시 Unity 5.6.x / Mono 2.0에서 검은 화면 발생.</div>
+      </div>
+      <div class="rt-card moddll">
+        <div class="name">Mod DLLs (user)</div>
+        <div class="target"><span class="badge net48">.NET 4.8</span> → <span class="badge mono">Mono 2.0</span> patched</div>
+        <div class="desc">모드 개발자가 .NET 4.8로 빌드. 적용 시 PE 헤더를 <code>v2.0.50727</code>로 패치.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 2. Mod Apply Pipeline -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon cyan">🔧</div>
+      모드 적용 파이프라인 — ApplyMods() 흐름
+    </div>
+
+    <div class="flow">
+      <!-- Step 1: Backup Check -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="decision-box" style="flex:1;">
+          <div class="step-title">◆ 백업 존재 여부?</div>
+          <div class="step-desc"><code>gamefiles/original/{GameId}/</code> 확인</div>
+          <div class="decision-row">
+            <div class="decision-option">
+              <div class="label yes">✓ 예</div>
+              <div class="text">백업에서 어셈블리 읽기. 게임 폴더 미접근 — 파일 잠금 위험 없음.</div>
+            </div>
+            <div class="decision-option">
+              <div class="label no">✗ 아니오</div>
+              <div class="text"><code>{GamePath}</code>에서 백업 자동 생성. IncludeAssemblies + CopyAssemblies 전체 복사. <em>(v2.0.9619)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Assembly Resolver -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot cyan"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">🔍 어셈블리 리졸버 설정</div>
+          <div class="step-desc">
+            <code>CustomAssemblyResolver</code> 검색 경로를 백업 폴더로만 설정.<br>
+            게임 설치 폴더는 백업이 <strong>없을 때만</strong> 추가 — Cecil의 게임 DLL 파일 잠금 방지. <em>(v2.0.9619)</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Read & Parse -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot green"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">📖 어셈블리 읽기 (Cecil)</div>
+          <div class="step-desc">
+            <code>ModuleDefinition.ReadModule()</code>로 <code>gamefiles/original/</code>에서 읽기.<br>
+            IncludeAssemblies: 전체 IL 파싱 + 수정.<br>
+            CopyAssemblies: mscorlib / UnityEngine 참조 해석.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: IL Modification -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot purple"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">✏️ IL 수정</div>
+          <div class="step-desc">
+            게임 어셈블리에 모드 코드 주입: <code>InjectInto</code>, <code>AddMethod</code>, <code>AddField</code>, <code>AddClass</code>.<br>
+            <code>BaseModLib</code> 어셈블리 참조 추가.<br>
+            <code>AssemblyVersionMap</code>으로 모든 참조 리매핑.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Write to modded -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot orange"></div>
+          <div class="flow-connector"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">💾 스테이징에 쓰기</div>
+          <div class="step-desc">
+            수정된 어셈블리를 <code>gamefiles/modded/{GameId}/</code>에 저장.<br>
+            PE 헤더 패치: <code>v4.0.30319</code> → <code>v2.0.50727</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: DirectoryCopy -->
+      <div class="flow-step">
+        <div class="flow-line">
+          <div class="flow-dot green"></div>
+          <div class="flow-connector" style="background: transparent;"></div>
+        </div>
+        <div class="flow-content">
+          <div class="step-title">📦 게임 폴더에 배포</div>
+          <div class="step-desc">
+            <code>DirectoryCopy()</code>: <code>gamefiles/modded/</code> → 실제 게임 설치 경로.<br>
+            모든 읽기가 백업 폴더에서 수행되므로 파일 잠금 충돌 없음.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. Assembly Remapping -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon green">🔄</div>
+      어셈블리 리매핑 파이프라인
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="step-title">👤 모드 개발자가 .NET 4.8로 빌드</div>
+          <div class="step-desc">모드 DLL: PE 헤더 <code>v4.0.30319</code>, <code>mscorlib 4.0.0.0</code> 참조</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot orange"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="step-title">🔧 ModAPI 적용 — ModProject.cs</div>
+          <div class="step-desc">
+            <code>AssemblyVersionMap.RemapAllReferences()</code>: <code>mscorlib 4.0.0.0 → 2.0.0.0</code> 등 (20개 어셈블리)<br>
+            <code>modModule.RuntimeVersion = "v2.0.50727"</code>: PE 헤더 재작성
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector" style="background:transparent"></div></div>
+        <div class="flow-content">
+          <div class="step-title">🎮 게임 Mono 2.0 런타임</div>
+          <div class="step-desc">PE 헤더 수락 ✅ → 참조 해석 ✅ → 인게임 모드 실행</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 4. Assembly Resolver Fallback -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon blue">🔗</div>
+      어셈블리 리졸버 대체 경로
+    </div>
+
+    <div class="resolve-chain">
+      <div class="resolve-node primary">
+        <div class="num">① 기본</div>
+        <div class="path">gamefiles/original/{GameId}/</div>
+        <div class="note">백업 폴더 — 항상 우선</div>
+      </div>
+      <div class="resolve-arrow">→</div>
+      <div class="resolve-node fallback">
+        <div class="num">② 대체</div>
+        <div class="path">{GameInstallPath}/</div>
+        <div class="note">백업이 없을 때만 (v2.0.9619)</div>
+      </div>
+      <div class="resolve-arrow">→</div>
+      <div class="resolve-node error">
+        <div class="num">③ 오류</div>
+        <div class="path">파일 없음</div>
+        <div class="note">팝업과 함께 중단 (Release) / 건너뛰기 (Debug)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 5. 디버그 / 릴리즈 빌드 분리 -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon cyan">🔀</div>
+      디버그 / 릴리즈 빌드 분리
+    </div>
+
+    <table class="split-table">
+      <thead>
+        <tr>
+          <th>위치</th>
+          <th class="col-debug">디버그 빌드</th>
+          <th class="col-release">릴리즈 빌드</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="loc">CheckSteam()</td>
+          <td>File.Exists()만 확인 — 더미 파일 허용</td>
+          <td>FileValidator.IsValidSteamExe() — PE + 최소 1 MB</td>
+        </tr>
+        <tr>
+          <td class="loc">CheckGamePath()</td>
+          <td>File.Exists()만 확인 — 더미 파일 허용</td>
+          <td>FileValidator.IsValidAssemblyDll() — PE + CLR + 최소 8 KB</td>
+        </tr>
+        <tr>
+          <td class="loc">ModLib.Create() — IncludeAssemblies</td>
+          <td>File.Copy() — Cecil 파싱 생략</td>
+          <td>전체 Mono.Cecil 파싱 + IL 수정</td>
+        </tr>
+        <tr>
+          <td class="loc">ModLib.Create() — file not found</td>
+          <td>경고 로그, 건너뛰고 계속</td>
+          <td>오류 로그, 팝업과 함께 중단</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 6. FileValidator — PE 헤더 검증 -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon green">🛡️</div>
+      FileValidator — PE 헤더 검증
+    </div>
+
+    <div class="validator-grid">
+      <div class="v-card">
+        <div class="method">IsValidSteamExe()</div>
+        <div class="checks">MZ 시그니처<br>PE\0\0 시그니처</div>
+        <div class="min-size">1 MB</div>
+        <div class="min-label">최소 크기</div>
+      </div>
+      <div class="v-card">
+        <div class="method">IsValidGameExe()</div>
+        <div class="checks">MZ 시그니처<br>PE\0\0 시그니처</div>
+        <div class="min-size">512 KB</div>
+        <div class="min-label">최소 크기</div>
+      </div>
+      <div class="v-card">
+        <div class="method">IsValidAssemblyDll()</div>
+        <div class="checks">MZ + PE\0\0<br>CLR 메타데이터 (DataDir #14)</div>
+        <div class="min-size">8 KB</div>
+        <div class="min-label">최소 크기 (v2.0.9619)</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="pe-layout">
+        <div class="pe-row">
+          <span class="pe-offset">[0x00]</span>
+          <span class="pe-bytes">4D 5A</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">"MZ" DOS 시그니처</span>
+        </div>
+        <div class="pe-row">
+          <span class="pe-offset">[0x3C]</span>
+          <span class="pe-bytes">XX XX XX XX</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">PE 헤더 오프셋 (리틀 엔디언)</span>
+        </div>
+        <div class="pe-row">
+          <span class="pe-offset">[offset]</span>
+          <span class="pe-bytes">50 45 00 00</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">"PE\0\0" 시그니처</span>
+        </div>
+        <div class="pe-row">
+          <span class="pe-offset">[DataDir #14]</span>
+          <span class="pe-bytes">RVA + Size ≠ 0</span>
+          <span class="pe-arrow">←</span>
+          <span class="pe-desc">.NET CLR 헤더 존재</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 7. Download Guard -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon blue">⬇️</div>
+      모드 다운로드 검증 — v2.0.9619
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot"></div><div class="flow-connector"></div></div>
+        <div class="flow-content">
+          <div class="step-title">📥 서버에서 다운로드</div>
+          <div class="step-desc">임시 파일에 저장: <code>{filename}.tmp</code></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot orange"></div><div class="flow-connector"></div></div>
+        <div class="decision-box" style="flex:1;">
+          <div class="step-title">◆ 파일 크기 > 0?</div>
+          <div class="decision-row">
+            <div class="decision-option">
+              <div class="label yes">✓ 예</div>
+              <div class="text"><code>.tmp</code> → 최종 <code>.mod</code>로 이름 변경. FindMods 타이머가 감지.</div>
+            </div>
+            <div class="decision-option">
+              <div class="label no">✗ 아니오 (0 바이트)</div>
+              <div class="text">임시 파일 삭제. <code>DownloadEmpty</code> 팝업 표시. false 반환.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-line"><div class="flow-dot green"></div><div class="flow-connector" style="background:transparent"></div></div>
+        <div class="flow-content">
+          <div class="step-title">📂 모드 로딩 (FindMods 타이머 — 1초)</div>
+          <div class="step-desc">
+            <code>Mod.Load()</code>로 헤더 파싱 (LF/CRLF 호환).<br>
+            실패한 로드는 <code>LoadedFiles</code>에 등록 — 무한 재시도 방지. <em>(v2.0.9619)</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    ModAPI v2.0.9619 아키텍처 다이어그램 — <a href="https://github.com/FluffyFishGames/ModAPI">github.com/FluffyFishGames/ModAPI</a><br>
+    원작: FluffyFish · 업그레이드: zzangae
+  </div>
+
+</div>
+
+</body>
+</html>
