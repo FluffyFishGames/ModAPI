@@ -99,6 +99,7 @@ public class ModsViewModel : INotifyPropertyChanged
             }
 
             var keys = LoadedFiles.Keys.ToArray();
+            var modsRemoved = false;
             for (var i = 0; i < keys.Length; i++)
             {
                 var file = keys[i];
@@ -116,12 +117,21 @@ public class ModsViewModel : INotifyPropertyChanged
                             if (vm.VersionsData.Count == 0)
                             {
                                 _Mods.RemoveAt(j);
+                                modsRemoved = true;
                             }
                             break;
                         }
                     }
                     LoadedFiles.Remove(file);
                 }
+            }
+
+            // 삭제된 mod 가 있으면 FilteredMods 갱신 알림
+            // (없으면 특정 게임 필터가 선택된 상태에서는 화면이 갱신되지 않고
+            //  All 필터로 전환해야만 비로소 목록에서 사라지는 것처럼 보이는 문제가 발생함)
+            if (modsRemoved)
+            {
+                OnPropertyChanged("FilteredMods");
             }
 
             // Collect .mod files from all game subdirectories under modsBase
@@ -135,14 +145,60 @@ public class ModsViewModel : INotifyPropertyChanged
             }
             var files = allFiles.ToArray();
             var toLoad = new List<string>();
+
+            Debug.Log("ModsViewModel", $"[FindMods] Scanning mods folder: {modsBase} | Total files found: {files.Length}", Debug.Type.Notice, detailedOnly: true);
+
             foreach (var file in files)
             {
                 var fileName = Path.GetFileName(file);
-                if (!LoadedFiles.ContainsKey(file) && Validation.IsMatch(fileName))
+
+                // 이미 로드된 파일 스킵
+                if (LoadedFiles.ContainsKey(file))
+                {
+                    Debug.Log("ModsViewModel", $"[FindMods] Skip (already loaded): {fileName}", Debug.Type.Notice, detailedOnly: true);
+                    continue;
+                }
+
+                // .mod 확장자 파일만 검사
+                if (!fileName.EndsWith(".mod", StringComparison.OrdinalIgnoreCase))
+                {
+                    Debug.Log("ModsViewModel", $"[FindMods] Skip (not .mod): {fileName}", Debug.Type.Notice, detailedOnly: true);
+                    continue;
+                }
+
+                // 정규식 패턴 검증
+                // 필요 형식: {ModId}-{Version}-{32자리 MD5}.mod
+                // 예: UltimateCheatMenu-2.3.6-a1b2c3d4e5f6789012345678901234ab.mod
+                if (Validation.IsMatch(fileName))
                 {
                     toLoad.Add(file);
+                    Debug.Log("ModsViewModel", $"[FindMods] Queued for load: {fileName}", Debug.Type.Notice, detailedOnly: true);
+                }
+                else
+                {
+                    // 패턴 매칭 실패 — 파일명 형식 진단 (Release 에서도 출력 — 사용자 문의 시 필요)
+                    var parts = fileName.Replace(".mod", "").Split('-');
+                    string reason;
+                    if (parts.Length < 3)
+                        reason = $"Too few segments (expected 3+, got {parts.Length}). Format: {{ModId}}-{{Version}}-{{MD5Hash}}.mod";
+                    else if (!System.Text.RegularExpressions.Regex.IsMatch(parts[0], "^[a-zA-Z0-9_]+$"))
+                        reason = "Invalid ModId segment: " + parts[0] + " (only letters, digits, underscore allowed)";
+                    else if (!System.Text.RegularExpressions.Regex.IsMatch(parts[1], "^[0-9.]+$"))
+                        reason = "Invalid Version segment: " + parts[1] + " (only digits and dots allowed)";
+                    else if (parts.Length < 3 || !System.Text.RegularExpressions.Regex.IsMatch(parts[parts.Length - 1], "^[0-9abcdef]{32}$"))
+                        reason = "Invalid or missing MD5 hash: " + (parts.Length >= 3 ? parts[parts.Length - 1] : "(missing)") + " (must be 32 lowercase hex chars)";
+                    else
+                        reason = "Pattern mismatch (unknown reason)";
+
+                    Debug.Log("ModsViewModel",
+                        $"[FindMods] Skip (filename validation failed): {fileName}" +
+                        $" | Reason: {reason}" +
+                        $" | Expected pattern: {{ModId}}-{{Version}}-{{32hexMD5}}.mod",
+                        Debug.Type.Warning);
                 }
             }
+
+            Debug.Log("ModsViewModel", $"[FindMods] Scan complete. Queued: {toLoad.Count} / {files.Length} files", Debug.Type.Notice, detailedOnly: true);
 
             if (toLoad.Count > 0)
             {
@@ -157,6 +213,7 @@ public class ModsViewModel : INotifyPropertyChanged
         }
         catch (Exception e)
         {
+            Debug.Log("ModsViewModel", $"[FindMods] Exception: {e}", Debug.Type.Error);
             Console.WriteLine(e.ToString());
         }
     }

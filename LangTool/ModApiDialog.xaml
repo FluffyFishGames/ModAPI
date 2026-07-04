@@ -1,0 +1,60 @@
+<Window x:Class="MODAPI_LangTool.ModApiDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="Height"
+        Width="420">
+
+    <Border Background="#1A1A2E"
+            BorderBrush="#E94560"
+            BorderThickness="1"
+            CornerRadius="4">
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 아이콘 + 타이틀 -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock x:Name="IconText"
+                           Text="⚠"
+                           FontSize="20"
+                           Foreground="#E94560"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+                <TextBlock x:Name="TitleText"
+                           FontSize="15" FontWeight="Bold"
+                           Foreground="#E0E0E0"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <!-- 구분선 -->
+            <Border Grid.Row="1" Height="1"
+                    Background="#0F3460"
+                    VerticalAlignment="Center"/>
+
+            <!-- 메시지 -->
+            <TextBlock Grid.Row="2"
+                       x:Name="MessageText"
+                       Foreground="#C0C0C0"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       LineHeight="20"/>
+
+            <!-- 버튼 -->
+            <StackPanel Grid.Row="4"
+                        x:Name="ButtonPanel"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"/>
+        </Grid>
+    </Border>
+</Window>

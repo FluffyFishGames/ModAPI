@@ -22,6 +22,8 @@ using ModAPI.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 
 namespace ModAPI
@@ -31,7 +33,7 @@ namespace ModAPI
     /// </summary>
     public partial class App : Application
     {
-        public static string Version = "2.0.9619";
+        public static string Version = "2.0.9620";
         public static bool DevMode;
 
         public ResourceDictionary LanguageDictionary;
@@ -68,6 +70,11 @@ namespace ModAPI
 
         public App()
         {
+            // .NET 예외 메시지가 Windows 시스템 언어를 따르지 않도록 고정
+            // 프랑스어 등 비영어 Windows 환경에서 예외 메시지가 혼용되는 문제 방지
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             AssemblyResolver.Initialize();
             RootPath = Path.GetFullPath(".");
             UpdatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;

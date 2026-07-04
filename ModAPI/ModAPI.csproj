@@ -198,8 +198,14 @@
     <Compile Include="Windows\SubWindows\CreateModProject.xaml.cs">
       <DependentUpon>CreateModProject.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SubWindows\GameIntegrityWarning.xaml.cs">
+      <DependentUpon>GameIntegrityWarning.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SubWindows\NoProjectWarning.xaml.cs">
       <DependentUpon>NoProjectWarning.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SubWindows\SelectGameDialog.xaml.cs">
+      <DependentUpon>SelectGameDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SubWindows\ThemeRestartNotice.xaml.cs">
       <DependentUpon>ThemeRestartNotice.xaml</DependentUpon>
@@ -344,9 +350,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\SubWindows\GameIntegrityWarning.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Windows\SubWindows\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\SelectGameDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\SubWindows\UpdateAvailable.xaml">
       <SubType>Designer</SubType>
@@ -736,9 +750,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Themes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
       <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>

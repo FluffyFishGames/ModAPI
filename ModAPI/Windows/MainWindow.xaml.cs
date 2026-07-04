@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -1072,6 +1073,25 @@ namespace ModAPI
             var modId = CurrentModViewModel.Id;
             var versionsData = CurrentModViewModel.VersionsData;
 
+            // 삭제 대상 mod 가 속한 게임 인스턴스를 직접 사용 — App.Game(현재 활성 게임)에
+            // 의존하면 다른 게임이 활성화된 상태에서 엉뚱한 게임 폴더를 참조하게 됨
+            // (예: TheForest 가 활성 상태에서 Green Hell mod 를 삭제하면
+            //  TheForest 의 Managed 폴더를 뒤져서 GH DLL을 찾지 못해 삭제가 누락됨)
+            var modGame = versionsData.Count > 0
+                ? versionsData[versionsData.Keys.First()].Game
+                : null;
+
+            // 삭제 대상 ModViewModel 참조 보관 — 파일 삭제 후 메모리 캐시(_Selected)도 초기화하기 위함
+            // ModsViewModel.UpdateMods() 의 동시성 타이밍에 따라 같은 ModId 로 재다운로드 시
+            // ViewModel 인스턴스가 재사용될 수 있는데, 이 경우 Configuration 키만 지워서는
+            // 이미 메모리에 캐싱된 _Selected 값(true)이 그대로 남아 체크박스가 활성 상태로 보임
+            var targetModViewModel = CurrentModViewModel;
+
+            Debug.Log("DeleteMod",
+                $"[Delete] Target mod: {modId} | Game: {modGame?.GameConfiguration?.Id ?? "(null)"}" +
+                $" | App.Game (active): {App.Game?.GameConfiguration?.Id ?? "(null)"}",
+                Debug.Type.Notice);
+
             var win = new Windows.SubWindows.DeleteModConfirm("Lang.Windows.DeleteModConfirm", modName);
             win.Closed += (s, args) =>
             {
@@ -1105,83 +1125,163 @@ namespace ModAPI
                     }
 
                     // Step 2: Delete deployed mod DLL from game folder
-                    if (App.Game != null && !string.IsNullOrEmpty(App.Game.GamePath))
+                    // mod 자신이 속한 게임(modGame)의 경로를 사용 — App.Game 이 아님
+                    if (modGame != null)
                     {
-                        var gameFolder = App.Game.GetGameFolder();
-                        if (!string.IsNullOrEmpty(gameFolder))
+                        // modGame.GamePath 가 비어있으면 저장된 설정 경로로 보완
+                        if (string.IsNullOrEmpty(modGame.GamePath))
                         {
-                            // Delete from assemblyPath (e.g. TheForest_Data/Managed/)
-                            try
+                            var savedPath = ModAPI.Configurations.Configuration.GetPath(
+                                "Games." + modGame.GameConfiguration.Id, silent: true);
+                            if (!string.IsNullOrEmpty(savedPath))
+                                modGame.GamePath = savedPath;
+                        }
+
+                        if (!string.IsNullOrEmpty(modGame.GamePath))
+                        {
+                            var gameFolder = modGame.GetGameFolder();
+                            Debug.Log("DeleteMod",
+                                $"[Delete] Using game folder: {gameFolder} (Game: {modGame.GameConfiguration.Id})",
+                                Debug.Type.Notice);
+
+                            if (!string.IsNullOrEmpty(gameFolder))
                             {
-                                var assemblyRelPath = App.Game.ParsePath(App.Game.GameConfiguration.AssemblyPath);
-                                var assemblyDir = Path.GetFullPath(Path.Combine(gameFolder, assemblyRelPath));
-                                if (Directory.Exists(assemblyDir))
+                                // Delete from assemblyPath (e.g. GH_Data/Managed/)
+                                try
                                 {
-                                    foreach (var moduleName in moduleNames)
+                                    var assemblyRelPath = modGame.ParsePath(modGame.GameConfiguration.AssemblyPath);
+                                    var assemblyDir = Path.GetFullPath(Path.Combine(gameFolder, assemblyRelPath));
+                                    if (Directory.Exists(assemblyDir))
                                     {
-                                        var dllPath = Path.Combine(assemblyDir, moduleName);
-                                        if (File.Exists(dllPath))
+                                        foreach (var moduleName in moduleNames)
                                         {
-                                            try { File.Delete(dllPath); Debug.Log("DeleteMod", "Deleted DLL: " + dllPath); }
-                                            catch (Exception ex) { Debug.Log("DeleteMod", "Failed to delete DLL: " + dllPath + " - " + ex.Message, Debug.Type.Warning); }
+                                            var dllPath = Path.Combine(assemblyDir, moduleName);
+                                            if (File.Exists(dllPath))
+                                            {
+                                                try { File.Delete(dllPath); Debug.Log("DeleteMod", "Deleted DLL: " + dllPath); }
+                                                catch (Exception ex) { Debug.Log("DeleteMod", "Failed to delete DLL: " + dllPath + " - " + ex.Message, Debug.Type.Warning); }
+                                            }
+                                            else
+                                            {
+                                                Debug.Log("DeleteMod",
+                                                    $"[Delete] DLL not found (already removed or never deployed): {dllPath}",
+                                                    Debug.Type.Notice);
+                                            }
                                         }
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("DeleteMod",
+                                            $"[Delete] Assembly directory not found: {assemblyDir}",
+                                            Debug.Type.Warning);
+                                    }
+                                }
+                                catch (Exception ex) { Debug.Log("DeleteMod", "Error resolving assembly path: " + ex.Message, Debug.Type.Warning); }
+
+                                // Delete from Mods folder (resources)
+                                var gameModsDir = Path.Combine(gameFolder, "Mods");
+                                if (Directory.Exists(gameModsDir))
+                                {
+                                    var modRes = Path.Combine(gameModsDir, modId + ".resources");
+                                    if (File.Exists(modRes))
+                                    {
+                                        try { File.Delete(modRes); }
+                                        catch (Exception ex) { Debug.Log("DeleteMod", "Failed to delete resources: " + modRes + " - " + ex.Message, Debug.Type.Warning); }
                                     }
                                 }
                             }
-                            catch (Exception ex) { Debug.Log("DeleteMod", "Error resolving assembly path: " + ex.Message, Debug.Type.Warning); }
-
-                            // Delete from Mods folder (resources)
-                            var gameModsDir = Path.Combine(gameFolder, "Mods");
-                            if (Directory.Exists(gameModsDir))
-                            {
-                                var modRes = Path.Combine(gameModsDir, modId + ".resources");
-                                if (File.Exists(modRes))
-                                {
-                                    try { File.Delete(modRes); }
-                                    catch (Exception ex) { Debug.Log("DeleteMod", "Failed to delete resources: " + modRes + " - " + ex.Message, Debug.Type.Warning); }
-                                }
-                            }
                         }
+                        else
+                        {
+                            Debug.Log("DeleteMod",
+                                $"[Delete] Skip game folder cleanup — path not configured for: {modGame.GameConfiguration.Id}",
+                                Debug.Type.Warning);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("DeleteMod",
+                            "[Delete] Skip game folder cleanup — mod.Game is null",
+                            Debug.Type.Warning);
                     }
 
                     // Step 3: Delete from ModdedGameFiles staging area
-                    try
+                    if (modGame != null)
                     {
-                        var moddedBase = Path.GetFullPath(
-                            ModAPI.Configurations.Configuration.GetPath("ModdedGameFiles") +
-                            Path.DirectorySeparatorChar + App.Game.GameConfiguration.Id);
-
-                        // Delete from staging Mods folder (resources)
-                        var moddedModsDir = Path.Combine(moddedBase, "Mods");
-                        if (Directory.Exists(moddedModsDir))
-                        {
-                            var moddedRes = Path.Combine(moddedModsDir, modId + ".resources");
-                            if (File.Exists(moddedRes))
-                                File.Delete(moddedRes);
-                        }
-
-                        // Delete from staging assembly folder (DLLs)
                         try
                         {
-                            var moddedAssemblyDir = Path.GetFullPath(
-                                moddedBase + Path.DirectorySeparatorChar +
-                                App.Game.ParsePath(App.Game.GameConfiguration.AssemblyPath));
-                            if (Directory.Exists(moddedAssemblyDir))
+                            var moddedBase = Path.GetFullPath(
+                                ModAPI.Configurations.Configuration.GetPath("ModdedGameFiles") +
+                                Path.DirectorySeparatorChar + modGame.GameConfiguration.Id);
+
+                            // Delete from staging Mods folder (resources)
+                            var moddedModsDir = Path.Combine(moddedBase, "Mods");
+                            if (Directory.Exists(moddedModsDir))
                             {
-                                foreach (var moduleName in moduleNames)
+                                var moddedRes = Path.Combine(moddedModsDir, modId + ".resources");
+                                if (File.Exists(moddedRes))
+                                    File.Delete(moddedRes);
+                            }
+
+                            // Delete from staging assembly folder (DLLs)
+                            try
+                            {
+                                var moddedAssemblyDir = Path.GetFullPath(
+                                    moddedBase + Path.DirectorySeparatorChar +
+                                    modGame.ParsePath(modGame.GameConfiguration.AssemblyPath));
+                                if (Directory.Exists(moddedAssemblyDir))
                                 {
-                                    var moddedDll = Path.Combine(moddedAssemblyDir, moduleName);
-                                    if (File.Exists(moddedDll))
-                                        File.Delete(moddedDll);
+                                    foreach (var moduleName in moduleNames)
+                                    {
+                                        var moddedDll = Path.Combine(moddedAssemblyDir, moduleName);
+                                        if (File.Exists(moddedDll))
+                                            File.Delete(moddedDll);
+                                    }
                                 }
                             }
+                            catch { }
                         }
                         catch { }
                     }
-                    catch { }
+
+                    // Step 3.5: Force-reset in-memory Selected state on the ViewModel itself
+                    // ModViewModel.Selected setter 는 Configuration.SetString(...) 도 함께 호출하므로
+                    // 메모리 캐시와 Configuration 값을 동시에 false 로 맞춘다.
+                    // (setter 가 VersionsData 의 mod 객체에 접근하므로 Step 1의 파일 삭제와는 무관하게 동작)
+                    if (targetModViewModel != null)
+                    {
+                        try
+                        {
+                            targetModViewModel.Selected = false;
+                            Debug.Log("DeleteMod",
+                                $"[Delete] Forced in-memory + Configuration Selected = false for: {modId}",
+                                Debug.Type.Notice);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Log("DeleteMod",
+                                $"[Delete] Failed to reset in-memory Selected: {ex.Message}",
+                                Debug.Type.Warning);
+                        }
+                    }
+
+                    // Step 3.6: Remove persisted Selected/Version settings from Configuration entirely
+                    // Step 3.5 가 "false" 로 키를 남겼다면, 여기서 키 자체를 완전히 제거하여
+                    // 다음 mod 재다운로드 시 Initialized() 가 "키 없음" 상태로 깨끗하게 시작하도록 함
+                    if (modGame != null)
+                    {
+                        var configPrefix = "Mods." + modGame.GameConfiguration.Id + "." + modId + ".";
+                        var removedCount = ModAPI.Configurations.Configuration.RemoveKeysWithPrefix(configPrefix);
+                        ModAPI.Configurations.Configuration.Save();
+                        Debug.Log("DeleteMod",
+                            $"[Delete] Removed {removedCount} config key(s) with prefix: {configPrefix}",
+                            Debug.Type.Notice);
+                    }
 
                     // Step 4: Reset UI - ModsViewModel timer will auto-detect deleted files
                     SetMod(null);
+
+                    Debug.Log("DeleteMod", $"[Delete] Completed: {modId}", Debug.Type.Notice);
                 }
                 catch (Exception ex)
                 {
@@ -1282,7 +1382,7 @@ namespace ModAPI
 
         private void StartGame(object sender, RoutedEventArgs e)
         {
-            // 검증 1: Settings 탭에 스팀 경로가 설정되어 있는지 확인
+            // ── 검증 1: Steam 설치 확인 ───────────────────────────────────────
             var steamPath = ModAPI.Configurations.Configuration.GetPath("Steam");
             var steamExePath = steamPath + System.IO.Path.DirectorySeparatorChar + "Steam.exe";
 #if DEBUG
@@ -1292,43 +1392,17 @@ namespace ModAPI
 #endif
             if (!steamValid)
             {
+                Debug.Log("StartGame", "[Validate] Steam not found → SteamNotFound popup", Debug.Type.Error);
                 var winSteam = new Windows.SubWindows.NoProjectWarning("Lang.Windows.SteamNotFound");
                 winSteam.ShowSubWindow();
                 winSteam.Show();
                 return;
             }
+            Debug.Log("StartGame", "[Validate] Steam OK", Debug.Type.Notice);
 
-            // 검증 2: mods/ 폴더에 .mod 파일이 있는 게임과 Settings 탭에 경로가 설정된 게임이 일치하는지 확인
-            var modsBase = ModAPI.Configurations.Configuration.GetPath("mods");
-            var supportedIds = new List<string> { "TheForest", "Subnautica", "Raft", "EscapeThePacific", "GH" };
-            bool anyMatch = false;
-            foreach (var gid in supportedIds)
-            {
-                // mods/{GameId}/ 폴더에 .mod 파일이 1개 이상 있는지
-                var modsDir = System.IO.Path.Combine(modsBase, gid);
-                bool hasMods = System.IO.Directory.Exists(modsDir) &&
-                               System.IO.Directory.GetFiles(modsDir, "*.mod").Length > 0;
-                if (!hasMods) continue;
-
-                // Settings 탭에 해당 게임 경로가 설정되어 있고 실행파일이 존재하는지
-                var gamePath = ModAPI.Configurations.Configuration.GetPath("Games." + gid, silent: true);
-                if (string.IsNullOrEmpty(gamePath)) continue;
-                if (!Configuration.Games.ContainsKey(gid)) continue;
-                var exeName = Configuration.Games[gid].SelectFile;
-                if (!string.IsNullOrEmpty(exeName) &&
-                    System.IO.File.Exists(System.IO.Path.Combine(gamePath, exeName)))
-                {
-                    anyMatch = true;
-                    break;
-                }
-            }
-            if (!anyMatch)
-            {
-                var winMatch = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GameModsMismatch");
-                winMatch.ShowSubWindow();
-                winMatch.Show();
-                return;
-            }
+            // ── 활성화된 mod 수집 ─────────────────────────────────────────────
+            var currentFilter = Mods?.SelectedGameFilter ?? "All";
+            bool isAllFilter = string.IsNullOrEmpty(currentFilter) || currentFilter == "All";
 
             var mods = new List<Mod>();
             foreach (var i in Mods.Mods)
@@ -1340,27 +1414,165 @@ namespace ModAPI
                     if (vm2 != null)
                     {
                         mods.Add(vm2.Mod);
+                        Debug.Log("StartGame",
+                            $"[ModCollect] Selected: {vm2.Mod.Id} | Game: {vm2.Mod.Game?.GameConfiguration?.Id}",
+                            Debug.Type.Notice);
                     }
                 }
             }
+            Debug.Log("StartGame", $"[ModCollect] Total: {mods.Count} | Filter: {currentFilter}", Debug.Type.Notice);
 
-            // 검증 2: 선택된 mod가 없으면 경고
-            if (mods.Count == 0)
+            // 선택된 mod 의 게임 ID 목록
+            var selectedGameIds = mods
+                .Select(m => m.Game?.GameConfiguration?.Id ?? "")
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Distinct()
+                .ToList();
+
+            // ── 검증 2: 게임 경로 확인 ───────────────────────────────────────
+            // All 필터 또는 복수 게임 mod 선택 시 → 게임 선택 팝업
+            // 특정 게임 필터 선택 시 → 해당 게임 경로 직접 확인
+            var supportedGameIds2 = new List<string> { "TheForest", "Subnautica", "Raft", "EscapeThePacific", "GH" };
+
+            bool needGameSelect = isAllFilter || selectedGameIds.Count >= 2;
+
+            Debug.Log("StartGame",
+                $"[Validate] Filter: {currentFilter}" +
+                $" | SelectedGameIds: [{string.Join(", ", selectedGameIds)}]" +
+                $" | NeedGameSelect: {needGameSelect}",
+                Debug.Type.Notice);
+
+            if (needGameSelect)
             {
-                var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.NoModSelected");
-                win.ShowSubWindow();
-                win.Show();
-                return;
+                // 후보: 활성화된 mod 의 게임이 있으면 해당 게임만, 없으면 전체 지원 게임
+                var candidateIds = selectedGameIds.Count >= 1 ? selectedGameIds : supportedGameIds2;
+
+                Debug.Log("StartGame",
+                    $"[GameSelect] Candidate IDs: [{string.Join(", ", candidateIds)}]",
+                    Debug.Type.Notice);
+
+                // ── 팝업에 표시할 게임 목록 결정 ────────────────────────────────
+                // 활성화된 mod 의 게임이 있으면 해당 게임 전체를 팝업에 표시
+                // (경로 미설정 게임도 포함 — 선택 후 경로 확인)
+                // 활성화된 mod 가 없으면 Configuration 에 등록된 전체 지원 게임 표시
+                var popupGames = candidateIds.Count >= 1 ? candidateIds : supportedGameIds2;
+
+                Debug.Log("StartGame",
+                    $"[GameSelect] Popup games: [{string.Join(", ", popupGames)}]",
+                    Debug.Type.Notice);
+
+                if (popupGames.Count == 0)
+                {
+                    Debug.Log("StartGame",
+                        "[GameSelect] No games available → GamePathNotSet popup",
+                        Debug.Type.Error);
+                    var winNoGame = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GamePathNotSet");
+                    winNoGame.ShowSubWindow();
+                    winNoGame.Show();
+                    return;
+                }
+
+                string chosenGameId;
+                if (popupGames.Count == 1)
+                {
+                    // 후보가 1개면 자동 선택
+                    chosenGameId = popupGames[0];
+                    Debug.Log("StartGame",
+                        $"[GameSelect] Auto-selected single game: {chosenGameId}",
+                        Debug.Type.Notice);
+                }
+                else
+                {
+                    // 2개 이상이면 팝업
+                    Debug.Log("StartGame",
+                        $"[GameSelect] Showing SelectGameDialog with {popupGames.Count} options",
+                        Debug.Type.Notice);
+                    var selectWin = new Windows.SubWindows.SelectGameDialog(popupGames);
+                    selectWin.Owner = this;
+                    selectWin.ShowDialog();
+                    if (string.IsNullOrEmpty(selectWin.SelectedGameId))
+                    {
+                        Debug.Log("StartGame",
+                            "[GameSelect] User cancelled SelectGameDialog",
+                            Debug.Type.Notice);
+                        return;
+                    }
+                    chosenGameId = selectWin.SelectedGameId;
+                    Debug.Log("StartGame",
+                        $"[GameSelect] User selected: {chosenGameId}",
+                        Debug.Type.Notice);
+                }
+
+                // ── 선택한 게임 경로 확인 (2순위) ───────────────────────────
+                var chosenPath = ModAPI.Configurations.Configuration.GetPath("Games." + chosenGameId, silent: true);
+                var chosenExeName = ModAPI.Configurations.Configuration.Games.ContainsKey(chosenGameId)
+                    ? ModAPI.Configurations.Configuration.Games[chosenGameId].SelectFile : null;
+                var chosenExeFull = !string.IsNullOrEmpty(chosenPath) && !string.IsNullOrEmpty(chosenExeName)
+                    ? System.IO.Path.Combine(chosenPath, chosenExeName) : null;
+
+                if (string.IsNullOrEmpty(chosenPath) ||
+                    string.IsNullOrEmpty(chosenExeFull) ||
+                    !System.IO.File.Exists(chosenExeFull))
+                {
+                    Debug.Log("StartGame",
+                        $"[Validate] Game path not set or exe not found for: {chosenGameId} → GamePathNotSet popup",
+                        Debug.Type.Error);
+                    var winNoPath = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GamePathNotSet");
+                    winNoPath.ShowSubWindow();
+                    winNoPath.Show();
+                    return;
+                }
+                Debug.Log("StartGame",
+                    $"[Validate] Game path OK: {chosenGameId} → {chosenExeFull}",
+                    Debug.Type.Notice);
+
+                // 선택한 게임으로 필터 전환
+                Mods.SelectedGameFilter = chosenGameId;
+                SyncModGameFilterRadioButton(chosenGameId);
+
+                // 선택한 게임의 mod 만 재수집 — 다른 게임 mod 는 완전히 무시
+                mods.Clear();
+                foreach (var i in Mods.Mods)
+                {
+                    var vm = (ModViewModel)i.DataContext;
+                    if (vm != null && vm.Selected &&
+                        string.Equals(vm.GameId, chosenGameId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var vm2 = (ModVersionViewModel)vm.SelectedVersion.DataContext;
+                        if (vm2 != null) mods.Add(vm2.Mod);
+                    }
+                }
+
+                Debug.Log("StartGame",
+                    $"[GameSelect] Mods collected for {chosenGameId}: {mods.Count}개" +
+                    $" | [{string.Join(", ", mods.Select(m => m.Id))}]",
+                    Debug.Type.Notice);
+
+                if (mods.Count == 0)
+                {
+                    Debug.Log("StartGame",
+                        $"[GameSelect] No mods selected for {chosenGameId} → NoModSelected popup",
+                        Debug.Type.Warning);
+                    var winNoMod = new Windows.SubWindows.NoProjectWarning("Lang.Windows.NoModSelected");
+                    winNoMod.ShowSubWindow();
+                    winNoMod.Show();
+                    return;
+                }
             }
-
-            // 검증 3: 서로 다른 게임의 mod가 혼합되어 있으면 경고
-            var gameIds = mods.Select(m => m.Game?.GameConfiguration?.Id ?? "").Distinct().ToList();
-            if (gameIds.Count > 1)
+            else
             {
-                var win = new Windows.SubWindows.NoProjectWarning("Lang.Windows.MixedGameMods");
-                win.ShowSubWindow();
-                win.Show();
-                return;
+                // ── 검증 3: 특정 게임 필터 선택 시 mod 활성화 확인 ───────────
+                if (mods.Count == 0)
+                {
+                    Debug.Log("StartGame",
+                        $"[Validate] No mods selected for filter: {currentFilter} → NoModSelected popup",
+                        Debug.Type.Warning);
+                    var winNoMod = new Windows.SubWindows.NoProjectWarning("Lang.Windows.NoModSelected");
+                    winNoMod.ShowSubWindow();
+                    winNoMod.Show();
+                    return;
+                }
+                Debug.Log("StartGame", $"[Validate] Mods OK: {mods.Count}개", Debug.Type.Notice);
             }
 
             // 선택된 mod의 게임 ID로 게임 객체 결정
@@ -1373,6 +1585,14 @@ namespace ModAPI
                 if (App.Game != null &&
                     string.Equals(App.Game.GameConfiguration.Id, modGameId, StringComparison.OrdinalIgnoreCase))
                 {
+                    // GamePath 가 비어있으면 저장된 경로로 보완
+                    if (string.IsNullOrEmpty(App.Game.GamePath))
+                    {
+                        var savedPathForAppGame = ModAPI.Configurations.Configuration.GetPath(
+                            "Games." + modGameId, silent: true);
+                        if (!string.IsNullOrEmpty(savedPathForAppGame))
+                            App.Game.GamePath = savedPathForAppGame;
+                    }
                     targetGame = App.Game;
                 }
                 else
@@ -1438,6 +1658,133 @@ namespace ModAPI
 
             if (targetGame == null)
                 targetGame = App.Game;
+
+#if !DEBUG
+            // ── 검증: 게임 실행파일 무결성 확인 ─────────────────────────────
+            if (targetGame != null && !string.IsNullOrEmpty(targetGame.GamePath))
+            {
+                var gameExePath = System.IO.Path.Combine(
+                    targetGame.GamePath, targetGame.GameConfiguration.SelectFile);
+
+                // 검증 A: PE 헤더 검증 — 실행파일 위/변조 확인
+                if (!ModAPI.Utils.FileValidator.IsValidGameExe(gameExePath))
+                {
+                    Debug.Log("StartGame",
+                        $"[Integrity] Game executable PE validation failed: {gameExePath}",
+                        Debug.Type.Error);
+                    var winCorrupt = new Windows.SubWindows.NoProjectWarning(
+                        "Lang.Windows.GameExeCorrupted");
+                    winCorrupt.ShowSubWindow();
+                    winCorrupt.Show();
+                    return;
+                }
+                Debug.Log("StartGame",
+                    $"[Integrity] Game executable PE validation passed: {gameExePath}",
+                    Debug.Type.Notice);
+
+                // 검증 B: Assembly-CSharp.dll 체크섬 → Versions.xml 비교
+                var managedFolder = System.IO.Path.Combine(
+                    targetGame.GamePath,
+                    targetGame.GameConfiguration.Id + "_Data",
+                    "Managed");
+
+                if (!System.IO.Directory.Exists(managedFolder))
+                {
+                    // 일부 게임은 Data 폴더명이 다름 — GH 등
+                    managedFolder = System.IO.Path.Combine(
+                        targetGame.GamePath,
+                        targetGame.GameConfiguration.Id.Replace("EscapeThePacific", "EscapeThePacific") + "_Data",
+                        "Managed");
+                }
+
+                var actualChecksum = ModAPI.Utils.FileValidator.ComputeAssemblyChecksum(managedFolder);
+                if (actualChecksum != null && targetGame.GameVersion.IsValid)
+                {
+                    var expectedChecksum = targetGame.GameVersion.CheckSum?.ToLower();
+                    if (!string.IsNullOrEmpty(expectedChecksum) &&
+                        !string.Equals(actualChecksum, expectedChecksum, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Debug.Log("StartGame",
+                            $"[Integrity] Assembly checksum mismatch!" +
+                            $" Expected: {expectedChecksum} | Actual: {actualChecksum}",
+                            Debug.Type.Error);
+                        var winTampered = new Windows.SubWindows.NoProjectWarning(
+                            "Lang.Windows.GameAssemblyTampered");
+                        winTampered.ShowSubWindow();
+                        winTampered.Show();
+                        return;
+                    }
+                    Debug.Log("StartGame",
+                        $"[Integrity] Assembly checksum matched: {actualChecksum}",
+                        Debug.Type.Notice);
+                }
+
+                // 검증 C: 디지털 서명 확인 (경고만 — 차단하지 않음)
+                if (!ModAPI.Utils.FileValidator.HasDigitalSignature(gameExePath))
+                {
+                    Debug.Log("StartGame",
+                        $"[Integrity] Game executable has no digital signature: {gameExePath}",
+                        Debug.Type.Warning);
+
+                    bool userConfirmed;
+                    try
+                    {
+                        // 사용자에게 선택권 부여 — 계속 진행 여부
+                        string displayName;
+                        try
+                        {
+                            displayName = GameDisplayNames.ContainsKey(targetGame.GameConfiguration.Id)
+                                ? GameDisplayNames[targetGame.GameConfiguration.Id]
+                                : targetGame.GameConfiguration.Id;
+                        }
+                        catch (Exception exName)
+                        {
+                            Debug.Log("StartGame",
+                                $"[Integrity] Failed to resolve game display name: {exName.Message}",
+                                Debug.Type.Warning);
+                            displayName = targetGame?.GameConfiguration?.Id ?? "";
+                        }
+
+                        Debug.Log("StartGame",
+                            $"[Integrity] Opening GameIntegrityWarning popup. DisplayName: {displayName}",
+                            Debug.Type.Notice);
+
+                        var winNoSig = new Windows.SubWindows.GameIntegrityWarning(
+                            "Lang.Windows.GameNoSignature", displayName);
+                        winNoSig.ShowSubWindow();
+                        winNoSig.ShowDialog();
+                        userConfirmed = winNoSig.UserConfirmed;
+
+                        Debug.Log("StartGame",
+                            $"[Integrity] GameIntegrityWarning closed. UserConfirmed: {userConfirmed}",
+                            Debug.Type.Notice);
+                    }
+                    catch (Exception exPopup)
+                    {
+                        // 팝업 생성/표시 중 예외 발생 시 ModAPI 전체가 강제 종료되지 않도록 방어
+                        // 서명 없음은 경고일 뿐 차단 사유가 아니므로, 팝업 자체가 실패해도
+                        // 안전하게 통과시키고 원인을 로그로 남긴다.
+                        Debug.Log("StartGame",
+                            $"[Integrity] GameIntegrityWarning popup failed: {exPopup.GetType().Name}" +
+                            $" | {exPopup.Message} | {exPopup}",
+                            Debug.Type.Error);
+                        userConfirmed = true;
+                    }
+
+                    if (!userConfirmed)
+                        return;
+                    Debug.Log("StartGame",
+                        "[Integrity] User chose to continue despite missing signature.",
+                        Debug.Type.Notice);
+                }
+                else
+                {
+                    Debug.Log("StartGame",
+                        $"[Integrity] Game executable digital signature verified: {gameExePath}",
+                        Debug.Type.Notice);
+                }
+            }
+#endif
 
             var progressHandler = new ProgressHandler();
             progressHandler.OnComplete += (o, ex) =>
@@ -3110,6 +3457,48 @@ namespace ModAPI
                 var capturedId = gameId;
                 rb.Checked += (s, e) => { if (Mods != null) Mods.SelectedGameFilter = capturedId; };
                 ModGameFilterPanel.Children.Add(rb);
+            }
+        }
+
+        // 게임 ID → 표시명 매핑 (팝업 메시지용)
+        private static readonly Dictionary<string, string> GameDisplayNames =
+            new Dictionary<string, string>
+            {
+                { "TheForest",        "The Forest" },
+                { "Subnautica",       "Subnautica" },
+                { "Raft",             "Raft" },
+                { "EscapeThePacific", "Escape The Pacific" },
+                { "GH",               "Green Hell" },
+            };
+
+        /// <summary>
+        /// ModGameFilterPanel 의 라디오버튼을 지정한 gameId 로 동기화합니다.
+        /// StartGame 에서 All → 특정 게임으로 전환 시 UI 반영을 위해 호출합니다.
+        /// </summary>
+        private void SyncModGameFilterRadioButton(string gameId)
+        {
+            if (ModGameFilterPanel == null) return;
+            foreach (var child in ModGameFilterPanel.Children)
+            {
+                var rb = child as RadioButton;
+                if (rb == null) continue;
+
+                // Tag 대신 Checked 이벤트에서 사용하는 capturedId 와 비교하기 위해
+                // RadioButton.Content 또는 Tag 를 활용 — 여기서는 Content 의 리소스키가 아닌
+                // DataContext 가 없으므로 Panel 내 인덱스 순서로 SupportedGameIds 와 매핑
+                var idx = ModGameFilterPanel.Children.IndexOf(rb);
+                if (idx >= 0 && idx < SupportedGameIds.Count)
+                {
+                    // 이벤트 중복 방지: Checked 이벤트가 다시 SelectedGameFilter 를 바꾸지 않도록
+                    // 이미 올바른 값이면 스킵
+                    var isTarget = string.Equals(
+                        SupportedGameIds[idx], gameId, StringComparison.OrdinalIgnoreCase);
+                    if (isTarget && rb.IsChecked != true)
+                    {
+                        rb.IsChecked = true;
+                        break;
+                    }
+                }
             }
         }
 

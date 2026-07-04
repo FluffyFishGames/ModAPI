@@ -109,6 +109,49 @@ namespace ModAPI.Configurations
             return 0;
         }
 
+        /// <summary>
+        /// UserConfigData 에서 키를 제거합니다 (영구 설정 삭제).
+        /// 예: mod 삭제 시 Mods.{GameId}.{ModId}.Selected / .Version 키 정리
+        /// — 제거하지 않으면 동일 ModId 로 재다운로드 시 이전 활성화 상태가 복원됨.
+        /// 다음 Save() 호출 시 UserConfiguration.xml 에도 반영됩니다.
+        /// </summary>
+        public static bool RemoveKey(string key)
+        {
+            key = key.ToLower();
+            var removed = false;
+            if (UserConfigData.ContainsKey(key))
+            {
+                UserConfigData.Remove(key);
+                removed = true;
+            }
+            if (ConfigDataInst.ContainsKey(key))
+            {
+                ConfigDataInst.Remove(key);
+                removed = true;
+            }
+            return removed;
+        }
+
+        /// <summary>
+        /// 지정한 접두사로 시작하는 모든 UserConfigData 키를 제거합니다.
+        /// 예: RemoveKeysWithPrefix("Mods.GH.ModTeleporter.") → Selected, Version 등 일괄 제거
+        /// </summary>
+        public static int RemoveKeysWithPrefix(string prefix)
+        {
+            prefix = prefix.ToLower();
+            var keysToRemove = new List<string>();
+            foreach (var key in UserConfigData.Keys)
+            {
+                if (key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    keysToRemove.Add(key);
+            }
+            foreach (var key in keysToRemove)
+            {
+                UserConfigData.Remove(key);
+            }
+            return keysToRemove.Count;
+        }
+
         public static void SetString(string key, string value, bool userConfig = false)
         {
             key = key.ToLower();

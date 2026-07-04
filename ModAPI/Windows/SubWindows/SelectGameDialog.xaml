@@ -1,0 +1,56 @@
+<Window x:Class="ModAPI.Windows.SubWindows.SelectGameDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="Height"
+        Width="360"
+        ShowInTaskbar="False">
+
+    <Border Background="{DynamicResource FluentBgBrush}"
+            BorderBrush="{DynamicResource FluentBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 타이틀 -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Text="🎮"
+                           FontSize="18"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+                <TextBlock FontSize="15" FontWeight="Bold"
+                           Foreground="{DynamicResource FluentTextPrimaryBrush}"
+                           VerticalAlignment="Center"
+                           Text="{DynamicResource Lang.Windows.SelectGame.Title}"/>
+            </StackPanel>
+
+            <!-- 구분선 -->
+            <Border Grid.Row="2" Height="1"
+                    Background="{DynamicResource FluentBorderBrush}"/>
+
+            <!-- 안내 텍스트 -->
+            <TextBlock Grid.Row="4"
+                       Foreground="{DynamicResource FluentTextSecondaryBrush}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,4"
+                       Text="{DynamicResource Lang.Windows.SelectGame.Message}"/>
+
+            <!-- 게임 버튼 목록 -->
+            <StackPanel Grid.Row="6" x:Name="GameButtonPanel"/>
+        </Grid>
+    </Border>
+</Window>

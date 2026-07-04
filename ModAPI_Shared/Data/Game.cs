@@ -38,8 +38,11 @@ namespace ModAPI.Data
     {
         public static readonly string[] VersionUpdateDomains =
         {
-            //"http://modapi.cc/app/configs/games/{0}/Versions.xml", Outdated URL
-            "http://modapi.survivetheforest.net/app/configs/games/{0}/Versions.xml"
+            // GitHub — 직접 관리하는 최신 Versions.xml (우선순위 1)
+            "https://raw.githubusercontent.com/FluffyFishGames/ModAPI/master/ModAPI/configs/games/{0}/Versions.xml",
+            // 기존 서버 — 폴백 (우선순위 2)
+            "http://modapi.survivetheforest.net/app/configs/games/{0}/Versions.xml",
+            //"http://modapi.cc/app/configs/games/{0}/Versions.xml", Outdated
         };
 
         public event EventHandler<EventArgs> OnModlibUpdate;
@@ -87,7 +90,7 @@ namespace ModAPI.Data
 
         public void Verify()
         {
-            Debug.Log("Game: " + this.GameConfiguration.Id, "Modified by: SiXxKilLuR ", Debug.Type.Notice);
+            Debug.Log("Game: " + this.GameConfiguration.Id, "Modified by: SiXxKilLuR ", Debug.Type.Notice, detailedOnly: true);
             Valid = true;
 
             // Developer mode bypass: skip game path validation when --dev argument is passed
@@ -124,7 +127,7 @@ namespace ModAPI.Data
 
             GameVersion = VersionsData.GetVersion(CheckSumGame);
             BackupVersion = VersionsData.GetVersion(CheckSumBackup);
-            Debug.Log("Game: " + this.GameConfiguration.Id, "Checksum: " + this.CheckSumGame, Debug.Type.Notice);
+            Debug.Log("Game: " + this.GameConfiguration.Id, "Checksum: " + this.CheckSumGame, Debug.Type.Notice, detailedOnly: true);
 
             if (((GameVersion.IsValid && !BackupVersion.IsValid) || (GameVersion.IsValid && BackupVersion.IsValid && GameVersion.Id != BackupVersion.Id)))
             {
@@ -521,7 +524,7 @@ namespace ModAPI.Data
                             {
                                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstPath));
                                 File.Copy(srcPath, dstPath, true);
-                                Debug.Log("ModLoader: " + GameConfiguration.Id, "Backed up: " + srcPath);
+                                Debug.Log("ModLoader: " + GameConfiguration.Id, "Backed up: " + srcPath, Debug.Type.Notice, detailedOnly: true);
                             }
                         }
                         foreach (var n in GameConfiguration.CopyAssemblies)
@@ -532,7 +535,7 @@ namespace ModAPI.Data
                             {
                                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(dstPath));
                                 File.Copy(srcPath, dstPath, true);
-                                Debug.Log("ModLoader: " + GameConfiguration.Id, "Backed up: " + srcPath);
+                                Debug.Log("ModLoader: " + GameConfiguration.Id, "Backed up: " + srcPath, Debug.Type.Notice, detailedOnly: true);
                             }
                         }
                     }
@@ -564,7 +567,7 @@ namespace ModAPI.Data
                     var folder = System.IO.Path.GetDirectoryName(assemblyPath);
                     if (!searchFolders.Contains(folder))
                     {
-                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.");
+                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.", Debug.Type.Notice, detailedOnly: true);
                         searchFolders.Add(folder);
                     }
                 }
@@ -575,7 +578,7 @@ namespace ModAPI.Data
                     var folder = System.IO.Path.GetDirectoryName(assemblyPath);
                     if (!searchFolders.Contains(folder))
                     {
-                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.");
+                        Debug.Log("ModLib: " + GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.", Debug.Type.Notice, detailedOnly: true);
                         searchFolders.Add(folder);
                     }
                 }
@@ -956,7 +959,7 @@ namespace ModAPI.Data
                     foreach (var entry in typesMap)
                     {
                         if (entry.Value == null) continue;
-                        Debug.Log("Game: " + GameConfiguration.Id, "Type entry: " + entry.Key.FullName + " - " + entry.Value.FullName);
+                        Debug.Log("Game: " + GameConfiguration.Id, "Type entry: " + entry.Key.FullName + " - " + entry.Value.FullName, Debug.Type.Notice, detailedOnly: true);
                     }
 
                     /*foreach (Mod.Header.AddClass addClass in mod.HeaderData.GetAddClasses()) 
@@ -1617,55 +1620,118 @@ namespace ModAPI.Data
 
             public void UpdateVersions()
             {
-                var responses = new List<string>();
+                var gameId = Game.GameConfiguration.Id;
+
+                // ── TLS 설정 ──────────────────────────────────────────────
+                // SSL/TLS 보안 채널 오류 방지를 위해 TLS 버전을 명시적으로 설정
+                // 서버와 클라이언트가 협상하여 공통으로 지원하는 최상위 버전이 자동 선택됨
+                var prevProtocol = System.Net.ServicePointManager.SecurityProtocol;
+                System.Net.ServicePointManager.SecurityProtocol =
+                    System.Net.SecurityProtocolType.Tls12 |
+                    System.Net.SecurityProtocolType.Tls11 |
+                    System.Net.SecurityProtocolType.Tls;
+
+                Debug.Log("Game: " + gameId,
+                    $"[UpdateVersions] TLS protocol set: {System.Net.ServicePointManager.SecurityProtocol} (was: {prevProtocol})",
+                    Debug.Type.Notice, detailedOnly: true);
+
+                // ── 다운로드 ──────────────────────────────────────────────
+                string successfulResponse = null;
+                string successfulUrl = null;
+                Debug.Log("Game: " + gameId,
+                    $"[UpdateVersions] Starting version file download. Servers: {string.Join(", ", VersionUpdateDomains)}",
+                    Debug.Type.Notice, detailedOnly: true);
 
                 using (var client = new WebClient())
                 {
                     foreach (var url in VersionUpdateDomains)
                     {
+                        // 이미 1순위 서버에서 성공했으면 나머지 서버는 시도하지 않음
+                        // (모든 성공 응답을 병합하면 동일 버전 항목이 중복으로 합쳐져
+                        //  체크섬이 두 배 길이로 깨지는 문제가 발생함)
+                        if (successfulResponse != null)
+                            break;
+
+                        var formattedUrl = string.Format(url, gameId);
+                        Debug.Log("Game: " + gameId,
+                            $"[UpdateVersions] Trying URL: {formattedUrl}",
+                            Debug.Type.Notice, detailedOnly: true);
                         try
                         {
-                            responses.Add(client.DownloadString(string.Format(url, Game.GameConfiguration.Id)));
+                            var response = client.DownloadString(formattedUrl);
+                            successfulResponse = response;
+                            successfulUrl = formattedUrl;
+                            Debug.Log("Game: " + gameId,
+                                $"[UpdateVersions] Download succeeded. URL: {formattedUrl} | Response length: {response.Length} chars | Protocol: {System.Net.ServicePointManager.SecurityProtocol}",
+                                Debug.Type.Notice);
                         }
                         catch (WebException e)
                         {
-                            // Something is wrong with the server or connection
-                            Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed to download one of the version files: " + e, Debug.Type.Error);
+                            var httpStatus = (e.Response as System.Net.HttpWebResponse)?.StatusCode;
+                            Debug.Log("Game: " + gameId,
+                                $"[UpdateVersions] WebException on URL: {formattedUrl}" +
+                                $" | Status: {httpStatus?.ToString() ?? "N/A"}" +
+                                $" | Protocol: {System.Net.ServicePointManager.SecurityProtocol}" +
+                                $" | Error: {e.Message}" +
+                                $" | Detail: {e}",
+                                Debug.Type.Error);
                         }
                         catch (Exception e)
                         {
-                            // Something else happened
-                            Debug.Log("Game: " + Game.GameConfiguration.Id, "Something failed while trying to download one of the version files: " + e, Debug.Type.Error);
+                            Debug.Log("Game: " + gameId,
+                                $"[UpdateVersions] Unexpected error on URL: {formattedUrl}" +
+                                $" | Type: {e.GetType().Name}" +
+                                $" | Error: {e.Message}" +
+                                $" | Detail: {e}",
+                                Debug.Type.Error);
                         }
                     }
                 }
 
-                if (responses.Count > 0)
+                Debug.Log("Game: " + gameId,
+                    $"[UpdateVersions] Download phase complete." +
+                    $" Result: {(successfulResponse != null ? $"Success ({successfulUrl})" : "All servers failed")}",
+                    Debug.Type.Notice);
+
+                // ── 파싱 ──────────────────────────────────────────────────
+                // 1순위 우선 — 처음 성공한 서버 응답 하나만 사용 (병합하지 않음)
+                if (successfulResponse != null)
                 {
-                    foreach (var response in responses)
-                    {
-                        try
-                        {
-                            var document = XDocument.Parse(response);
-
-                            foreach (var element in document.Root.Element("files").Elements("file"))
-                            {
-                                CheckFiles.Add(element.Value);
-                            }
-                            foreach (var element in document.Root.Elements("version"))
-                            {
-                                VersionsList.Add(new Version(element));
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed parsing VersionsData file from server: " + e, Debug.Type.Error);
-                        }
-                    }
-
                     try
                     {
-                        // Save updated VersionsData
+                        var document = XDocument.Parse(successfulResponse);
+
+                        var filesBefore = CheckFiles.Count;
+                        var versionsBefore = VersionsList.Count;
+
+                        foreach (var element in document.Root.Element("files").Elements("file"))
+                        {
+                            CheckFiles.Add(element.Value);
+                        }
+                        foreach (var element in document.Root.Elements("version"))
+                        {
+                            VersionsList.Add(new Version(element));
+                        }
+
+                        Debug.Log("Game: " + gameId,
+                            $"[UpdateVersions] Parsed successfully." +
+                            $" Files: {filesBefore} → {CheckFiles.Count}" +
+                            $" | Versions: {versionsBefore} → {VersionsList.Count}",
+                            Debug.Type.Notice);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Game: " + gameId,
+                            $"[UpdateVersions] Failed parsing VersionsData from server." +
+                            $" | Type: {e.GetType().Name}" +
+                            $" | Error: {e.Message}" +
+                            $" | Detail: {e}",
+                            Debug.Type.Error);
+                    }
+
+                    // ── 저장 ──────────────────────────────────────────────
+                    try
+                    {
                         var finalDocument = new XDocument(new XElement("VersionsData"));
                         finalDocument.Root.Add(new XElement("files", CheckFiles.Select(o => new XElement("file", o))));
                         foreach (var version in VersionsList.OrderBy(o => o.Id))
@@ -1675,15 +1741,29 @@ namespace ModAPI.Data
                             finalDocument.Root.Add(element);
                         }
                         finalDocument.Save(FileName);
+                        Debug.Log("Game: " + gameId,
+                            $"[UpdateVersions] VersionsData saved successfully. Path: {FileName}" +
+                            $" | Total versions: {VersionsList.Count}" +
+                            $" | Total files: {CheckFiles.Count}",
+                            Debug.Type.Notice);
                     }
                     catch (Exception e)
                     {
-                        Debug.Log("Game: " + Game.GameConfiguration.Id, "Failed saving version file: " + e, Debug.Type.Error);
+                        Debug.Log("Game: " + gameId,
+                            $"[UpdateVersions] Failed saving VersionsData file. Path: {FileName}" +
+                            $" | Type: {e.GetType().Name}" +
+                            $" | Error: {e.Message}" +
+                            $" | Detail: {e}",
+                            Debug.Type.Error);
                     }
                 }
                 else
                 {
-                    Debug.Log("Game: " + Game.GameConfiguration.Id, "No version files available on any of the servers: " + string.Join(", ", VersionUpdateDomains), Debug.Type.Error);
+                    Debug.Log("Game: " + gameId,
+                        $"[UpdateVersions] No responses received from any server." +
+                        $" Servers tried: {string.Join(", ", VersionUpdateDomains)}" +
+                        $" | Protocol: {System.Net.ServicePointManager.SecurityProtocol}",
+                        Debug.Type.Error);
                 }
             }
 

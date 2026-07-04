@@ -57,6 +57,70 @@ namespace ModAPI.Utils
             return HasClrMetadata(path);
         }
 
+        // ── 추가 공개 API ─────────────────────────────────────────────────
+
+        /// <summary>
+        /// 게임 어셈블리 DLL MD5 해시 계산.
+        /// Versions.xml 체크섬과 비교하여 변조 여부를 확인합니다.
+        /// firstpass.dll 이 존재하면 firstpass + Assembly-CSharp 순으로 연결합니다.
+        /// </summary>
+        public static string ComputeAssemblyChecksum(string gameFolder)
+        {
+            try
+            {
+                var managed = System.IO.Path.Combine(gameFolder);
+                var primaryDll = System.IO.Path.Combine(managed, "Assembly-CSharp.dll");
+                var firstpassDll = System.IO.Path.Combine(managed, "Assembly-CSharp-firstpass.dll");
+
+                if (!File.Exists(primaryDll)) return null;
+
+                using (var md5 = System.Security.Cryptography.MD5.Create())
+                {
+                    if (File.Exists(firstpassDll))
+                    {
+                        // firstpass + Assembly-CSharp 연결 해시 (64자)
+                        var h1 = BitConverter.ToString(
+                            md5.ComputeHash(File.ReadAllBytes(firstpassDll)))
+                            .Replace("-", "").ToLower();
+                        md5.Initialize();
+                        var h2 = BitConverter.ToString(
+                            md5.ComputeHash(File.ReadAllBytes(primaryDll)))
+                            .Replace("-", "").ToLower();
+                        return h1 + h2;
+                    }
+                    else
+                    {
+                        // Assembly-CSharp 단독 해시 (32자)
+                        return BitConverter.ToString(
+                            md5.ComputeHash(File.ReadAllBytes(primaryDll)))
+                            .Replace("-", "").ToLower();
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 게임 실행파일 Authenticode 디지털 서명 확인.
+        /// 서명이 존재하면 true, 없으면 false 를 반환합니다.
+        /// </summary>
+        public static bool HasDigitalSignature(string path)
+        {
+            try
+            {
+                var cert = System.Security.Cryptography.X509Certificates
+                    .X509Certificate.CreateFromSignedFile(path);
+                return cert != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         // ── 내부 구현 ─────────────────────────────────────────────────────
 
         /// <summary>파일이 존재하고 최소 크기 이상인지 확인합니다.</summary>

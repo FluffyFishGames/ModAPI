@@ -118,7 +118,7 @@ namespace ModAPI.Data
                 }
                 removedFiles++;
             }
-            Debug.Log("Modlib: " + Game.GameConfiguration.Id, "Removed " + removedFiles + " files and directories.");
+            Debug.Log("Modlib: " + Game.GameConfiguration.Id, "Removed " + removedFiles + " files and directories.", Debug.Type.Notice, detailedOnly: true);
             SetProgress(progress, 1f, "CreatingModToolkit");
 
             var baseModLibPath = Configuration.GetPath("Libraries") + Path.DirectorySeparatorChar + "BaseModLib.dll";
@@ -153,7 +153,7 @@ namespace ModAPI.Data
                         method.IsAssembly = false;
                         method.IsFamilyAndAssembly = false;
                         method.IsPublic = true;
-                        Debug.Log("Modlib: " + Game.GameConfiguration.Id, "Changed the accessibility of " + method.FullName + " in BaseModLib.dll");
+                        Debug.Log("Modlib: " + Game.GameConfiguration.Id, "Changed the accessibility of " + method.FullName + " in BaseModLib.dll", Debug.Type.Notice, detailedOnly: true);
                     }
                 }
             }
@@ -162,7 +162,7 @@ namespace ModAPI.Data
             // BaseModLib is built with .NET 4.8 for development convenience, but must reference
             // the correct assembly versions when deployed to the game's Unity 5.6.x environment.
             var remappedCount = AssemblyVersionMap.RemapAllReferences(baseModLib);
-            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Remapped " + remappedCount + " assembly references in BaseModLib.dll to Unity 5.6.x Mono 2.0 versions.");
+            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Remapped " + remappedCount + " assembly references in BaseModLib.dll to Unity 5.6.x Mono 2.0 versions.", Debug.Type.Notice, detailedOnly: true);
 
             CreationTime = DateTime.Now;
             GameVersion = Game.BackupVersion.Id;
@@ -194,7 +194,7 @@ namespace ModAPI.Data
                 var folder = Path.GetDirectoryName(assemblyPath);
                 if (!searchFolders.Contains(folder))
                 {
-                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.");
+                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.", Debug.Type.Notice, detailedOnly: true);
                     searchFolders.Add(folder);
                 }
             }
@@ -205,7 +205,7 @@ namespace ModAPI.Data
                 var folder = Path.GetDirectoryName(assemblyPath);
                 if (!searchFolders.Contains(folder))
                 {
-                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.");
+                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added folder \"" + folder + "\" to assembly resolver.", Debug.Type.Notice, detailedOnly: true);
                     searchFolders.Add(folder);
                 }
             }
@@ -219,7 +219,7 @@ namespace ModAPI.Data
                     var folder = Path.GetDirectoryName(gameFolderPath);
                     if (!string.IsNullOrEmpty(folder) && !searchFolders.Contains(folder))
                     {
-                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added game install folder \"" + folder + "\" to assembly resolver (fallback).");
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added game install folder \"" + folder + "\" to assembly resolver (fallback).", detailedOnly: true);
                         searchFolders.Add(folder);
                     }
                 }
@@ -229,7 +229,7 @@ namespace ModAPI.Data
                     var folder = Path.GetDirectoryName(gameFolderPath);
                     if (!string.IsNullOrEmpty(folder) && !searchFolders.Contains(folder))
                     {
-                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added game install folder \"" + folder + "\" to assembly resolver (fallback).");
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added game install folder \"" + folder + "\" to assembly resolver (fallback).", detailedOnly: true);
                         searchFolders.Add(folder);
                     }
                 }
@@ -251,16 +251,16 @@ namespace ModAPI.Data
                     var fallbackPath = Game.GamePath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]);
                     if (File.Exists(fallbackPath))
                     {
-                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Backup not found, using game install fallback: \"" + fallbackPath + "\"");
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Backup not found, using game install fallback: \"" + fallbackPath + "\"", detailedOnly: true);
                         assemblyPath = fallbackPath;
                     }
                 }
 
-                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================");
-                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "========================     NEW ASSEMBLY     ========================");
-                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================");
-                Debug.Log("ModLib: " + Game.GameConfiguration.Id, assemblyPath);
-                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================");
+                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================", detailedOnly: true);
+                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "========================     NEW ASSEMBLY     ========================", detailedOnly: true);
+                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================", detailedOnly: true);
+                Debug.Log("ModLib: " + Game.GameConfiguration.Id, assemblyPath, detailedOnly: true);
+                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "======================================================================", detailedOnly: true);
 
                 if (File.Exists(assemblyPath))
                 {
@@ -269,7 +269,7 @@ namespace ModAPI.Data
                     var savePath = Path.GetFullPath(libraryPath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]));
                     Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                     File.Copy(assemblyPath, savePath, overwrite: true);
-                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "[DEBUG] Copied dummy assembly to " + savePath);
+                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "[DEBUG] Copied dummy assembly to " + savePath, detailedOnly: true);
 #else
                     try
                     {
@@ -281,7 +281,7 @@ namespace ModAPI.Data
                         {
                             if (string.IsNullOrEmpty(type.Namespace))
                             {
-                                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Validating root namespace type " + type.FullName);
+                                Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Validating root namespace type " + type.FullName, detailedOnly: true);
                             }
 
                             if ((string.IsNullOrEmpty(type.Namespace) || !CheckName(type.Namespace, Game.GameConfiguration.ExcludeNamespaces))
@@ -290,7 +290,7 @@ namespace ModAPI.Data
                             {
                                 if (string.IsNullOrEmpty(type.Namespace))
                                 {
-                                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Processing root namespace type " + type.FullName);
+                                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Processing root namespace type " + type.FullName, detailedOnly: true);
                                 }
 
                                 if (type.IsAbstract && type.IsSealed)
@@ -302,7 +302,7 @@ namespace ModAPI.Data
                                     var constructor = new MethodDefinition(".ctor",
                                         MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.Public | MethodAttributes.HideBySig, type.Module.TypeSystem.Void);
                                     type.Methods.Add(constructor);
-                                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added public constructor to abstract class " + constructor.FullName);
+                                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added public constructor to abstract class " + constructor.FullName, detailedOnly: true);
                                 }
 
                                 if (type.IsNotPublic)
@@ -316,14 +316,14 @@ namespace ModAPI.Data
                                     var constructor = new MethodDefinition(".ctor",
                                         MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.Public | MethodAttributes.HideBySig, type.Module.TypeSystem.Void);
                                     type.Methods.Add(constructor);
-                                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added public constructor " + constructor.FullName);
+                                    Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Added public constructor " + constructor.FullName, detailedOnly: true);
                                 }
                                 else
                                 {
                                     foreach (var constructor in constructors)
                                     {
                                         constructor.IsPublic = true;
-                                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed non-public constructor " + constructor.FullName + " to public");
+                                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed non-public constructor " + constructor.FullName + " to public", detailedOnly: true);
                                     }
                                 }
 
@@ -338,13 +338,13 @@ namespace ModAPI.Data
                                         if (m.IsPrivate)
                                         {
                                             m.IsFamily = true;
-                                            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed private method " + m.FullName + " to protectded");
+                                            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed private method " + m.FullName + " to protectded", detailedOnly: true);
                                         }
                                         else if (m.IsAssembly)
                                         {
                                             m.IsAssembly = false;
                                             m.IsPublic = true;
-                                            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed internal method " + m.FullName + " to public");
+                                            Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed internal method " + m.FullName + " to public", detailedOnly: true);
                                         }
                                     }
                                 }
@@ -353,13 +353,13 @@ namespace ModAPI.Data
                                     if (f.IsPrivate)
                                     {
                                         f.IsFamily = true;
-                                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed private field " + f.FullName + " to protectded");
+                                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed private field " + f.FullName + " to protectded", detailedOnly: true);
                                     }
                                     else if (f.IsAssembly)
                                     {
                                         f.IsAssembly = false;
                                         f.IsPublic = true;
-                                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed internal field " + f.FullName + " to public");
+                                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Changed internal field " + f.FullName + " to public", detailedOnly: true);
                                     }
                                 }
                             }
@@ -367,7 +367,7 @@ namespace ModAPI.Data
                         var savePath = Path.GetFullPath(libraryPath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.IncludeAssemblies[i]));
                         Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                         module.Write(savePath);
-                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Saved modified \"" + module.Name + "\" into " + savePath + "");
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Saved modified \"" + module.Name + "\" into " + savePath + "", detailedOnly: true);
                     }
                     catch (Exception e)
                     {
@@ -404,7 +404,7 @@ namespace ModAPI.Data
                     var fallbackPath = Game.GamePath + Path.DirectorySeparatorChar + Game.ParsePath(Game.GameConfiguration.CopyAssemblies[i]);
                     if (File.Exists(fallbackPath))
                     {
-                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Backup not found, using game install fallback for copy: \"" + fallbackPath + "\"");
+                        Debug.Log("ModLib: " + Game.GameConfiguration.Id, "Backup not found, using game install fallback for copy: \"" + fallbackPath + "\"", detailedOnly: true);
                         copyFrom = fallbackPath;
                     }
                 }

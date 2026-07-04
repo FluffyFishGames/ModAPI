@@ -1,0 +1,17 @@
+{
+  "languages": [
+    { "isoCode": "us", "langCode": "EN",    "langName": "English",      "builtin": true,  "active": true },
+    { "isoCode": "kr", "langCode": "KR",    "langName": "한국어",        "builtin": true,  "active": true },
+    { "isoCode": "de", "langCode": "DE",    "langName": "Deutsch",      "builtin": true,  "active": true },
+    { "isoCode": "es", "langCode": "ES",    "langName": "Español",      "builtin": true,  "active": true },
+    { "isoCode": "fr", "langCode": "FR",    "langName": "Français",     "builtin": true,  "active": true },
+    { "isoCode": "it", "langCode": "IT",    "langName": "Italiano",     "builtin": true,  "active": true },
+    { "isoCode": "jp", "langCode": "JP",    "langName": "日本語",        "builtin": true,  "active": true },
+    { "isoCode": "pl", "langCode": "PL",    "langName": "Polski",       "builtin": true,  "active": true },
+    { "isoCode": "pt", "langCode": "PT",    "langName": "Português",    "builtin": true,  "active": true },
+    { "isoCode": "ru", "langCode": "RU",    "langName": "Русский",      "builtin": true,  "active": true },
+    { "isoCode": "vn", "langCode": "VI",    "langName": "Tiếng Việt",   "builtin": true,  "active": true },
+    { "isoCode": "cn", "langCode": "ZH",    "langName": "简体中文",      "builtin": true,  "active": true },
+    { "isoCode": "tw", "langCode": "ZH-TW", "langName": "繁體中文",      "builtin": true,  "active": true }
+  ]
+}

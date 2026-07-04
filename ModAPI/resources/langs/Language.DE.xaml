@@ -491,5 +491,78 @@ Bitte konfigurieren Sie den Spielpfad im Settings-Tab.</s:String>
     <s:String x:Key="Lang.Windows.DownloadEmpty.Title">Download fehlgeschlagen</s:String>
     <s:String x:Key="Lang.Windows.DownloadEmpty.Text">Die heruntergeladene Mod-Datei ist leer (0 Bytes). Die Datei existiert möglicherweise nicht auf dem Server.</s:String>
     <s:String x:Key="Lang.Windows.DownloadEmpty.Buttons.OK">OK</s:String>
+
+
+    <!-- LangTool -->
+    <s:String x:Key="Lang.LangTool.Title">ModAPI Sprachenwerkzeug</s:String>
+    <s:String x:Key="Lang.LangTool.RootPath">ModAPI Stammverzeichnis</s:String>
+    <s:String x:Key="Lang.LangTool.LangPath">Sprachdateipfad (resources/langs)</s:String>
+    <s:String x:Key="Lang.LangTool.BrowsePath">Pfad auswählen</s:String>
+    <s:String x:Key="Lang.LangTool.LangList">Sprachenliste</s:String>
+    <s:String x:Key="Lang.LangTool.LangEdit">Sprache bearbeiten</s:String>
+    <s:String x:Key="Lang.LangTool.Add">+ Hinzufügen</s:String>
+    <s:String x:Key="Lang.LangTool.Deactivate">Deaktivieren</s:String>
+    <s:String x:Key="Lang.LangTool.Reactivate">Aktivieren</s:String>
+    <s:String x:Key="Lang.LangTool.Save">💾 Speichern</s:String>
+    <s:String x:Key="Lang.LangTool.UpdateBuiltin">⚠ In integriert umwandeln (nicht rückgängig)</s:String>
+    <s:String x:Key="Lang.LangTool.ReadOnly">(Integrierte Sprache — Nur Lesen)</s:String>
+    <s:String x:Key="Lang.LangTool.IsoCode">ISO-Code (Flagge)</s:String>
+    <s:String x:Key="Lang.LangTool.LangCode">Sprachdateicode (LangCode)</s:String>
+    <s:String x:Key="Lang.LangTool.LangName">Sprachname (LangName)</s:String>
+    <s:String x:Key="Lang.LangTool.FlagPreview">Flaggenvorschau</s:String>
+    <s:String x:Key="Lang.LangTool.KeyEdit">Übersetzungsschlüssel bearbeiten</s:String>
+    <s:String x:Key="Lang.LangTool.KeyColumn">Schlüssel</s:String>
+    <s:String x:Key="Lang.LangTool.ValueColumn">Übersetzung</s:String>
+    <s:String x:Key="Lang.LangTool.EnglishColumn">Englisches Original</s:String>
+    <s:String x:Key="Lang.LangTool.Status.Ready">Bereit</s:String>
+    <s:String x:Key="Lang.LangTool.Status.Loading">Laden...</s:String>
+    <s:String x:Key="Lang.LangTool.Status.Saved">Erfolgreich gespeichert.</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.Title">Neue Sprache hinzufügen</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.IsoCode">ISO 3166-1 Ländercode (für Flaggen-Download)</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.IsoCodeHint">z.B. gb (UK), tr (Türkei), ar (Argentinien)</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.LangCode">Sprachdateicode (für Language.XX.xaml Dateiname)</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.LangCodeHint">z.B. EN-GB, TR, AR (Großbuchstaben empfohlen)</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.LangName">Sprachname (in der Sprachauswahlliste angezeigt)</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.LangNameHint">z.B. English (UK), Türkçe, العربية</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.Add">Hinzufügen</s:String>
+    <s:String x:Key="Lang.LangTool.AddDialog.Cancel">Abbrechen</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.SaveConfirm">Es gibt ungespeicherte Änderungen. Möchten Sie speichern?</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.SaveConfirmTitle">Speicherbestätigung</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.DeactivateConfirm">Diese Sprache deaktivieren? Sie wird aus der ModAPI-Sprachliste ausgeblendet.</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.DeactivateTitle">Deaktivierungsbestätigung</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.BuiltinWarn">⚠ Warnung: Dies kann nicht rückgängig gemacht werden!
+
+Nach der Umwandlung in eine integrierte Sprache ist keine Bearbeitung oder Löschung mehr möglich.
+
+Sind Sie sicher?</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.BuiltinWarnTitle">Integriert umwandeln</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.BuiltinConfirm">Letzte Bestätigung. Diese Sprache wird integriert. Fortfahren?</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.BuiltinConfirmTitle">Letzte Bestätigung</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.NoDuplicate">Dieser Sprachcode existiert bereits.</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.DuplicateTitle">Doppelter Eintrag</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.FlagFailed">Flaggenbild-Download fehlgeschlagen.
+Sprache ohne Flagge hinzufügen?</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.FlagFailedTitle">Download fehlgeschlagen</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.NoPath">Bitte wählen Sie zuerst den ModAPI-Stammordner aus.</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.NoPathTitle">Kein Pfad</s:String>
+    <s:String x:Key="Lang.LangTool.StatusBuiltin">Integriert</s:String>
+    <s:String x:Key="Lang.LangTool.StatusActive">Aktiv</s:String>
+    <s:String x:Key="Lang.LangTool.StatusInactive">Inaktiv</s:String>
+    <s:String x:Key="Lang.LangTool.MissingKeys">⚠ Fehlende/Leere Schlüssel: {0}</s:String>
+    <s:String x:Key="Lang.LangTool.AllTranslated">✅ Alle Schlüssel übersetzt</s:String>
+    <s:String x:Key="Lang.LangTool.Progress">Übersetzt: {0} / {1}</s:String>
+    <s:String x:Key="Lang.LangTool.Msg.InvalidPath">❌ Ordner resources/langs nicht gefunden. Bitte den ModAPI-Stammordner auswählen.</s:String>
+    <s:String x:Key="Lang.LangTool.InactiveNotice">(Inaktiv — Aktivieren zum Bearbeiten)</s:String>
+    <s:String x:Key="Lang.LangTool.Update">⚠ Aktualisieren (nicht rückgängig)</s:String>
+    <s:String x:Key="Lang.Windows.SelectGame.Title">Spiel auswählen</s:String>
+    <s:String x:Key="Lang.Windows.SelectGame.Message">Wähle das zu startende Spiel:</s:String>
+    <s:String x:Key="Lang.Windows.GameExeCorrupted.Title">Ausführbare Datei beschädigt</s:String>
+    <s:String x:Key="Lang.Windows.GameExeCorrupted.Text">Die Validierung der Spieldatei ist fehlgeschlagen. Die Datei ist möglicherweise beschädigt oder durch eine nicht autorisierte Datei ersetzt worden. Der Start wurde zum Schutz Ihres Systems blockiert.</s:String>
+    <s:String x:Key="Lang.Windows.GameAssemblyTampered.Title">Spieledateien manipuliert</s:String>
+    <s:String x:Key="Lang.Windows.GameAssemblyTampered.Text">Die Prüfsumme der Spielassembly stimmt nicht mit dem erwarteten Wert überein. Spieledateien wurden möglicherweise verändert. Start blockiert.</s:String>
+    <s:String x:Key="Lang.Windows.GameNoSignature.Title">Integritätswarnung</s:String>
+    <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} hat keine digitale Signatur. Dies ist bei Indie-Spielen üblich und hat keinen Einfluss auf das Spiel.</s:String>
+    <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Trotzdem fortfahren</s:String>
+    <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Abbrechen</s:String>
 </ResourceDictionary>
     

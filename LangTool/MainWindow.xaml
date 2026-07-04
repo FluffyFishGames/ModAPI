@@ -1,0 +1,553 @@
+<Window x:Class="MODAPI_LangTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource Lang.LangTool.Title}"
+        Width="1000" Height="700"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#1A1A2E">
+
+    <Window.Resources>
+        <Style x:Key="ToolButton" TargetType="Button">
+            <Setter Property="Background" Value="#0F3460"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="MinWidth" Value="80"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#333355"/>
+                    <Setter Property="Foreground" Value="#666688"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1A4A80"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
+            <Setter Property="Background" Value="#8B1A1A"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#333355"/>
+                    <Setter Property="Foreground" Value="#666688"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B02020"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
+            <Setter Property="Background" Value="#E94560"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#333355"/>
+                    <Setter Property="Foreground" Value="#666688"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF5577"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="UpdateButton" TargetType="Button" BasedOn="{StaticResource ToolButton}">
+            <Setter Property="Background" Value="#6B4A00"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#333355"/>
+                    <Setter Property="Foreground" Value="#666688"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#8B6A00"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#16213E"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="BorderBrush" Value="#0F3460"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#111128"/>
+                    <Setter Property="Foreground" Value="#555577"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LangListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="#16213E"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="BorderBrush" Value="#0F3460"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#0F3460"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1A2A50"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#888888"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+        </Style>
+
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <!-- 타이틀 + 언어 선택 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 구분선 -->
+            <RowDefinition Height="8"/>
+            <!-- 경로 설정 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 구분선 -->
+            <RowDefinition Height="12"/>
+            <!-- 메인 컨텐츠 -->
+            <RowDefinition Height="*"/>
+            <!-- 상태바 -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 타이틀 + 언어 선택 -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <TextBlock Text="{DynamicResource Lang.LangTool.Title}"
+                           FontSize="22" FontWeight="Bold" Foreground="#E0E0E0"/>
+                <TextBlock Text="  v2.0.9620"
+                           FontSize="14" Foreground="#E94560"
+                           VerticalAlignment="Bottom" Margin="0,0,0,2"/>
+            </StackPanel>
+
+            <!-- 언어 선택 ComboBox -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Image x:Name="LangSelectorFlag"
+                       Width="36" Height="24"
+                       Stretch="Uniform"
+                       Margin="0,0,6,0"
+                       VerticalAlignment="Center"/>
+                <ComboBox x:Name="LangSelector"
+                          Width="160" Height="32"
+                          FontSize="12"
+                          SelectionChanged="LangSelector_SelectionChanged">
+                    <ComboBox.Style>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="Background" Value="#16213E"/>
+                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                            <Setter Property="BorderBrush" Value="#0F3460"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ComboBox">
+                                        <Grid>
+                                            <ToggleButton x:Name="ToggleButton"
+                                                          Background="#16213E"
+                                                          BorderBrush="#0F3460"
+                                                          BorderThickness="1"
+                                                          Foreground="#E0E0E0"
+                                                          IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                          Focusable="False">
+                                                <ToggleButton.Template>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="20"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <ContentPresenter Grid.Column="0" Margin="6,0,0,0"
+                                                                                  VerticalAlignment="Center"/>
+                                                                <Path Grid.Column="1"
+                                                                      Data="M 0 0 L 4 4 L 8 0 Z"
+                                                                      Fill="#E0E0E0"
+                                                                      HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </ToggleButton.Template>
+                                            </ToggleButton>
+                                            <ContentPresenter x:Name="ContentSite"
+                                                              IsHitTestVisible="False"
+                                                              Content="{TemplateBinding SelectionBoxItem}"
+                                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                              Margin="6,0,24,0"
+                                                              VerticalAlignment="Center"/>
+                                            <Popup x:Name="Popup"
+                                                   Placement="Bottom"
+                                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                                   AllowsTransparency="True"
+                                                   Focusable="False"
+                                                   PopupAnimation="Slide">
+                                                <Grid MinWidth="{TemplateBinding ActualWidth}"
+                                                      MaxHeight="200">
+                                                    <Border Background="#16213E"
+                                                            BorderBrush="#0F3460"
+                                                            BorderThickness="1"/>
+                                                    <ScrollViewer>
+                                                        <StackPanel IsItemsHost="True"/>
+                                                    </ScrollViewer>
+                                                </Grid>
+                                            </Popup>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#1A2A50"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding LangName}"
+                                       Foreground="#E0E0E0"
+                                       Padding="4,4"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Background" Value="#16213E"/>
+                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                            <Setter Property="Padding" Value="6,4"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter Property="Background" Value="#0F3460"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <!-- 경로 설정 -->
+        <Border Grid.Row="2" Background="#16213E" BorderBrush="#0F3460"
+                BorderThickness="1" Padding="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="{DynamicResource Lang.LangTool.RootPath}"
+                           Style="{StaticResource Label}"/>
+                <TextBlock Grid.Row="0" Grid.Column="2"
+                           Text="{DynamicResource Lang.LangTool.LangPath}"
+                           Style="{StaticResource Label}"/>
+
+                <TextBox Grid.Row="2" Grid.Column="0" x:Name="RootPathBox"
+                         Style="{StaticResource InputBox}" IsReadOnly="True"/>
+                <TextBox Grid.Row="2" Grid.Column="2" x:Name="LangPathBox"
+                         Style="{StaticResource InputBox}" IsReadOnly="True"/>
+                <Button Grid.Row="2" Grid.Column="4"
+                        Content="{DynamicResource Lang.LangTool.BrowsePath}"
+                        Style="{StaticResource AccentButton}"
+                        VerticalAlignment="Stretch"
+                        Click="BrowseRoot_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- 메인 컨텐츠 (좌/우 분할) -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 좌측: 언어 목록 -->
+            <Border Grid.Column="0" Background="#16213E" BorderBrush="#0F3460"
+                    BorderThickness="1" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="{DynamicResource Lang.LangTool.LangList}"
+                               Style="{StaticResource SectionTitle}"/>
+
+                    <ListBox Grid.Row="1" x:Name="LangListBox"
+                             Style="{StaticResource LangListBoxStyle}"
+                             SelectionChanged="LangListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="28"/>
+                                        <ColumnDefinition Width="36"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding StatusIcon}"
+                                               FontSize="14"
+                                               VerticalAlignment="Center"/>
+                                    <Image Grid.Column="1"
+                                           x:Name="FlagImage"
+                                           Width="36" Height="24"
+                                           Stretch="Uniform"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,6,0"/>
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding LangName}"
+                                                   Foreground="#E0E0E0" FontSize="12"/>
+                                        <TextBlock Text="{Binding LangCode}"
+                                                   Foreground="#666688" FontSize="10"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="3"
+                                               Text="{Binding StatusText}"
+                                               Foreground="#888888" FontSize="10"
+                                               VerticalAlignment="Center"
+                                               Margin="4,0,0,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel Grid.Row="3" Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button Content="{DynamicResource Lang.LangTool.Add}"
+                                Style="{StaticResource AccentButton}"
+                                Margin="0,0,6,0"
+                                Click="AddLanguage_Click"/>
+                        <Button x:Name="DeactivateButton"
+                                Content="{DynamicResource Lang.LangTool.Deactivate}"
+                                Style="{StaticResource DangerButton}"
+                                IsEnabled="False"
+                                Click="DeactivateLanguage_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 우측: 편집 패널 -->
+            <Border Grid.Column="2" Background="#16213E" BorderBrush="#0F3460"
+                    BorderThickness="1" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="{DynamicResource Lang.LangTool.LangEdit}"
+                               Style="{StaticResource SectionTitle}"/>
+
+                    <!-- 언어 기본 정보 -->
+                    <Border Grid.Row="2" Background="#111128" BorderBrush="#0F3460"
+                            BorderThickness="1" Padding="12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="6"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="{DynamicResource Lang.LangTool.IsoCode}"
+                                       Style="{StaticResource Label}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2"
+                                       Text="{DynamicResource Lang.LangTool.LangCode}"
+                                       Style="{StaticResource Label}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="4"
+                                       Text="{DynamicResource Lang.LangTool.LangName}"
+                                       Style="{StaticResource Label}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="6"
+                                       Text="{DynamicResource Lang.LangTool.FlagPreview}"
+                                       Style="{StaticResource Label}"/>
+
+                            <TextBox Grid.Row="2" Grid.Column="0" x:Name="IsoCodeBox"
+                                     Style="{StaticResource InputBox}" IsEnabled="False"/>
+                            <TextBox Grid.Row="2" Grid.Column="2" x:Name="LangCodeBox"
+                                     Style="{StaticResource InputBox}" IsEnabled="False"/>
+                            <TextBox Grid.Row="2" Grid.Column="4" x:Name="LangNameBox"
+                                     Style="{StaticResource InputBox}" IsEnabled="False"
+                                     TextChanged="LangNameBox_TextChanged"/>
+                            <Border Grid.Row="2" Grid.Column="6"
+                                    BorderBrush="#0F3460" BorderThickness="1"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image x:Name="PreviewFlagImage"
+                                       Width="36" Height="24" Stretch="Uniform"/>
+                            </Border>
+
+                            <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="7"
+                                        Orientation="Horizontal">
+                                <TextBlock x:Name="MissingKeyText"
+                                           Foreground="#E94560" FontSize="11"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock x:Name="TranslationProgressText"
+                                           Foreground="#888888" FontSize="11"
+                                           VerticalAlignment="Center"
+                                           Margin="12,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- 번역 키 편집 -->
+                    <Grid Grid.Row="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="6"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock Text="{DynamicResource Lang.LangTool.KeyEdit}"
+                                       Style="{StaticResource SectionTitle}"
+                                       Margin="0"/>
+                            <TextBlock x:Name="ReadOnlyNotice"
+                                       Foreground="#E94560" FontSize="11"
+                                       VerticalAlignment="Center"
+                                       Visibility="Collapsed"/>
+                        </StackPanel>
+
+                        <DataGrid Grid.Row="2"
+                                  x:Name="KeysDataGrid"
+                                  Background="#111128"
+                                  Foreground="#E0E0E0"
+                                  BorderBrush="#0F3460"
+                                  BorderThickness="1"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#1A2A50"
+                                  RowBackground="#111128"
+                                  AlternatingRowBackground="#131325"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  IsReadOnly="True"
+                                  SelectionMode="Single"
+                                  CellEditEnding="KeysDataGrid_CellEditEnding"
+                                  FontSize="11">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{DynamicResource Lang.LangTool.KeyColumn}"
+                                                    Binding="{Binding Key}"
+                                                    Width="280" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#888888"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="{DynamicResource Lang.LangTool.ValueColumn}"
+                                                    Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                                                    Width="*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Background" Value="#0F3460"/>
+                                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="{DynamicResource Lang.LangTool.EnglishColumn}"
+                                                    Binding="{Binding EnglishValue}"
+                                                    Width="*" IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#556688"/>
+                                            <Setter Property="Padding" Value="4,2"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+
+                    <!-- 하단 버튼 -->
+                    <StackPanel Grid.Row="6" Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button x:Name="UpdateBuiltinButton"
+                                Content="{DynamicResource Lang.LangTool.Update}"
+                                Style="{StaticResource UpdateButton}"
+                                IsEnabled="False"
+                                Margin="0,0,8,0"
+                                Click="UpdateBuiltin_Click"/>
+                        <Button x:Name="SaveButton"
+                                Content="{DynamicResource Lang.LangTool.Save}"
+                                Style="{StaticResource AccentButton}"
+                                IsEnabled="False"
+                                Click="SaveLanguage_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 상태바 -->
+        <Border Grid.Row="5" Margin="0,8,0,0"
+                Background="#111128" BorderBrush="#0F3460"
+                BorderThickness="1" Padding="8,4">
+            <TextBlock x:Name="StatusText"
+                       Text="{DynamicResource Lang.LangTool.Status.Ready}"
+                       Foreground="#888888" FontSize="11"/>
+        </Border>
+    </Grid>
+</Window>

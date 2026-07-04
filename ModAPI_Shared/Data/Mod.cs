@@ -910,12 +910,15 @@ namespace ModAPI.Data
                     buttonIDs.Add(b.Id);
                 }
 
+                var mismatchCount = 0;
+
                 foreach (var i in InjectIntos)
                 {
                     i.Verify();
                     if (!i.Valid)
                     {
                         Valid = false;
+                        mismatchCount++;
                     }
                 }
                 foreach (var i in AddFields)
@@ -924,6 +927,7 @@ namespace ModAPI.Data
                     if (!i.Valid)
                     {
                         Valid = false;
+                        mismatchCount++;
                     }
                 }
                 foreach (var i in AddMethods)
@@ -932,6 +936,7 @@ namespace ModAPI.Data
                     if (!i.Valid)
                     {
                         Valid = false;
+                        mismatchCount++;
                     }
                 }
                 foreach (var i in AddClasses)
@@ -940,7 +945,21 @@ namespace ModAPI.Data
                     if (!i.Valid)
                     {
                         Valid = false;
+                        mismatchCount++;
                     }
+                }
+
+                // 항목별 상세 불일치 내역은 detailedOnly 로 ModAPI.detailed.log 에만 기록되므로,
+                // 사용자용 ModAPI.log 에는 요약 한 줄만 남긴다.
+                // (mod 가 많은 InjectInto/AddMethod 등을 가질 경우 ModAPI.log 가
+                //  수십~수백 줄의 반복 메시지로 채워지는 문제를 방지)
+                if (mismatchCount > 0)
+                {
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id,
+                        "Mod \"" + Mod.Id + "\" has " + mismatchCount + " checksum mismatch(es)." +
+                        " This usually means the mod is incompatible with the current game version." +
+                        " See ModAPI.detailed.log for the full list.",
+                        Debug.Type.Warning);
                 }
             }
 
@@ -950,7 +969,9 @@ namespace ModAPI.Data
                 try
                 {
                     var configuration = XDocument.Parse(header);
-                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, configuration.ToString());
+                    // mod 헤더 XML 원문 전체 덤프 — InjectInto 가 많은 mod 는 수십 줄씩 찍혀
+                    // ModAPI.log 를 채우는 주범이므로 상세 로그 전용으로 분리
+                    Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, configuration.ToString(), Debug.Type.Notice, detailedOnly: true);
                     SetXml(configuration);
                     Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Successfully parsed mod header of mod \"" + Id + "\".");
                 }
@@ -1105,7 +1126,7 @@ namespace ModAPI.Data
                         var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
                         if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddMethods." + Path + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddMethods." + Path + "\".", Debug.Type.Notice, detailedOnly: true);
                             Valid = false;
                         }
                     }
@@ -1189,7 +1210,7 @@ namespace ModAPI.Data
                         var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Field)).ToLower().Replace("-", "");
                         if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddFields." + Path + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddFields." + Path + "\".", Debug.Type.Notice, detailedOnly: true);
                             Valid = false;
                         }
                     }
@@ -1300,7 +1321,7 @@ namespace ModAPI.Data
                         var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Method)).ToLower().Replace("-", "");
                         if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".InjectIntos." + Path + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".InjectIntos." + Path + "\".", Debug.Type.Notice, detailedOnly: true);
                             Valid = false;
                         }
                     }
@@ -1380,7 +1401,7 @@ namespace ModAPI.Data
                         var newCheckSum = BitConverter.ToString(Checksum.CreateChecksum(_Type)).ToLower().Replace("-", "");
                         if (CheckSum != newCheckSum)
                         {
-                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddClasses." + TypeName + "\".");
+                            Debug.Log("Game: " + Mod.Game.GameConfiguration.Id, "Mismatched checksum at \"" + Mod.Id + ".AddClasses." + TypeName + "\".", Debug.Type.Notice, detailedOnly: true);
                             Valid = false;
                         }
                     }
