@@ -172,6 +172,14 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
 | `IsValidGameExe(path)` | MZ 서명 + PE\0\0 서명 | 512 KB |
 | `IsValidAssemblyDll(path)` | MZ + PE\0\0 + .NET CLR 메타데이터 헤더 (데이터 디렉토리 #14) | 64 KB |
 
+```
+PE Header layout checked:
+[0x00] 4D 5A          ← "MZ" DOS signature
+[0x3C] XX XX XX XX   ← PE header offset (little-endian)
+[offset] 50 45 00 00 ← "PE\0\0" signature
+[Optional Header → DataDirectory[14]] RVA+Size != 0 ← .NET CLR header present
+```
+
 ### 어셈블리 재매핑 처리 과정
 
 ```
@@ -179,8 +187,10 @@ Unity 4에서 Unity 5로 엔진을 업그레이드하며 비주얼과 물리 효
   → 모드 DLL: PE 헤더 v4.0.30319, mscorlib 4.0.0.0
 
 [ModAPI Apply — ModProject.cs]
-  → RemapAllReferences: mscorlib 4.0.0.0 → 2.0.0.0 등
+  → AssemblyVersionMap.RemapAllReferences(modModule)
+      mscorlib 4.0.0.0 → 2.0.0.0, etc.
   → modModule.RuntimeVersion = "v2.0.50727"
+      PE header: v4.0.30319 → v2.0.50727
 
 [게임 Mono 2.0]
   → PE 헤더 수락 ✅  →  참조 해결 ✅
@@ -225,15 +235,15 @@ v2.0.9613에서 Settings 탭의 테마 UI를 별도 **Themes 탭**으로 분리�
 | Theme | Theme |
 | :---: | :---: |
 |**01. Classic theme**|**02. Light theme**|
-| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
+| ![01. Classic theme](https://github.com/user-attachments/assets/dc81132a-149c-4d0b-a7bb-a04a900e878b) | ![02. Light theme](https://github.com/user-attachments/assets/0d6925ec-f8b2-4f8a-a1d6-c082a5aa3378) |
 |**03. Dark theme**|**04. Diablo theme**|
-| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
+| ![03. Dark theme](https://github.com/user-attachments/assets/53abe172-ee66-4f3e-9c36-830b2d659b4d) | ![04. Diablo theme](https://github.com/user-attachments/assets/8c30f223-e564-45dc-8389-c51bfc60b3eb) |
 |**05. Nebula theme**|**06. Sunset theme**|
-| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
+| ![05. Nebula theme](https://github.com/user-attachments/assets/4ff565dd-516b-4951-9d47-6027ac9e3e29) | ![06. Sunset theme](https://github.com/user-attachments/assets/192a6f16-b041-4422-8b64-4f8522f27c15) |
 |**07. Ocean theme**|**08. Nordic theme**|
-| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
+| ![07. Ocean theme](https://github.com/user-attachments/assets/50a47588-bc62-4cfc-91a0-a44f87c45867) | ![08. Nordic theme](https://github.com/user-attachments/assets/81e98f6b-2897-4fd5-bee9-604c04dc26ff) |
 |**09. Citrus theme**|**10. Bloom theme**|
-| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
+| ![09. Citrus theme](https://github.com/user-attachments/assets/64ccb11d-4ab0-41a2-8e00-4f7910558372) | ![10. Bloom theme](https://github.com/user-attachments/assets/265c9249-4d43-4f77-86d6-ccc4037071f7) |
 
 ### 배경 텍스처
 
@@ -390,6 +400,14 @@ bin\Debug\                               # 디버그 테스트 전용
 
 > **오프라인 시**: `modapi.survivetheforest.net`에서 `.mod` 파일을 수동으로 다운로드한 후 해당 게임 폴더에 넣어주세요.
 
+| Game | Folder |
+|---|---|
+| The Forest | `mods/TheForest/` |
+| Subnautica | `mods/Subnautica/` |
+| RAFT | `mods/Raft/` |
+| Escape The Pacific | `mods/EscapeThePacific/` |
+| Green Hell | `mods/GH/` |
+
 ### Step 6 — 모드 적용 및 게임 시작 (Mods 탭)
 
 1. **Mods** 탭으로 이동합니다
@@ -431,12 +449,13 @@ bin\Debug\                               # 디버그 테스트 전용
 - **검색**: 모드명, 설명, 제작자 기준
 - **오프라인 모드**: 지원 5종 게임 폴더 기준 수동 다운로드 안내
 
-### 개발 탭 (Development)
-모드 개발자용. 게임 필터 패널(Col 0)로 5종 게임 전환.
+### Development 탭
+Mod 개발 작업 흐름 — 게임 필터 패널(열 0)이 5개 지원 게임 전체를 포함합니다.
 
-- 게임별 모드 프로젝트 생성, 빌드, 적용
-- ModLib 재생성 3단계 검증 (스팀 → 프로젝트 → 게임 경로)
-- 경량 `Game` 생성자로 안전한 게임 전환
+- 게임별 Mod 프로젝트 생성, 빌드 및 적용
+- 언어 리소스 관리
+- 3단계 검증을 통한 ModLib 생성 (Steam → 프로젝트 → 게임 경로)
+- 경량 `Game` 생성자를 통한 안전한 게임 전환 (`Verify()` 호출 없음)
 
 ### 테마 탭 (Themes)
 테마 선택 및 배경 텍스처 관리 화면.
@@ -466,7 +485,7 @@ bin\Debug\                               # 디버그 테스트 전용
 **위치**: `VersionTool\MODAPI_VersionTool.csproj`
 
 ## Version Tool
-<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/d7d40dea-129e-457d-9978-4ca149487275" />
 
 **기능**
 - 현재 버전 자동 표시 (`App.xaml.cs`에서 읽어옴)
@@ -668,8 +687,7 @@ public static readonly List<string> ThemeIds = new List<string>(new[]
 
 ### 배경 텍스처 기능
 
-Themes 탭의 **Background Texture** 카드에서 이미지를 선택하면 앱 전체 배경으로 적용됩니다.
-어떤 테마가 선택되어 있어도 동일하게 작동합니다.
+Themes 탭의 **Background Texture** 카드에서 이미지를 선택하면 앱 전체 배경으로 적용됩니다. 어떤 테마가 선택되어 있어도 동일하게 작동합니다.
 
 **지원 입력 형식**: `.png` / `.jpg` / `.jpeg`, 최대 50MB, 4K 이하 해상도
 
@@ -760,21 +778,15 @@ Clear 버튼
   → GC.Collect() (4K 이미지 메모리 반환)
 ```
 
-**추가된 언어 키**
+**새 언어 키**
 
-| 키 | 한국어 값 |
+| 키 | 설명 |
 |---|---|
-| `Lang.Options.Theme.Diablo` | 디아블로 |
-| `Lang.Options.Theme.Nebula` | 네뷸라 |
-| `Lang.Options.Theme.Sunset` | 선셋 |
-| `Lang.Options.Theme.Ocean` | 오션 |
-| `Lang.Options.Theme.Nordic` | 노르딕 |
-| `Lang.Options.Theme.Citrus` | 감귤 |
-| `Lang.Options.Theme.Bloom` | 블룸 |
-| `Lang.Options.Labels.TextureBackground` | 배경 텍스처 |
-| `Lang.Options.Labels.TextureEnable` | 활성화 |
-| `Lang.Options.Labels.TextureClear` | 초기화 |
-| `Lang.Windows.TextureTooLarge` | 이미지 용량 초과 경고 |
+| `Lang.Options.Theme.Diablo` ~ `Lang.Options.Theme.Bloom` | 7개 신규 테마명 |
+| `Lang.Options.Labels.TextureBackground` | 배경 텍스처 라벨 |
+| `Lang.Options.Labels.TextureEnable` | 활성화 라벨 |
+| `Lang.Options.Labels.TextureClear` | 초기화 버튼 |
+| `Lang.Windows.TextureTooLarge` | 파일 용량 초과 경고 |
 | `Lang.Windows.TextureTampered` | 텍스처 변조 감지 경고 |
 
 **파일 구조**
@@ -875,6 +887,17 @@ ModAPI\
 
 - **`create_dummy_Debug_games.ps1`** — `bin\Debug\`용 PowerShell 스크립트; 5종 게임 전체의 더미 파일을 `dummy_games\`, `dummy_steam\`, `gamefiles\original\` 아래에 생성 — 실제 게임 설치 없이 전체 UI 작업 흐름 테스트 가능
 
+#### Settings 탭
+
+- **스팀 경로 카드** — 게임 설치 경로 카드 내부 통합; `InitSteamPath()`, `SteamBrowse_Click()`, `SteamSave_Click()`
+- **게임 경로 패널** — `BuildGamePathsPanel()` 게임별 확장 가능 카드 포함; TextBox는 `HorizontalAlignment=Stretch` 사용
+- **모두 펼치기 / 모두 접기** 버튼
+- **항상 위에** 체크박스 (`ui.cfg`에 저장)
+- **Mod/프로젝트 목록 너비** 슬라이더 — 최소값 `150`부터 시작; `ui.cfg`에 저장
+- **글꼴 크기** ComboBox — FHD 10–16, 4K 10–22, 8K 10–28
+- **체크박스 동기화** — `SettingsCheckboxes.DataContext = SettingsVm`; AutoUpdate / UseSteam / UpdateVersions 정상 동기화
+- **`_uiInitialized` 플래그** — WPF 시작 중 `ui.cfg` 조기 기록 방지
+
 #### Mods 탭 — 게임 시작 검증 전면 재작성
 
 게임 시작 버튼 클릭 시 모드 목록 상태와 무관하게 항상 5단계 검증 실행:
@@ -897,17 +920,10 @@ Mod 라이브러리 재생성 버튼 클릭 시 3단계 검증:
 | 2 | 프로젝트 목록 존재 여부 | NoProjectWarning |
 | 3 | `App.Game.GamePath` 설정 여부 | GamePathNotSet |
 
-#### Settings 탭
-
-- **스팀 경로 카드** — 게임 설치 경로 카드 내부 통합; `InitSteamPath()`, `SteamBrowse_Click()`, `SteamSave_Click()`
-- **게임 경로 패널** — `BuildGamePathsPanel()`, TextBox 전체 너비, 모두 펼치기/접기 버튼
-- **모드/프로젝트목록 너비** 슬라이더 — 저장값 없을 때 최솟값 `150`으로 시작
-- **폰트 크기** ComboBox — FHD 10–16, 4K 10–22, 8K 10–28
-- **체크박스 동기화** — `SettingsCheckboxes.DataContext = SettingsVm`
-- **`_uiInitialized` 플래그** — WPF 시작 중 조기 `ui.cfg` 덮어쓰기 방지
-
-#### 다운로드 탭
-- 디버그 문자열 → `Lang.Downloads.Status.NoDownloads`; 일관된 Padding; 오프라인 안내 업데이트
+#### Downloads 탭
+- 디버그 문자열을 `Lang.Downloads.Status.NoDownloads`로 교체
+- 모든 상태 메시지에 일관된 여백 적용
+- 오프라인 안내 텍스트를 5개 지원 게임용으로 업데이트; 두 개의 TextBlock을 통한 줄바꿈
 
 #### 최초 설정 및 게임 경로 시스템
 - `FirstSetup.Check()` — 기본값 `true` 동기화
@@ -963,14 +979,15 @@ Mod 라이브러리 재생성 버튼 클릭 시 3단계 검증:
 
 ### 추가된 항목
 
-- **다운로드 탭**: 게임 필터 5종 추가 (TheForest, Subnautica, RAFT, EscapeThePacific, GH)
-- **Welcome 탭**: 탭 목록 맨 앞(번호 0) 배치
-- **Mods 탭**: 3-컬럼 레이아웃(WrapPanel → 세로 목록), 너비 자동 조절, 모드명 줄바꿈
-- **`ModsViewModel`**: 게임별 필터링, `ResolveGame()`으로 올바른 `Game` 인스턴스 생성
-- **`Game.cs`**: 경량 생성자 `new Game(config, true)` — 식별 전용, `Verify()` 생략
-- **빌드**: 4개 게임 XML `CopyToOutputDirectory=Always` 등록; 경고 정리 (CS0168, CS0618, CS0252)
+- **Downloads 탭**: 5개 게임 필터 (TheForest, Subnautica, RAFT, EscapeThePacific, GH)
+- **Welcome 탭**: 가장 왼쪽 위치에 추가 (인덱스 0)
+- **Mods 탭**: 3열 레이아웃 (WrapPanel → 세로 목록); 자동 너비 조절; Mod 이름 줄바꿈
+- **`ModsViewModel`**: 게임별 필터링, Mod별 올바른 `Game` 인스턴스를 위한 `ResolveGame()`
+- **`Game.cs`**: 경량 생성자 `new Game(config, true)` — 식별 전용, `Verify()` 호출 없음
+- **빌드**: 4개 게임 XML 파일을 `ModAPI.csproj`에 `CopyToOutputDirectory=Always`로 등록
+- **빌드**: 경고 정리 — CS0168, CS0618, CS0252
 - **게임 XML**: TheForest, Raft, GH DLL 목록 수정
-- **언어 국기**: 13개 언어 배지 이미지 크기 통일
+- **언어 플래그**: 13개 언어 배지 전체의 이미지 크기 표준화
 
 ### 제거된 항목
 
