@@ -1,18 +1,6 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9620 - 20260621
+# ModAPI(v1) v2.0.9621 - 20260728
 
 **Công Cụ Quản Lý Mod cho The Forest — Phiên Bản Nâng Cấp**
 
@@ -276,15 +264,15 @@ Việc đổi theme sẽ khởi động lại ứng dụng tự động. (đư�
 | Theme | Theme |
 | :---: | :---: |
 |**01. Theme Classic**|**02. Theme Light**|
-| ![01. Classic theme](https://github.com/user-attachments/assets/dc81132a-149c-4d0b-a7bb-a04a900e878b) | ![02. Light theme](https://github.com/user-attachments/assets/0d6925ec-f8b2-4f8a-a1d6-c082a5aa3378) |
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
 |**03. Theme Dark**|**04. Theme Diablo**|
-| ![03. Dark theme](https://github.com/user-attachments/assets/53abe172-ee66-4f3e-9c36-830b2d659b4d) | ![04. Diablo theme](https://github.com/user-attachments/assets/8c30f223-e564-45dc-8389-c51bfc60b3eb) |
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
 |**05. Theme Nebula**|**06. Theme Sunset**|
-| ![05. Nebula theme](https://github.com/user-attachments/assets/4ff565dd-516b-4951-9d47-6027ac9e3e29) | ![06. Sunset theme](https://github.com/user-attachments/assets/192a6f16-b041-4422-8b64-4f8522f27c15) |
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
 |**07. Theme Ocean**|**08. Theme Nordic**|
-| ![07. Ocean theme](https://github.com/user-attachments/assets/50a47588-bc62-4cfc-91a0-a44f87c45867) | ![08. Nordic theme](https://github.com/user-attachments/assets/81e98f6b-2897-4fd5-bee9-604c04dc26ff) |
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
 |**09. Theme Citrus**|**10. Theme Bloom**|
-| ![09. Citrus theme](https://github.com/user-attachments/assets/64ccb11d-4ab0-41a2-8e00-4f7910558372) | ![10. Bloom theme](https://github.com/user-attachments/assets/265c9249-4d43-4f77-86d6-ccc4037071f7) |
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
 
 ### Texture Nền
 
@@ -693,6 +681,108 @@ Các log chẩn đoán chỉ dành cho nhà phát triển trước đây bị gi
 </details>
 
 <details open>
+<summary><b>Thay Đổi Trong v2.0.9621</b></summary>
+
+## Thay Đổi Trong v2.0.9621
+
+### Tính năng mới
+
+#### Tự động phát hiện trên toàn bộ thư viện Steam
+
+`FindGamePath()` giờ đây, khi không tìm thấy game qua `SearchPaths` cố định, sẽ tìm kiếm thêm trong **tất cả các thư viện Steam đã đăng ký trên hệ thống** (phân tích một lần từ `libraryfolders.vdf`, lưu cache trong suốt phiên làm việc). Áp dụng cho cả 5 game được hỗ trợ, không chỉ game đang hoạt động.
+
+- Mới: `Game.GetSteamLibraryFolders()` — phân tích `libraryfolders.vdf`, cache tĩnh theo phiên
+- Được kiểm soát bởi ô **Kết nối Steam**: tắt (mặc định khi cài mới) → bỏ qua hoàn toàn việc tự động dò tìm cho cả 5 game, đường dẫn giữ trống cho đến khi người dùng tự thiết lập. Bật → cả 5 game được tìm kiếm nhất quán qua cùng một phương pháp.
+
+#### Tự động phát hiện mod dành cho game khác
+
+Một tệp `.mod` được đặt nhầm vào thư mục game khác (ví dụ mod Green Hell bị chép vào `mods\TheForest\`) giờ đây được phát hiện tự động thay vì âm thầm làm hỏng thao tác Apply.
+
+- `Game.CheckModGameCompatibility()` (dùng bên trong `ApplyMods()`) kiểm tra trước khi bắt đầu tiêm mã, xem mọi kiểu `AddMethod`/`AddField`/`InjectInto` mà mod khai báo có thực sự tồn tại trong assembly thật của game đích hay không. Mod không khớp sẽ tự động bị loại khỏi lần Apply đó; phần còn lại vẫn áp dụng bình thường.
+- `Game.CheckModGameCompatibilityLight()` + `Game.GetCachedTypeNames()` thực hiện cùng kiểm tra ngay khi mod được tải (nhẹ hơn — đọc byte assembly vào bộ nhớ, trích tên kiểu, giải phóng tệp ngay lập tức). Mod không khớp hiển thị **huy hiệu cảnh báo ⚠** kèm chú thích trong tab Mods, ngay cả trước khi nhấn Apply.
+- Nếu có mod bị loại và/hoặc cuối cùng không có gì được áp dụng, Start Game hiển thị một cửa sổ bật lên tổng hợp duy nhất thay vì nhiều cửa sổ chồng lên nhau; game sẽ không khởi chạy nếu không còn mod nào được áp dụng (`Game.LastAppliedModCount`).
+
+#### Tab Cài đặt — Nhật ký nhà phát triển / Xóa nhật ký khi khởi động
+
+Hai ô mới, sau **Kết nối Steam** và trước **Luôn ở trên cùng**:
+
+| Khóa | Mô tả |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Bật `ModAPI.dev.log` (đổi tên từ `ModAPI.detailed.log`) — tương đương chạy với `--dev` |
+| `Lang.Options.Labels.ClearLogsOnStart` | Xóa thư mục `logs\` mỗi khi khởi động |
+
+`Debug.ClearLogs()` đóng các luồng ghi nhật ký đang mở trước khi xóa tệp, tránh lỗi "tệp đang được sử dụng".
+
+#### Ghi nhật ký ngoại lệ chưa xử lý toàn cục
+
+`App.xaml.cs` giờ đây móc vào `DispatcherUnhandledException` (luồng UI) và `AppDomain.UnhandledException` (luồng nền). Các ngoại lệ trước đây làm ứng dụng sập mà không để lại dấu vết nào trong nhật ký giờ được ghi lại — loại, thông báo và stack trace đầy đủ — trước khi tiến trình kết thúc.
+
+---
+
+### Sửa lỗi nghiêm trọng
+
+| # | Tệp | Vấn đề | Cách sửa |
+|---|---|---|---|
+| 1 | `Configuration.cs` | `GetPath()` phân giải một đường dẫn đã được đặt lại rõ ràng (chuỗi rỗng) thành `RootPath` thay vì `""`, vì `Path.GetFullPath(RootPath + ký tự phân cách + "")` rút gọn thành `RootPath` | Giá trị lưu trữ rỗng giờ trả về trực tiếp `""`, trước bước ghép đường dẫn |
+| 2 | `MainWindow.xaml.cs` | Thứ tự xác thực của Start Game khác nhau giữa bộ lọc "Tất cả" và bộ lọc cụ thể, đôi khi hiển thị cửa sổ chọn mod hoặc chọn game trước một vấn đề cơ bản hơn (thiếu đường dẫn Steam/game) | Cả hai đường đi giờ theo cùng thứ tự: Steam → đường dẫn game → chọn mod → chọn game |
+| 3 | `MainWindow.xaml.cs` | Việc thu thập mod cho Start Game bỏ qua bộ lọc game đang hoạt động — mod được đánh dấu cho game khác (không hiển thị) vẫn bị tính, gây ra cửa sổ sai | Việc thu thập mod giờ tôn trọng bộ lọc hiện tại; chỉ "Tất cả" mới tổng hợp trên toàn bộ game |
+| 4 | `ModsViewModel.cs` | `Mod.Mods` chỉ được đánh khóa bằng `{ModId}-{Phiên bản}`, nên tên tệp giống hệt nhau ở hai thư mục game khác nhau bị xung đột — `Load()` của tệp thứ hai không bao giờ được gọi | Khóa giờ bao gồm GameId: `{GameId}-{ModId}-{Phiên bản}` |
+| 5 | `ModsViewModel.cs` | Sau khi sửa lỗi #4, `UpdateMods()` vẫn nhóm các mục danh sách chỉ theo ModId, gộp hai mod cùng tên từ các game khác nhau thành một mục — sập với `ArgumentException: An item with the same key has already been added` khi cả hai khai báo cùng phiên bản | Việc nhóm hiển thị giờ cũng so sánh GameId |
+| 6 | `Game.cs` | Danh sách `<files>` trong `Versions.xml` của Green Hell chứa cùng hai tệp bị liệt kê hai lần với chữ hoa/thường khác nhau (`_Data`/`_data`); `CheckFiles` là `HashSet<string>` phân biệt chữ hoa/thường, nên cả hai đều bị băm, làm gấp đôi checksum tính toán và gây lỗi toàn vẹn giả | `CheckFiles` giờ dùng `StringComparer.OrdinalIgnoreCase` |
+| 7 | `Game.cs` / `ModLib.cs` | Bước "xóa tệp cũ" trong `ModLib.Create()` không có bảo vệ thử lại đối với `BaseModLib.dll` bị khóa, và `Game.CreateModLibrary()` hoàn toàn không có xử lý ngoại lệ — việc bị khóa làm sập toàn bộ ứng dụng trên một luồng nền | Thêm vòng lặp thử lại 10×500ms vào bước xóa; `CreateModLibrary()` giờ bọc lệnh gọi trong try/catch |
+| 8 | `MainWindow.xaml.cs` | Khi `ApplyMods()` hoàn tất mà không thực sự áp dụng mod nào (ví dụ tất cả bị loại), nó vẫn báo hiệu hoàn tất giống như thành công thực sự, nên game khởi chạy mà không có bất kỳ chỉnh sửa nào | `Game.LastAppliedModCount` phân biệt "không áp dụng gì" với "đã áp dụng N"; bỏ qua khởi chạy khi bằng 0 |
+| 9 | `MainWindow.xaml.cs` | Chiều cao cửa sổ không được tính lại khi đổi cỡ chữ, khi tải cỡ chữ lớn đã lưu lúc khởi động, hay khi chuyển sang tab Cài đặt (`Tabs_SelectionChanged` trống) — với cỡ chữ lớn, thẻ đường dẫn game cuối cùng bị cắt | Đã thêm tính lại chiều cao ở cả ba điểm |
+| 10 | `MainWindow.xaml.cs` | `UpdateWindowHeight()` không có giới hạn trên — mở rộng cả 5 thẻ đường dẫn game cùng lúc có thể làm cửa sổ to bằng cả màn hình hoặc hơn | Chiều cao giờ bị giới hạn theo `SystemParameters.WorkArea.Height` |
+| 11 | `MainWindow.xaml.cs` | Thư mục `mods\`/`projects\` được tạo vô điều kiện cho cả 5 game mỗi khi khởi động, bất kể game đã cài đặt hay chưa | Thư mục giờ chỉ được tạo cho các game có đường dẫn đã xác minh và tệp thực thi tồn tại |
+| 12 | `Game.cs` | `UpdateVersions()` có thể lưu `Versions.xml` thất bại nếu thư mục đích chưa tồn tại (bị che giấu cho đến nay vì cả 5 thư mục đều được commit sẵn khi phân phối) | Thư mục được tạo qua `Directory.CreateDirectory()` ngay trước khi lưu |
+
+---
+
+### Tab Cài đặt — Thay đổi giá trị mặc định khi chạy lần đầu
+
+`AutoUpdate`, `UseSteam` (Kết nối Steam) và `UpdateVersionsTable` (Giữ bảng VersionsData luôn mới) giờ mặc định **tắt** khi cài đặt mới (trước đây mặc định bật). Ba tính năng này vẫn chưa hoàn thiện ở phía máy chủ, nên giờ là opt-in — giống như `DevLog`/`ClearLogsOnStart`.
+
+### Giao diện
+
+- Hàng ô chọn tab Cài đặt (`SettingsCheckboxes`): `StackPanel` → `WrapPanel`, để nhãn xuống dòng thay vì bị cắt khi cỡ chữ lớn.
+
+### Khóa ngôn ngữ mới (13 ngôn ngữ)
+
+| Khóa | Giá trị tiếng Anh |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Developer Log |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
+| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
+| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
+| `Lang.Windows.NoModsApplied.OK` | OK |
+
+### Tệp đã sửa đổi
+
+| Tệp | Đường dẫn | Thay đổi |
+|---|---|---|
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | Thống nhất thứ tự xác thực Start Game, thu thập mod theo bộ lọc, cửa sổ kết quả tổng hợp, tự động dò tìm 4 game qua thư viện Steam được kiểm soát bởi UseSteam, sửa chiều cao cửa sổ (cỡ chữ / chuyển tab / giới hạn) |
+| `MainWindow.xaml` | `ModAPI\Windows\` | Ô DevLog/ClearLogsOnStart trong tab Cài đặt, `WrapPanel` |
+| `Game.cs` | `ModAPI_Shared\Data\` | Tìm kiếm thư viện Steam, `CheckFiles` không phân biệt chữ hoa/thường, kiểm tra tương thích mod (đầy đủ + nhẹ), `LastAppliedModCount`/`LastExcludedModsSummary`, xử lý ngoại lệ trong `CreateModLibrary()`, tự động dò tìm được kiểm soát bởi UseSteam |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | Vòng lặp thử lại khi xóa tệp cũ |
+| `Mod.cs` | `ModAPI_Shared\Data\` | Trường `GameMismatchReason` |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | Sửa lỗi đường dẫn rỗng trong `GetPath()` |
+| `Debug.cs` | `ModAPI_Shared\` | Đổi tên thành `ModAPI.dev.log`, trường `DevMode`, `ClearLogs()` |
+| `App.xaml.cs` | `ModAPI\` | Trình xử lý ngoại lệ toàn cục, kết nối `Debug.DevMode` |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | Khóa `Mod.Mods` theo game, nhóm hiển thị theo game, huy hiệu không khớp, chặn spam nhật ký |
+| `ModViewModel.cs` | `ModAPI\Data\ViewModels\` | `HasGameMismatch`/`GameMismatchTooltip` |
+| `SettingsViewModel.cs` | `ModAPI\Data\ViewModels\` | `DevLog`/`ClearLogsOnStart`, giá trị mặc định opt-in cho 3 ô có sẵn |
+| `FirstSetup.xaml` | `ModAPI\Windows\SubWindows\` | Giá trị mặc định của 3 ô đổi thành tắt |
+| `ModsExcludedWarning.xaml` / `.cs` | `ModAPI\Windows\SubWindows\` | Mới |
+| 13x `Language.XX.xaml` | `ModAPI\resources\langs\` | 8 khóa mới |
+
+---
+
+</details>
+
+<details>
 <summary><b>Thay Đổi Trong v2.0.9620</b></summary>
 
 ## Thay Đổi Trong v2.0.9620
@@ -1528,6 +1618,16 @@ Kiểm tra 3 bước khi nhấp Mod Library Regeneration:
 
 <details>
 <summary><b>Giai Đoạn 6-3 — Mở Rộng Hệ Thống Theme, Cải Tiến Cài Đặt, Ổn Định và Công Cụ</b></summary>
+
+### v2.0.9621 — 2026-07-28
+
+- Tự động dò tìm trên toàn bộ thư viện Steam cho cả 5 game, được kiểm soát bởi ô Kết nối Steam
+- Tự động phát hiện và loại bỏ mod được tạo cho game khác (danh sách + lúc Apply), có huy hiệu ⚠ trong tab Mods
+- Cửa sổ kết quả tổng hợp cho mod bị loại / không có mod nào được áp dụng thay vì các cửa sổ chồng lên nhau; game không còn khởi chạy khi có 0 mod được áp dụng
+- Ghi nhật ký ngoại lệ chưa xử lý toàn cục (luồng UI + luồng nền)
+- `ModAPI.dev.log` thay thế `ModAPI.detailed.log`; thêm công tắc mới trong tab Cài đặt cho Nhật ký nhà phát triển và Xóa nhật ký khi khởi động
+- `AutoUpdate`/`UseSteam`/`UpdateVersionsTable` giờ mặc định tắt khi cài đặt mới
+- Đã sửa: lỗi đường dẫn rỗng trong `Configuration.GetPath()`, thứ tự xác thực Start Game không nhất quán, thu thập mod bỏ qua bộ lọc, xung đột khóa `Mod.Mods` giữa các game và sự cố `UpdateMods()` do đó gây ra, nhân đôi checksum của Green Hell (`_Data`/`_data`), sập do khóa tệp `BaseModLib.dll`, tạo `mods\`/`projects\` vô điều kiện, lưu `Versions.xml` thất bại khi thiếu thư mục, không tính lại chiều cao cửa sổ khi đổi cỡ chữ / chuyển tab, chiều cao cửa sổ không giới hạn khi "Mở rộng tất cả"
 
 ### v2.0.9620 — 2026-06-21
 

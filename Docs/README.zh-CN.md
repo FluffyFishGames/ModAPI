@@ -1,18 +1,6 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9620 - 20260621
+# ModAPI(v1) v2.0.9621 - 20260728
 
 **The Forest 模组管理工具 — 升级版**
 
@@ -276,15 +264,15 @@ builtin: false → true (langs.json)
 | 主题 | 主题 |
 | :---: | :---: |
 |**01. Classic 主题**|**02. Light 主题**|
-| ![01. Classic theme](https://github.com/user-attachments/assets/dc81132a-149c-4d0b-a7bb-a04a900e878b) | ![02. Light theme](https://github.com/user-attachments/assets/0d6925ec-f8b2-4f8a-a1d6-c082a5aa3378) |
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
 |**03. Dark 主题**|**04. Diablo 主题**|
-| ![03. Dark theme](https://github.com/user-attachments/assets/53abe172-ee66-4f3e-9c36-830b2d659b4d) | ![04. Diablo theme](https://github.com/user-attachments/assets/8c30f223-e564-45dc-8389-c51bfc60b3eb) |
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
 |**05. Nebula 主题**|**06. Sunset 主题**|
-| ![05. Nebula theme](https://github.com/user-attachments/assets/4ff565dd-516b-4951-9d47-6027ac9e3e29) | ![06. Sunset theme](https://github.com/user-attachments/assets/192a6f16-b041-4422-8b64-4f8522f27c15) |
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
 |**07. Ocean 主题**|**08. Nordic 主题**|
-| ![07. Ocean theme](https://github.com/user-attachments/assets/50a47588-bc62-4cfc-91a0-a44f87c45867) | ![08. Nordic theme](https://github.com/user-attachments/assets/81e98f6b-2897-4fd5-bee9-604c04dc26ff) |
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
 |**09. Citrus 主题**|**10. Bloom 主题**|
-| ![09. Citrus theme](https://github.com/user-attachments/assets/64ccb11d-4ab0-41a2-8e00-4f7910558372) | ![10. Bloom theme](https://github.com/user-attachments/assets/265c9249-4d43-4f77-86d6-ccc4037071f7) |
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
 
 ### 背景纹理
 
@@ -693,6 +681,108 @@ ISO代码 (小写) → flagcdn.com/h24/{iso}.png → Language.{LANGCODE}.png
 </details>
 
 <details open>
+<summary><b>v2.0.9621 的变更内容</b></summary>
+
+## v2.0.9621 的变更内容
+
+### 新功能
+
+#### 全 Steam 库自动检测
+
+现在，如果通过固定的 `SearchPaths` 找不到游戏，`FindGamePath()` 还会搜索**系统中已注册的所有 Steam 库**（从 `libraryfolders.vdf` 解析一次，会话期间缓存）。此功能适用于全部 5 款支持的游戏，而不仅仅是当前激活的那一款。
+
+- 新增 `Game.GetSteamLibraryFolders()` —— 解析 `libraryfolders.vdf`，按会话静态缓存
+- 由 **Steam 连接** 复选框控制：关闭（全新安装的默认值）→ 全部 5 款游戏都跳过自动检测，路径保持为空直到手动设置。开启 → 全部 5 款游戏都通过同一方法一致地进行搜索。
+
+#### 自动检测其他游戏的模组
+
+放错游戏文件夹的 `.mod` 文件（例如把 Green Hell 的模组复制到了 `mods\TheForest\`）现在会被自动检测出来，而不是悄悄破坏 Apply 操作。
+
+- `Game.CheckModGameCompatibility()`（在 `ApplyMods()` 内部使用）会在注入开始前，验证模组声明的每个 `AddMethod`/`AddField`/`InjectInto` 类型是否真实存在于目标游戏的实际程序集中。不匹配的模组会自动从该次 Apply 中排除；其余模组照常应用。
+- `Game.CheckModGameCompatibilityLight()` + `Game.GetCachedTypeNames()` 在模组加载时执行同样的轻量级检查（将程序集字节读入内存，提取类型名后立即释放文件句柄）。不匹配的模组会在 Mods 标签页中显示 **⚠ 警告徽章** 及提示，甚至在点击 Apply 之前就能看到。
+- 如果有模组被排除和/或最终没有任何内容被应用，Start Game 会显示一个合并后的弹窗，而不是多个堆叠的弹窗；如果没有任何模组最终应用成功，游戏将不会启动（`Game.LastAppliedModCount`）。
+
+#### 设置标签页 —— 开发者日志 / 启动时清除日志
+
+在 **Steam 连接** 之后、**始终置顶** 之前新增两个复选框：
+
+| 键 | 说明 |
+|---|---|
+| `Lang.Options.Labels.DevLog` | 启用 `ModAPI.dev.log`（由 `ModAPI.detailed.log` 更名而来）—— 等同于使用 `--dev` 启动 |
+| `Lang.Options.Labels.ClearLogsOnStart` | 每次启动时清空 `logs\` 文件夹 |
+
+`Debug.ClearLogs()` 会在删除文件前先关闭已打开的日志流，避免"文件正在使用"错误。
+
+#### 全局未处理异常日志
+
+`App.xaml.cs` 现在挂钩了 `DispatcherUnhandledException`（UI 线程）和 `AppDomain.UnhandledException`（后台线程）。以前会导致应用无声崩溃、日志中毫无痕迹的异常，现在会在进程退出前记录下类型、消息和完整的调用堆栈。
+
+---
+
+### 关键错误修复
+
+| # | 文件 | 问题 | 修复 |
+|---|---|---|---|
+| 1 | `Configuration.cs` | `GetPath()` 会把明确重置为空字符串的路径解析为 `RootPath` 而不是 `""`，原因是 `Path.GetFullPath(RootPath + 分隔符 + "")` 会被归约为 `RootPath` | 存储值为空字符串时，现在会在路径拼接之前直接返回 `""` |
+| 2 | `MainWindow.xaml.cs` | "全部"筛选和特定筛选下 Start Game 的验证顺序不一致，有时会在更根本的问题（缺少 Steam/游戏路径）之前先弹出模组选择或游戏选择弹窗 | 两条路径现在遵循同样的顺序：Steam → 游戏路径 → 模组选择 → 游戏选择 |
+| 3 | `MainWindow.xaml.cs` | Start Game 收集模组时忽略了当前激活的游戏筛选 —— 其他（不可见）游戏中被勾选的模组仍会被计入，导致弹出错误的窗口 | 模组收集现在会遵循当前筛选；只有"全部"才会跨所有游戏汇总 |
+| 4 | `ModsViewModel.cs` | `Mod.Mods` 仅以 `{ModId}-{版本}` 作为键，导致两个不同游戏文件夹下相同的文件名发生冲突 —— 第二个的 `Load()` 从未被调用 | 键现在包含 GameId：`{GameId}-{ModId}-{版本}` |
+| 5 | `ModsViewModel.cs` | 修复第 4 项后，`UpdateMods()` 仍仅按 ModId 对列表条目分组，导致来自不同游戏的同名模组被合并为一个条目 —— 当两者声明相同版本时，会因 `ArgumentException: An item with the same key has already been added` 而崩溃 | 显示分组现在也会比较 GameId |
+| 6 | `Game.cs` | Green Hell 的 `Versions.xml` 中 `<files>` 列表以不同大小写（`_Data`/`_data`）重复列出了相同的两个文件；`CheckFiles` 是区分大小写的 `HashSet<string>`，因此两者都被哈希，使计算出的校验和翻倍，造成虚假的完整性错误 | `CheckFiles` 现在使用 `StringComparer.OrdinalIgnoreCase` |
+| 7 | `Game.cs` / `ModLib.cs` | `ModLib.Create()` 的"移除旧文件"步骤对被锁定的 `BaseModLib.dll` 没有重试保护，`Game.CreateModLibrary()` 也完全没有异常处理 —— 文件被锁定时会导致整个应用在后台线程中崩溃 | 在删除步骤中添加了 10×500ms 的重试循环；`CreateModLibrary()` 现在用 try/catch 包裹调用 |
+| 8 | `MainWindow.xaml.cs` | 当 `ApplyMods()` 结束时实际应用的模组数为零（例如全部被排除），仍会像真正成功一样发出完成信号，导致游戏在未做任何修改的情况下启动 | `Game.LastAppliedModCount` 用于区分"未应用任何内容"与"已应用 N 个"；为 0 时跳过启动 |
+| 9 | `MainWindow.xaml.cs` | 无论是更改字体大小、启动时加载已保存的大号字体，还是切换到设置标签页（`Tabs_SelectionChanged` 是空的），窗口高度都不会重新计算 —— 大字号下最下方的游戏路径卡片会被裁切 | 在这三处都添加了高度重新计算 |
+| 10 | `MainWindow.xaml.cs` | `UpdateWindowHeight()` 没有上限 —— 同时展开全部 5 张游戏路径卡片可能使窗口达到整个屏幕大小甚至更大 | 高度现在被限制在 `SystemParameters.WorkArea.Height` 以内 |
+| 11 | `MainWindow.xaml.cs` | 无论游戏是否已安装，每次启动都会无条件为全部 5 款游戏创建 `mods\`/`projects\` 文件夹 | 现在仅为路径已验证且可执行文件存在的游戏创建文件夹 |
+| 12 | `Game.cs` | 如果目标文件夹尚不存在，`UpdateVersions()` 可能无法保存 `Versions.xml`（此前一直被掩盖，因为全部 5 个文件夹都已预先提交随分发包一起发布） | 保存前立即通过 `Directory.CreateDirectory()` 创建文件夹 |
+
+---
+
+### 设置标签页 —— 首次运行默认值变更
+
+`AutoUpdate`、`UseSteam`（Steam 连接）和 `UpdateVersionsTable`（保持 VersionsData 最新）在全新安装时现在默认**关闭**（此前默认开启）。这三项功能的服务器端实现仍不完整，因此现在改为选择性开启（opt-in）—— 与 `DevLog`/`ClearLogsOnStart` 保持一致。
+
+### 界面
+
+- 设置标签页复选框行（`SettingsCheckboxes`）：从 `StackPanel` 改为 `WrapPanel`，使标签在字体过大时自动换行而不是被裁切。
+
+### 新增语言键（13 种语言）
+
+| 键 | 英文值 |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Developer Log |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
+| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
+| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
+| `Lang.Windows.NoModsApplied.OK` | OK |
+
+### 修改的文件
+
+| 文件 | 路径 | 变更内容 |
+|---|---|---|
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | 统一 Start Game 验证顺序、按筛选收集模组、合并结果弹窗、由 UseSteam 控制的 4 款游戏 Steam 库自动检测、窗口高度修复（字体大小 / 标签切换 / 上限） |
+| `MainWindow.xaml` | `ModAPI\Windows\` | 设置标签页 DevLog/ClearLogsOnStart 复选框、`WrapPanel` |
+| `Game.cs` | `ModAPI_Shared\Data\` | Steam 库搜索、不区分大小写的 `CheckFiles`、模组兼容性检查（完整版 + 轻量版）、`LastAppliedModCount`/`LastExcludedModsSummary`、`CreateModLibrary()` 异常处理、由 UseSteam 控制的自动检测 |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | 删除旧文件时的重试循环 |
+| `Mod.cs` | `ModAPI_Shared\Data\` | `GameMismatchReason` 字段 |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | 修复 `GetPath()` 的空路径错误 |
+| `Debug.cs` | `ModAPI_Shared\` | 更名为 `ModAPI.dev.log`、`DevMode` 字段、`ClearLogs()` |
+| `App.xaml.cs` | `ModAPI\` | 全局异常处理器、接入 `Debug.DevMode` |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | 按游戏区分的 `Mod.Mods` 键、按游戏分组显示、不匹配徽章、日志刷屏抑制 |
+| `ModViewModel.cs` | `ModAPI\Data\ViewModels\` | `HasGameMismatch`/`GameMismatchTooltip` |
+| `SettingsViewModel.cs` | `ModAPI\Data\ViewModels\` | `DevLog`/`ClearLogsOnStart`，现有 3 个复选框改为选择性开启默认值 |
+| `FirstSetup.xaml` | `ModAPI\Windows\SubWindows\` | 3 个复选框默认值改为关闭 |
+| `ModsExcludedWarning.xaml` / `.cs` | `ModAPI\Windows\SubWindows\` | 新增 |
+| 13x `Language.XX.xaml` | `ModAPI\resources\langs\` | 新增 8 个键 |
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9620 的变更内容</b></summary>
 
 ## v2.0.9620 的变更内容
@@ -1521,6 +1611,16 @@ ModAPI\
 
 <details>
 <summary><b>Phase 6-3 — 主题系统扩展、设置改进、稳定性 & 工具新增</b></summary>
+
+### v2.0.9621 — 2026-07-28
+
+- 全部 5 款游戏的全 Steam 库自动检测，由 Steam 连接复选框控制
+- 自动检测并排除为其他游戏构建的模组（列表阶段 + Apply 阶段），Mods 标签页显示 ⚠ 徽章
+- 将排除的模组 / 未应用任何模组的提示合并为一个弹窗，不再堆叠多个弹窗；应用的模组为零个时游戏不再启动
+- 新增全局未处理异常日志记录（UI 线程 + 后台线程）
+- 用 `ModAPI.dev.log` 取代 `ModAPI.detailed.log`；设置标签页新增开发者日志、启动时清除日志开关
+- `AutoUpdate`/`UseSteam`/`UpdateVersionsTable` 全新安装时默认改为关闭
+- 修复：`Configuration.GetPath()` 空路径错误、Start Game 验证顺序不一致、忽略筛选的模组收集、跨游戏的 `Mod.Mods` 键冲突及由此导致的 `UpdateMods()` 崩溃、Green Hell 校验和重复计算（`_Data`/`_data`）、`BaseModLib.dll` 文件锁定崩溃、无条件创建 `mods\`/`projects\`、文件夹不存在时 `Versions.xml` 保存失败、字体大小变更/标签切换时窗口高度未重新计算、"全部展开"时窗口高度无限扩大
 
 ### v2.0.9620 — 2026-06-21
 

@@ -1,18 +1,6 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9620 - 20260621
+# ModAPI(v1) v2.0.9621 - 20260728
 
 **Инструмент управления модами для The Forest — Расширенная версия**
 
@@ -276,15 +264,15 @@ builtin: false → true (langs.json)
 | Тема | Тема |
 | :---: | :---: |
 |**01. Тема Classic**|**02. Тема Light**|
-| ![01. Classic theme](https://github.com/user-attachments/assets/dc81132a-149c-4d0b-a7bb-a04a900e878b) | ![02. Light theme](https://github.com/user-attachments/assets/0d6925ec-f8b2-4f8a-a1d6-c082a5aa3378) |
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
 |**03. Тема Dark**|**04. Тема Diablo**|
-| ![03. Dark theme](https://github.com/user-attachments/assets/53abe172-ee66-4f3e-9c36-830b2d659b4d) | ![04. Diablo theme](https://github.com/user-attachments/assets/8c30f223-e564-45dc-8389-c51bfc60b3eb) |
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
 |**05. Тема Nebula**|**06. Тема Sunset**|
-| ![05. Nebula theme](https://github.com/user-attachments/assets/4ff565dd-516b-4951-9d47-6027ac9e3e29) | ![06. Sunset theme](https://github.com/user-attachments/assets/192a6f16-b041-4422-8b64-4f8522f27c15) |
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
 |**07. Тема Ocean**|**08. Тема Nordic**|
-| ![07. Ocean theme](https://github.com/user-attachments/assets/50a47588-bc62-4cfc-91a0-a44f87c45867) | ![08. Nordic theme](https://github.com/user-attachments/assets/81e98f6b-2897-4fd5-bee9-604c04dc26ff) |
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
 |**09. Тема Citrus**|**10. Тема Bloom**|
-| ![09. Citrus theme](https://github.com/user-attachments/assets/64ccb11d-4ab0-41a2-8e00-4f7910558372) | ![10. Bloom theme](https://github.com/user-attachments/assets/265c9249-4d43-4f77-86d6-ccc4037071f7) |
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
 
 ### Текстура Фона
 
@@ -693,6 +681,108 @@ bin\Debug\                               # Только для Debug-тесто�
 </details>
 
 <details open>
+<summary><b>Изменения в v2.0.9621</b></summary>
+
+## Изменения в v2.0.9621
+
+### Новые функции
+
+#### Автоопределение по всей библиотеке Steam
+
+Теперь, если игра не найдена через жёстко заданные `SearchPaths`, `FindGamePath()` также ищет во **всех библиотеках Steam, зарегистрированных в системе** (парсится один раз из `libraryfolders.vdf`, кешируется на сессию). Это применяется ко всем 5 поддерживаемым играм, а не только к текущей активной.
+
+- Новый `Game.GetSteamLibraryFolders()` — парсит `libraryfolders.vdf`, статический кеш на сессию
+- Управляется флажком **Подключение к Steam**: выключен (по умолчанию при новой установке) → автоопределение полностью пропускается для всех 5 игр, пути остаются пустыми до ручной настройки. Включён → все 5 игр ищутся единообразно тем же способом.
+
+#### Автоматическое обнаружение модов для другой игры
+
+Файл `.mod`, помещённый в папку не той игры (например, мод для Green Hell, скопированный в `mods\TheForest\`), теперь обнаруживается автоматически, вместо того чтобы незаметно ломать операцию Apply.
+
+- `Game.CheckModGameCompatibility()` (используется внутри `ApplyMods()`) перед началом внедрения проверяет, действительно ли каждый тип `AddMethod`/`AddField`/`InjectInto`, объявленный модом, существует в реальных сборках целевой игры. Несовместимые моды автоматически исключаются из этого Apply; остальные применяются как обычно.
+- `Game.CheckModGameCompatibilityLight()` + `Game.GetCachedTypeNames()` выполняют ту же проверку в момент загрузки мода (облегчённая версия — читает байты сборки в память, извлекает имена типов, немедленно освобождает файл). Несовместимые моды показывают **значок предупреждения ⚠** с подсказкой на вкладке Mods ещё до нажатия Apply.
+- Если моды были исключены и/или в итоге ничего не применено, Start Game показывает одно объединённое всплывающее окно вместо нескольких, наложенных друг на друга; игра не запускается, если не осталось ни одного применённого мода (`Game.LastAppliedModCount`).
+
+#### Вкладка Настройки — Лог разработчика / Очищать логи при запуске
+
+Два новых флажка, после **Подключение к Steam** и перед **Поверх всех окон**:
+
+| Ключ | Описание |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Включает `ModAPI.dev.log` (переименован из `ModAPI.detailed.log`) — эквивалентно запуску с `--dev` |
+| `Lang.Options.Labels.ClearLogsOnStart` | Очищает папку `logs\` при каждом запуске |
+
+`Debug.ClearLogs()` закрывает открытые потоки логов перед удалением файлов, избегая ошибок "файл используется".
+
+#### Глобальное журналирование необработанных исключений
+
+`App.xaml.cs` теперь перехватывает `DispatcherUnhandledException` (поток UI) и `AppDomain.UnhandledException` (фоновые потоки). Исключения, которые раньше приводили к падению приложения без единого следа в логе, теперь фиксируются — тип, сообщение и полный стек вызовов — перед завершением процесса.
+
+---
+
+### Критические исправления ошибок
+
+| # | Файл | Проблема | Исправление |
+|---|---|---|---|
+| 1 | `Configuration.cs` | `GetPath()` разрешал явно сброшенный (пустая строка) путь в `RootPath` вместо `""`, поскольку `Path.GetFullPath(RootPath + разделитель + "")` сворачивается в `RootPath` | Пустые сохранённые значения теперь сразу возвращают `""`, до объединения пути |
+| 2 | `MainWindow.xaml.cs` | Порядок валидации Start Game различался между фильтром "Все" и конкретным фильтром, иногда показывая всплывающее окно выбора мода или игры раньше более фундаментальной проблемы (отсутствие пути Steam/игры) | Оба пути теперь следуют одному порядку: Steam → путь игры → выбор модов → выбор игры |
+| 3 | `MainWindow.xaml.cs` | Сбор модов для Start Game игнорировал активный фильтр игры — отмеченные моды другой (невидимой) игры всё равно учитывались, вызывая неверное окно | Сбор модов теперь учитывает текущий фильтр; только "Все" агрегирует все игры |
+| 4 | `ModsViewModel.cs` | `Mod.Mods` индексировался только по `{ModId}-{Версия}`, поэтому одинаковые имена файлов в двух разных папках игр конфликтовали — `Load()` второго никогда не вызывался | Ключ теперь включает GameId: `{GameId}-{ModId}-{Версия}` |
+| 5 | `ModsViewModel.cs` | После исправления №4 `UpdateMods()` всё ещё группировал записи списка только по ModId, объединяя два одноимённых мода из разных игр в одну запись — сбой с `ArgumentException: An item with the same key has already been added`, когда оба объявляли одну и ту же версию | Группировка отображения теперь также сравнивает GameId |
+| 6 | `Game.cs` | Список `<files>` в `Versions.xml` Green Hell содержит одни и те же два файла дважды с разным регистром (`_Data`/`_data`); `CheckFiles` был чувствительным к регистру `HashSet<string>`, поэтому оба хешировались, удваивая вычисленную контрольную сумму и вызывая ложные ошибки целостности | `CheckFiles` теперь использует `StringComparer.OrdinalIgnoreCase` |
+| 7 | `Game.cs` / `ModLib.cs` | Шаг "удаление старых файлов" в `ModLib.Create()` не имел защиты повторными попытками от заблокированного `BaseModLib.dll`, а у `Game.CreateModLibrary()` вообще не было обработки исключений — блокировка приводила к падению всего приложения в фоновом потоке | В шаг удаления добавлен цикл повторных попыток 10×500мс; `CreateModLibrary()` теперь оборачивает вызов в try/catch |
+| 8 | `MainWindow.xaml.cs` | Когда `ApplyMods()` завершался без фактического применения ни одного мода (например, все исключены), он всё равно сигнализировал завершение как настоящий успех, поэтому игра запускалась без каких-либо модификаций | `Game.LastAppliedModCount` различает "ничего не применено" и "применено N"; запуск пропускается при 0 |
+| 9 | `MainWindow.xaml.cs` | Высота окна не пересчитывалась ни при изменении размера шрифта, ни при загрузке при старте сохранённого крупного размера шрифта, ни при переключении на вкладку Настройки (`Tabs_SelectionChanged` была пустой) — при крупных шрифтах нижняя карточка пути игры обрезалась | Пересчёт высоты добавлен во всех трёх местах |
+| 10 | `MainWindow.xaml.cs` | У `UpdateWindowHeight()` не было верхнего предела — одновременное разворачивание всех 5 карточек путей игр могло увеличить окно до размера всего экрана или больше | Высота теперь ограничена значением `SystemParameters.WorkArea.Height` |
+| 11 | `MainWindow.xaml.cs` | Папки `mods\`/`projects\` создавались безусловно для всех 5 игр при каждом запуске, независимо от того, установлена ли игра | Папки теперь создаются только для игр с проверенным путём и существующим исполняемым файлом |
+| 12 | `Game.cs` | `UpdateVersions()` мог не сохранить `Versions.xml`, если целевая папка ещё не существовала (до сих пор было скрыто, поскольку все 5 папок распространяются уже закоммиченными) | Папка создаётся через `Directory.CreateDirectory()` непосредственно перед сохранением |
+
+---
+
+### Вкладка Настройки — Изменены значения по умолчанию при первом запуске
+
+`AutoUpdate`, `UseSteam` (Подключение к Steam) и `UpdateVersionsTable` (Поддерживать таблицу VersionsData) теперь по умолчанию **выключены** при новой установке (ранее были включены по умолчанию). Эти три функции всё ещё не завершены на стороне сервера, поэтому теперь они опциональны — как и `DevLog`/`ClearLogsOnStart`.
+
+### UI
+
+- Строка флажков вкладки Настройки (`SettingsCheckboxes`): `StackPanel` → `WrapPanel`, чтобы подписи переносились на новую строку вместо обрезания при крупных размерах шрифта.
+
+### Новые языковые ключи (13 языков)
+
+| Ключ | Значение на английском |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Developer Log |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
+| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
+| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
+| `Lang.Windows.NoModsApplied.OK` | OK |
+
+### Изменённые файлы
+
+| Файл | Путь | Изменение |
+|---|---|---|
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | Единый порядок валидации Start Game, учёт фильтра при сборе модов, объединённое всплывающее окно результата, автоопределение 4 игр через библиотеку Steam под управлением UseSteam, исправления высоты окна (размер шрифта / смена вкладки / предел) |
+| `MainWindow.xaml` | `ModAPI\Windows\` | Флажки DevLog/ClearLogsOnStart на вкладке Настройки, `WrapPanel` |
+| `Game.cs` | `ModAPI_Shared\Data\` | Поиск по библиотеке Steam, регистронезависимый `CheckFiles`, проверки совместимости модов (полная + облегчённая), `LastAppliedModCount`/`LastExcludedModsSummary`, обработка исключений в `CreateModLibrary()`, автоопределение под управлением UseSteam |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | Цикл повторных попыток при удалении старых файлов |
+| `Mod.cs` | `ModAPI_Shared\Data\` | Поле `GameMismatchReason` |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | Исправление ошибки пустого пути в `GetPath()` |
+| `Debug.cs` | `ModAPI_Shared\` | Переименование в `ModAPI.dev.log`, поле `DevMode`, `ClearLogs()` |
+| `App.xaml.cs` | `ModAPI\` | Глобальные обработчики исключений, привязка `Debug.DevMode` |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | Ключи `Mod.Mods` по игре, группировка отображения по игре, значок несовместимости, подавление спама в логах |
+| `ModViewModel.cs` | `ModAPI\Data\ViewModels\` | `HasGameMismatch`/`GameMismatchTooltip` |
+| `SettingsViewModel.cs` | `ModAPI\Data\ViewModels\` | `DevLog`/`ClearLogsOnStart`, опциональные значения по умолчанию для 3 существующих флажков |
+| `FirstSetup.xaml` | `ModAPI\Windows\SubWindows\` | Значения по умолчанию 3 флажков изменены на выключенные |
+| `ModsExcludedWarning.xaml` / `.cs` | `ModAPI\Windows\SubWindows\` | Новый |
+| 13x `Language.XX.xaml` | `ModAPI\resources\langs\` | 8 новых ключей |
+
+---
+
+</details>
+
+<details>
 <summary><b>Изменения в v2.0.9620</b></summary>
 
 ## Изменения в v2.0.9620
@@ -1528,6 +1618,16 @@ ModAPI\
 
 <details>
 <summary><b>Фаза 6-3 — Расширение Системы Тем, Улучшения Настроек, Стабильность и Инструменты</b></summary>
+
+### v2.0.9621 — 2026-07-28
+
+- Автоопределение по всей библиотеке Steam для всех 5 игр, управляется флажком Подключение к Steam
+- Автоматическое обнаружение и исключение модов, созданных для другой игры (список + во время Apply), со значком ⚠ на вкладке Mods
+- Объединённое всплывающее окно результата для исключённых модов / отсутствия применённых модов вместо наложенных друг на друга окон; игра больше не запускается при нуле применённых модов
+- Глобальное журналирование необработанных исключений (поток UI + фоновые потоки)
+- `ModAPI.dev.log` заменяет `ModAPI.detailed.log`; новые переключатели на вкладке Настройки для Лога разработчика и Очистки логов при запуске
+- `AutoUpdate`/`UseSteam`/`UpdateVersionsTable` теперь по умолчанию выключены при новой установке
+- Исправлено: ошибка пустого пути в `Configuration.GetPath()`, непоследовательный порядок валидации Start Game, сбор модов, игнорировавший фильтр, конфликты ключей `Mod.Mods` между играми и вызванный ими сбой `UpdateMods()`, удвоение контрольной суммы Green Hell (`_Data`/`_data`), сбой из-за блокировки файла `BaseModLib.dll`, безусловное создание `mods\`/`projects\`, сбой сохранения `Versions.xml` при отсутствующей папке, отсутствие пересчёта высоты окна при изменении размера шрифта / смене вкладки, неограниченная высота окна при "Развернуть всё"
 
 ### v2.0.9620 — 2026-06-21
 

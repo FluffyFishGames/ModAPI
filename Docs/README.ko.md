@@ -1,18 +1,6 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9620 - 20260621
+# ModAPI(v1) v2.0.9621 - 20260728
 
 **더 포레스트 모드 관리 도구 — 업그레이드 에디션**
 
@@ -276,15 +264,15 @@ v2.0.9613부터 테마 선택 UI가 설정 탭에서 전용 **테마 탭**으로
 | 테마 | 테마 |
 | :---: | :---: |
 |**01. Classic 테마**|**02. Light 테마**|
-| ![01. Classic theme](https://github.com/user-attachments/assets/dc81132a-149c-4d0b-a7bb-a04a900e878b) | ![02. Light theme](https://github.com/user-attachments/assets/0d6925ec-f8b2-4f8a-a1d6-c082a5aa3378) |
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
 |**03. Dark 테마**|**04. Diablo 테마**|
-| ![03. Dark theme](https://github.com/user-attachments/assets/53abe172-ee66-4f3e-9c36-830b2d659b4d) | ![04. Diablo theme](https://github.com/user-attachments/assets/8c30f223-e564-45dc-8389-c51bfc60b3eb) |
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
 |**05. Nebula 테마**|**06. Sunset 테마**|
-| ![05. Nebula theme](https://github.com/user-attachments/assets/4ff565dd-516b-4951-9d47-6027ac9e3e29) | ![06. Sunset theme](https://github.com/user-attachments/assets/192a6f16-b041-4422-8b64-4f8522f27c15) |
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
 |**07. Ocean 테마**|**08. Nordic 테마**|
-| ![07. Ocean theme](https://github.com/user-attachments/assets/50a47588-bc62-4cfc-91a0-a44f87c45867) | ![08. Nordic theme](https://github.com/user-attachments/assets/81e98f6b-2897-4fd5-bee9-604c04dc26ff) |
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
 |**09. Citrus 테마**|**10. Bloom 테마**|
-| ![09. Citrus theme](https://github.com/user-attachments/assets/64ccb11d-4ab0-41a2-8e00-4f7910558372) | ![10. Bloom theme](https://github.com/user-attachments/assets/265c9249-4d43-4f77-86d6-ccc4037071f7) |
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
 
 ### 배경 텍스처
 
@@ -693,6 +681,108 @@ LangTool UI 문자열, 다이얼로그 메시지, 상태 텍스트를 포함하�
 </details>
 
 <details open>
+<summary><b>v2.0.9621 변경사항</b></summary>
+
+## v2.0.9621 변경사항
+
+### 신규 기능
+
+#### Steam 라이브러리 전체 자동탐색
+
+`FindGamePath()`가 고정된 `SearchPaths`로 게임을 못 찾으면, 이제 **시스템에 등록된 모든 Steam 라이브러리**(`libraryfolders.vdf`에서 한 번만 파싱, 세션 동안 캐시)를 대상으로 추가 검색합니다. 현재 활성화된 게임뿐 아니라 5개 게임 전체에 적용됩니다.
+
+- `Game.GetSteamLibraryFolders()` 신규 — `libraryfolders.vdf` 파싱, 세션 단위 정적 캐시
+- **스팀 연결** 체크박스로 게이팅: 꺼짐(신규 설치 기본값) → 5개 게임 전부 자동탐색 자체를 생략, 사용자가 직접 설정하기 전까지 빈 상태 유지. 켜짐 → 5개 게임 전부 동일한 방식으로 일관되게 탐색
+
+#### 다른 게임용 mod 자동 감지
+
+`.mod` 파일이 엉뚱한 게임 폴더에 들어있는 경우(예: Green Hell용 mod가 `mods\TheForest\`에 복사된 경우), 이제 Apply 작업이 조용히 망가지는 대신 자동으로 걸러냅니다.
+
+- `Game.CheckModGameCompatibility()`(`ApplyMods()` 내부에서 사용) — 실제 IL 주입 전에, mod가 선언한 모든 `AddMethod`/`AddField`/`InjectInto` 타입이 대상 게임의 진짜 어셈블리에 실제로 존재하는지 확인합니다. 불일치하는 mod는 그 Apply에서 자동 제외되고, 나머지는 정상 적용됩니다.
+- `Game.CheckModGameCompatibilityLight()` + `Game.GetCachedTypeNames()` — mod가 로드되는 시점에 같은 검사를 경량으로 수행합니다(어셈블리를 메모리로 통째로 읽어 타입 이름만 뽑고 파일은 즉시 손을 뗌). 불일치하는 mod는 Apply를 누르기도 전에 Mods 탭에서 **⚠ 경고 배지**와 툴팁으로 표시됩니다.
+- mod가 제외됐거나 결과적으로 아무것도 적용되지 않았다면, Start Game이 팝업을 여러 개 겹쳐서 띄우는 대신 **하나로 합쳐서** 안내합니다. 적용된 mod가 0개면 게임을 실행하지 않습니다(`Game.LastAppliedModCount`).
+
+#### 설정 탭 — 개발자 로그 / 로그 초기화
+
+**스팀 연결** 다음, **항상 위에** 앞에 새 체크박스 2개가 추가됐습니다:
+
+| 키 | 설명 |
+|---|---|
+| `Lang.Options.Labels.DevLog` | `ModAPI.dev.log`(`ModAPI.detailed.log`에서 이름 변경) 활성화 — `--dev`로 실행한 것과 동일한 상태 |
+| `Lang.Options.Labels.ClearLogsOnStart` | 시작할 때마다 `logs\` 폴더를 비움 |
+
+`Debug.ClearLogs()`는 파일을 지우기 전에 열려있는 로그 스트림을 먼저 닫아서 "파일 사용 중" 오류를 방지합니다.
+
+#### 전역 예외 로깅
+
+`App.xaml.cs`가 이제 `DispatcherUnhandledException`(UI 스레드)과 `AppDomain.UnhandledException`(백그라운드 스레드)을 전부 후킹합니다. 이전에는 로그에 아무 흔적 없이 앱이 죽던 예외들도, 이제 종료 직전에 종류·메시지·전체 스택 트레이스가 기록됩니다.
+
+---
+
+### 크리티컬 버그 수정
+
+| # | 파일 | 문제 | 수정 |
+|---|---|---|---|
+| 1 | `Configuration.cs` | `GetPath()`가 명시적으로 초기화된(빈 문자열) 경로를 `""` 대신 `RootPath`로 잘못 해석 — `Path.GetFullPath(RootPath + 구분자 + "")`가 `RootPath`로 정규화되기 때문 | 저장된 값이 빈 문자열이면 경로 결합 전에 바로 `""`을 반환 |
+| 2 | `MainWindow.xaml.cs` | "All 필터"와 "특정 필터"의 Start Game 검증 순서가 서로 달라서, 더 근본적인 문제(스팀/게임경로 미설정)보다 모드선택·게임선택 팝업이 먼저 뜨는 경우가 있었음 | 두 경로 모두 스팀 → 게임경로 → 모드선택 → 게임선택 순서로 통일 |
+| 3 | `MainWindow.xaml.cs` | Start Game의 mod 수집이 현재 필터를 무시함 — 화면에 안 보이는 다른 게임의 체크된 mod까지 집계되어 엉뚱한 팝업이 뜸 | mod 수집이 현재 필터를 반영하도록 수정, "All"일 때만 전체 집계 |
+| 4 | `ModsViewModel.cs` | `Mod.Mods`가 `{ModId}-{Version}`으로만 키가 잡혀서, 서로 다른 게임 폴더에 있는 동일한 파일명이 충돌 — 두 번째 것은 `Load()` 자체가 호출되지 않음 | 키에 GameId 포함: `{GameId}-{ModId}-{Version}` |
+| 5 | `ModsViewModel.cs` | 4번 수정 이후에도 `UpdateMods()`가 여전히 ModId만으로 화면 항목을 묶어서, 서로 다른 게임의 동명 mod가 한 항목으로 합쳐지며 같은 버전을 두 번 추가하려다 `ArgumentException: An item with the same key has already been added`로 크래시 | 화면 항목 매칭 시 GameId도 함께 비교 |
+| 6 | `Game.cs` | Green Hell의 `Versions.xml` `<files>` 목록에 같은 파일 2개가 대소문자만 다르게(`_Data`/`_data`) 중복 등재되어 있는데, `CheckFiles`가 대소문자 구분 `HashSet<string>`이라 둘 다 해시되어 체크섬이 두 배가 되고 무결성 불일치로 오탐 | `CheckFiles`를 `StringComparer.OrdinalIgnoreCase`로 변경 |
+| 7 | `Game.cs` / `ModLib.cs` | `ModLib.Create()`의 "오래된 파일 제거" 단계에 `BaseModLib.dll` 잠금에 대한 재시도 보호가 없었고, `Game.CreateModLibrary()`에는 예외 처리 자체가 없어서 잠금 상태에서 백그라운드 스레드 예외로 앱 전체가 죽음 | 삭제 단계에 10회×500ms 재시도 루프 추가, `CreateModLibrary()`를 try/catch로 감쌈 |
+| 8 | `MainWindow.xaml.cs` | `ApplyMods()`가 적용된 mod 0개로 끝나도(전부 제외된 경우 등) 실제 성공과 동일한 신호를 보내서, 아무것도 적용 안 된 채로 게임이 그냥 실행됨 | `Game.LastAppliedModCount`로 "적용 없음"과 "N개 적용"을 구분, 0이면 실행 건너뜀 |
+| 9 | `MainWindow.xaml.cs` | 폰트 크기 변경 시, 시작 시 저장된 큰 폰트 값을 불러올 때, Settings 탭으로 전환할 때(`Tabs_SelectionChanged`가 비어있었음) 전부 창 높이 재계산이 안 일어나서 큰 폰트에서 맨 아래 게임 경로 카드가 잘림 | 세 지점 모두에 높이 재계산 추가 |
+| 10 | `MainWindow.xaml.cs` | `UpdateWindowHeight()`에 상한선이 없어서, 게임 경로 카드 5개를 한꺼번에 펼치면 창이 화면 전체 크기(또는 그 이상)로 커질 수 있었음 | `SystemParameters.WorkArea.Height`로 높이 상한 적용 |
+| 11 | `MainWindow.xaml.cs` | `mods\`/`projects\` 폴더가 게임 설치 여부와 무관하게 매 시작마다 5개 게임 전부에 대해 무조건 생성됨 | 경로가 검증되고 실행파일이 존재하는 게임에 대해서만 생성 |
+| 12 | `Game.cs` | 저장 대상 폴더가 없으면 `UpdateVersions()`가 `Versions.xml` 저장에 실패할 수 있었음(지금까지는 5개 폴더가 전부 미리 커밋되어 있어서 드러나지 않았음) | 저장 직전에 `Directory.CreateDirectory()`로 폴더 생성 |
+
+---
+
+### 설정 탭 — 최초 실행 기본값 변경
+
+`AutoUpdate`, `UseSteam`(스팀 연결), `UpdateVersionsTable`(최신버전 유지)의 신규 설치 시 기본값이 **꺼짐**으로 바뀌었습니다(기존엔 켜짐이 기본값). 이 3가지는 아직 서버 쪽 구현이 완전하지 않아서, `DevLog`/`ClearLogsOnStart`와 동일하게 opt-in 방식으로 맞췄습니다.
+
+### UI
+
+- Settings 탭 체크박스 행(`SettingsCheckboxes`): `StackPanel` → `WrapPanel`로 변경 — 큰 폰트 크기에서 잘리는 대신 다음 줄로 넘어갑니다.
+
+### 신규 언어 키 (13개 언어)
+
+| 키 | 영문 값 |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Developer Log |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
+| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
+| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
+| `Lang.Windows.NoModsApplied.OK` | OK |
+
+### 수정된 파일
+
+| 파일 | 경로 | 변경 내용 |
+|---|---|---|
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | Start Game 검증 순서 통일, 필터 인식 mod 수집, 통합 결과 팝업, UseSteam 게이팅 4개 게임 Steam 라이브러리 자동탐색, 창 높이 수정(폰트/탭전환/상한) |
+| `MainWindow.xaml` | `ModAPI\Windows\` | Settings 탭 DevLog/ClearLogsOnStart 체크박스, `WrapPanel` |
+| `Game.cs` | `ModAPI_Shared\Data\` | Steam 라이브러리 검색, 대소문자 구분 없는 `CheckFiles`, mod 호환성 검사(정밀+경량), `LastAppliedModCount`/`LastExcludedModsSummary`, `CreateModLibrary()` 예외 처리, UseSteam 게이팅 자동탐색 |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | 오래된 파일 삭제 재시도 루프 |
+| `Mod.cs` | `ModAPI_Shared\Data\` | `GameMismatchReason` 필드 |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | `GetPath()` 빈 문자열 버그 수정 |
+| `Debug.cs` | `ModAPI_Shared\` | `ModAPI.dev.log` 이름 변경, `DevMode` 필드, `ClearLogs()` |
+| `App.xaml.cs` | `ModAPI\` | 전역 예외 핸들러, `Debug.DevMode` 연동 |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | 게임별 `Mod.Mods` 키, 게임별 화면 그룹핑, 불일치 배지, 로그 스팸 억제 |
+| `ModViewModel.cs` | `ModAPI\Data\ViewModels\` | `HasGameMismatch`/`GameMismatchTooltip` |
+| `SettingsViewModel.cs` | `ModAPI\Data\ViewModels\` | `DevLog`/`ClearLogsOnStart`, 기존 체크박스 3개 opt-in 기본값 |
+| `FirstSetup.xaml` | `ModAPI\Windows\SubWindows\` | 체크박스 3개 기본값을 꺼짐으로 변경 |
+| `ModsExcludedWarning.xaml` / `.cs` | `ModAPI\Windows\SubWindows\` | 신규 |
+| 13개 `Language.XX.xaml` | `ModAPI\resources\langs\` | 신규 키 8개 |
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9620 변경사항</b></summary>
 
 ## v2.0.9620 변경사항
@@ -1521,6 +1611,16 @@ Mod Library Regeneration 클릭 시 3단계 검증:
 
 <details>
 <summary><b>Phase 6-3 — 테마 시스템 확장, 설정 개선, 안정성 & 도구 추가</b></summary>
+
+### v2.0.9621 — 2026-07-28
+
+- 5개 게임 전체 Steam 라이브러리 자동탐색, 스팀 연결 체크박스로 게이팅
+- 다른 게임용 mod 자동 감지 및 제외(목록 단계 + Apply 단계), Mods 탭 ⚠ 배지 표시
+- 제외된 mod / 적용된 mod 없음 안내를 팝업 하나로 통합, 적용된 mod 0개면 게임 미실행
+- 전역 예외 로깅(UI 스레드 + 백그라운드 스레드)
+- `ModAPI.detailed.log`를 `ModAPI.dev.log`로 대체, Settings 탭에 개발자 로그/로그 초기화 토글 추가
+- `AutoUpdate`/`UseSteam`/`UpdateVersionsTable` 신규 설치 기본값을 꺼짐으로 변경
+- 수정: `Configuration.GetPath()` 빈 경로 버그, Start Game 검증 순서 불일치, 필터 무시하던 mod 수집, 게임 간 `Mod.Mods` 키 충돌 및 `UpdateMods()` 크래시, Green Hell 체크섬 중복(`_Data`/`_data`), `BaseModLib.dll` 파일잠금 크래시, `mods\`/`projects\` 무조건 생성, 폴더 없을 때 `Versions.xml` 저장 실패, 폰트크기 변경/탭전환 시 창 높이 미재계산, 모두펼치기 시 창 높이 무제한 확장
 
 ### v2.0.9620 — 2026-06-21
 

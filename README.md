@@ -1,18 +1,6 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](Docs/README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](Docs/README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](Docs/README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](Docs/README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](Docs/README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](Docs/README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](Docs/README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](Docs/README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](Docs/README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](Docs/README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](Docs/README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](Docs/README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](Docs/README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](Docs/README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](Docs/README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](Docs/README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](Docs/README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](Docs/README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](Docs/README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](Docs/README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](Docs/README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](Docs/README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](Docs/README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](Docs/README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9620 - 20260621
+# ModAPI(v1) v2.0.9621 - 20260728
 
 **The Forest Mod Management Tool — Upgraded Edition**
 
@@ -693,6 +681,108 @@ Developer-only diagnostic logs were previously gated with `#if DEBUG`, which mea
 </details>
 
 <details open>
+<summary><b>What Changed in v2.0.9621</b></summary>
+
+## What Changed in v2.0.9621
+
+### New Features
+
+#### Steam Library-Wide Auto-Detection
+
+`FindGamePath()` now falls back to scanning **every Steam library registered on the system** (parsed once from `libraryfolders.vdf`, cached for the session) when a game isn't found via its hardcoded `SearchPaths`. This applies to all 5 supported games, not just the currently active one.
+
+- New `Game.GetSteamLibraryFolders()` — parses `libraryfolders.vdf`, cached statically per session.
+- Gated behind the **Steam Connection** checkbox: unchecked (fresh-install default) → auto-detect is skipped entirely for all 5 games, paths stay blank until set manually. Checked → all 5 games are searched consistently through the same method.
+
+#### Automatic Detection of Wrong-Game Mods
+
+A `.mod` file placed in the wrong game's folder (e.g. a Green Hell mod copied into `mods\TheForest\`) is now caught automatically instead of silently corrupting an Apply operation.
+
+- `Game.CheckModGameCompatibility()` (used inside `ApplyMods()`) verifies that every `AddMethod`/`AddField`/`InjectInto` type a mod declares actually exists in the target game's real assemblies before injection begins. Mismatched mods are excluded from that Apply automatically; the rest of the batch still applies normally.
+- `Game.CheckModGameCompatibilityLight()` + `Game.GetCachedTypeNames()` run the same check at mod-load time (lightweight — reads assembly bytes into memory, extracts type names, releases the file handle immediately). Mismatched mods show a **⚠ warning badge** with a tooltip in the Mods tab, before the user ever clicks Apply.
+- If mods were excluded and/or nothing ultimately applied, Start Game shows a single combined popup instead of stacking separate ones; the game is not launched when zero mods remain (`Game.LastAppliedModCount`).
+
+#### Settings Tab — Developer Log / Clear Logs on Start
+
+Two new checkboxes, positioned after **Steam Connection** and before **Always on Top**:
+
+| Key | Description |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Enables `ModAPI.dev.log` (renamed from `ModAPI.detailed.log`) — same as running with `--dev` |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clears the `logs\` folder on every startup |
+
+`Debug.ClearLogs()` closes open log streams before deleting files, avoiding "file in use" errors.
+
+#### Global Unhandled Exception Logging
+
+`App.xaml.cs` now hooks `DispatcherUnhandledException` (UI thread) and `AppDomain.UnhandledException` (background threads). Any exception that previously crashed the app with zero trace in the log is now recorded — type, message, and full stack trace — before the process exits.
+
+---
+
+### Critical Bug Fixes
+
+| # | File | Issue | Fix |
+|---|---|---|---|
+| 1 | `Configuration.cs` | `GetPath()` resolved an explicitly-reset (empty string) path to `RootPath` instead of `""`, because `Path.GetFullPath(RootPath + separator + "")` collapses to `RootPath` | Empty stored values now short-circuit to `""` before the path-join |
+| 2 | `MainWindow.xaml.cs` | Start Game validation order differed between the "All filter" and "specific filter" code paths, sometimes surfacing a mod-selection or game-selection popup before a more fundamental problem (missing Steam/game path) | Both paths now follow the same order: Steam → game path → mod selection → game selection |
+| 3 | `MainWindow.xaml.cs` | Mod collection for Start Game ignored the active game filter — mods checked for a different (invisible) game were still counted, triggering the wrong popup | Mod collection now respects the current filter; only "All" aggregates across every game |
+| 4 | `ModsViewModel.cs` | `Mod.Mods` was keyed by `{ModId}-{Version}` only, so identical filenames in two different game folders collided — the second one's `Load()` was never called | Key now includes GameId: `{GameId}-{ModId}-{Version}` |
+| 5 | `ModsViewModel.cs` | After fix #4, `UpdateMods()` still grouped list entries by ModId alone, merging two same-named mods from different games into one entry — crashed with `ArgumentException: An item with the same key has already been added` when both declared the same version | Display grouping now also compares GameId |
+| 6 | `Game.cs` | Green Hell's `Versions.xml` `<files>` list has the same two files listed twice under different casing (`_Data` / `_data`); `CheckFiles` was a case-sensitive `HashSet<string>`, so both got hashed, doubling the computed checksum and producing false integrity-mismatch failures | `CheckFiles` now uses `StringComparer.OrdinalIgnoreCase` |
+| 7 | `Game.cs` / `ModLib.cs` | `ModLib.Create()`'s "remove old files" step had no retry protection against a locked `BaseModLib.dll`, and `Game.CreateModLibrary()` had no exception handling — a lock crashed the entire app on a background thread | 10×500ms retry loop added to the delete step; `CreateModLibrary()` now wraps the call in try/catch |
+| 8 | `MainWindow.xaml.cs` | `ApplyMods()` completing with zero mods actually applied (e.g. all excluded) still signaled completion the same way a real success would, so the game launched with nothing modded | `Game.LastAppliedModCount` distinguishes "nothing applied" from "applied N"; launch is skipped at 0 |
+| 9 | `MainWindow.xaml.cs` | Window height wasn't recalculated when font size changed, when a saved large font size loaded at startup, or when switching to the Settings tab (`Tabs_SelectionChanged` was empty) — the bottom game-path card(s) got clipped at large font sizes | Height recalculation added to all three points |
+| 10 | `MainWindow.xaml.cs` | `UpdateWindowHeight()` had no upper bound — expanding all 5 game-path cards at once could size the window to the full screen or beyond | Height capped to `SystemParameters.WorkArea.Height` |
+| 11 | `MainWindow.xaml.cs` | `mods\`/`projects\` folders were created for all 5 games unconditionally on every startup, regardless of whether the game was installed | Folders now only created for games with a verified path and existing executable |
+| 12 | `Game.cs` | `UpdateVersions()` could fail to save `Versions.xml` if the destination folder didn't already exist (masked until now because all 5 folders ship pre-committed) | Folder created via `Directory.CreateDirectory()` immediately before saving |
+
+---
+
+### Settings Tab — First-Run Defaults Changed
+
+`AutoUpdate`, `UseSteam` (Steam Connection), and `UpdateVersionsTable` (Keep VersionsData) now default to **unchecked** on a fresh install (previously checked by default). These three remain incomplete server-side, so they're opt-in now — matching `DevLog`/`ClearLogsOnStart`.
+
+### UI
+
+- Settings tab checkbox row (`SettingsCheckboxes`): `StackPanel` → `WrapPanel`, so labels wrap onto a new line instead of clipping at large font sizes.
+
+### New Language Keys (13 languages)
+
+| Key | English Value |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Developer Log |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
+| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
+| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
+| `Lang.Windows.NoModsApplied.OK` | OK |
+
+### Files Modified
+
+| File | Path | Change |
+|---|---|---|
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | Unified Start Game validation order, filter-aware mod collection, combined result popup, 4-game Steam-library auto-detect gated by UseSteam, window height fixes (font size / tab switch / cap) |
+| `MainWindow.xaml` | `ModAPI\Windows\` | Settings tab DevLog/ClearLogsOnStart checkboxes, `WrapPanel` |
+| `Game.cs` | `ModAPI_Shared\Data\` | Steam library search, case-insensitive `CheckFiles`, mod compatibility checks (heavy + light), `LastAppliedModCount`/`LastExcludedModsSummary`, `CreateModLibrary()` exception handling, UseSteam-gated auto-detect |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | Retry loop on old-file deletion |
+| `Mod.cs` | `ModAPI_Shared\Data\` | `GameMismatchReason` field |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | `GetPath()` empty-string fix |
+| `Debug.cs` | `ModAPI_Shared\` | `ModAPI.dev.log` rename, `DevMode` field, `ClearLogs()` |
+| `App.xaml.cs` | `ModAPI\` | Global exception handlers, `Debug.DevMode` wiring |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | Per-game `Mod.Mods` keys, per-game display grouping, mismatch badge, log-spam suppression |
+| `ModViewModel.cs` | `ModAPI\Data\ViewModels\` | `HasGameMismatch`/`GameMismatchTooltip` |
+| `SettingsViewModel.cs` | `ModAPI\Data\ViewModels\` | `DevLog`/`ClearLogsOnStart`, opt-in defaults for 3 existing checkboxes |
+| `FirstSetup.xaml` | `ModAPI\Windows\SubWindows\` | 3 checkbox defaults changed to unchecked |
+| `ModsExcludedWarning.xaml` / `.cs` | `ModAPI\Windows\SubWindows\` | New |
+| 13x `Language.XX.xaml` | `ModAPI\resources\langs\` | 8 new keys |
+
+---
+
+</details>
+
+<details>
 <summary><b>What Changed in v2.0.9620</b></summary>
 
 ## What Changed in v2.0.9620
@@ -1528,6 +1618,16 @@ Three-step validation on Mod Library Regeneration click:
 
 <details>
 <summary><b>Phase 6-3 — Theme System Expansion, Settings Improvements, Stability & Tools</b></summary>
+
+### v2.0.9621 — 2026-07-28
+
+- Steam-library-wide auto-detection for all 5 games, gated behind the Steam Connection checkbox
+- Automatic detection and exclusion of mods built for a different game (list + Apply-time), with a ⚠ badge in the Mods tab
+- Combined result popup for excluded mods / no-mods-applied instead of stacked popups; game no longer launches with zero mods applied
+- Global unhandled-exception logging (UI thread + background threads)
+- `ModAPI.dev.log` replaces `ModAPI.detailed.log`; new Settings tab toggles for Developer Log and Clear Logs on Start
+- `AutoUpdate`/`UseSteam`/`UpdateVersionsTable` now default to unchecked on fresh install
+- Fixed: `Configuration.GetPath()` empty-path bug, Start Game validation order inconsistency, filter-unaware mod collection, cross-game `Mod.Mods` key collisions and the resulting `UpdateMods()` crash, Green Hell checksum doubling (`_Data`/`_data`), `BaseModLib.dll` file-lock crash, unconditional `mods\`/`projects\` folder creation, `Versions.xml` save failing on a missing folder, window height not recalculating on font-size change / tab switch, unbounded window height on Expand All
 
 ### v2.0.9620 — 2026-06-21
 

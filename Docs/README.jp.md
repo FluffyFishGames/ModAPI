@@ -1,18 +1,6 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
-[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
-[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
-[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
-[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
-[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
-[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
-[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
-[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
-[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
-[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
-[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9620 - 20260621
+# ModAPI(v1) v2.0.9621 - 20260728
 
 **The Forest モッド管理ツール — アップグレード版**
 
@@ -276,15 +264,15 @@ v2.0.9613より、テーマ選択UIがSettingsタブから専用の**Themesタ�
 | テーマ | テーマ |
 | :---: | :---: |
 |**01. Classicテーマ**|**02. Lightテーマ**|
-| ![01. Classic theme](https://github.com/user-attachments/assets/dc81132a-149c-4d0b-a7bb-a04a900e878b) | ![02. Light theme](https://github.com/user-attachments/assets/0d6925ec-f8b2-4f8a-a1d6-c082a5aa3378) |
+| ![01. Classic theme](https://github.com/user-attachments/assets/1f8866b2-1715-45b6-9ada-c550da6d14fc) | ![02. Light theme](https://github.com/user-attachments/assets/180bb717-d4a4-490d-8fd5-c32338ad338f) |
 |**03. Darkテーマ**|**04. Diabloテーマ**|
-| ![03. Dark theme](https://github.com/user-attachments/assets/53abe172-ee66-4f3e-9c36-830b2d659b4d) | ![04. Diablo theme](https://github.com/user-attachments/assets/8c30f223-e564-45dc-8389-c51bfc60b3eb) |
+| ![03. Dark theme](https://github.com/user-attachments/assets/577934f1-9962-4042-9595-023eecc12ab0) | ![04. Diablo theme](https://github.com/user-attachments/assets/7b32e134-d661-4493-b275-54b8c2c04abf) |
 |**05. Nebulaテーマ**|**06. Sunsetテーマ**|
-| ![05. Nebula theme](https://github.com/user-attachments/assets/4ff565dd-516b-4951-9d47-6027ac9e3e29) | ![06. Sunset theme](https://github.com/user-attachments/assets/192a6f16-b041-4422-8b64-4f8522f27c15) |
+| ![05. Nebula theme](https://github.com/user-attachments/assets/e88b5162-58f6-460a-90a1-f26f2b589591) | ![06. Sunset theme](https://github.com/user-attachments/assets/12bb187c-0187-432e-8819-235abc68d149) |
 |**07. Oceanテーマ**|**08. Nordicテーマ**|
-| ![07. Ocean theme](https://github.com/user-attachments/assets/50a47588-bc62-4cfc-91a0-a44f87c45867) | ![08. Nordic theme](https://github.com/user-attachments/assets/81e98f6b-2897-4fd5-bee9-604c04dc26ff) |
+| ![07. Ocean theme](https://github.com/user-attachments/assets/3be28095-8872-471a-b066-36c58585a0db) | ![08. Nordic theme](https://github.com/user-attachments/assets/b43a8183-5b43-41a0-ba59-f9a37cc44e2e) |
 |**09. Citrusテーマ**|**10. Bloomテーマ**|
-| ![09. Citrus theme](https://github.com/user-attachments/assets/64ccb11d-4ab0-41a2-8e00-4f7910558372) | ![10. Bloom theme](https://github.com/user-attachments/assets/265c9249-4d43-4f77-86d6-ccc4037071f7) |
+| ![09. Citrus theme](https://github.com/user-attachments/assets/1f971fdf-411a-4db4-9941-4c37f6567656) | ![10. Bloom theme](https://github.com/user-attachments/assets/5b8ed319-7947-4209-b85e-1caeacac39e8) |
 
 ### 背景テクスチャ
 
@@ -693,6 +681,108 @@ LangToolのUI文字列、ダイアログメッセージ、ステータステキ�
 </details>
 
 <details open>
+<summary><b>v2.0.9621の変更点</b></summary>
+
+## v2.0.9621の変更点
+
+### 新機能
+
+#### Steamライブラリ全体の自動検出
+
+`FindGamePath()` は、固定の `SearchPaths` でゲームが見つからない場合、**システムに登録されているすべてのSteamライブラリ**（`libraryfolders.vdf` から一度だけ解析し、セッション中キャッシュ）も検索するようになりました。対象は現在アクティブなゲームだけでなく、対応する5ゲームすべてです。
+
+- 新規 `Game.GetSteamLibraryFolders()` — `libraryfolders.vdf` を解析し、セッション単位で静的キャッシュ
+- **Steam連携**チェックボックスでゲーティング：オフ（新規インストール時の初期値）→ 5ゲームすべてで自動検出自体をスキップし、手動設定するまでパスは空のまま。オン → 5ゲームすべてが同じ方式で一貫して検索される
+
+#### 別ゲーム用Modの自動検出
+
+`.mod` ファイルが間違ったゲームフォルダに置かれている場合（例：Green Hell用Modが `mods\TheForest\` にコピーされた場合）、Apply処理が静かに破損する代わりに自動で検出されるようになりました。
+
+- `Game.CheckModGameCompatibility()`（`ApplyMods()` 内で使用）は、注入開始前に、Modが宣言するすべての `AddMethod`/`AddField`/`InjectInto` タイプが対象ゲームの実際のアセンブリに存在するかを検証します。不一致のModはそのApplyから自動的に除外され、残りは通常どおり適用されます。
+- `Game.CheckModGameCompatibilityLight()` + `Game.GetCachedTypeNames()` は、Modのロード時点で同じ検査を軽量に実行します（アセンブリのバイト列をメモリに読み込み、型名だけを抽出してファイルは即座に解放）。不一致のModは、Applyを押す前からModsタブに**⚠警告バッジ**とツールチップで表示されます。
+- Modが除外された場合や、結果的に何も適用されなかった場合、Start Gameは複数のポップアップを重ねて表示する代わりに、**1つに統合したポップアップ**を表示します。適用されたModが0個ならゲームは起動しません（`Game.LastAppliedModCount`）。
+
+#### 設定タブ — 開発者ログ / 起動時にログを初期化
+
+**Steam連携**の後、**常に最前面**の前に新しいチェックボックスが2つ追加されました：
+
+| キー | 説明 |
+|---|---|
+| `Lang.Options.Labels.DevLog` | `ModAPI.dev.log`（`ModAPI.detailed.log` から改称）を有効化 — `--dev` で実行した場合と同じ状態 |
+| `Lang.Options.Labels.ClearLogsOnStart` | 起動のたびに `logs\` フォルダを空にする |
+
+`Debug.ClearLogs()` はファイルを削除する前に開いているログストリームを閉じるため、「ファイル使用中」エラーを防ぎます。
+
+#### グローバルな未処理例外ロギング
+
+`App.xaml.cs` はこれで `DispatcherUnhandledException`（UIスレッド）と `AppDomain.UnhandledException`（バックグラウンドスレッド）の両方をフックします。以前はログに一切痕跡を残さずアプリを落としていた例外も、プロセス終了前に種類・メッセージ・完全なスタックトレースが記録されるようになりました。
+
+---
+
+### 重大なバグ修正
+
+| # | ファイル | 問題 | 修正 |
+|---|---|---|---|
+| 1 | `Configuration.cs` | `GetPath()` は、明示的にリセットされた（空文字列の）パスを `""` ではなく `RootPath` として解決していた（`Path.GetFullPath(RootPath + 区切り文字 + "")` が `RootPath` に正規化されるため） | 保存値が空文字列の場合、パス結合前に直接 `""` を返すように変更 |
+| 2 | `MainWindow.xaml.cs` | Start Gameの検証順序が「All」フィルターと特定フィルターで異なり、より根本的な問題（Steam/ゲームパス未設定）よりも先にMod選択・ゲーム選択のポップアップが表示されることがあった | 両方の経路で「Steam → ゲームパス → Mod選択 → ゲーム選択」の順序に統一 |
+| 3 | `MainWindow.xaml.cs` | Start GameのMod収集が現在のフィルターを無視していた — 見えていない別ゲームでチェックされたModもカウントされ、誤ったポップアップが表示された | Mod収集が現在のフィルターを反映するように修正、「All」のときのみ全ゲームを集計 |
+| 4 | `ModsViewModel.cs` | `Mod.Mods` が `{ModId}-{バージョン}` のみでキー化されていたため、異なるゲームフォルダにある同名ファイルが衝突し、2つ目の `Load()` が呼び出されなかった | キーにGameIdを含める：`{GameId}-{ModId}-{バージョン}` |
+| 5 | `ModsViewModel.cs` | #4の修正後も `UpdateMods()` は依然としてModIdのみで画面項目をグループ化しており、異なるゲームの同名Modが1つの項目に統合され、両方が同じバージョンを宣言すると `ArgumentException: An item with the same key has already been added` でクラッシュした | 画面表示のグルーピングでGameIdも比較するように修正 |
+| 6 | `Game.cs` | Green Hellの `Versions.xml` の `<files>` リストに、同じ2ファイルが大文字小文字違い（`_Data`/`_data`）で二重登録されており、`CheckFiles` が大文字小文字を区別する `HashSet<string>` だったため両方がハッシュ化され、計算されたチェックサムが2倍になって整合性エラーを誤検知していた | `CheckFiles` を `StringComparer.OrdinalIgnoreCase` に変更 |
+| 7 | `Game.cs` / `ModLib.cs` | `ModLib.Create()` の「古いファイル削除」ステップにロックされた `BaseModLib.dll` に対するリトライ保護がなく、`Game.CreateModLibrary()` には例外処理が一切なかった — ロック状態だとバックグラウンドスレッドでアプリ全体がクラッシュしていた | 削除ステップに10回×500msのリトライループを追加、`CreateModLibrary()` を try/catch で包む |
+| 8 | `MainWindow.xaml.cs` | `ApplyMods()` が実際にはMod0個の適用で終了しても（全部除外された場合など）、本当の成功と同じ完了シグナルを送っていたため、何も改造されていない状態でゲームが起動してしまっていた | `Game.LastAppliedModCount` で「何も適用されていない」と「N個適用」を区別、0のときは起動をスキップ |
+| 9 | `MainWindow.xaml.cs` | フォントサイズ変更時、起動時に保存された大きいフォントサイズを読み込むとき、設定タブへの切り替え時（`Tabs_SelectionChanged` が空だった）のいずれでもウィンドウの高さが再計算されず、大きいフォントサイズで一番下のゲームパスカードが切れていた | 3箇所すべてに高さの再計算を追加 |
+| 10 | `MainWindow.xaml.cs` | `UpdateWindowHeight()` に上限がなかったため、5個のゲームパスカードを一度に展開するとウィンドウが画面全体かそれ以上のサイズになりうる問題があった | `SystemParameters.WorkArea.Height` を上限として設定 |
+| 11 | `MainWindow.xaml.cs` | ゲームがインストールされているかどうかに関係なく、起動のたびに5ゲームすべてに対して無条件に `mods\`/`projects\` フォルダが作成されていた | パスが検証済みで実行ファイルが存在するゲームに対してのみフォルダを作成するように変更 |
+| 12 | `Game.cs` | 保存先フォルダがまだ存在しない場合、`UpdateVersions()` が `Versions.xml` の保存に失敗する可能性があった（5つのフォルダがすべて事前コミット済みで配布されているため、これまで表面化していなかった） | 保存直前に `Directory.CreateDirectory()` でフォルダを作成 |
+
+---
+
+### 設定タブ — 初回起動時の初期値変更
+
+`AutoUpdate`、`UseSteam`（Steam連携）、`UpdateVersionsTable`（最新バージョン維持）が、新規インストール時の初期値として**オフ**に変更されました（従来はオンが初期値）。この3つはサーバー側の実装がまだ完全ではないため、`DevLog`/`ClearLogsOnStart` と同様にopt-in方式になりました。
+
+### UI
+
+- 設定タブのチェックボックス行（`SettingsCheckboxes`）：`StackPanel` → `WrapPanel` に変更。大きいフォントサイズでラベルが切れる代わりに次の行に折り返されるようになりました。
+
+### 新しい言語キー（13言語）
+
+| キー | 英語の値 |
+|---|---|
+| `Lang.Options.Labels.DevLog` | Developer Log |
+| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
+| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
+| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
+| `Lang.Windows.NoModsApplied.OK` | OK |
+
+### 変更されたファイル
+
+| ファイル | パス | 変更内容 |
+|---|---|---|
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | Start Game検証順序の統一、フィルター対応のMod収集、統合結果ポップアップ、UseSteamでゲーティングされた4ゲームのSteamライブラリ自動検出、ウィンドウ高さの修正（フォントサイズ／タブ切替／上限） |
+| `MainWindow.xaml` | `ModAPI\Windows\` | 設定タブのDevLog/ClearLogsOnStartチェックボックス、`WrapPanel` |
+| `Game.cs` | `ModAPI_Shared\Data\` | Steamライブラリ検索、大文字小文字を区別しない `CheckFiles`、Mod互換性検査（精密＋軽量）、`LastAppliedModCount`/`LastExcludedModsSummary`、`CreateModLibrary()` の例外処理、UseSteamでゲーティングされた自動検出 |
+| `ModLib.cs` | `ModAPI_Shared\Data\` | 古いファイル削除のリトライループ |
+| `Mod.cs` | `ModAPI_Shared\Data\` | `GameMismatchReason` フィールド |
+| `Configuration.cs` | `ModAPI_Shared\Configurations\` | `GetPath()` の空文字列バグ修正 |
+| `Debug.cs` | `ModAPI_Shared\` | `ModAPI.dev.log` への改称、`DevMode` フィールド、`ClearLogs()` |
+| `App.xaml.cs` | `ModAPI\` | グローバル例外ハンドラー、`Debug.DevMode` との連携 |
+| `ModsViewModel.cs` | `ModAPI\Data\ViewModels\` | ゲーム別 `Mod.Mods` キー、ゲーム別画面グルーピング、不一致バッジ、ログスパム抑制 |
+| `ModViewModel.cs` | `ModAPI\Data\ViewModels\` | `HasGameMismatch`/`GameMismatchTooltip` |
+| `SettingsViewModel.cs` | `ModAPI\Data\ViewModels\` | `DevLog`/`ClearLogsOnStart`、既存3チェックボックスのopt-in初期値 |
+| `FirstSetup.xaml` | `ModAPI\Windows\SubWindows\` | チェックボックス3個の初期値をオフに変更 |
+| `ModsExcludedWarning.xaml` / `.cs` | `ModAPI\Windows\SubWindows\` | 新規 |
+| 13x `Language.XX.xaml` | `ModAPI\resources\langs\` | 新規キー8個 |
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9620の変更点</b></summary>
 
 ## v2.0.9620の変更点
@@ -1521,6 +1611,16 @@ Mod Library Regenerationクリック時に3段階の検証:
 
 <details>
 <summary><b>Phase 6-3 — テーマシステム拡張、設定改善、安定性 & ツール追加</b></summary>
+
+### v2.0.9621 — 2026-07-28
+
+- Steam連携チェックボックスでゲーティングされた、5ゲーム全体のSteamライブラリ全体自動検出
+- 別ゲーム用に作られたModの自動検出と除外（一覧段階＋Apply時）、Modsタブに⚠バッジ表示
+- 除外Mod／未適用の案内をポップアップ1つに統合（積み重ね表示を廃止）、適用Modが0個ならゲーム未起動
+- グローバルな未処理例外ロギング（UIスレッド＋バックグラウンドスレッド）
+- `ModAPI.detailed.log` を `ModAPI.dev.log` に置き換え、設定タブに開発者ログ／起動時ログ初期化のトグルを追加
+- `AutoUpdate`/`UseSteam`/`UpdateVersionsTable` の新規インストール時初期値をオフに変更
+- 修正：`Configuration.GetPath()` の空パスバグ、Start Game検証順序の不一致、フィルターを無視していたMod収集、ゲーム間の `Mod.Mods` キー衝突とそれによる `UpdateMods()` クラッシュ、Green Hellのチェックサム重複（`_Data`/`_data`）、`BaseModLib.dll` のファイルロッククラッシュ、`mods\`/`projects\` の無条件作成、フォルダ未存在時の `Versions.xml` 保存失敗、フォントサイズ変更／タブ切替時のウィンドウ高さ未再計算、全展開時のウィンドウ高さ無制限拡大
 
 ### v2.0.9620 — 2026-06-21
 
