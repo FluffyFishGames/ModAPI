@@ -275,6 +275,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">バージョンテーブルを最新に保つ:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">アップデートを確認:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam接続:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">開発者ログ</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">起動時にログを初期化</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">常に手前に表示</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">ゲームインストールパス</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">保存</s:String>
@@ -420,6 +422,12 @@ Settingsタブでゲームパスを設定してください。</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} にデジタル署名がありません。インディーゲームではよくあることで、ゲームプレイには影響しません。</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">続行する</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">キャンセル</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">一部のModが除外されました</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">以下のModは別のゲーム用と思われるため除外されました: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">適用されたModなし</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">適用できる有効なModが残っていなかったため、ゲームは起動されませんでした。</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">OK</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

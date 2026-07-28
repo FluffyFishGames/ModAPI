@@ -615,6 +615,14 @@ namespace ModAPI.Configurations
             var key = name.ToLower();
             if (UserPaths.ContainsKey(key))
             {
+                // 저장된 값이 빈 문자열이면(Reset 등) 그대로 빈 문자열을 반환한다.
+                // 이 체크가 없으면 아래 Path.GetFullPath(RootPath + "\" + "")가
+                // RootPath 자체로 정규화되어, "경로 미설정"이 "ModAPI 설치 폴더"로
+                // 둔갑해버리는 문제가 있었다.
+                if (string.IsNullOrEmpty(UserPaths[key]))
+                {
+                    return "";
+                }
                 if (Path.IsPathRooted(UserPaths[key]))
                 {
                     return UserPaths[key];
@@ -624,6 +632,10 @@ namespace ModAPI.Configurations
 
             if (Paths.ContainsKey(key))
             {
+                if (string.IsNullOrEmpty(Paths[key]))
+                {
+                    return "";
+                }
                 if (Path.IsPathRooted(Paths[key]))
                 {
                     return Paths[key];

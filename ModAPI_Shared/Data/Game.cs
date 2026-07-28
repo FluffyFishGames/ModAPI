@@ -45,12 +45,40 @@ namespace ModAPI.Data
             //"http://modapi.cc/app/configs/games/{0}/Versions.xml", Outdated
         };
 
+        // Steam 라이브러리 자동탐색용: GameId → steamapps\common\ 아래 실제 폴더명
+        // (README 설치 안내 표에 명시된 이름과 동일 — 여기서만 사용하는 로컬 매핑이며
+        //  GameConfiguration이나 게임별 XML은 건드리지 않는다)
+        private static readonly Dictionary<string, string> SteamCommonFolderNames = new Dictionary<string, string>
+        {
+            { "TheForest", "The Forest" },
+            { "Subnautica", "Subnautica" },
+            { "Raft", "Raft" },
+            { "EscapeThePacific", "Escape The Pacific" },
+            { "GH", "Green Hell" },
+        };
+
+        // Steam library 목록은 앱 실행 중 한 번만 읽으면 되므로 정적 캐시로 재사용한다
+        // (전체 드라이브를 스캔하는 게 아니라 libraryfolders.vdf 한 번 읽는 것뿐이라 비용이 작다)
+        private static List<string> _steamLibraryFoldersCache;
+
         public event EventHandler<EventArgs> OnModlibUpdate;
 
         public Configuration.GameConfiguration GameConfiguration;
         public List<Mod> Mods = new List<Mod>();
         public string GamePath = "";
         public bool Valid;
+
+        // ApplyMods()가 끝난 뒤 "실제로 몇 개의 mod가 적용됐는지"를 나타낸다.
+        // -1 = 아직 ApplyMods()를 실행한 적 없음, 0 = 적용된 mod가 없음(전부 제외되었거나
+        // 실패), 1 이상 = 그만큼 정상 적용됨. 호출자(MainWindow)가 이 값을 보고
+        // "게임을 실행해도 되는 상태인지"를 판단하는 데 쓴다 — SetProgress(handler, 100f, "Finish")만으로는
+        // "적용된 게 하나도 없어도 정상 종료"와 "실제로 적용하고 정상 종료"를 구분할 수 없었다.
+        public int LastAppliedModCount = -1;
+
+        // ApplyMods()에서 게임 불일치로 제외된 mod 목록 요약. 팝업을 그 자리에서
+        // 바로 띄우지 않고 여기 저장해뒀다가, OnComplete 시점에 게임 실행 여부와
+        // 하나로 합쳐서 안내하는 데 쓴다. 제외된 게 없으면 빈 문자열.
+        public string LastExcludedModsSummary = "";
         public ModLib ModLibrary;
 
         protected bool RegenerateModLibrary;
@@ -104,10 +132,17 @@ namespace ModAPI.Data
                 }
             }
 
-            /** Some files are missing. Try auto-detection. If not found, user sets path in Settings tab. **/
+            /** Some files are missing. Try auto-detection — but only if the user has enabled
+             *  "Steam connection" in Settings. 스팀연결이 꺼져있으면(신규 설치 기본값) 자동탐색
+             *  자체를 하지 않고, 사용자가 Settings 탭에서 직접 경로를 설정할 때까지 그대로
+             *  빈 상태로 둔다. 스팀연결이 켜져있으면 5개 게임 전부 동일하게(FindGamePath()가
+             *  SearchPaths + Steam 라이브러리 순으로 확인) 자동탐색을 시도한다. **/
             if (!CheckGamePath())
             {
-                GamePath = FindGamePath();
+                if (Configuration.GetString("UseSteam") == "true")
+                {
+                    GamePath = FindGamePath();
+                }
                 if (!CheckGamePath())
                 {
                     Valid = false;
@@ -182,8 +217,21 @@ namespace ModAPI.Data
             Schedule.AddTask("GUI", "OperationPending", null, new object[] { "CreatingModLibrary", progressHandler, null, autoClose });
             var t = new Thread(delegate ()
             {
-                ModLibrary.Create(progressHandler);
-                OnModlibUpdate?.Invoke(this, new EventArgs());
+                try
+                {
+                    ModLibrary.Create(progressHandler);
+                    OnModlibUpdate?.Invoke(this, new EventArgs());
+                }
+                catch (Exception e)
+                {
+                    // ModLib.Create() 내부의 재시도(파일 잠금 등)가 전부 실패하면 여기로
+                    // 예외가 올라온다. 백그라운드 스레드에서 이 예외를 안 잡으면 .NET이
+                    // 프로세스 전체를 그냥 종료시켜버리므로, 반드시 여기서 잡아야 한다.
+                    Debug.Log("Game: " + GameConfiguration.Id,
+                        "[CreateModLibrary] Failed: " + e.GetType().Name + ": " + e.Message,
+                        Debug.Type.Error);
+                    SetProgress(progressHandler, "Error.Unexpected");
+                }
             });
             t.Start();
         }
@@ -199,8 +247,89 @@ namespace ModAPI.Data
                 {
                     return p;
                 }
+                Debug.Log("Game: " + GameConfiguration.Id, $"[FindGamePath] SearchPaths candidate miss: {p}", Debug.Type.Notice, detailedOnly: true);
             }
+
+            // 기존 SearchPaths 후보로 못 찾았으면, Steam에 등록된 모든 라이브러리 폴더
+            // (C:, D:, E: ... 사용자가 Steam에 직접 추가해둔 라이브러리 전부)에서 추가로 확인한다.
+            // 드라이브를 전체 스캔하는 게 아니라 Steam 자신의 libraryfolders.vdf에 적힌
+            // 위치만 확인하므로 비용이 거의 없다.
+            string steamFolderName;
+            if (SteamCommonFolderNames.TryGetValue(GameConfiguration.Id, out steamFolderName))
+            {
+                var libraries = GetSteamLibraryFolders();
+                Debug.Log("Game: " + GameConfiguration.Id,
+                    $"[FindGamePath] Checking {libraries.Count} Steam library folder(s) for \"{steamFolderName}\"",
+                    Debug.Type.Notice);
+                foreach (var lib in libraries)
+                {
+                    var candidate = System.IO.Path.Combine(lib, "steamapps", "common", steamFolderName);
+                    GamePath = candidate;
+                    if (CheckGamePath())
+                    {
+                        return candidate;
+                    }
+                    Debug.Log("Game: " + GameConfiguration.Id, $"[FindGamePath] Steam library candidate miss: {candidate}", Debug.Type.Notice, detailedOnly: true);
+                }
+            }
+            else
+            {
+                Debug.Log("Game: " + GameConfiguration.Id,
+                    "[FindGamePath] No Steam common folder name mapped for this game — skipping Steam library search",
+                    Debug.Type.Warning);
+            }
+
             return prevGamePath;
+        }
+
+        // Steam에 등록된 모든 라이브러리 폴더 경로를 읽어온다 (steamapps\libraryfolders.vdf 1회 파싱).
+        // 결과는 앱 실행 중 재사용 — 게임 5개를 검사해도 파일은 한 번만 읽는다.
+        public static List<string> GetSteamLibraryFolders()
+        {
+            if (_steamLibraryFoldersCache != null) return _steamLibraryFoldersCache;
+
+            var result = new List<string>();
+            try
+            {
+                var steamRoot = Configuration.GetPath("Steam", silent: true);
+                if (string.IsNullOrEmpty(steamRoot))
+                {
+                    Debug.Log("Game", "[SteamLibraries] Steam path is not configured — nothing to search", Debug.Type.Warning);
+                }
+                else
+                {
+                    // 기본 Steam 설치 위치 자체도 하나의 라이브러리다
+                    result.Add(steamRoot);
+
+                    var vdfPath = System.IO.Path.Combine(steamRoot, "steamapps", "libraryfolders.vdf");
+                    if (!File.Exists(vdfPath))
+                    {
+                        Debug.Log("Game", $"[SteamLibraries] libraryfolders.vdf not found at: {vdfPath}", Debug.Type.Warning);
+                    }
+                    else
+                    {
+                        var regex = new System.Text.RegularExpressions.Regex("\"path\"\\s*\"(.+?)\"");
+                        foreach (var line in File.ReadAllLines(vdfPath))
+                        {
+                            var m = regex.Match(line);
+                            if (!m.Success) continue;
+                            var lib = m.Groups[1].Value.Replace("\\\\", "\\");
+                            if (!result.Contains(lib)) result.Add(lib);
+                        }
+                    }
+
+                    Debug.Log("Game",
+                        $"[SteamLibraries] Found {result.Count} library folder(s): [{string.Join(", ", result)}]",
+                        Debug.Type.Notice);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Game", "[SteamLibraries] Failed to read libraryfolders.vdf: " + e.Message, Debug.Type.Warning);
+            }
+
+            _steamLibraryFoldersCache = result;
+            return result;
         }
 
         public string GetGameFolder()
@@ -334,6 +463,91 @@ namespace ModAPI.Data
             return ret;
         }
 
+        // ── 게임별 타입 이름 캐시 (mod 로드 시점의 경량 호환성 검사용) ────────────
+        // ApplyMods()의 Assemblies(ModuleDefinition 전체)와 달리, 여기서는 타입 이름
+        // 문자열만 뽑아서 캐시한다. 파일은 File.ReadAllBytes로 통째로 메모리에 읽어들인
+        // 뒤 Cecil에 넘기므로, 원본 파일 핸들을 계속 물고 있지 않는다(읽는 즉시 손을 뗌) —
+        // Apply나 게임 실행과 파일 잠금이 충돌할 일이 없다. 한 번 만든 뒤로는 이 게임의
+        // mod가 아무리 많이 스캔/로드되어도 다시 파일을 읽지 않고 캐시만 재사용한다.
+        private static readonly Dictionary<string, HashSet<string>> _gameTypeNameCache = new Dictionary<string, HashSet<string>>();
+        private static readonly object _gameTypeNameCacheLock = new object();
+
+        public HashSet<string> GetCachedTypeNames()
+        {
+            lock (_gameTypeNameCacheLock)
+            {
+                if (_gameTypeNameCache.ContainsKey(GameConfiguration.Id))
+                {
+                    return _gameTypeNameCache[GameConfiguration.Id];
+                }
+
+                var typeNames = new HashSet<string>();
+                foreach (var assemblyPath in GetIncludedAssemblies())
+                {
+                    if (!File.Exists(assemblyPath)) continue;
+                    try
+                    {
+                        var bytes = File.ReadAllBytes(assemblyPath);
+                        using (var stream = new System.IO.MemoryStream(bytes))
+                        {
+                            var module = ModuleDefinition.ReadModule(stream);
+                            foreach (var type in module.Types)
+                            {
+                                typeNames.Add(type.FullName);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Game: " + GameConfiguration.Id,
+                            "[GetCachedTypeNames] Failed reading \"" + assemblyPath + "\": " + e.Message,
+                            Debug.Type.Warning);
+                    }
+                }
+
+                _gameTypeNameCache[GameConfiguration.Id] = typeNames;
+                Debug.Log("Game: " + GameConfiguration.Id,
+                    "[GetCachedTypeNames] Cached " + typeNames.Count + " type name(s)",
+                    Debug.Type.Notice, detailedOnly: true);
+                return typeNames;
+            }
+        }
+
+        // mod가 로드되는 시점(목록에 나타나기 전)에 쓰는 경량 호환성 검사.
+        // ApplyMods()의 CheckModGameCompatibility()보다 가볍다 — 실제 ModuleDefinition을
+        // 매번 새로 읽지 않고 캐시된 타입 이름 집합만으로 판단한다. AssemblyName별 구분
+        // 없이 이 게임의 모든 대상 어셈블리를 합쳐서 보므로 정밀도는 조금 낮지만,
+        // "다른 게임용으로 보이는 mod"를 목록 단계에서 미리 눈에 띄게 하는 용도로는 충분하다.
+        // 어셈블리를 하나도 못 읽었으면(경로 문제 등) 오탐을 피하기 위해 null(문제없음)을 반환한다.
+        public string CheckModGameCompatibilityLight(Mod mod)
+        {
+            var typeNames = GetCachedTypeNames();
+            if (typeNames.Count == 0) return null;
+
+            foreach (var addMethod in mod.HeaderData.GetAddMethods())
+            {
+                if (!typeNames.Contains(addMethod.TypeName))
+                {
+                    return "type \"" + addMethod.TypeName + "\" not found in " + GameConfiguration.Id + " (AddMethod)";
+                }
+            }
+            foreach (var addField in mod.HeaderData.GetAddFields())
+            {
+                if (!typeNames.Contains(addField.TypeName))
+                {
+                    return "type \"" + addField.TypeName + "\" not found in " + GameConfiguration.Id + " (AddField)";
+                }
+            }
+            foreach (var injectInto in mod.HeaderData.GetInjectIntos())
+            {
+                if (!typeNames.Contains(injectInto.TypeName))
+                {
+                    return "type \"" + injectInto.TypeName + "\" not found in " + GameConfiguration.Id + " (InjectInto: " + injectInto.MethodName + ")";
+                }
+            }
+            return null;
+        }
+
         public string ParsePath(string n)
         {
             var fileName = GameConfiguration.SelectFile;
@@ -376,8 +590,53 @@ namespace ModAPI.Data
             return null;
         }
 
+        // mod가 선언한 AssemblyName/TypeName이 실제로 이 게임의 어셈블리(assemblies)에
+        // 존재하는지 확인한다. 문제없으면 null, 문제가 있으면 사유 문자열을 반환한다.
+        // AddClass는 mod 자체에 새로 추가하는 타입이라 게임 어셈블리와 무관하므로 검사하지 않는다.
+        private string CheckModGameCompatibility(Mod mod, Dictionary<string, ModuleDefinition> assemblies)
+        {
+            foreach (var addMethod in mod.HeaderData.GetAddMethods())
+            {
+                if (!assemblies.ContainsKey(addMethod.AssemblyName))
+                {
+                    return "assembly \"" + addMethod.AssemblyName + "\" not found (AddMethod: " + addMethod.TypeName + ")";
+                }
+                if (assemblies[addMethod.AssemblyName].GetType(addMethod.TypeName) == null)
+                {
+                    return "type \"" + addMethod.TypeName + "\" not found in \"" + addMethod.AssemblyName + "\" (AddMethod)";
+                }
+            }
+
+            foreach (var addField in mod.HeaderData.GetAddFields())
+            {
+                if (!assemblies.ContainsKey(addField.AssemblyName))
+                {
+                    return "assembly \"" + addField.AssemblyName + "\" not found (AddField: " + addField.TypeName + ")";
+                }
+                if (assemblies[addField.AssemblyName].GetType(addField.TypeName) == null)
+                {
+                    return "type \"" + addField.TypeName + "\" not found in \"" + addField.AssemblyName + "\" (AddField)";
+                }
+            }
+
+            foreach (var injectInto in mod.HeaderData.GetInjectIntos())
+            {
+                if (!assemblies.ContainsKey(injectInto.AssemblyName))
+                {
+                    return "assembly \"" + injectInto.AssemblyName + "\" not found (InjectInto: " + injectInto.TypeName + "::" + injectInto.MethodName + ")";
+                }
+                if (assemblies[injectInto.AssemblyName].GetType(injectInto.TypeName) == null)
+                {
+                    return "type \"" + injectInto.TypeName + "\" not found in \"" + injectInto.AssemblyName + "\" (InjectInto: " + injectInto.MethodName + ")";
+                }
+            }
+
+            return null;
+        }
+
         public void ApplyMods(List<Mod> mods, ProgressHandler handler)
         {
+            LastExcludedModsSummary = "";
             try
             {
                 if (mods.Count == 0)
@@ -387,6 +646,7 @@ namespace ModAPI.Data
                     {
                         throw new Exception("Could not apply original files.");
                     }
+                    LastAppliedModCount = 0;
                     SetProgress(handler, 100f, "Finish");
                     return;
                 }
@@ -860,6 +1120,57 @@ namespace ModAPI.Data
 
                 var modConfigurations = new Dictionary<string, XElement>();
                 var c = 0;
+
+                // ── 다른 게임용 mod 사전 검증 (A안: 문제 mod만 자동 제외) ────────────
+                // mod가 선언한 AssemblyName/TypeName이 실제 이 게임의 어셈블리에
+                // 존재하는지 여기서 먼저 확인한다. 존재하지 않으면(= 다른 게임용으로
+                // 만들어진 mod일 가능성이 높음) 그 mod만 목록에서 제외하고 로그로
+                // 원인을 남긴 뒤, 나머지 정상 mod들은 그대로 적용을 계속한다.
+                // 이 검증이 없으면 바로 아래 루프에서 Assemblies[...] 조회 중
+                // KeyNotFoundException/NullReferenceException으로 이어져, 다른
+                // 정상 mod까지 포함한 Apply 작업 전체가 뭉뚱그린 오류로 취소되던
+                // 문제가 있었다.
+                var incompatibleMods = new List<Mod>();
+                foreach (var mod in mods.ToList())
+                {
+                    var reason = CheckModGameCompatibility(mod, Assemblies);
+                    if (reason != null)
+                    {
+                        incompatibleMods.Add(mod);
+                        mods.Remove(mod);
+                        Debug.Log("Game: " + GameConfiguration.Id,
+                            "Mod \"" + mod.Id + "\" appears to be incompatible with " + GameConfiguration.Id +
+                            " and was excluded from this Apply: " + reason,
+                            Debug.Type.Warning);
+                    }
+                }
+                if (incompatibleMods.Count > 0)
+                {
+                    Debug.Log("Game: " + GameConfiguration.Id,
+                        incompatibleMods.Count + " mod(s) excluded due to game incompatibility: [" +
+                        string.Join(", ", incompatibleMods.Select(m => m.Id)) + "]",
+                        Debug.Type.Warning);
+
+                    // 팝업은 여기서 바로 띄우지 않는다. ApplyMods() 도중에 즉시 띄우면
+                    // 서명 경고 팝업(GameIntegrityWarning) 등과 시간이 겹쳐서 여러 팝업이
+                    // 동시에 쌓이는 문제가 있었다. 대신 결과만 필드에 저장해두고,
+                    // Apply 작업이 완전히 끝난 뒤(OnComplete) "게임 실행 여부"와
+                    // 하나로 합쳐서 한 번만 안내한다.
+                    LastExcludedModsSummary = string.Join("\n", incompatibleMods.Select(m => "- " + m.Id));
+                }
+                if (mods.Count == 0)
+                {
+                    // 남은 mod가 하나도 없으면(전부 제외됨) 원본 파일 상태로 되돌리고 종료
+                    SetProgress(handler, "Saving");
+                    if (!ApplyOriginalFiles())
+                    {
+                        throw new Exception("Could not apply original files.");
+                    }
+                    LastAppliedModCount = 0;
+                    SetProgress(handler, 100f, "Finish");
+                    return;
+                }
+
                 foreach (var mod in mods)
                 {
                     mod.RewindModule();
@@ -1452,6 +1763,7 @@ namespace ModAPI.Data
                 {
                     File.Copy(f, gamePath + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(f), true);
                 }
+                LastAppliedModCount = mods.Count;
                 SetProgress(handler, 100f, "Finish");
             }
             catch (Exception e)
@@ -1459,6 +1771,7 @@ namespace ModAPI.Data
                 RemoveModdedFiles();
                 ApplyOriginalFiles();
                 Debug.Log("ModLoader: " + GameConfiguration.Id, "An exception occured: " + e, Debug.Type.Error);
+                LastAppliedModCount = 0;
                 SetProgress(handler, "Error.Unexpected");
                 //Communicator.Error(e.ToString());
             }
@@ -1589,7 +1902,10 @@ namespace ModAPI.Data
 
             public void Refresh()
             {
-                CheckFiles = new HashSet<string>();
+                // 대소문자 구분 없이 비교 — Versions.xml에 같은 파일이 "_Data"/"_data"처럼
+                // 대소문자만 다르게 중복 기재된 경우, 실제로는 Windows에서 동일한 파일이므로
+                // 중복으로 두 번 해시되어 체크섬이 배로 늘어나는 문제를 막는다.
+                CheckFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 VersionsList = new HashSet<Version>();
 
                 if (Configuration.GetString("UpdateVersions").ToLower() == "true")
@@ -1740,6 +2056,13 @@ namespace ModAPI.Data
                             element.Add(new XElement("checksum", version.CheckSum));
                             finalDocument.Root.Add(element);
                         }
+                        // configs\games\{GameId}\ 폴더가 없으면 저장 전에 생성.
+                        // 지금은 5개 게임 폴더가 리포에 이미 커밋돼 있어 실제로는 대부분 no-op 이지만,
+                        // 새 게임이 나중에 추가되거나 폴더가 어떤 이유로든 없을 때 저장이
+                        // DirectoryNotFoundException 으로 조용히 실패하던 문제를 막는다.
+                        // (여기 도달했다는 것 자체가 Game.Verify()에서 게임경로 검증을 이미
+                        //  통과했다는 뜻이므로, 검증 순서는 항상 "경로 검증 → 폴더 생성"이 보장된다)
+                        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(FileName));
                         finalDocument.Save(FileName);
                         Debug.Log("Game: " + gameId,
                             $"[UpdateVersions] VersionsData saved successfully. Path: {FileName}" +

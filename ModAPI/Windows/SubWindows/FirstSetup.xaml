@@ -37,19 +37,19 @@
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <TextBlock Style="{StaticResource NormalLabel}" Margin="0, 0, 0, 5" TextWrapping="Wrap" Utils:Language.Key="Text" />
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="true" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="AutoUpdate" />
+                <CheckBox IsChecked="false" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="AutoUpdate" />
                 <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 <TextBlock  Style="{StaticResource NormalLabel}" Utils:Language.Key="AutoUpdate" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Utils:Language.Key="AutoUpdateText" />
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="true" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseSteam" />
+                <CheckBox IsChecked="false" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseSteam" />
                 <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE7F8;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="Steam" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="SteamText" TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="true" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseAutoUpdateVersions" />
+                <CheckBox IsChecked="false" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseAutoUpdateVersions" />
                 <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE895;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                 <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="UpdateVersions" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
             </StackPanel>

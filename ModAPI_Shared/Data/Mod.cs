@@ -41,6 +41,11 @@ namespace ModAPI.Data
         public Game Game;
         public ZipFile Resources;
 
+        // 이 mod가 속한 폴더의 게임과 실제로 맞는지, 로드 시점에 경량 검사한 결과.
+        // null = 문제없음(또는 아직 검사 안 함), 그 외 = 불일치 사유 문자열.
+        // Game.CheckModGameCompatibilityLight()가 채워준다.
+        public string GameMismatchReason;
+
         public string UniqueId
         {
             get

@@ -30,6 +30,8 @@ public class SettingsViewModel : INotifyPropertyChanged
         OnPropertyChanged("UpdateVersionsTable");
         OnPropertyChanged("AutoUpdate");
         OnPropertyChanged("UseSteam");
+        OnPropertyChanged("DevLog");
+        OnPropertyChanged("ClearLogsOnStart");
     }
 
     public int Language
@@ -47,9 +49,12 @@ public class SettingsViewModel : INotifyPropertyChanged
         }
     }
 
+    // 최신버전유지/업데이트검색/스팀연결 3가지는 아직 개발이 완전하지 않은 기능이라,
+    // 값이 없을 때(신규 설치 등) true가 아니라 false로 취급한다 — 사용자가 명시적으로
+    // 켜야만 동작하는 opt-in 방식.
     public bool UpdateVersionsTable
     {
-        get { var v = Configuration.GetString("UpdateVersions"); return v == "" || v == "true"; }
+        get { return Configuration.GetString("UpdateVersions") == "true"; }
         set
         {
             Configuration.SetString("UpdateVersions", value ? "true" : "false", true);
@@ -59,7 +64,7 @@ public class SettingsViewModel : INotifyPropertyChanged
 
     public bool AutoUpdate
     {
-        get { var v = Configuration.GetString("AutoUpdate"); return v == "" || v == "true"; }
+        get { return Configuration.GetString("AutoUpdate") == "true"; }
         set
         {
             Configuration.SetString("AutoUpdate", value ? "true" : "false", true);
@@ -68,10 +73,35 @@ public class SettingsViewModel : INotifyPropertyChanged
     }
     public bool UseSteam
     {
-        get { var v = Configuration.GetString("UseSteam"); return v == "" || v == "true"; }
+        get { return Configuration.GetString("UseSteam") == "true"; }
         set
         {
             Configuration.SetString("UseSteam", value ? "true" : "false", true);
+            Configuration.Save();
+        }
+    }
+
+    // 개발자 로그 — 기본값 false (opt-in). 켜면 --dev 로 실행한 것과 동일하게
+    // ModAPI.dev.log 가 생성/기록된다. 껐다 켰다 할 때마다 즉시 반영되도록
+    // Configuration 값을 매번 직접 읽어서 판단한다(별도 캐시 없음).
+    public bool DevLog
+    {
+        get { return Configuration.GetString("DevLog") == "true"; }
+        set
+        {
+            Configuration.SetString("DevLog", value ? "true" : "false", true);
+            Configuration.Save();
+        }
+    }
+
+    // 로그 초기화 — 기본값 false (opt-in). 켜져 있으면 앱을 시작할 때마다
+    // logs 폴더의 로그 파일을 전부 비운다.
+    public bool ClearLogsOnStart
+    {
+        get { return Configuration.GetString("ClearLogsOnStart") == "true"; }
+        set
+        {
+            Configuration.SetString("ClearLogsOnStart", value ? "true" : "false", true);
             Configuration.Save();
         }
     }

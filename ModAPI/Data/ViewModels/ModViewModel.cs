@@ -183,6 +183,8 @@ public class ModViewModel : INotifyPropertyChanged
             OnPropertyChanged("Name");
             OnPropertyChanged("Description");
             OnPropertyChanged("Version");
+            OnPropertyChanged("HasGameMismatch");
+            OnPropertyChanged("GameMismatchTooltip");
         }
     }
 
@@ -251,6 +253,30 @@ public class ModViewModel : INotifyPropertyChanged
                 }
             }
             return "";
+        }
+    }
+
+    // 다른 게임용으로 보이는 mod인지 — Game.CheckModGameCompatibilityLight()가
+    // 로드 시점에 판정해서 Mod.GameMismatchReason 에 저장해둔 결과를 그대로 노출한다.
+    public bool HasGameMismatch
+    {
+        get
+        {
+            if (SelectedVersion == null) return false;
+            var vm = (ModVersionViewModel)SelectedVersion.DataContext;
+            var mod = vm?.Mod;
+            return mod != null && !string.IsNullOrEmpty(mod.GameMismatchReason);
+        }
+    }
+
+    public string GameMismatchTooltip
+    {
+        get
+        {
+            if (SelectedVersion == null) return "";
+            var vm = (ModVersionViewModel)SelectedVersion.DataContext;
+            var mod = vm?.Mod;
+            return mod?.GameMismatchReason ?? "";
         }
     }
 
@@ -412,6 +438,8 @@ public class ModViewModel : INotifyPropertyChanged
             OnPropertyChanged("Description");
             OnPropertyChanged("Version");
             OnPropertyChanged("Buttons");
+            OnPropertyChanged("HasGameMismatch");
+            OnPropertyChanged("GameMismatchTooltip");
         }
     }
 

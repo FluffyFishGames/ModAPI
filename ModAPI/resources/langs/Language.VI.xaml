@@ -275,6 +275,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Cập nhật bảng phiên bản:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Tìm bản cập nhật:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Kết nối Steam:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">Nhật ký nhà phát triển</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Xóa nhật ký khi khởi động</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Luôn hiển thị trên cùng</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Đường dẫn cài đặt trò chơi</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Lưu</s:String>
@@ -420,6 +422,12 @@ Thêm ngôn ngữ không có cờ?</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} không có chữ ký số. Đây là điều thường gặp ở các trò chơi indie và không ảnh hưởng đến lối chơi.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Tiếp tục dù sao</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Hủy</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">Một số mod bị loại trừ</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">Các mod sau có vẻ được tạo cho một trò chơi khác và đã bị loại trừ: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">Không có mod nào được áp dụng</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">Không còn mod hợp lệ nào để áp dụng, vì vậy trò chơi đã không được khởi động.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">OK</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

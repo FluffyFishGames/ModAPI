@@ -201,6 +201,9 @@
     <Compile Include="Windows\SubWindows\GameIntegrityWarning.xaml.cs">
       <DependentUpon>GameIntegrityWarning.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SubWindows\ModsExcludedWarning.xaml.cs">
+      <DependentUpon>ModsExcludedWarning.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SubWindows\NoProjectWarning.xaml.cs">
       <DependentUpon>NoProjectWarning.xaml</DependentUpon>
     </Compile>
@@ -357,6 +360,10 @@
     <Page Include="Windows\SubWindows\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SubWindows\ModsExcludedWarning.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\SubWindows\SelectGameDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

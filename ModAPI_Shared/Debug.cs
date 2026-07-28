@@ -30,7 +30,8 @@ namespace ModAPI
     ///
     /// 매번 두 파일에 동시에 기록될 수 있다:
     ///   - ModAPI.log           : 사용자용 핵심 로그 (기본값 — detailedOnly 가 아닌 모든 호출)
-    ///   - ModAPI.detailed.log  : 모든 호출이 항상 기록됨 (Release/Debug 관계없이)
+    ///   - ModAPI.dev.log        : "--dev" 인자 또는 설정 탭의 "개발자 로그" 체크박스가
+    ///                             켜져 있을 때만 생성/기록됨 (둘 다 꺼져 있으면 파일 자체가 안 생김)
     ///
     /// ── 4단계 레벨 ──────────────────────────────────────────────────────
     ///   Verbose  : Debug.Log(..., detailedOnly: true) 로 호출
@@ -69,18 +70,24 @@ namespace ModAPI
         public static string Environment = "global";
         public static bool Verbose = false;
 
+        // "--dev" 로 실행됐는지 여부. ModAPI_Shared는 ModAPI(App 클래스가 있는 프로젝트)를
+        // 참조하지 않으므로(참조 방향이 반대) App.DevMode를 직접 볼 수 없다. 대신 이 필드를
+        // 여기 두고, App.xaml.cs(ModAPI 프로젝트, ModAPI_Shared를 참조함)에서
+        // "--dev" 인자를 파싱한 직후 Debug.DevMode = true; 로 값을 채워준다.
+        public static bool DevMode = false;
+
         protected static string LastEnvironment = "";
         protected static FileStream LogStream;
         protected static StreamWriter LogWriter;
 
-        // ── 상세 로그 (detailed) ──────────────────────────────────────────
+        // ── 상세 로그 (dev) ──────────────────────────────────────────────
         // ModAPI.log 는 사용자가 보기 편하도록 핵심 로그만 유지하고,
         // 모든 Debug.Log() 호출 내용은 Release/Debug 관계없이 항상
-        // ModAPI.detailed.log 에 기록한다. 사용자 문제 발생 시
+        // ModAPI.dev.log 에 기록한다. 사용자 문제 발생 시
         // 이 파일만 받으면 #if DEBUG 로 가려졌던 상세 로그까지 모두 확인 가능.
-        protected static string LastDetailedEnvironment = "";
-        protected static FileStream DetailedLogStream;
-        protected static StreamWriter DetailedLogWriter;
+        protected static string LastDevEnvironment = "";
+        protected static FileStream DevLogStream;
+        protected static StreamWriter DevLogWriter;
 
         /// <summary>
         /// 심각도 3단계. Verbose(반복적 추적 로그) 단계는 별도 enum 값이 아니라
@@ -95,9 +102,9 @@ namespace ModAPI
         }
 
         /// <summary>
-        /// detailedOnly: true 면 ModAPI.log 에는 쓰지 않고 ModAPI.detailed.log 에만 기록한다.
+        /// detailedOnly: true 면 ModAPI.log 에는 쓰지 않고 ModAPI.dev.log 에만 기록한다.
         /// 기존 #if DEBUG 로 감싸져 있던 호출들을 이 옵션으로 전환하면,
-        /// Release 빌드에서도 호출 자체는 항상 실행되어 detailed.log 에는 빠짐없이 남고,
+        /// Release 빌드에서도 호출 자체는 항상 실행되어 dev.log 에는 빠짐없이 남고,
         /// 사용자용 ModAPI.log 는 기존처럼 핵심 로그만 유지된다.
         /// </summary>
         public static void Log(string type, string message, Type logType = Type.Notice, bool detailedOnly = false)
@@ -157,67 +164,71 @@ namespace ModAPI
                 LastEnvironment = Environment;
             }
 
-            // ── 상세 로그 파일 준비 (ModAPI.detailed.log) ───────────────────
-            // ModAPI.log 와 동일한 회전 규칙을 따르되 파일명만 분리한다.
-            // Release/Debug 관계없이 항상 기록되므로, #if DEBUG 로 막힌 호출도
-            // 이 파일에는 전부 남는다.
-            var detailedLogFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment + ".detailed.log";
-            if (detailedLogFileName.StartsWith("" + Path.DirectorySeparatorChar))
+            // ── 개발자 로그 파일 준비 (ModAPI.dev.log) ───────────────────────
+            // "--dev" 커맨드라인 인자, 또는 설정 탭의 "개발자 로그" 체크박스가
+            // 켜져 있을 때만 파일을 만들고 기록한다. 둘 다 꺼져 있으면 이 블록 자체를
+            // 건너뛰어 ModAPI.dev.log 가 아예 생기지 않는다. 매 호출마다 현재 설정값을
+            // 다시 읽으므로, 설정 탭에서 체크박스를 켜는 즉시(재시작 없이) 반영된다.
+            if (DevMode || Configuration.GetString("DevLog", silent: true) == "true")
             {
-                detailedLogFileName = detailedLogFileName.Substring(1);
-            }
-            if (Environment != LastDetailedEnvironment || DetailedLogStream == null || !DetailedLogStream.CanWrite)
-            {
-                if (DetailedLogStream != null)
+                var devLogFileName = Configuration.GetPath("Logs") + Path.DirectorySeparatorChar + Environment + ".dev.log";
+                if (devLogFileName.StartsWith("" + Path.DirectorySeparatorChar))
                 {
-                    try
-                    {
-                        DetailedLogStream.Close();
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    devLogFileName = devLogFileName.Substring(1);
                 }
-                if (File.Exists(detailedLogFileName))
+                if (Environment != LastDevEnvironment || DevLogStream == null || !DevLogStream.CanWrite)
                 {
-                    var directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
-                    if (Path.GetFileName(detailedLogFileName) != detailedLogFileName)
-                    {
-                        directory = Path.GetDirectoryName(detailedLogFileName) + Path.DirectorySeparatorChar;
-                    }
-                    var oldDetailedLogs = (Directory.GetFiles(directory, Environment + ".detailed.*.log")).ToList();
-                    oldDetailedLogs.Sort();
-                    oldDetailedLogs.Reverse();
-                    foreach (var oldLog in oldDetailedLogs)
+                    if (DevLogStream != null)
                     {
                         try
                         {
-                            var fileName = Path.GetFileNameWithoutExtension(oldLog);
-                            var prefixLen = (Environment + ".detailed.").Length;
-                            var num = int.Parse(fileName.Substring(prefixLen));
-                            if (num < 5)
-                            {
-                                File.Move(oldLog, Path.GetDirectoryName(oldLog) + Path.DirectorySeparatorChar + Environment + ".detailed." + (num + 1) + ".log");
-                            }
-                            else
-                            {
-                                File.Delete(oldLog);
-                            }
+                            DevLogStream.Close();
                         }
                         catch (Exception)
                         {
                         }
                     }
+                    if (File.Exists(devLogFileName))
+                    {
+                        var directory = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
+                        if (Path.GetFileName(devLogFileName) != devLogFileName)
+                        {
+                            directory = Path.GetDirectoryName(devLogFileName) + Path.DirectorySeparatorChar;
+                        }
+                        var oldDevLogs = (Directory.GetFiles(directory, Environment + ".dev.*.log")).ToList();
+                        oldDevLogs.Sort();
+                        oldDevLogs.Reverse();
+                        foreach (var oldLog in oldDevLogs)
+                        {
+                            try
+                            {
+                                var fileName = Path.GetFileNameWithoutExtension(oldLog);
+                                var prefixLen = (Environment + ".dev.").Length;
+                                var num = int.Parse(fileName.Substring(prefixLen));
+                                if (num < 5)
+                                {
+                                    File.Move(oldLog, Path.GetDirectoryName(oldLog) + Path.DirectorySeparatorChar + Environment + ".dev." + (num + 1) + ".log");
+                                }
+                                else
+                                {
+                                    File.Delete(oldLog);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
 
-                    File.Move(detailedLogFileName, directory + Environment + ".detailed.0.log");
+                        File.Move(devLogFileName, directory + Environment + ".dev.0.log");
+                    }
+
+                    DevLogStream = new FileStream(devLogFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
+                    DevLogWriter = new StreamWriter(DevLogStream);
+                    LastDevEnvironment = Environment;
                 }
-
-                DetailedLogStream = new FileStream(detailedLogFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-                DetailedLogWriter = new StreamWriter(DetailedLogStream);
-                LastDetailedEnvironment = Environment;
             }
 
-            if (LogWriter != null || DetailedLogWriter != null)
+            if (LogWriter != null || DevLogWriter != null)
             {
                 var prefix = "";
                 if (logType == Type.Warning)
@@ -243,22 +254,64 @@ namespace ModAPI
                     LogStream.Flush();
                 }
 
-                // ModAPI.detailed.log — detailedOnly 여부와 관계없이 모든 로그를 항상 기록
+                // ModAPI.dev.log — detailedOnly 여부와 관계없이 모든 로그를 항상 기록
                 // (Release/Debug 모두 동일하게 기록되므로, 평소엔 숨겨졌던 개발자 로그도
                 //  사용자 문제 발생 시 이 파일 하나로 전부 확인 가능)
-                if (DetailedLogWriter != null)
+                if (DevLogWriter != null)
                 {
                     try
                     {
-                        DetailedLogWriter.WriteLine(msg);
-                        DetailedLogWriter.Flush();
-                        DetailedLogStream.Flush();
+                        DevLogWriter.WriteLine(msg);
+                        DevLogWriter.Flush();
+                        DevLogStream.Flush();
                     }
                     catch (Exception)
                     {
                         // 상세 로그 기록 실패는 앱 동작에 영향을 주면 안 되므로 조용히 무시
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// logs 폴더의 로그 파일을 전부 지운다. 현재 열려있는 ModAPI.log/ModAPI.dev.log
+        /// 스트림은 파일이 잠겨있어 그냥 File.Delete() 로는 지워지지 않으므로, 먼저 스트림을
+        /// 닫고 지운 뒤 상태를 초기화한다 — 다음 Log() 호출 시 새 파일로 자동 재생성된다.
+        /// 설정 탭의 "로그 초기화" 체크박스 및 관련 기능에서 사용한다.
+        /// </summary>
+        public static void ClearLogs()
+        {
+            try
+            {
+                if (LogStream != null)
+                {
+                    try { LogStream.Close(); } catch (Exception) { }
+                    LogStream = null;
+                    LogWriter = null;
+                }
+                if (DevLogStream != null)
+                {
+                    try { DevLogStream.Close(); } catch (Exception) { }
+                    DevLogStream = null;
+                    DevLogWriter = null;
+                }
+
+                var logsFolder = Configuration.GetPath("Logs", silent: true);
+                if (!string.IsNullOrEmpty(logsFolder) && Directory.Exists(logsFolder))
+                {
+                    foreach (var logFile in Directory.GetFiles(logsFolder, "*.log"))
+                    {
+                        try { File.Delete(logFile); } catch (Exception) { }
+                    }
+                }
+
+                // 다음 Log() 호출에서 새 파일을 다시 만들도록 상태 초기화
+                LastEnvironment = "";
+                LastDevEnvironment = "";
+            }
+            catch (Exception)
+            {
+                // 로그 초기화 실패가 앱 동작에 영향을 주면 안 되므로 조용히 무시
             }
         }
 

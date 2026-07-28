@@ -275,6 +275,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Обновлять таблицу версий:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Проверять обновления:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Подключение к Steam:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">Лог разработчика</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Очищать логи при запуске</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Всегда поверх окон</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Пути установки игры</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Сохранить</s:String>
@@ -420,6 +422,12 @@
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} не имеет цифровой подписи. Это обычное явление для инди-игр и не влияет на игровой процесс.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Продолжить в любом случае</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Отмена</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">Некоторые моды исключены</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">Следующие моды похожи на созданные для другой игры и были исключены: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">ОК</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">Моды не применены</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">Не осталось подходящих модов для применения, поэтому игра не была запущена.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">ОК</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

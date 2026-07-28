@@ -276,6 +276,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Mantener tabla de versiones actualizada:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Buscar actualizaciones:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Conexión con Steam:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">Registro de desarrollador</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Borrar registros al iniciar</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Siempre visible</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Rutas de instalación del juego</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Guardar</s:String>
@@ -421,6 +423,12 @@ Convertir a idioma integrado impedirá futuras ediciones o eliminaciones.
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} no tiene firma digital. Esto es común en juegos independientes y no afecta la jugabilidad.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Continuar de todos modos</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Cancelar</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">Algunos mods excluidos</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">Los siguientes mods parecen estar hechos para otro juego y fueron excluidos: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">Aceptar</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">Ningún mod aplicado</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">No quedaron mods válidos para aplicar, por lo que el juego no se inició.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">Aceptar</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

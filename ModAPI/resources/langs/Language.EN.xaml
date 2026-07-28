@@ -275,6 +275,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Keep VersionsData table up-to-date:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Search for updates:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam connection:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">Developer Log</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Clear Logs on Start</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Always on Top</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Game Installation Paths</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Save</s:String>
@@ -420,6 +422,12 @@ Add language without flag?</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} executable has no digital signature. This is common for indie games and does not affect gameplay.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Continue Anyway</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Cancel</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">Some Mods Excluded</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">The following mod(s) appear to be built for a different game and were excluded: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">No Mods Applied</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">No valid mods remained to apply, so the game was not started.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">OK</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

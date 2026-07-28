@@ -419,6 +419,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Versionstabelle aktuell halten:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Nach Updates suchen:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steamanbindung:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">Entwicklerprotokoll</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Protokolle beim Start leeren</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Immer im Vordergrund</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Spielinstallationspfade</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Speichern</s:String>
@@ -564,5 +566,11 @@ Sprache ohne Flagge hinzufügen?</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} hat keine digitale Signatur. Dies ist bei Indie-Spielen üblich und hat keinen Einfluss auf das Spiel.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Trotzdem fortfahren</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Abbrechen</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">Einige Mods ausgeschlossen</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">Die folgenden Mods scheinen für ein anderes Spiel erstellt worden zu sein und wurden ausgeschlossen: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">Keine Mods angewendet</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">Es blieben keine gültigen Mods zum Anwenden übrig, daher wurde das Spiel nicht gestartet.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">OK</s:String>
 </ResourceDictionary>
     

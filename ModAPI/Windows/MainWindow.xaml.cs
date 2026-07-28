@@ -134,6 +134,21 @@ namespace ModAPI
         {
             FirstSetup = false;
 
+            // 설정 탭의 "로그 초기화"가 켜져 있으면, 시작할 때마다 logs 폴더의
+            // 로그 파일을 전부 비운다. Debug.ClearLogs()가 열려있는 스트림을 먼저
+            // 닫고 지우므로 "파일이 사용 중" 문제 없이 안전하게 처리된다.
+            // (참고: Configuration 로딩 등 이 시점 이전에 이미 몇 줄의 로그가 기록되어
+            //  있을 수 있는데, 그 앞부분까지 포함해서 지워진다 — 완전히 이르게 처리하려면
+            //  Configuration.Load() 이전 시점에 넣어야 하나, 그 지점은 이 파일 범위 밖이라
+            //  현재는 여기서 처리한다)
+            var clearLogsOnStart = Configuration.GetString("ClearLogsOnStart", silent: true);
+            Debug.Log("FirstSetupDone", "[ClearLogs] ClearLogsOnStart config value = \"" + clearLogsOnStart + "\"", Debug.Type.Notice);
+            if (clearLogsOnStart == "true")
+            {
+                Debug.ClearLogs();
+                Debug.Log("FirstSetupDone", "[ClearLogs] Debug.ClearLogs() executed.", Debug.Type.Notice);
+            }
+
             if (!CheckSteamPath())
             {
                 return;
@@ -171,12 +186,80 @@ namespace ModAPI
                 if (cb != null) cb.IsChecked = true;
             }
 
-            // 지원 게임 5종의 mods / projects 폴더 초기 생성
             var supportedIds = new List<string> { "TheForest", "Subnautica", "Raft", "EscapeThePacific", "GH" };
+
+            // App.Game(현재 선택된 게임)은 이미 Verify()에서 FindGamePath() 자동탐색을 거쳤다
+            // (단, 그것도 이제 "스팀연결"이 켜져있을 때만 실제로 탐색하도록 게이팅되어 있다).
+            // 나머지 게임들도 마찬가지로 "스팀연결"이 켜져있을 때만 경로 자동탐색을 시도한다.
+            // 꺼져있으면(신규 설치 기본값) 자동탐색 자체를 건너뛰고, 사용자가 Settings 탭에서
+            // 직접 설정하기 전까지 전부 빈 상태로 둔다 — 5개 게임 전부 일관되게 취급한다.
+            if (Configuration.GetString("UseSteam") == "true")
+            {
+                foreach (var gid in supportedIds)
+                {
+                    if (string.Equals(gid, Configuration.CurrentGame, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Debug.Log("FirstSetupDone", $"[AutoDetect] Skip {gid}: is CurrentGame (already handled by App.Game.Verify())", Debug.Type.Notice, detailedOnly: true);
+                        continue;
+                    }
+
+                    var existingPath = Configuration.GetPath("Games." + gid, silent: true);
+                    if (!string.IsNullOrEmpty(existingPath))
+                    {
+                        Debug.Log("FirstSetupDone", $"[AutoDetect] Skip {gid}: already has a saved path ({existingPath})", Debug.Type.Notice, detailedOnly: true);
+                        continue;
+                    }
+
+                    Configuration.GameConfiguration autoCfg = null;
+                    if (Configuration.Games.ContainsKey(gid)) autoCfg = Configuration.Games[gid];
+                    if (autoCfg == null)
+                    {
+                        Debug.Log("FirstSetupDone", $"[AutoDetect] Skip {gid}: no GameConfiguration found in Configuration.Games", Debug.Type.Warning);
+                        continue;
+                    }
+
+                    Debug.Log("FirstSetupDone", $"[AutoDetect] Trying {gid}...", Debug.Type.Notice, detailedOnly: true);
+                    var tempGame = new Game(autoCfg, true);
+                    var foundPath = tempGame.FindGamePath();
+                    if (!string.IsNullOrEmpty(foundPath))
+                    {
+                        Configuration.SetPath("Games." + gid, foundPath, true);
+                        Debug.Log("FirstSetupDone",
+                            $"[AutoDetect] Found {gid} at: {foundPath}",
+                            Debug.Type.Notice);
+                    }
+                    else
+                    {
+                        Debug.Log("FirstSetupDone",
+                            $"[AutoDetect] Not found: {gid} (no matching path in SearchPaths or Steam libraries)",
+                            Debug.Type.Notice, detailedOnly: true);
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("FirstSetupDone",
+                    "[AutoDetect] UseSteam is off — skipping auto-detect for all games, leaving paths blank until user configures them manually",
+                    Debug.Type.Notice);
+            }
+
+            // 지원 게임 5종 중 "설정 탭에서 게임설치경로가 검증된 게임"만 mods / projects 폴더 생성
+            // (경로 미설정/실행파일 없음 상태에서 폴더만 먼저 생기면, 사용자가 미설치 게임 폴더에
+            //  엉뚱한 모드를 잘못 넣어둘 여지가 생기므로 검증 통과한 게임에 한해서만 생성한다)
             var modsBase = Configuration.GetPath("mods");
             var projectsBase = Configuration.GetPath("projects");
             foreach (var gid in supportedIds)
             {
+                var savedPath = Configuration.GetPath("Games." + gid, silent: true);
+                if (string.IsNullOrEmpty(savedPath)) continue;
+
+                Configuration.GameConfiguration gcfg = null;
+                if (Configuration.Games.ContainsKey(gid)) gcfg = Configuration.Games[gid];
+                if (gcfg == null) continue;
+
+                var exePath = System.IO.Path.Combine(savedPath, gcfg.SelectFile);
+                if (!File.Exists(exePath)) continue;
+
                 var modsDir = System.IO.Path.Combine(modsBase, gid);
                 var projectDir = System.IO.Path.Combine(projectsBase, gid);
                 if (!string.IsNullOrEmpty(modsBase) && !Directory.Exists(modsDir)) Directory.CreateDirectory(modsDir);
@@ -934,6 +1017,16 @@ namespace ModAPI
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // WPF TabControl은 보통 "현재 보이는 탭"만 실제로 측정한다. Settings 탭이
+            // 화면에 뜨기 전(예: Welcome 탭이 보이는 상태)에 창 높이가 이미 SizeToContent로
+            // 고정되면, 나중에 Settings 탭으로 전환해도 그 탭 안의 게임 경로 카드들
+            // 크기가 창 높이 계산에 전혀 반영되지 않는다 — 폰트 크기와 무관하게 탭을
+            // 전환할 때마다 다시 계산해줘야 한다.
+            // Settings 탭 인덱스: Welcome(0), Mods(1), Downloads(2), Development(3), Themes(4), Settings(5)
+            if (Tabs.SelectedIndex == 5)
+            {
+                UpdateWindowHeight();
+            }
         }
 
         public void Preload(ProgressHandler handler)
@@ -1410,6 +1503,15 @@ namespace ModAPI
                 var vm = (ModViewModel)i.DataContext;
                 if (vm != null && vm.Selected)
                 {
+                    // All 필터가 아니면, 현재 선택된 필터의 게임 mod만 수집한다.
+                    // (필터를 특정 게임으로 바꿔도 다른 게임에서 체크해둔 mod가
+                    //  안 보이는 채로 계속 집계되어, 필터와 무관하게 게임 선택
+                    //  팝업이 뜨는 등 필터를 무시하는 것처럼 보이는 문제가 있었다)
+                    if (!isAllFilter && !string.Equals(vm.GameId, currentFilter, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
                     var vm2 = (ModVersionViewModel)vm.SelectedVersion.DataContext;
                     if (vm2 != null)
                     {
@@ -1452,19 +1554,33 @@ namespace ModAPI
                     Debug.Type.Notice);
 
                 // ── 팝업에 표시할 게임 목록 결정 ────────────────────────────────
-                // 활성화된 mod 의 게임이 있으면 해당 게임 전체를 팝업에 표시
-                // (경로 미설정 게임도 포함 — 선택 후 경로 확인)
-                // 활성화된 mod 가 없으면 Configuration 에 등록된 전체 지원 게임 표시
+                // 활성화된 mod 의 게임이 있으면 해당 게임 전체를 후보로 삼되,
+                // 실제로 "설정 탭에 경로가 등록되어 있고 exe가 존재하는" 게임만 팝업에 남긴다.
+                // (경로 미설정 게임까지 선택지로 보여주면, 사용자가 뭘 고르든 결국
+                //  아래의 GamePathNotSet으로 다시 튕기게 되어 "게임 선택 → 경로 없음 안내"
+                //  순서가 뒤바뀐 것처럼 보이는 문제가 있었다. 경로 검증을 먼저 하고
+                //  통과한 게임만으로 선택 팝업을 구성한다)
                 var popupGames = candidateIds.Count >= 1 ? candidateIds : supportedGameIds2;
 
+                var installedPopupGames = popupGames.Where(gid =>
+                {
+                    var p = ModAPI.Configurations.Configuration.GetPath("Games." + gid, silent: true);
+                    if (string.IsNullOrEmpty(p)) return false;
+                    var exeName = ModAPI.Configurations.Configuration.Games.ContainsKey(gid)
+                        ? ModAPI.Configurations.Configuration.Games[gid].SelectFile : null;
+                    if (string.IsNullOrEmpty(exeName)) return false;
+                    return System.IO.File.Exists(System.IO.Path.Combine(p, exeName));
+                }).ToList();
+
                 Debug.Log("StartGame",
-                    $"[GameSelect] Popup games: [{string.Join(", ", popupGames)}]",
+                    $"[GameSelect] Popup games: [{string.Join(", ", popupGames)}]" +
+                    $" | Installed: [{string.Join(", ", installedPopupGames)}]",
                     Debug.Type.Notice);
 
-                if (popupGames.Count == 0)
+                if (installedPopupGames.Count == 0)
                 {
                     Debug.Log("StartGame",
-                        "[GameSelect] No games available → GamePathNotSet popup",
+                        "[GameSelect] No installed games available → GamePathNotSet popup",
                         Debug.Type.Error);
                     var winNoGame = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GamePathNotSet");
                     winNoGame.ShowSubWindow();
@@ -1472,22 +1588,37 @@ namespace ModAPI
                     return;
                 }
 
+                // ── 검증 3: 모드 선택 여부 (게임 선택 팝업보다 먼저 확인) ───────────
+                // 1.스팀경로 → 2.게임경로 → 3.모드선택 순서를 지키기 위해,
+                // 게임 후보가 여러 개라서 SelectGameDialog를 띄우기 전에
+                // "애초에 선택한 mod가 하나라도 있는지"부터 먼저 확인한다.
+                if (mods.Count == 0)
+                {
+                    Debug.Log("StartGame",
+                        $"[Validate] No mods selected (filter: {currentFilter}) → NoModSelected popup",
+                        Debug.Type.Warning);
+                    var winNoModEarly = new Windows.SubWindows.NoProjectWarning("Lang.Windows.NoModSelected");
+                    winNoModEarly.ShowSubWindow();
+                    winNoModEarly.Show();
+                    return;
+                }
+
                 string chosenGameId;
-                if (popupGames.Count == 1)
+                if (installedPopupGames.Count == 1)
                 {
                     // 후보가 1개면 자동 선택
-                    chosenGameId = popupGames[0];
+                    chosenGameId = installedPopupGames[0];
                     Debug.Log("StartGame",
                         $"[GameSelect] Auto-selected single game: {chosenGameId}",
                         Debug.Type.Notice);
                 }
                 else
                 {
-                    // 2개 이상이면 팝업
+                    // 2개 이상이면 팝업 (설치 확인된 게임만 표시)
                     Debug.Log("StartGame",
-                        $"[GameSelect] Showing SelectGameDialog with {popupGames.Count} options",
+                        $"[GameSelect] Showing SelectGameDialog with {installedPopupGames.Count} options",
                         Debug.Type.Notice);
-                    var selectWin = new Windows.SubWindows.SelectGameDialog(popupGames);
+                    var selectWin = new Windows.SubWindows.SelectGameDialog(installedPopupGames);
                     selectWin.Owner = this;
                     selectWin.ShowDialog();
                     if (string.IsNullOrEmpty(selectWin.SelectedGameId))
@@ -1561,7 +1692,29 @@ namespace ModAPI
             }
             else
             {
-                // ── 검증 3: 특정 게임 필터 선택 시 mod 활성화 확인 ───────────
+                // ── 검증 3: 특정 게임 필터 선택 시 "게임경로 → mod 활성화" 순서로 확인 ───────────
+                // (게임경로 검증 없이 mod 개수부터 확인하면, 경로도 없고 mod도 없는 상태에서
+                //  "모드를 선택하세요" 팝업이 먼저 떠서 원인을 오해하게 만드는 문제가 있었다)
+                var filterPath = ModAPI.Configurations.Configuration.GetPath("Games." + currentFilter, silent: true);
+                var filterExeName = ModAPI.Configurations.Configuration.Games.ContainsKey(currentFilter)
+                    ? ModAPI.Configurations.Configuration.Games[currentFilter].SelectFile : null;
+                var filterExeFull = !string.IsNullOrEmpty(filterPath) && !string.IsNullOrEmpty(filterExeName)
+                    ? System.IO.Path.Combine(filterPath, filterExeName) : null;
+
+                if (string.IsNullOrEmpty(filterPath) ||
+                    string.IsNullOrEmpty(filterExeFull) ||
+                    !System.IO.File.Exists(filterExeFull))
+                {
+                    Debug.Log("StartGame",
+                        $"[Validate] Game path not set or exe not found for filter: {currentFilter} → GamePathNotSet popup",
+                        Debug.Type.Error);
+                    var winNoPath = new Windows.SubWindows.NoProjectWarning("Lang.Windows.GamePathNotSet");
+                    winNoPath.ShowSubWindow();
+                    winNoPath.Show();
+                    return;
+                }
+                Debug.Log("StartGame", $"[Validate] Game path OK for filter: {currentFilter}", Debug.Type.Notice);
+
                 if (mods.Count == 0)
                 {
                     Debug.Log("StartGame",
@@ -1789,6 +1942,70 @@ namespace ModAPI
             var progressHandler = new ProgressHandler();
             progressHandler.OnComplete += (o, ex) =>
             {
+                var excludedSummary = targetGame.LastExcludedModsSummary;
+                var launched = targetGame.LastAppliedModCount > 0;
+
+                // 실제로 적용된 mod가 0개면(전부 게임 불일치로 제외됐거나 실패) 게임을
+                // 실행하지 않는다. SetProgress(handler, 100f, "Finish")만으로는 "적용된 게
+                // 없어도 정상 종료"와 "실제로 적용하고 정상 종료"를 구분할 수 없었는데,
+                // Game.LastAppliedModCount로 구분해서 판단한다.
+                //
+                // "mod 제외됨" 안내와 "게임 실행 여부" 안내는 같은 작업의 결과라서 각자
+                // 따로 팝업을 띄우면(서명 경고 팝업과도 겹쳐서) 순서가 헷갈렸다.
+                // 여기서 하나로 합쳐서 한 번만 보여준다.
+                if (!string.IsNullOrEmpty(excludedSummary) || !launched)
+                {
+                    Debug.Log("StartGame",
+                        "[Launch] LastAppliedModCount=" + targetGame.LastAppliedModCount +
+                        " | ExcludedMods=" + (string.IsNullOrEmpty(excludedSummary) ? "(none)" : excludedSummary) +
+                        (launched ? " → launching with remaining mods" : " → skipping game launch (nothing to run)"),
+                        Debug.Type.Warning);
+
+                    Func<string, string, string> lang = (key, fallback) =>
+                    {
+                        try
+                        {
+                            var v = Application.Current.Resources[key] as string;
+                            return string.IsNullOrEmpty(v) ? fallback : v;
+                        }
+                        catch (Exception)
+                        {
+                            return fallback;
+                        }
+                    };
+
+                    string title;
+                    string message;
+                    var excludedTemplate = lang("Lang.Windows.IncompatibleModsExcluded.Text",
+                        "The following mod(s) appear to be built for a different game and were excluded: {0}");
+
+                    if (!launched)
+                    {
+                        title = lang("Lang.Windows.NoModsApplied.Title", "No Mods Applied");
+                        message = lang("Lang.Windows.NoModsApplied.Text",
+                            "No valid mods remained to apply, so the game was not started.");
+                        if (!string.IsNullOrEmpty(excludedSummary))
+                        {
+                            message += "\n\n" + string.Format(excludedTemplate, excludedSummary);
+                        }
+                    }
+                    else
+                    {
+                        title = lang("Lang.Windows.IncompatibleModsExcluded.Title", "Some Mods Excluded");
+                        message = string.Format(excludedTemplate, excludedSummary);
+                    }
+
+                    Dispatcher.Invoke(delegate
+                    {
+                        var win = Windows.SubWindows.ModsExcludedWarning.CreateWithCustomMessage(
+                            title, message, "Lang.Windows.NoModsApplied.OK");
+                        win.ShowSubWindow();
+                        win.ShowDialog();
+                    });
+
+                    if (!launched) return;
+                }
+
                 if (Configuration.GetString("UseSteam") == "true" && targetGame.GameConfiguration.SteamAppId != "")
                 {
                     var p = new Process();
@@ -2550,6 +2767,19 @@ namespace ModAPI
             _fontSizeUpdating = false;
 
             ApplyFontSize(current);
+
+            // 시작 시 저장된 폰트 크기를 불러오는 경로라서 FontSizeSelector_Changed(콤보박스
+            // 변경 이벤트)가 호출되지 않는다(_fontSizeUpdating 로 억제됨). 그래서 창 너비/높이
+            // 재계산도 같이 빠져있었다 — 저장된 폰트가 MAX 등 큰 값이면, 처음 실행 시 창
+            // 크기가 그 폰트에 맞게 계산되지 않아 마지막 카드가 잘리는 문제가 있었다.
+            // 콤보박스 변경 핸들러와 동일하게 여기서도 재계산해준다.
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.UpdateLayout();
+                UpdateMinWindowWidth();
+                this.Width = this.MinWidth;
+                UpdateWindowHeight();
+            }), System.Windows.Threading.DispatcherPriority.Render);
         }
 
         private void ApplyFontSize(double size)
@@ -2572,12 +2802,17 @@ namespace ModAPI
             var size = (double)item.Tag;
             ApplyFontSize(size);
             SaveUiCfg("AppFontSize", size.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            // 폰트 크기 변경 후 레이아웃 재계산 완료 후 MinWidth 업데이트
+            // 폰트 크기 변경 후 레이아웃 재계산 완료 후 MinWidth/높이 업데이트.
+            // 너비 계산과 높이 계산을 같은 콜백 안에서 순서대로 실행해야 한다 —
+            // 따로 예약하면(별도의 Dispatcher.BeginInvoke) 폰트 변경이 실제로 화면에
+            // 반영되기 전에 높이를 측정해버려서, 여전히 이전 폰트 크기 기준으로
+            // 잘못 계산되는 문제가 있었다.
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 this.UpdateLayout();
                 UpdateMinWindowWidth();
                 this.Width = this.MinWidth;
+                UpdateWindowHeight();
             }), System.Windows.Threading.DispatcherPriority.Render);
         }
 
@@ -2627,6 +2862,21 @@ namespace ModAPI
                 this.SizeToContent = SizeToContent.Height;
                 this.SizeToContent = SizeToContent.Manual;
 
+                // "모두 펼치기"로 게임 경로 카드 5개가 한꺼번에 열리는 등, 콘텐츠가
+                // 화면보다 커질 수 있다. 이 탭 콘텐츠에는 별도 스크롤 영역이 없어서
+                // SizeToContent.Height 로 측정한 값이 그대로 창 높이가 되면, 창이
+                // 화면 전체 크기(또는 그 이상)로 커져버리는 문제가 있었다. 작업 표시줄을
+                // 제외한 화면 높이를 넘지 않도록 상한선을 둔다.
+                var maxHeight = System.Windows.SystemParameters.WorkArea.Height - 40;
+                if (this.Height > maxHeight)
+                {
+                    this.Height = maxHeight;
+                }
+                if (this.Top < 0)
+                {
+                    this.Top = 0;
+                }
+
                 if (wasVisible) layer.Visibility = Visibility.Visible;
             }), System.Windows.Threading.DispatcherPriority.Render);
         }
@@ -2639,11 +2889,17 @@ namespace ModAPI
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            // 콘텐츠 렌더링 완료 후 — ActualWidth 정확히 측정 가능
+            // 콘텐츠 렌더링 완료 후 — ActualWidth/ActualHeight 정확히 측정 가능.
+            // InitFontSize()에서도 높이 재계산을 시도하지만, 그건 카드들이 화면에
+            // 완전히 자리잡기 전(레이아웃 패스 이전)에 실행될 수 있어 너무 작은 값으로
+            // 잘못 고정될 위험이 있다. 여기(ContentRendered)는 이미 너비 계산이
+            // 안정적으로 동작하고 있는 "확실히 안전한" 시점이므로, 높이도 여기서
+            // 한 번 더 확정한다.
             UpdateMinWindowWidth();
             this.Width = this.MinWidth;
             var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
             this.Left = (screenWidth - this.Width) / 2;
+            UpdateWindowHeight();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

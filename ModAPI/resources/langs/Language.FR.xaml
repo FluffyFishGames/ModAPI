@@ -272,6 +272,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Mise à jour de la table des versions:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">Recherche de mises à jour:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Connexion Steam:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">Journal développeur</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Effacer les journaux au démarrage</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">Toujours au premier plan</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">Chemins d'installation du jeu</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Enregistrer</s:String>
@@ -417,6 +419,12 @@ Ajouter la langue sans drapeau?</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} n'a pas de signature numérique. C'est courant pour les jeux indépendants et cela n'affecte pas le jeu.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">Continuer quand même</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">Annuler</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">Certains mods exclus</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">Les mods suivants semblent être conçus pour un autre jeu et ont été exclus : {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">OK</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">Aucun mod appliqué</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">Aucun mod valide n'a pu être appliqué, le jeu n'a donc pas été lancé.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">OK</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

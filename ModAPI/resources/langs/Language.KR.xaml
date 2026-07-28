@@ -272,6 +272,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">최신버전 유지:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">업데이트 검색:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">스팀 연결:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">개발자 로그</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">로그 초기화</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">항상 위에</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">게임 설치 경로</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">저장</s:String>
@@ -417,6 +419,12 @@ Settings탭에서 해당 게임의 경로를 설정해주십시오.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} 실행파일에 디지털 서명이 없습니다. 인디 게임에서는 흔한 경우이며 게임 진행에는 아무런 영향이 없습니다.</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">계속 진행</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">취소</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">모드 제외됨</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">다음 모드는 다른 게임용으로 보여 제외되었습니다: {0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">확인</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">적용된 모드 없음</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">적용 가능한 모드가 없어 게임을 실행하지 않았습니다.</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">확인</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

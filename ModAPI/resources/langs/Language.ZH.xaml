@@ -275,6 +275,8 @@
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">保持版本表最新:</s:String>
     <s:String x:Key="Lang.Options.Labels.AutoUpdate">检查更新:</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam连接:</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLog">开发者日志</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">启动时清除日志</s:String>
     <s:String x:Key="Lang.Options.Labels.AlwaysOnTop">总在最前</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePaths">游戏安装路径</s:String>
     <s:String x:Key="Lang.Options.Labels.GamePathSave">保存</s:String>
@@ -420,6 +422,12 @@
     <s:String x:Key="Lang.Windows.GameNoSignature.Text">{0} 没有数字签名。这在独立游戏中很常见，不会影响游戏进行。</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Continue">仍然继续</s:String>
     <s:String x:Key="Lang.Windows.GameNoSignature.Cancel">取消</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Title">部分模组已排除</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.Text">以下模组似乎是为其他游戏制作的，已被排除：{0}</s:String>
+    <s:String x:Key="Lang.Windows.IncompatibleModsExcluded.OK">确定</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Title">未应用任何模组</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.Text">没有可应用的有效模组，因此未启动游戏。</s:String>
+    <s:String x:Key="Lang.Windows.NoModsApplied.OK">确定</s:String>
 
     <!-- Savegames -->
     <s:String x:Key="Lang.Savegames.Savegame.Blueprints.Buttons.Actions">Actions</s:String>

@@ -83,6 +83,12 @@ public class ModsViewModel : INotifyPropertyChanged
     protected Regex Validation = new Regex("^([a-zA-Z0-9_]+)-([0-9\\.]+)-([0-9abcdef]{32})\\.mod$");
     protected bool Loading;
 
+    // 1초마다 폴링되는 FindMods()가 매번 동일한 로그를 반복해서
+    // modapi.detailed.log 를 무한정 불려놓는 문제를 막기 위한 상태 캐시.
+    // 마지막 스캔과 파일 개수가 같고 실제로 추가/삭제된 mod 도 없으면
+    // "아무 변화 없음" 스캔으로 보고 반복 로그를 생략한다.
+    protected int _lastFindModsFileCount = -1;
+
     protected void FindMods()
     {
         try
@@ -106,7 +112,11 @@ public class ModsViewModel : INotifyPropertyChanged
                 if (!File.Exists(file))
                 {
                     var mod = LoadedFiles[file];
-                    var id = LoadedFiles[file].Id + "-" + LoadedFiles[file].HeaderData.GetVersion();
+                    // Mod.Mods 키에 게임ID를 포함시켜야 한다 (아래 LoadMods()와 동일한 키 형식).
+                    // 게임ID 없이 "ModId-Version"만 쓰면, 서로 다른 게임 폴더에 같은 이름의
+                    // mod가 있을 때 한쪽을 지워도 다른 게임 쪽 항목까지 같이 지워지는 문제가 있었다.
+                    var modGameId = mod.Game?.GameConfiguration?.Id ?? "";
+                    var id = modGameId + "-" + LoadedFiles[file].Id + "-" + LoadedFiles[file].HeaderData.GetVersion();
                     Mod.Mods.Remove(id);
                     for (var j = 0; j < _Mods.Count; j++)
                     {
@@ -146,7 +156,14 @@ public class ModsViewModel : INotifyPropertyChanged
             var files = allFiles.ToArray();
             var toLoad = new List<string>();
 
-            Debug.Log("ModsViewModel", $"[FindMods] Scanning mods folder: {modsBase} | Total files found: {files.Length}", Debug.Type.Notice, detailedOnly: true);
+            // 지난 스캔과 파일 개수가 같고(=새로 추가/삭제된 게 없고) mod 제거도 없었다면
+            // "변화 없는" 스캔으로 보고 아래의 반복적인 상세 로그를 생략한다.
+            var scanQuiet = !modsRemoved && files.Length == _lastFindModsFileCount;
+
+            if (!scanQuiet)
+            {
+                Debug.Log("ModsViewModel", $"[FindMods] Scanning mods folder: {modsBase} | Total files found: {files.Length}", Debug.Type.Notice, detailedOnly: true);
+            }
 
             foreach (var file in files)
             {
@@ -155,14 +172,20 @@ public class ModsViewModel : INotifyPropertyChanged
                 // 이미 로드된 파일 스킵
                 if (LoadedFiles.ContainsKey(file))
                 {
-                    Debug.Log("ModsViewModel", $"[FindMods] Skip (already loaded): {fileName}", Debug.Type.Notice, detailedOnly: true);
+                    if (!scanQuiet)
+                    {
+                        Debug.Log("ModsViewModel", $"[FindMods] Skip (already loaded): {fileName}", Debug.Type.Notice, detailedOnly: true);
+                    }
                     continue;
                 }
 
                 // .mod 확장자 파일만 검사
                 if (!fileName.EndsWith(".mod", StringComparison.OrdinalIgnoreCase))
                 {
-                    Debug.Log("ModsViewModel", $"[FindMods] Skip (not .mod): {fileName}", Debug.Type.Notice, detailedOnly: true);
+                    if (!scanQuiet)
+                    {
+                        Debug.Log("ModsViewModel", $"[FindMods] Skip (not .mod): {fileName}", Debug.Type.Notice, detailedOnly: true);
+                    }
                     continue;
                 }
 
@@ -176,29 +199,38 @@ public class ModsViewModel : INotifyPropertyChanged
                 }
                 else
                 {
-                    // 패턴 매칭 실패 — 파일명 형식 진단 (Release 에서도 출력 — 사용자 문의 시 필요)
-                    var parts = fileName.Replace(".mod", "").Split('-');
-                    string reason;
-                    if (parts.Length < 3)
-                        reason = $"Too few segments (expected 3+, got {parts.Length}). Format: {{ModId}}-{{Version}}-{{MD5Hash}}.mod";
-                    else if (!System.Text.RegularExpressions.Regex.IsMatch(parts[0], "^[a-zA-Z0-9_]+$"))
-                        reason = "Invalid ModId segment: " + parts[0] + " (only letters, digits, underscore allowed)";
-                    else if (!System.Text.RegularExpressions.Regex.IsMatch(parts[1], "^[0-9.]+$"))
-                        reason = "Invalid Version segment: " + parts[1] + " (only digits and dots allowed)";
-                    else if (parts.Length < 3 || !System.Text.RegularExpressions.Regex.IsMatch(parts[parts.Length - 1], "^[0-9abcdef]{32}$"))
-                        reason = "Invalid or missing MD5 hash: " + (parts.Length >= 3 ? parts[parts.Length - 1] : "(missing)") + " (must be 32 lowercase hex chars)";
-                    else
-                        reason = "Pattern mismatch (unknown reason)";
+                    // 패턴 매칭 실패 — 파일명 형식 진단 (같은 파일이 계속 남아있는 동안은
+                    // scanQuiet 로 한 번만 남기고, 문제되는 파일이 바뀌면 다시 남긴다)
+                    if (!scanQuiet)
+                    {
+                        var parts = fileName.Replace(".mod", "").Split('-');
+                        string reason;
+                        if (parts.Length < 3)
+                            reason = $"Too few segments (expected 3+, got {parts.Length}). Format: {{ModId}}-{{Version}}-{{MD5Hash}}.mod";
+                        else if (!System.Text.RegularExpressions.Regex.IsMatch(parts[0], "^[a-zA-Z0-9_]+$"))
+                            reason = "Invalid ModId segment: " + parts[0] + " (only letters, digits, underscore allowed)";
+                        else if (!System.Text.RegularExpressions.Regex.IsMatch(parts[1], "^[0-9.]+$"))
+                            reason = "Invalid Version segment: " + parts[1] + " (only digits and dots allowed)";
+                        else if (parts.Length < 3 || !System.Text.RegularExpressions.Regex.IsMatch(parts[parts.Length - 1], "^[0-9abcdef]{32}$"))
+                            reason = "Invalid or missing MD5 hash: " + (parts.Length >= 3 ? parts[parts.Length - 1] : "(missing)") + " (must be 32 lowercase hex chars)";
+                        else
+                            reason = "Pattern mismatch (unknown reason)";
 
-                    Debug.Log("ModsViewModel",
-                        $"[FindMods] Skip (filename validation failed): {fileName}" +
-                        $" | Reason: {reason}" +
-                        $" | Expected pattern: {{ModId}}-{{Version}}-{{32hexMD5}}.mod",
-                        Debug.Type.Warning);
+                        Debug.Log("ModsViewModel",
+                            $"[FindMods] Skip (filename validation failed): {fileName}" +
+                            $" | Reason: {reason}" +
+                            $" | Expected pattern: {{ModId}}-{{Version}}-{{32hexMD5}}.mod",
+                            Debug.Type.Warning);
+                    }
                 }
             }
 
-            Debug.Log("ModsViewModel", $"[FindMods] Scan complete. Queued: {toLoad.Count} / {files.Length} files", Debug.Type.Notice, detailedOnly: true);
+            if (!scanQuiet || toLoad.Count > 0)
+            {
+                Debug.Log("ModsViewModel", $"[FindMods] Scan complete. Queued: {toLoad.Count} / {files.Length} files", Debug.Type.Notice, detailedOnly: true);
+            }
+
+            _lastFindModsFileCount = files.Length;
 
             if (toLoad.Count > 0)
             {
@@ -224,6 +256,7 @@ public class ModsViewModel : INotifyPropertyChanged
         {
             var add = true;
             ModViewModel alreadyVm = null;
+            var kvGameId = kv.Value.Game?.GameConfiguration?.Id ?? "";
             foreach (var i in _Mods)
             {
                 var vm = ((ModViewModel)i.DataContext);
@@ -231,7 +264,11 @@ public class ModsViewModel : INotifyPropertyChanged
                 {
                     add = false;
                 }
-                if (vm.Id == kv.Value.Id)
+                // ModId만으로 묶으면 서로 다른 게임의 같은 이름 mod(예: GH와 TheForest에
+                // 둘 다 있는 "UltimateCheatmenu")가 같은 화면 항목으로 합쳐져 버린다.
+                // 그 상태에서 같은 버전 번호가 VersionsData에 중복으로 추가되려다가
+                // "키 중복" 예외로 앱이 죽는 문제가 있었다 — 게임까지 같이 비교해야 한다.
+                if (vm.Id == kv.Value.Id && vm.GameId == kvGameId)
                 {
                     alreadyVm = vm;
                 }
@@ -272,6 +309,24 @@ public class ModsViewModel : INotifyPropertyChanged
                     textBlock2.Style = (Style)Application.Current.FindResource("NormalLabel");
                     panel.Children.Add(textBlock2);
                     outerPanel.Children.Add(panel);
+
+                    // 다른 게임용으로 보이는 mod에 경고 배지(⚠) 표시.
+                    // Game.CheckModGameCompatibilityLight()가 로드 시점에 판정한 결과를
+                    // ModViewModel.HasGameMismatch/GameMismatchTooltip 이 그대로 노출한다.
+                    var mismatchIcon = new TextBlock
+                    {
+                        Text = "⚠",
+                        FontSize = 14,
+                        Foreground = System.Windows.Media.Brushes.Orange,
+                        Margin = new Thickness(6, 0, 0, 0),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    mismatchIcon.SetBinding(TextBlock.VisibilityProperty, new System.Windows.Data.Binding("HasGameMismatch")
+                    {
+                        Converter = new System.Windows.Controls.BooleanToVisibilityConverter()
+                    });
+                    mismatchIcon.SetBinding(TextBlock.ToolTipProperty, "GameMismatchTooltip");
+                    outerPanel.Children.Add(mismatchIcon);
 
                     var mvm = new ModViewModel(mod);
                     item.DataContext = mvm;
@@ -323,10 +378,16 @@ public class ModsViewModel : INotifyPropertyChanged
             var fileName = toLoad[i];
             var collection = Validation.Match(Path.GetFileName(fileName));
 
-            var id = collection.Groups[1].Captures[0].Value + "-" + collection.Groups[2].Captures[0].Value;
-
-            // 파일 경로에서 GameId 추출하여 올바른 Game 인스턴스 사용
+            // 파일 경로에서 GameId 추출 (아래 id 계산과 Game 인스턴스 선택 모두에 사용)
             var gameId = Path.GetFileName(Path.GetDirectoryName(fileName));
+
+            // Mod.Mods 키에 게임ID를 포함시킨다. 이게 없으면 서로 다른 게임 폴더에
+            // 같은 이름(ModId+Version)의 mod가 있을 때, 먼저 로드된 쪽이 있다는 이유로
+            // 뒤에 스캔되는 다른 게임의 mod는 mod.Load()조차 호출되지 않고 조용히
+            // 스킵되어(그러면서 LoadedFiles 에는 "처리됨"으로 등록만 되어 재시도도 안 됨)
+            // 그 게임의 목록에 영원히 나타나지 않는 문제가 있었다.
+            var id = gameId + "-" + collection.Groups[1].Captures[0].Value + "-" + collection.Groups[2].Captures[0].Value;
+
             ModAPI.Data.Game modGame = App.Game;
             if (!string.IsNullOrEmpty(gameId) &&
                 !string.Equals(gameId, App.Game?.GameConfiguration?.Id, StringComparison.OrdinalIgnoreCase))
@@ -338,12 +399,32 @@ public class ModsViewModel : INotifyPropertyChanged
                     modGame = new ModAPI.Data.Game(cfg, true);
             }
             var mod = new Mod(modGame, fileName);
-            if (Mod.Mods.ContainsKey(id) || mod.Load())
+            var alreadyKnown = Mod.Mods.ContainsKey(id);
+            if (alreadyKnown || mod.Load())
             {
                 LoadedFiles.Add(fileName, mod);
-                if (!Mod.Mods.ContainsKey(id))
+                if (!alreadyKnown)
                 {
                     Mod.Mods.Add(id, mod);
+
+                    // 새로 로드된 mod에 한해, 이 폴더의 게임과 실제로 맞는지 경량 검사한다.
+                    // (이미 알려진 mod는 처음 로드될 때 이미 검사했으므로 다시 안 함)
+                    try
+                    {
+                        mod.GameMismatchReason = modGame?.CheckModGameCompatibilityLight(mod);
+                        if (!string.IsNullOrEmpty(mod.GameMismatchReason))
+                        {
+                            Debug.Log("ModsViewModel",
+                                "[FindMods] Mod \"" + mod.Id + "\" in \"" + gameId + "\" folder looks mismatched: " + mod.GameMismatchReason,
+                                Debug.Type.Warning);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log("ModsViewModel",
+                            "[FindMods] Compatibility check failed for \"" + mod.Id + "\": " + ex.Message,
+                            Debug.Type.Warning, detailedOnly: true);
+                    }
                 }
             }
             else

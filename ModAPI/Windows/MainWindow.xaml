@@ -957,26 +957,36 @@
                                     <Border CornerRadius="6" Padding="16,10"
                                             Background="{DynamicResource FluentCardBrush}"
                                             BorderThickness="1" BorderBrush="{DynamicResource FluentBorderBrush}">
-                                        <StackPanel x:Name="SettingsCheckboxes" Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,32,0" VerticalAlignment="Center">
+                                        <WrapPanel x:Name="SettingsCheckboxes" Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding UpdateVersionsTable,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.UpdateVersionsTable}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,32,0" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding AutoUpdate,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.AutoUpdate}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
                                                 <CheckBox IsChecked="{Binding UseSteam,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.UseSteam}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
+                                            <!-- 개발자 로그 -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding DevLog,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <TextBlock Text="{DynamicResource Lang.Options.Labels.DevLog}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <!-- 로그 초기화 -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
+                                                <CheckBox IsChecked="{Binding ClearLogsOnStart,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <TextBlock Text="{DynamicResource Lang.Options.Labels.ClearLogsOnStart}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
+                                            </StackPanel>
                                             <!-- 항상 위에 -->
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="32,0,0,0">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,4" VerticalAlignment="Center">
                                                 <CheckBox x:Name="AlwaysOnTopCheckBox" VerticalAlignment="Center" Margin="0,0,8,0"
                                                           Checked="AlwaysOnTop_Changed" Unchecked="AlwaysOnTop_Changed" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.AlwaysOnTop}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
-                                        </StackPanel>
+                                        </WrapPanel>
                                     </Border>
                                 </ContentControl>
 
