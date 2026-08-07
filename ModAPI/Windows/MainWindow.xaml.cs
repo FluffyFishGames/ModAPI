@@ -1836,22 +1836,18 @@ namespace ModAPI
                     Debug.Type.Notice);
 
                 // 검증 B: Assembly-CSharp.dll 체크섬 → Versions.xml 비교
-                var managedFolder = System.IO.Path.Combine(
-                    targetGame.GamePath,
-                    targetGame.GameConfiguration.Id + "_Data",
-                    "Managed");
-
-                if (!System.IO.Directory.Exists(managedFolder))
-                {
-                    // 일부 게임은 Data 폴더명이 다름 — GH 등
-                    managedFolder = System.IO.Path.Combine(
-                        targetGame.GamePath,
-                        targetGame.GameConfiguration.Id.Replace("EscapeThePacific", "EscapeThePacific") + "_Data",
-                        "Managed");
-                }
-
-                var actualChecksum = ModAPI.Utils.FileValidator.ComputeAssemblyChecksum(managedFolder);
-                if (actualChecksum != null && targetGame.GameVersion.IsValid)
+                //
+                // FileValidator.ComputeAssemblyChecksum()으로 여기서 별도로 다시 계산하지 않는다.
+                // 그 메서드는 "Assembly-CSharp(+firstpass)" 2개 파일만 고정으로 계산하도록
+                // 만들어져 있어서, The Forest처럼 4개 파일(firstpass + 본체 +
+                // UnityScript-firstpass + UnityScript)을 잇는 게임에서는 게임 파일이
+                // 멀쩡해도 항상 체크섬이 어긋나는 구조적 문제가 있었다.
+                // targetGame.CheckSumGame은 Verify() 시점에 GenerateCheckSums()가 이미
+                // 그 게임에 실제로 필요한 파일 목록(VersionsData.CheckFiles) 기준으로
+                // 정확히 계산해둔 값이므로, 여기서는 그 값을 그대로 재사용한다 —
+                // 계산 방식이 하나로 통일되어 이런 종류의 불일치가 다시 생길 수 없다.
+                var actualChecksum = targetGame.CheckSumGame?.ToLower();
+                if (!string.IsNullOrEmpty(actualChecksum) && targetGame.GameVersion.IsValid)
                 {
                     var expectedChecksum = targetGame.GameVersion.CheckSum?.ToLower();
                     if (!string.IsNullOrEmpty(expectedChecksum) &&

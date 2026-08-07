@@ -85,7 +85,12 @@ namespace ModAPI.Data
         protected Dictionary<string, Mod> FileNameToMod = new Dictionary<string, Mod>();
         protected Versions VersionsData;
         protected string CheckSumBackup;
-        protected string CheckSumGame;
+        // GenerateCheckSums()가 이 게임에 실제로 필요한 파일 목록(VersionsData.CheckFiles)
+        // 기준으로 정확하게 계산한 체크섬. StartGame()의 무결성 검사가 별도로 다시
+        // 계산하지 않고 이 값을 그대로 재사용해야 한다 — 안 그러면 게임마다 필요한
+        // 파일 개수가 다른데(The Forest 4개, GH 2개 등) 고정된 파일 목록으로 재계산하면
+        // 항상 어긋나는 문제가 생긴다.
+        public string CheckSumGame;
         protected string CheckSumModded;
 
         public Versions.Version BackupVersion;
