@@ -1,6 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9621 - 20260728
+# ModAPI(v1) v2.0.9622 - 20260808
 
 **Инструмент управления модами для The Forest — Расширенная версия**
 
@@ -681,6 +693,29 @@ bin\Debug\                               # Только для Debug-тесто�
 </details>
 
 <details open>
+<summary><b>Изменения в v2.0.9622</b></summary>
+
+## Изменения в v2.0.9622
+
+### Исправление Ошибки — Расчёт Контрольной Суммы Унифицирован
+
+Проверка целостности в `StartGame()` (Проверка B) самостоятельно пересчитывала контрольную сумму через `FileValidator.ComputeAssemblyChecksum()`, которая всегда хеширует только фиксированную пару файлов (`Assembly-CSharp` + `Assembly-CSharp-firstpass`). Это структурно не подходило для игр вроде The Forest, которые связывают 4 файла (firstpass + основной + UnityScript-firstpass + UnityScript) — проверка сообщала о ложном несоответствии контрольной суммы, даже когда файлы игры оставались нетронутыми.
+
+- `Game.CheckSumGame` (уже корректно вычисляемое `GenerateCheckSums()` в момент `Verify()` по реальному списку `VersionsData.CheckFiles` каждой игры — 2 файла для Green Hell, 4 для The Forest и т.д.) теперь открыто как `public` и напрямую переиспользуется в `StartGame()` вместо пересчёта с другим, жёстко заданным набором файлов.
+- Расчёт контрольной суммы теперь унифицирован в единый источник истины (`GenerateCheckSums()`), независимо от того, сколько файлов реально требуется конкретной игре.
+
+### Изменённые файлы
+
+| Файл | Путь | Изменение |
+|---|---|---|
+| `Game.cs` | `ModAPI_Shared\Data\` | `CheckSumGame` изменено с `protected` на `public` |
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | Проверка целостности в `StartGame()` переиспользует `targetGame.CheckSumGame` вместо пересчёта через `FileValidator.ComputeAssemblyChecksum()` |
+
+---
+
+</details>
+
+<details>
 <summary><b>Изменения в v2.0.9621</b></summary>
 
 ## Изменения в v2.0.9621

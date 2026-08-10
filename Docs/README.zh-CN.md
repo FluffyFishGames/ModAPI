@@ -1,6 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9621 - 20260728
+# ModAPI(v1) v2.0.9622 - 20260808
 
 **The Forest 模组管理工具 — 升级版**
 
@@ -681,6 +693,29 @@ ISO代码 (小写) → flagcdn.com/h24/{iso}.png → Language.{LANGCODE}.png
 </details>
 
 <details open>
+<summary><b>v2.0.9622 的变更内容</b></summary>
+
+## v2.0.9622 的变更内容
+
+### 错误修复 — 校验和计算方式统一
+
+此前 `StartGame()` 的完整性检查（验证 B）会通过 `FileValidator.ComputeAssemblyChecksum()` 自行重新计算校验和，而该方法始终只对固定的两个文件（`Assembly-CSharp` + `Assembly-CSharp-firstpass`）计算哈希。这与 The Forest 这类链接 4 个文件（firstpass + 主体 + UnityScript-firstpass + UnityScript）的游戏在结构上不匹配——即使游戏文件完全未被改动，该检查也会误报校验和不匹配。
+
+- `Game.CheckSumGame`（已由 `GenerateCheckSums()` 在 `Verify()` 时按每个游戏实际的 `VersionsData.CheckFiles` 列表正确计算好——Green Hell 为 2 个文件，The Forest 为 4 个文件，以此类推）现在被公开为 `public`，并直接在 `StartGame()` 中复用，而不再用另一套固定的文件集合重新计算。
+- 无论某个游戏实际需要多少个文件，校验和计算现在都统一到唯一的数据来源（`GenerateCheckSums()`）。
+
+### 修改的文件
+
+| 文件 | 路径 | 变更内容 |
+|---|---|---|
+| `Game.cs` | `ModAPI_Shared\Data\` | `CheckSumGame` 由 `protected` 改为 `public` |
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | `StartGame()` 的完整性检查改为复用 `targetGame.CheckSumGame`，不再通过 `FileValidator.ComputeAssemblyChecksum()` 重新计算 |
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9621 的变更内容</b></summary>
 
 ## v2.0.9621 的变更内容

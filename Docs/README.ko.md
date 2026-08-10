@@ -1,6 +1,18 @@
-[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md) [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md) [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md) [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md) [![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md) [![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md) [![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md) [![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md) [![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md) [![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md) [![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md) [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md) [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
+[![English](https://img.shields.io/badge/English-🇺🇸-blue)](../README.md)
+[![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](README.ko.md)
+[![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](README.de.md)
+[![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](README.es.md)
+[![Français](https://img.shields.io/badge/Français-🇫🇷-blue)](README.fr.md)
+[![Polski](https://img.shields.io/badge/Polski-🇵🇱-red)](README.pl.md)
+[![Русский](https://img.shields.io/badge/Русский-🇷🇺-blue)](README.ru.md)
+[![Italiano](https://img.shields.io/badge/Italiano-🇮🇹-green)](README.it.md)
+[![日本語](https://img.shields.io/badge/日本語-🇯🇵-red)](README.jp.md)
+[![Português](https://img.shields.io/badge/Português-🇵🇹-green)](README.pt.md)
+[![Tiếng Việt](https://img.shields.io/badge/Tiếng%20Việt-🇻🇳-green)](README.vi.md)
+[![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9621 - 20260728
+# ModAPI(v1) v2.0.9622 - 20260808
 
 **더 포레스트 모드 관리 도구 — 업그레이드 에디션**
 
@@ -681,6 +693,29 @@ LangTool UI 문자열, 다이얼로그 메시지, 상태 텍스트를 포함하�
 </details>
 
 <details open>
+<summary><b>v2.0.9622 변경사항</b></summary>
+
+## v2.0.9622 변경사항
+
+### 버그 수정 — 체크섬 계산 방식 통일
+
+`StartGame()`의 무결성 검사(검증 B)는 `FileValidator.ComputeAssemblyChecksum()`으로 체크섬을 별도로 다시 계산하고 있었는데, 이 메서드는 항상 고정된 두 파일(`Assembly-CSharp` + `Assembly-CSharp-firstpass`)만 해시합니다. The Forest처럼 4개 파일(firstpass + 본체 + UnityScript-firstpass + UnityScript)을 잇는 게임에서는 이 방식이 구조적으로 맞지 않아서, 게임 파일이 전혀 손상되지 않았는데도 체크섬 불일치로 오탐하는 문제가 있었습니다.
+
+- `Game.CheckSumGame`(이미 `Verify()` 시점에 `GenerateCheckSums()`가 각 게임의 실제 `VersionsData.CheckFiles` 목록을 기준으로 정확히 계산해둔 값 — Green Hell은 2개, The Forest는 4개 등)을 `public`으로 노출하고, `StartGame()`에서 다른 고정 파일 목록으로 재계산하는 대신 이 값을 그대로 재사용하도록 변경했습니다.
+- 게임마다 실제로 필요한 파일 개수가 몇 개든, 체크섬 계산이 이제 `GenerateCheckSums()` 한 곳으로 통일되었습니다.
+
+### 수정된 파일
+
+| 파일 | 경로 | 변경 내용 |
+|---|---|---|
+| `Game.cs` | `ModAPI_Shared\Data\` | `CheckSumGame`을 `protected`에서 `public`으로 변경 |
+| `MainWindow.xaml.cs` | `ModAPI\Windows\` | `StartGame()` 무결성 검사가 `FileValidator.ComputeAssemblyChecksum()`으로 재계산하는 대신 `targetGame.CheckSumGame`을 재사용 |
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9621 변경사항</b></summary>
 
 ## v2.0.9621 변경사항
