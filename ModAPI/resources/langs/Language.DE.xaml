@@ -63,6 +63,7 @@
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">Fehler!: Steam wurde geschlossen!</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">Update wird heruntergeladen...</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">Update wird entpackt...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Done">Update bereit — bitte die Änderungen unten prüfen und dann auf Fertig klicken.</s:String>
 
     <s:String x:Key="Lang.Windows.CreateModProject.Title">Modprojekt erstellen</s:String>
     <s:String x:Key="Lang.Windows.CreateModProject.Text">Gib die ID des neuen Projekts an. Die ID muss einmalig sein und darf nur alphanumerische Zeichen und "_" enthalten.</s:String>
@@ -102,20 +103,20 @@
     <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">Nein</s:String>
 
     <s:String x:Key="Lang.Windows.FirstSetup.Title">Willkommen!</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Text">Dies ist der erste Start der ModAPI. Bevor Du loslegen kannst, solltest du folgende Einstellungen überprüfen:</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">Auto-Update</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">Über die Auto-Update Funktion wirst Du immer dann informiert, wenn es eine neue Version von der ModAPI gibt. Du erhältst dann die Möglichkeit, das Update zu starten.</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Steamverknpüfung</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Die Steamverküpfung ermöglicht es, dass du weiterhin auf die Steamfunktionen im Spiel zugreifen kannst. Desweiteren kann die ModAPI hierdurch die Spieldateien, falls nötig, auf den Originalzustand zurücksetzen.</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">Versionstabellen Auto-Update</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">Wenn die Versionstabelle automatisch aktualisiert wird, können neue Versionen vom Spiel von der ModAPI erkannt werden. Es kann bis zu 24 Stunden dauern, bis die Versionstabelle geupdatet wird, wenn eine neue Version erscheint.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">Dies ist der erste Start der ModAPI. Wirf unten einen Blick auf die Neuerungen dieser Version. Optionen wie Steamverknüpfung / Versionstabelle aktuell halten kannst du jederzeit im Einstellungen-Tab aktivieren.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewTitle">Neuerungen in dieser Version</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewText" xml:space="preserve">■ Neue Funktionen&#10;&#10;▸ ModAPI-Selbstaktualisierung&#10;• Prüft und installiert die neueste Version über den "Update"-Button im Einstellungen-Tab.&#10;• Nach dem Download werden zuerst die Änderungen angezeigt; erst nach Klick auf "Fertig" wird neu gestartet.&#10;• Der gesamte Ablauf wurde direkt getestet und funktioniert einwandfrei.&#10;&#10;▸ Neu gestalteter Erststart-Bildschirm&#10;• Die Abfragen zu "Steamanbindung" und "Versionstabelle aktuell halten" wurden entfernt — überflüssig, da sie jederzeit im Einstellungen-Tab umgeschaltet werden können.&#10;• Stattdessen wurde ein scrollbarer Bereich "Was ist neu in dieser Version" hinzugefügt.&#10;• Dieser Bildschirm kann jederzeit über den Button im Willkommens-Tab erneut geöffnet werden.&#10;&#10;▸ Ein/Aus-Hinweise für 4 Kontrollkästchen hinzugefügt&#10;• Tooltips hinzugefügt, die erklären, was "Steamanbindung", "Entwicklerprotokoll", "Protokolle beim Start leeren" und "Immer im Vordergrund" im ein-/ausgeschalteten Zustand bewirken.&#10;&#10;■ Updates (Verbesserungen)&#10;&#10;▸ Option "Versionstabelle aktuell halten"&#10;• Wird deaktiviert, wenn kein Spielpfad eingestellt ist, mit einem Tooltip, der den Grund erklärt.&#10;• Umbenannt von "Neueste Version behalten" zu "Versionstabelle aktuell halten", um Verwechslungen mit dem Update-Button zu vermeiden.&#10;• Die Beschreibung wurde verständlicher formuliert und um eine kurze Erklärung ergänzt, warum die Funktion wichtig ist.&#10;&#10;▸ Nutzbarkeit der "Steamanbindung"&#10;• Erkennt und füllt bei Aktivierung automatisch den Steam-Installationspfad aus (funktioniert auch auf anderen Laufwerken).&#10;&#10;▸ Hinweis beim Spielstart&#10;• Der Bestätigungsdialog, der bisher bei jedem Start für nicht signierte Spiele (z. B. Green Hell) erschien, wurde entfernt.&#10;• Tatsächliche Beschädigung oder Manipulation wird weiterhin blockiert wie bisher.&#10;• Ein Ablaufdiagramm zur Prüfung wurde der README hinzugefügt.&#10;&#10;▸ Bereinigung des Theme-Systems (Vereinheitlichung Classic ↔ Fluent)&#10;• Die Steuerelemente von Classic und allen 9 Fluent-Themes wurden vollständig verglichen.&#10;• Schieberegler und mehrsprachige Eingabefelder wurden allen 9 Themes hinzugefügt (gemeinsam über eine geteilte Stildatei verwaltet).&#10;• Der Listentrenner (GridSplitter) wurde auch dem Classic-Theme hinzugefügt.&#10;• Die abgeblendete Darstellung deaktivierter Buttons wurde vereinheitlicht.&#10;&#10;▸ Aktualisierter Willkommens-Popup-Text&#10;• Dieser Zusammenfassungstext wurde entsprechend den Release Notes neu geschrieben (manuell gepflegt, nicht automatisch synchronisiert).&#10;&#10;■ Behoben (Fehler)&#10;&#10;• Tooltips im Classic-Theme, die mangels eigenem Design im weißen Standardstil erschienen, wurden behoben.&#10;• Probleme mit Textumbruch/Abschneiden in mehreren Popups wurden behoben.&#10;• Ein Fehler bei der Fenstergröße des Willkommens-Popups je nach Theme wurde behoben.&#10;• Unsichtbarer Text im Willkommens-Popup des Classic-Themes wurde behoben.&#10;• Ein Fehler, bei dem der Zurücksetzen-Button bei aktivierter Steamanbindung aktiv blieb, wurde behoben.&#10;• Der leere Bereich vor der Scrollbar, verursacht durch eine feste Breite des Zusammenfassungstextes, wurde entfernt.&#10;• Toter Code wurde statt gelöscht als Kommentar erhalten.&#10;• Zwei ungenutzte Restdateien wurden aufgeräumt.</s:String>
     <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">Fortsetzen</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Close">Schließen</s:String>
 
 
     <s:String x:Key="Lang.Windows.UpdateAvailable.Title">Update verfügbar!</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Text">Es ist eine neue Version für die ModAPI verfügbar. Möchtest du die neue Version jetzt installieren?</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">Jetzt updaten</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">Später updaten</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Title">Aktuellste Version</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Text">Du verwendest bereits die aktuellste Version der ModAPI.</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Buttons.OK">OK</s:String>
 
 
     <s:String x:Key="Lang.Languages.EN">Englisch</s:String>
@@ -189,7 +190,7 @@
     <s:String x:Key="Lang.Mods.Labels.Buttons">Tastenzuweisungen</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">Kompatibel mit: </s:String>
 
-    <s:String x:Key="Lang.Mods.Welcome.Title0">Willkommen!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Buttons.OpenWelcomePopup">Willkommen!</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text0">Um Mods auf dein Spiel anzuwenden, musst du die Mods zunächst aktivieren. Um dies zu tun, klickst du einfach auf den runden Knopf neben den Mod in der linken Liste. Um Änderungen an z.B. der Tastenbelegung der einzelnen Mods vorzunehmen, kannst du einen Mod aus der Liste auswählen und die Werte anpassen.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">Damit die Mods auf das Spiel angewendet werden, musst du nur unten rechts auf die Schaltfläche &quot;Spiel starten&quot; drücken.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">Fehler?</s:String>
@@ -417,7 +418,17 @@
     <s:String x:Key="Lang.Options.Labels.Language">Sprache:</s:String>
     <s:String x:Key="Lang.Options.Labels.FontSize">Schriftgröße</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Versionstabelle aktuell halten:</s:String>
-    <s:String x:Key="Lang.Options.Labels.AutoUpdate">Nach Updates suchen:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableDisabledHint">Lege zuerst den Spielpfad fest, um dies zu nutzen.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableEnabledHint">Wenn das Spiel gepatcht wird, muss ModAPI die neue Version erkennen. Aktiviere dies, damit diese Information automatisch aktuell bleibt.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamEnabledHint">Wenn aktiviert, wird der Steam-Installationspfad automatisch erkannt und das Spiel über Steam gestartet. Steam-Overlay wird unterstützt.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamDisabledHint">Wenn deaktiviert, kannst du den Steam-Pfad manuell eingeben.</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogEnabledHint">Wenn aktiviert, wird eine ausführlichere Protokolldatei (ModAPI.dev.log) erstellt, die bei der Fehlersuche hilft.</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogDisabledHint">Wenn deaktiviert, wird nur das normale Protokoll (ModAPI.log) geführt.</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartEnabledHint">Wenn aktiviert, wird das vorherige Protokoll bei jedem Start von ModAPI gelöscht.</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartDisabledHint">Wenn deaktiviert, wird weiter an das vorherige Protokoll angehängt.</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopEnabledHint">Wenn aktiviert, bleibt das ModAPI-Fenster immer über anderen Fenstern.</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopDisabledHint">Wenn deaktiviert, können andere Fenster es beim Anklicken überdecken.</s:String>
+    <s:String x:Key="Lang.Options.Buttons.Update">Update</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steamanbindung:</s:String>
     <s:String x:Key="Lang.Options.Labels.DevLog">Entwicklerprotokoll</s:String>
     <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Protokolle beim Start leeren</s:String>
@@ -426,6 +437,7 @@
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Speichern</s:String>
     <s:String x:Key="Lang.Options.Labels.PathReset">Zurücksetzen</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Steam-Installationspfad</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPathManagedByConnectionHint">Der Pfad wird automatisch verwaltet, solange die Steamverknüpfung aktiviert ist. Deaktiviere sie, um ihn manuell festzulegen.</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steam nicht gefunden</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam ist nicht installiert. Bitte konfigurieren Sie Steam im Settings-Tab.</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">OK</s:String>

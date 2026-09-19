@@ -63,6 +63,7 @@
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">오류!: 스팀이 닫혀 있습니다!</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">업데이트 다운로드중...</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">업데이트 압축푸는중...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Done">업데이트 준비 완료 — 아래 변경 내역을 확인 후 완료를 눌러주세요.</s:String>
 
     <s:String x:Key="Lang.Windows.CreateModProject.Title">Mod 프로젝트 생성</s:String>
     <s:String x:Key="Lang.Windows.CreateModProject.Text">새로운 프로젝트의 ID를 입력하십시오. ID는 고유해야하며 "_" 영/숫자 문자를 포함 할 수 있습니다.</s:String>
@@ -102,20 +103,20 @@
     <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">아니오</s:String>
 
     <s:String x:Key="Lang.Windows.FirstSetup.Title">환영합니다!</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Text">ModAPI 첫 시작화면입니다. 시작하기전에 다음과 같은 옵션을 확인해야합니다:</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">자동-업데이트</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">자동 업데이트 기능을 사용하면 ModAPI의 새 버전이 나왔을 때 정보를 얻을 수 있습니다. 이 부분이 체크 되어 있으면 새로운 업데이트를 적용 할 수 있습니다.</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Steam">스팀 연결</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">스팀에 접속되어 있으면 게임 스팀 기능 (예를 들어, 스팀 오버레이)에 액세스 할 수 있습니다. 손상되었거나 잘못되어 있다면 ModAPI는 게임 파일을 복원 할 수 있습니다.</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">버전 테이블 업데이트</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">버전 테이블 업데이트를 활성화하면 ModAPI의 버전 테이블을 다운로드합니다. 새로운 업데이트를 수동으로 업데이트하지 않고 자동으로 ModAPI에 의해 인식되는것을 의미합니다. 새로운 버전이 적용되기까지 최대 24 시간이 걸릴 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">ModAPI 첫 시작화면입니다. 아래에서 이번 버전의 주요 변경 사항을 확인해보세요. 스팀 연결 / 버전 테이블 유지 같은 옵션은 설정 탭에서 언제든 켤 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewTitle">이번 버전에서 달라진 점</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewText" xml:space="preserve">■ 새로운 기능&#10;&#10;▸ ModAPI 자체 업데이트 기능&#10;• 설정 탭 "업데이트" 버튼으로 최신 버전을 확인하고 설치합니다.&#10;• 다운로드 후 변경 내역을 먼저 보여주고, "완료"를 눌러야 재시작됩니다.&#10;• 전체 흐름을 직접 테스트해서 정상 동작을 확인했습니다.&#10;&#10;▸ 첫 실행 화면 재설계&#10;• "스팀 연결" / "버전 테이블 유지" 질문을 없앴습니다 — 설정 탭에서 언제든 켤 수 있어서 중복이었습니다.&#10;• 대신 "이번 버전에서 달라진 점"을 보여주는 스크롤 영역을 추가했습니다.&#10;• 환영 탭 버튼으로 이 화면을 언제든 다시 열어볼 수 있습니다.&#10;&#10;▸ 체크박스 4종에 ON/OFF 안내 추가&#10;• "스팀 연결", "개발자 로그", "로그 초기화", "항상 위에"에 켜짐/꺼짐 설명 툴팁을 추가했습니다.&#10;&#10;■ 업데이트(개선)&#10;&#10;▸ "버전 테이블 유지" 옵션&#10;• 게임 경로가 없으면 비활성화되고, 왜 그런지 툴팁으로 설명합니다.&#10;• 라벨을 "최신버전 유지"에서 "버전 테이블 유지"로 바꿔 업데이트 버튼과 헷갈리지 않게 했습니다.&#10;• 안내 문구를 쉬운 말투로 다듬고, 왜 필요한지도 짧게 알려줍니다.&#10;&#10;▸ "스팀 연결" 사용성&#10;• 켜면 스팀 설치 경로를 자동으로 찾아 채워 넣습니다(다른 드라이브 설치도 인식).&#10;&#10;▸ 게임 실행 시 안내&#10;• 서명 없는 게임(Green Hell 등)에서 매번 뜨던 확인 팝업을 없앴습니다.&#10;• 실제 손상·변조는 지금처럼 계속 차단합니다.&#10;• 검증 흐름도를 README에 추가했습니다.&#10;&#10;▸ 테마 시스템 정리 (클래식 ↔ Fluent 통합)&#10;• 클래식과 Fluent 9종 테마의 컨트롤 구성을 전수 비교했습니다.&#10;• 슬라이더, 다국어 입력란을 9개 테마 모두에 추가했습니다(공통 스타일 파일로 일괄 관리).&#10;• 목록 구분선(GridSplitter)을 클래식 테마에도 추가했습니다.&#10;• 비활성화된 버튼이 흐릿하게 보이도록 통일했습니다.&#10;&#10;▸ 환영 팝업 문구 갱신&#10;• 이 요약 문구를 릴리즈 노트 기준으로 다시 작성했습니다(수작업 관리, 자동 연동 아님).&#10;&#10;■ 수정된 것(버그)&#10;&#10;• 클래식 테마에 툴팁 디자인이 없어 흰색 기본 스타일로 보이던 문제를 고쳤습니다.&#10;• 여러 팝업에서 텍스트 줄바꿈/잘림 문제를 정리했습니다.&#10;• 테마별 환영 팝업 창 크기 버그를 고쳤습니다.&#10;• 클래식 테마 환영 팝업 글자 안 보이던 문제를 수정했습니다.&#10;• 스팀 연결 켜짐 상태에서 초기화 버튼이 비활성화 안 되던 버그를 고쳤습니다.&#10;• 요약 텍스트 고정 폭 때문에 스크롤바 앞에 남던 여백을 없앴습니다.&#10;• 죽은 코드는 삭제 대신 주석으로 보존했습니다.&#10;• 미사용 잔재 파일 2개를 정리했습니다.</s:String>
     <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">계속</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Close">닫기</s:String>
 
 
     <s:String x:Key="Lang.Windows.UpdateAvailable.Title">사용 가능한 업데이트!</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Text">새로운 버전인 ModAPI 가 있습니다. 지금 업데이트를 시작하시겠습니까?</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">지금 업데이트</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">나중에 업데이트</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Title">최신 버전입니다</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Text">현재 최신 버전의 ModAPI를 사용하고 있습니다.</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Buttons.OK">확인</s:String>
 
 
     <s:String x:Key="Lang.Languages.EN">영어</s:String>
@@ -189,7 +190,7 @@
     <s:String x:Key="Lang.Mods.Labels.Buttons">단축키</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">호환성:</s:String>
 
-    <s:String x:Key="Lang.Mods.Welcome.Title0">환영합니다!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Buttons.OpenWelcomePopup">환영합니다</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text0">게임에 모드를 적용하려면 먼저 modAPI를 활성화해야 합니다. 그렇게 하려면 모드 이름 왼쪽에 있는 둥근 버튼을 클릭해야 합니다. 키 바인딩을 변경하려면 목록에서 모드를 선택하고 "설정" 탭으로 전환하세요.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">mod 와 게임을 시작하려면 오른쪽 하단에 있는 "게임 시작" 을 클릭해야 합니다.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">오류?</s:String>
@@ -269,8 +270,18 @@
     <s:String x:Key="Lang.Welcome.Tab">환영</s:String>
     <s:String x:Key="Lang.Options.Labels.Language">언어 선택:</s:String>
     <s:String x:Key="Lang.Options.Labels.FontSize">폰트 크기</s:String>
-    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">최신버전 유지:</s:String>
-    <s:String x:Key="Lang.Options.Labels.AutoUpdate">업데이트 검색:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">버전 테이블 유지:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableDisabledHint">게임 경로를 먼저 설정해야 사용할 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableEnabledHint">게임이 패치되면 ModAPI가 새 버전인지 확인해야 하는데, 켜두면 이 정보를 자동으로 최신 상태로 유지합니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamEnabledHint">켜두면 스팀 설치 경로를 자동으로 찾아서 스팀을 통해 게임을 실행합니다. 스팀 오버레이도 쓸 수 있습니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamDisabledHint">꺼두면 스팀 경로를 직접 입력해서 사용합니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogEnabledHint">켜두면 더 자세한 로그 파일(ModAPI.dev.log)이 따로 만들어집니다. 오류가 생겼을 때 원인 파악에 도움됩니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogDisabledHint">꺼두면 기본 로그(ModAPI.log)만 남깁니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartEnabledHint">켜두면 ModAPI를 실행할 때마다 이전 로그를 지우고 새로 시작합니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartDisabledHint">꺼두면 이전 로그에 계속 이어서 기록합니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopEnabledHint">켜두면 ModAPI 창이 다른 창보다 항상 위에 떠 있습니다.</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopDisabledHint">꺼두면 다른 창을 클릭했을 때 뒤로 갑니다.</s:String>
+    <s:String x:Key="Lang.Options.Buttons.Update">업데이트</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">스팀 연결:</s:String>
     <s:String x:Key="Lang.Options.Labels.DevLog">개발자 로그</s:String>
     <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">로그 초기화</s:String>
@@ -279,6 +290,7 @@
     <s:String x:Key="Lang.Options.Labels.GamePathSave">저장</s:String>
     <s:String x:Key="Lang.Options.Labels.PathReset">초기화</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">스팀 설치 경로</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPathManagedByConnectionHint">스팀 연결이 켜져 있으면 경로가 자동으로 관리됩니다. 직접 지정하려면 스팀 연결을 꺼주세요.</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">스팀을 찾을 수 없음</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">설치된 스팀이 없습니다. Settings탭에서 스팀을 설정해주십시오.</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">확인</s:String>

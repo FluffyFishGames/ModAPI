@@ -43,6 +43,35 @@
     <SolidColorBrush x:Key="FluentCardBrush" Color="#20FFFFFF" />
     <SolidColorBrush x:Key="FluentBgTertiaryBrush" Color="#30FFFFFF" />
     <FontFamily x:Key="FluentIconFont">Segoe UI Symbol</FontFamily>
+
+    <!-- ===== Tooltip (classic 테마 전용 — FluentStyles*.xaml에도 동일한 스타일이 있지만,
+         classic 테마는 그 파일들을 전혀 로드하지 않아서 여기 없으면 시스템 기본 흰색
+         툴팁으로 보인다. App.xaml.cs ApplyTheme() 참고) ===== -->
+    <Style TargetType="{x:Type ToolTip}">
+        <!-- FluentCardBrush/FluentBgTertiaryBrush는 반투명이라(카드가 배경 이미지 위에 겹쳐지는
+             용도) 툴팁처럼 화면 아무 곳에나 뜨는 팝업에는 부적합 — 불투명 색을 직접 지정 -->
+        <Setter Property="Background" Value="#2D2D2D" />
+        <Setter Property="Foreground" Value="{StaticResource FluentTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource FluentBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="10,6,10,8" />
+        <Setter Property="FontFamily" Value="{StaticResource NormalFont}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToolTip}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="16" Opacity="0.4" ShadowDepth="2" Direction="270" />
+                        </Border.Effect>
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="FluentCloseButton" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
@@ -494,6 +523,9 @@
     </Style>
 
 
+    <!-- 죽은 코드 (사용 안 함, v2.0.9623 확인): LoginWindow.xaml에서만 참조하는데
+         LoginWindow 자체를 앱 어디서도 생성(new)하지 않음 — 로그인 시스템은
+         v2.0.9400에서 이미 제거됨. 원작자의 유산으로 삭제하지 않고 주석으로 보존.
     <Style TargetType="{x:Type PasswordBox}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -549,6 +581,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    -->
 
     <Style x:Key="ListItem" TargetType="{x:Type ListBoxItem}">
         <Setter Property="Foreground" Value="#ffffff" />
@@ -605,6 +638,9 @@
     </Style>
 
 
+    <!-- 죽은 코드 (사용 안 함, v2.0.9623 확인): 실제 XAML에서 Style="{StaticResource ModProjectButton}"
+         참조나 <Components:ModProjectButton> 요소 사용이 전혀 없음. 원작자의 유산으로
+         삭제하지 않고 주석으로 보존.
     <Style TargetType="{x:Type Components:ModProjectButton}">
         <Setter Property="Foreground" Value="#222222" />
         <Setter Property="Template">
@@ -663,7 +699,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+    -->
+
     <Style x:Key="ListScrollViewer" TargetType="{x:Type ScrollViewer}">
         <Setter Property="Template">
             <Setter.Value>
@@ -1294,9 +1331,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}" x:Name="Parent">
-                    <Grid>
+                    <Grid x:Name="RootGrid">
                         <Components:Scale9 x:Name="Scale9Control"
-                                       NormalSource="/resources/textures/NewGUI/Button_Normal.png" 
+                                       NormalSource="/resources/textures/NewGUI/Button_Normal.png"
                                        HoverSource="/resources/textures/NewGUI/Button_Hover.png" 
                                        ActiveSource="/resources/textures/NewGUI/Button_Active.png" 
                                        Border="12, 10, 12, 16"
@@ -1341,6 +1378,15 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- classic 테마의 NormalButton엔 원래 IsEnabled=False에 대한 시각적
+                             처리가 전혀 없어서, IsEnabled 바인딩으로 비활성화해도 겉보기엔
+                             아무 변화가 없었다(FluentStyles*.xaml에는 이미 있던 처리) —
+                             흐릿하게 만들어서 비활성화 상태임을 알 수 있게 한다. -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="RootGrid" Property="Opacity" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -1400,6 +1446,9 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!-- 죽은 코드 (사용 안 함, v2.0.9623 확인): 소셜 로그인 버튼 4종(Facebook/Twitter/
+         Youtube/Twitch) — 로그인 시스템이 v2.0.9400에서 제거되면서 함께 미사용이 됨.
+         실제 XAML 참조 없음. 원작자의 유산으로 삭제하지 않고 주석으로 보존.
     <Style TargetType="{x:Type Button}" x:Key="FacebookButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -1537,6 +1586,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+    -->
+
     <Style TargetType="{x:Type Button}" x:Key="MinimizeButton">
         <Setter Property="Template">
             <Setter.Value>
@@ -2257,6 +2308,11 @@
     </Style>
 
 
+    <!-- 죽은 코드 (사용 안 함, v2.0.9623: 아래 flat 디자인 Slider로 교체되며 미사용이 됨):
+         SliderButtonStyle/SliderThumbStyle/HorizontalSlider/VerticalSlider(Scale9 이미지 기반).
+         사용자가 Fluent(라이트 등) 테마의 슬라이더 디자인을 보고 classic 테마도 동일한
+         플랫 디자인으로 통일해 달라고 요청해서 교체함 — 원작자의 유산으로 삭제하지 않고
+         주석으로 보존.
     <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -2270,7 +2326,12 @@
             </Setter.Value>
         </Setter>
     </Style>
+    -->
 
+    <!-- 죽은 코드 (사용 안 함, v2.0.9623 확인): TimeSliderThumbStyle/TimeHorizontalSlider/
+         TimeSlider(일출-일몰 게이지용 sunThumb/sunMeter 이미지 슬라이더로 추정)는
+         Style="{StaticResource TimeSlider}"로 실제 사용하는 곳이 앱 어디에도 없음
+         (자기들끼리만 서로 참조). 원작자의 유산으로 삭제하지 않고 주석으로 보존.
     <Style x:Key="TimeSliderThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -2280,7 +2341,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Components:Scale9 Grid.Row="1" x:Name="Scale9Control"
-                                            NormalSource="/resources/textures/NewGUI/sunThumb.png" 
+                                            NormalSource="/resources/textures/NewGUI/sunThumb.png"
                                             Border="4"
                                             Overflow="0, 4, 0, 4"
                                             InnerPadding="0"
@@ -2292,7 +2353,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+    -->
+
+    <!-- 죽은 코드 (사용 안 함, v2.0.9623): SliderThumbStyle/HorizontalSlider/VerticalSlider/
+         (기존 implicit Slider 스타일) — 위쪽 flat 디자인 Slider로 교체되며 미사용이 됨.
+         원작자의 유산으로 삭제하지 않고 주석으로 보존.
     <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -2341,11 +2406,10 @@
         </Setter>
     </Style>
 
-    <!--Template when the orientation of the Slider is Horizontal.-->
     <ControlTemplate x:Key="HorizontalSlider" TargetType="{x:Type Slider}">
         <Grid>
             <Components:Scale9 x:Name="Scale9Control"
-                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Background.png" 
+                                            NormalSource="/resources/textures/NewGUI/HorizontalScrollbar_Background.png"
                                             Border="10, 0, 10, 0"
                                             Overflow="0, 0, 0, 0"
                                             InnerPadding="0"
@@ -2383,10 +2447,9 @@
         </Grid>
     </ControlTemplate>
 
-    <!--Template when the orientation of the Slider is Vertical.-->
     <ControlTemplate x:Key="VerticalSlider" TargetType="{x:Type Slider}">
         <Grid>
-            
+
             <Track x:Name="PART_Track">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
@@ -2401,7 +2464,7 @@
         </Grid>
     </ControlTemplate>
 
-    <Style TargetType="{x:Type Slider}">
+    <Style x:Key="OldSliderStyleUnused" TargetType="{x:Type Slider}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Style.Triggers>
@@ -2417,8 +2480,96 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    -->
+
+    <!-- Slider: Fluent 테마(FluentStylesShared.xaml)와 동일한 Border/Track 기반 플랫
+         디자인으로 통일 (v2.0.9623). classic 팔레트에 맞춰 트랙은 반투명 흰색, 손잡이는
+         금색 계열로 배색했다. -->
+    <Style x:Key="ClassicSliderThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Ellipse x:Name="Knob" Fill="#B8963E" Stroke="#8A6F2E" StrokeThickness="1" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Knob" Property="Fill" Value="#D4B15A" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ClassicSliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="ClassicHorizontalSlider" TargetType="{x:Type Slider}">
+        <Grid VerticalAlignment="Center" Height="20">
+            <Border Height="4" VerticalAlignment="Center" Background="#40FFFFFF" CornerRadius="2" />
+            <Track x:Name="PART_Track" VerticalAlignment="Center">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ClassicSliderRepeatButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource ClassicSliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ClassicSliderRepeatButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ClassicVerticalSlider" TargetType="{x:Type Slider}">
+        <Grid HorizontalAlignment="Center" Width="20">
+            <Border Width="4" HorizontalAlignment="Center" Background="#40FFFFFF" CornerRadius="2" />
+            <Track x:Name="PART_Track" HorizontalAlignment="Center" Orientation="Vertical">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ClassicSliderRepeatButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource ClassicSliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource ClassicSliderRepeatButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type Slider}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="Template" Value="{StaticResource ClassicHorizontalSlider}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="MinWidth" Value="21" />
+                <Setter Property="MinHeight" Value="104" />
+                <Setter Property="Template" Value="{StaticResource ClassicVerticalSlider}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
 
+    <!-- 죽은 코드 (사용 안 함): TimeSlider — 위 TimeSliderThumbStyle 참고.
     <Style TargetType="{x:Type Slider}" x:Key="TimeSlider">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -2430,6 +2581,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    -->
 
 
     <Style TargetType="{x:Type Components:Scale9}">
@@ -3123,5 +3275,11 @@
         </Setter>
     </Style>
 
+    <!-- GridSplitter: Fluent 테마들엔 이미 있었지만 classic엔 없어서 기본 시스템
+         스타일(회색 사각형)로 표시되던 것을 보정 (v2.0.9623). MainWindow.xaml의
+         모드 목록/버전 목록 사이 구분자에서 실제로 쓰인다. -->
+    <Style TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="#40FFFFFF" />
+    </Style>
 
 </ResourceDictionary>

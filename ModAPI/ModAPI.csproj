@@ -213,6 +213,9 @@
     <Compile Include="Windows\SubWindows\ThemeRestartNotice.xaml.cs">
       <DependentUpon>ThemeRestartNotice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SubWindows\NoUpdateAvailable.xaml.cs">
+      <DependentUpon>NoUpdateAvailable.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SubWindows\ThemeConfirm.xaml.cs">
       <DependentUpon>ThemeConfirm.xaml</DependentUpon>
     </Compile>
@@ -413,6 +416,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\SubWindows\NoUpdateAvailable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\SubWindows\ThemeConfirm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -464,15 +471,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\FluentStylesShared.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\FluentStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\FluentStylesLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\FluentStylesClassic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

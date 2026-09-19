@@ -1,0 +1,225 @@
+<!--
+    ModAPI v2.0 - Fluent Shared Styles (v2.0.9623)
+    9개 Fluent 계열 테마(FluentStyles*.xaml)가 공통으로 병합(MergedDictionaries)하는
+    파일. classic 테마에만 있고 Fluent 테마에는 없던 컨트롤 스타일 중, 실제로
+    앱에서 사용 중인 것(Slider, MultilingualTextField)을 여기 한 곳에만 정의해서
+    9개 파일에 중복 작성하지 않는다 — 색상 하나 고칠 때도 여기 한 곳만 고치면 됨.
+
+    색상은 전부 DynamicResource로 참조한다 — 이 파일 자체엔 FluentAccentBrush 같은
+    색상 리소스가 없고, 이 파일을 병합하는 각 FluentStyles*.xaml이 자기 팔레트를
+    갖고 있으므로 StaticResource로는 못 찾는다. DynamicResource는 실행 시점에
+    Application.Resources 전체(현재 적용된 테마 포함)에서 찾기 때문에 테마별로
+    자동으로 색이 바뀐다.
+    -->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Components="clr-namespace:ModAPI.Components"
+                    xmlns:ComponentsInputs="clr-namespace:ModAPI.Components.Inputs">
+
+    <!-- ===== Slider (설정 탭 — 모드 목록/프로젝트 목록 너비 슬라이더에서 사용) ===== -->
+    <Style x:Key="FluentSliderThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Ellipse x:Name="Knob"
+                             Fill="{DynamicResource FluentAccentBrush}"
+                             Stroke="{DynamicResource FluentAccentDarkBrush}"
+                             StrokeThickness="1" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Knob" Property="Fill" Value="{DynamicResource FluentAccentLightBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FluentSliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="FluentHorizontalSlider" TargetType="{x:Type Slider}">
+        <Grid VerticalAlignment="Center" Height="20">
+            <Border Height="4" VerticalAlignment="Center"
+                    Background="{DynamicResource FluentBorderBrush}"
+                    CornerRadius="2" />
+            <Track x:Name="PART_Track" VerticalAlignment="Center">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource FluentSliderRepeatButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource FluentSliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource FluentSliderRepeatButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="FluentVerticalSlider" TargetType="{x:Type Slider}">
+        <Grid HorizontalAlignment="Center" Width="20">
+            <Border Width="4" HorizontalAlignment="Center"
+                    Background="{DynamicResource FluentBorderBrush}"
+                    CornerRadius="2" />
+            <Track x:Name="PART_Track" HorizontalAlignment="Center" Orientation="Vertical">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource FluentSliderRepeatButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource FluentSliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource FluentSliderRepeatButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type Slider}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="MinWidth" Value="104" />
+                <Setter Property="MinHeight" Value="21" />
+                <Setter Property="Template" Value="{StaticResource FluentHorizontalSlider}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="MinWidth" Value="21" />
+                <Setter Property="MinHeight" Value="104" />
+                <Setter Property="Template" Value="{StaticResource FluentVerticalSlider}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ===== MultilingualTextField (개발 탭 — 모드 이름/설명 다국어 입력란) =====
+         원본(classic)은 ComboBox를 상속하는 커스텀 컨트롤이며, 구조(Popup,
+         ToggleButton, IsDropDownOpen 바인딩, CurrentText 바인딩)는 그대로 유지하고
+         Scale9 이미지 스킨만 Fluent의 Border 기반 플랫 스타일로 교체한다. -->
+    <Style TargetType="{x:Type ComponentsInputs:MultilingualTextField}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="AllowDrop" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource FluentTextPrimaryBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComponentsInputs:MultilingualTextField}">
+                    <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" x:Name="root">
+                        <Border x:Name="Chrome" Height="30"
+                                Background="{DynamicResource FluentSurfaceBrush}"
+                                BorderBrush="{DynamicResource FluentBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="6,0,2,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="16" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter ClipToBounds="True" Width="30" Grid.Column="0"
+                                                       Content="{TemplateBinding SelectionBoxItem}"
+                                                       ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                       ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                       HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    <Path Grid.Column="1" Width="8" Height="4"
+                                          Stretch="Fill"
+                                          Fill="{DynamicResource FluentTextSecondaryBrush}"
+                                          Data="M0,0 L8,0 L4,5 Z"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <ToggleButton Grid.ColumnSpan="2"
+                                                  Background="Transparent"
+                                                  HorizontalAlignment="Stretch"
+                                                  VerticalAlignment="Stretch"
+                                                  Name="ToggleButton"
+                                                  Focusable="False"
+                                                  IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ClickMode="Press">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border Background="{TemplateBinding Background}" />
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+                                </Grid>
+                                <TextBox x:Name="PART_EditableTextBox"
+                                         Grid.Column="1"
+                                         Margin="0,0,8,0"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="{DynamicResource FluentTextPrimaryBrush}"
+                                         VerticalContentAlignment="Center"
+                                         Text="{Binding Path=CurrentText,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent},UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <Popup VerticalOffset="2"
+                               Name="Popup"
+                               Placement="Bottom"
+                               Width="{TemplateBinding ActualWidth}"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Slide">
+                            <Border Name="DropDown"
+                                    SnapsToDevicePixels="True"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    Background="{DynamicResource FluentCardBrush}"
+                                    BorderBrush="{DynamicResource FluentBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Margin="0,0,0,4">
+                                <Border.Effect>
+                                    <DropShadowEffect ShadowDepth="2" Direction="270" Color="Black" Opacity="0.4" BlurRadius="8" />
+                                </Border.Effect>
+                                <ScrollViewer SnapsToDevicePixels="True" Margin="2">
+                                    <StackPanel Orientation="Vertical" IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- DynamicResource 브러시는 앱 전체가 같은 인스턴스를 공유하므로
+                             Storyboard로 직접 애니메이션하면 다른 컨트롤 색까지 같이
+                             바뀌는 부작용이 생긴다 — 그래서 Storyboard 대신 Setter로
+                             다른 브러시 리소스를 통째로 교체하는 방식을 쓴다. -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource FluentAccentBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource FluentAccentBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="root" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

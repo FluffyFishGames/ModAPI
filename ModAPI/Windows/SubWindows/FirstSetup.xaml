@@ -25,43 +25,64 @@
         xmlns:Utils="clr-namespace:ModAPI.Utils" 
         x:Name="Window"
         Style="{StaticResource SubWindow}"
+        SizeToContent="Height"
         Height="400" Width="600" MaxWidth="600">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="300" MaxWidth="{Binding ElementName=Window,Path=ActualWidth}" />
-        </Grid.ColumnDefinitions>
+    <!-- classic(기본) 테마의 SubWindow 틀(Window.png, Scale9)은 반투명 이미지라 뒤로
+         비치는데, 이 팝업은 텍스트 위주라 가독성이 떨어진다 — 공용 창틀(다른 모든
+         팝업이 같이 씀)은 그대로 두고, 이 팝업의 콘텐츠 영역에만 불투명 배경을 깐다.
+         임의 색 대신, 앱의 다른 카드들과 똑같이 쓰이는 PanelCenter 텍스처를 그대로
+         재사용해서 테마와 정확히 일치하는 배경이 되도록 한다(테마마다 PanelCenter
+         스타일 자체가 다르게 정의되어 있어 자동으로 맞는 걸로 적용됨). -->
+    <ContentControl Style="{StaticResource PanelCenter}">
+    <!-- 바깥쪽 Grid의 컬럼을 Window.ActualWidth에 바인딩하던 코드가 있었는데, 테마마다
+         SubWindow 템플릿 구조가 달라서 측정되는 ActualWidth가 들쭉날쭉해지고, 그 값이
+         550px보다 작게 나오는 테마에서는 카드가 통째로 잘려 보이는 원인이 됐다 — 이미
+         내부 요소들이 전부 고정 폭(아래)을 쓰고 있어서 이 바인딩 자체가 불필요하므로
+         제거한다. 창 자체도 이제 SizeToContent="Height"로 가로는 항상 600 고정이라
+         내부 고정폭들도 그 기준(600 - 좌우 여백)으로 안전하게 맞춘다. -->
+    <Grid Margin="20,16,20,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource NormalLabel}" Margin="0, 0, 0, 5" TextWrapping="Wrap" Utils:Language.Key="Text" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="false" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="AutoUpdate" />
-                <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
-                <TextBlock  Style="{StaticResource NormalLabel}" Utils:Language.Key="AutoUpdate" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
-            </StackPanel>
-            <TextBlock Style="{StaticResource NormalLabel}" TextWrapping="Wrap" Utils:Language.Key="AutoUpdateText" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="false" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseSteam" />
-                <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE7F8;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
-                <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="Steam" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
-            </StackPanel>
-            <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="SteamText" TextWrapping="Wrap" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="false" VerticalAlignment="Center" Margin="0, 5, 0, 0" x:Name="UseAutoUpdateVersions" />
-                <TextBlock VerticalAlignment="Center" Margin="0,0,0,0" Text="&#xE895;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
-                <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="UpdateVersions" VerticalAlignment="Center" Margin="5, 9, 0, 0" Height="30" FontSize="20" FontWeight="Bold" />
-            </StackPanel>
-            <TextBlock Style="{StaticResource NormalLabel}" Utils:Language.Key="UpdateVersionsText" TextWrapping="Wrap" />
+            <TextBlock x:Name="TextBlock1" Style="{StaticResource NormalLabel}"
+                       Margin="0, 0, 0, 10" TextWrapping="Wrap" Utils:Language.Key="Text" />
+            <TextBlock x:Name="WhatsNewTitleBlock" Style="{StaticResource NormalLabel}"
+                       Margin="0, 0, 0, 5" TextWrapping="Wrap" FontWeight="Bold" FontSize="16" Utils:Language.Key="WhatsNewTitle" />
+            <!-- 스팀 연결 / 버전 테이블 유지 체크박스는 설정 탭에 이미 있어서 여기서는 제거 —
+                 대신 최신 버전 요약을 보여준다. 폭 고정은 순수 레이아웃 문제라 모든 테마에
+                 공통으로 필요하다(OperationPending에서 확인된 것과 동일한 이유). 배경/글자색은
+                 기본적으로 테마 시스템(PanelCenter/NormalLabel)에 맡기되, classic 테마에서만
+                 코드 비하인드(ApplyClassicThemeTextFix)로 가독성 보정을 추가로 적용한다. -->
+            <!-- 고정 픽셀 값으로는 테마마다 못 맞춘다 — SubWindow 템플릿이 차지하는 여백이
+                 테마마다 다르다(classic: ContentPresenter Margin 16×2=32, Fluent: 바깥쪽
+                 Border Margin 16×2=32 + ContentPresenter Margin 20×2=40 = 72, 거의 2배
+                 차이). 고정 폭을 Fluent 기준으로 맞추면 classic엔 여백이 남고, classic
+                 기준으로 맞추면 Fluent에서 오른쪽(스크롤바 자리)이 표시 영역 밖으로
+                 밀려나 안 보이게 된다. HorizontalAlignment을 지정하지 않으면(기본값
+                 Stretch) StackPanel이 실제 남는 폭에 맞춰 자동으로 채워주므로, 테마별
+                 여백 차이와 무관하게 항상 정확히 맞는다. -->
+            <Border x:Name="WhatsNewBorder" Height="220" Margin="0,0,0,0"
+                    Background="{DynamicResource FluentCardBrush}"
+                    BorderThickness="1" BorderBrush="{DynamicResource FluentBorderBrush}" CornerRadius="4">
+                <!-- 고정 Width를 준 TextBlock 대신, OperationPending.xaml에서 이미 검증된 방식대로
+                     ScrollViewer.Padding만 쓴다 — 고정 Width는 실제 사용 가능한 폭(Border 폭 -
+                     스크롤바 차지 폭)보다 좁게 잡히기 쉬워서 스크롤바 앞에 불필요한 여백이 남았다. -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="14">
+                    <TextBlock x:Name="WhatsNewTextBlock" TextWrapping="Wrap" Style="{StaticResource NormalLabel}"
+                               Utils:Language.Key="WhatsNewText" />
+                </ScrollViewer>
+            </Border>
         </StackPanel>
         <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="ConfirmButton" Margin="0" Style="{StaticResource NormalButton}" Click="ConfirmButton_Click">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="0,0,5,0" Text="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
-                    <TextBlock Utils:Language.Key="Buttons.Confirm" />
+                    <TextBlock x:Name="ConfirmButtonIcon" Margin="0,0,5,0" Text="&#xE8FB;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
+                    <TextBlock x:Name="ConfirmButtonText" Utils:Language.Key="Buttons.Confirm" />
                 </StackPanel>
             </Button>
         </StackPanel>
     </Grid>
+    </ContentControl>
 </SubWindows:BaseSubWindow>

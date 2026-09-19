@@ -66,6 +66,7 @@
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">錯誤!: Steam已關閉!</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">正在下載更新...</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">正在解壓更新...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Done">更新已就緒 — 請確認下方的變更內容後點擊完成。</s:String>
 
     <s:String x:Key="Lang.Windows.CreateModProject.Title">建立Mod專案</s:String>
     <s:String x:Key="Lang.Windows.CreateModProject.Text">輸入新專案的ID。ID必須唯一，只能包含英數字和「_」。</s:String>
@@ -105,20 +106,20 @@
     <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">否</s:String>
 
     <s:String x:Key="Lang.Windows.FirstSetup.Title">歡迎!</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Text">這是ModAPI的首次執行。在開始之前請檢查以下選項:</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">自動更新</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">啟用自動更新後，當有新版本ModAPI時會通知你。你可以一鍵套用更新。</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Steam連線</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Steam連線允許在遊戲中使用Steam功能(如Steam覆疊層)。如果遊戲檔案損壞或被修改，ModAPI也可以自動還原。</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">更新版本表</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">啟用版本表更新後，ModAPI會在啟動時下載版本表。遊戲新版本將被自動識別。新版本加入表中可能需要最長24小時。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">這是ModAPI的首次執行。請在下方查看此版本的新功能。Steam連線／保持版本表最新等選項可隨時在設定頁籤中開啟。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewTitle">此版本的新功能</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewText" xml:space="preserve">■ 新功能&#10;&#10;▸ ModAPI 自我更新功能&#10;• 設定頁籤新增了一個「更新」按鈕。點擊後會在 GitHub 上檢查最新版本，若有新版本會自動下載並解壓縮。&#10;• 下載完成後會先顯示變更內容(更新日誌)，只有按下「完成」後 ModAPI 才會重新啟動並套用新版本——不會未經確認就突然關閉。&#10;• 從實際下載到重新啟動的整個流程都已親自測試，確認可以正常運作。&#10;&#10;▸ 首次啟動畫面重新設計&#10;• 移除了首次啟動時出現的「Steam 連結」/「保持版本表最新」詢問——由於隨時可以在設定頁籤中開啟，這些問題是多餘的。&#10;• 取而代之的是一個可捲動的摘要區域，用來顯示「此版本的更新內容」。&#10;• 歡迎頁籤的標題變成了一個按鈕，方便日後隨時重新開啟此畫面(重新開啟時會顯示為「關閉」按鈕，且不會重新執行初始設定流程)。&#10;&#10;▸ 4 個核取方塊新增開/關說明文字&#10;• 與「保持版本表最新」一樣，設定頁籤中的「Steam 連結」、「開發者紀錄」、「啟動時清除紀錄」、「永遠置頂」核取方塊，現在滑鼠懸停時也會顯示說明文字，解釋開啟與關閉時分別會發生什麼事(已在全部 13 種語言中實作)。&#10;&#10;■ 改進&#10;&#10;▸ 「保持版本表最新」選項&#10;• 若未設定遊戲安裝路徑，此核取方塊現在會被停用(變灰)——以前即使在沒有路徑的情況下開啟也不會有任何效果，現在會立即依目前情況顯示是否可以開啟。&#10;• 滑鼠懸停時會顯示說明文字，解釋目前為何無法開啟，或開啟後會發生什麼事。&#10;• 韓文標籤已從「최신버전 유지」改為「버전 테이블 유지」，避免與新增的「更新」按鈕混淆。&#10;• 根據回饋，原說明文字對初次使用的使用者來說太難理解，因此改用更簡單的措辭重新撰寫，並簡短說明了「為什麼」需要這個功能(遊戲修補後會推出新版本，若 ModAPI 無法辨識就會出問題)：「遊戲修補後，ModAPI 需要確認是否為新版本——開啟此項會自動保持這項資訊為最新狀態。」&#10;&#10;▸ 「Steam 連結」的易用性&#10;• 開啟「Steam 連結」的瞬間，會自動從登錄檔中找到並填入 Steam 安裝路徑——即使 Steam 安裝在 C 磁碟以外的其他磁碟也能自動找到。&#10;&#10;▸ 遊戲啟動時的提示&#10;• 對於像 Green Hell 這類本來就沒有數位簽章的遊戲，移除了以往每次啟動遊戲都會彈出的「是否繼續？」警告。沒有簽章這件事本身並不能證明檔案已損壞。&#10;• 若遊戲檔案確實已損壞或遭竄改，仍會像以前一樣阻止執行並彈出警告——安全機制保持不變。&#10;• 在 README 中新增了一張流程圖，一目了然地呈現整個驗證過程，方便日後需要討論時參考。&#10;&#10;▸ 主題系統整理(經典 ↔ Fluent 系列統一)&#10;• 全面檢查了預設(經典)主題與後來製作的 Fluent 系列主題(深色、海洋、日落、北歐、柑橘、綻放、暗黑、星雲、明亮，共 9 種)是否擁有不同的控制項組合。&#10;• 將實際有在使用、但 Fluent 主題中缺少的功能(模組清單/專案清單寬度調整滑桿、模組名稱/說明的多語言輸入欄位)加入到全部 9 個主題中。為了避免每次改一個顏色都要分別修改 9 個地方，建立了一個共用樣式檔案，讓 9 個主題統一參照。&#10;• 反過來，Fluent 主題中原有、但經典主題缺少的清單大小調整分隔線(GridSplitter)樣式，也補到了經典主題中。&#10;• 在整個應用程式中，停用狀態的按鈕現在會顯示為淡色，讓人一眼就能看出「現在無法點擊」(預設經典主題先前缺少這種視覺效果，這次已補上)。&#10;&#10;▸ 歡迎彈出視窗「此版本的更新內容」更新&#10;• 首次啟動/重新開啟歡迎頁籤彈出視窗中的摘要文字，已依本次發行說明重新撰寫。&#10;• 此文字不會與 GitHub 發行頁面(英文)自動同步，是另外手動維護的文字——之後每次更新發行說明時，也會一併手動更新這份摘要。&#10;• 摘要方塊的寬高已固定(500×220)，內部有垂直捲軸，因此即使文字變長，彈出視窗本身的大小也會保持不變。&#10;&#10;■ 修復的問題(錯誤)&#10;&#10;• 修復了預設(經典)主題完全缺少工具提示設計的問題，導致新增的說明文字以純白色預設樣式顯示——此修復適用於經典主題下整個應用程式中的所有工具提示，而不僅是某一個彈出視窗。&#10;• 整理了多個彈出視窗中文字不換行、超出邊框被截斷顯示的問題。&#10;• 修復了在多個主題(包括深色系列)間切換測試時發現的歡迎彈出視窗大小錯誤，現在無論使用哪種主題，此畫面都會以正確的大小顯示。&#10;• 修復了預設(經典)主題的歡迎彈出視窗中文字不易看清的問題，僅針對該主題進行了修復(不影響其他主題)。&#10;• 修復了一個錯誤：「Steam 連結」開啟期間，手動輸入/瀏覽/儲存/重設路徑的區域本應被停用，但外觀上看不出被停用，實際上重設按鈕仍然可以被按下。&#10;• 歡迎彈出視窗摘要文字曾使用固定寬度(450px)，導致捲軸前方留有不必要的空白——已改為與更新檢查彈出視窗(OperationPending)中已驗證過的做法一致，不使用固定寬度，而是為捲動區域本身加上內距(Padding)，統一修復。&#10;• 在整理主題系統的過程中，發現了多處實際上未在任何地方使用的死程式碼(登入相關控制項、社群登入按鈕、未使用的滑桿等——登入系統已在先前版本中移除)。出於對原作者程式碼的尊重，沒有直接刪除，而是以註解方式停用保留，作為記錄。&#10;• 刪除了開發過程中遺留、實際上未連接到應用程式任何位置的 2 個舊檔案(重複的主題定義檔案、早期主題系統的試驗檔案)——如有需要，隨時可以從 git 歷史中復原。</s:String>
     <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">繼續</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Close">關閉</s:String>
 
 
     <s:String x:Key="Lang.Windows.UpdateAvailable.Title">有可用更新!</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Text">有新版本的ModAPI。是否立即更新?</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">立即更新</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">稍後更新</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Title">已是最新版本</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Text">您目前使用的是最新版本的 ModAPI。</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Buttons.OK">確定</s:String>
 
 
     <s:String x:Key="Lang.Languages.EN">英語</s:String>
@@ -192,7 +193,7 @@
     <s:String x:Key="Lang.Mods.Labels.Buttons">按鍵綁定</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">相容版本:</s:String>
 
-    <s:String x:Key="Lang.Mods.Welcome.Title0">歡迎!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Buttons.OpenWelcomePopup">歡迎!</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text0">要將Mod套用到遊戲，需要先啟用Mod。點擊Mod名稱左邊的圓形按鈕即可。要更改按鍵綁定，在清單中選擇一個Mod然後切換到「設定」標籤。</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">要啟動帶Mod的遊戲，只需點擊右下角的「開始遊戲」按鈕。</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">遇到錯誤?</s:String>
@@ -273,7 +274,17 @@
     <s:String x:Key="Lang.Options.Labels.Language">語言:</s:String>
     <s:String x:Key="Lang.Options.Labels.FontSize">字體大小</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">保持版本表最新:</s:String>
-    <s:String x:Key="Lang.Options.Labels.AutoUpdate">檢查更新:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableDisabledHint">請先設定遊戲路徑才能使用。</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableEnabledHint">遊戲更新修補程式後，ModAPI 需要辨識新版本。開啟後，這項資訊會自動保持最新。</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamEnabledHint">開啟後，會自動偵測 Steam 安裝路徑並透過 Steam 啟動遊戲，也支援 Steam 疊加層。</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamDisabledHint">關閉後，可以手動輸入 Steam 路徑。</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogEnabledHint">開啟後，會另外產生更詳細的紀錄檔(ModAPI.dev.log)，有助於排查錯誤原因。</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogDisabledHint">關閉後，只保留一般紀錄檔(ModAPI.log)。</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartEnabledHint">開啟後，每次啟動 ModAPI 都會清除先前的紀錄並重新開始。</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartDisabledHint">關閉後，會持續附加在先前的紀錄之後。</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopEnabledHint">開啟後，ModAPI 視窗會一直顯示在其他視窗之上。</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopDisabledHint">關閉後，點擊其他視窗時會被蓋住。</s:String>
+    <s:String x:Key="Lang.Options.Buttons.Update">更新</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam連線:</s:String>
     <s:String x:Key="Lang.Options.Labels.DevLog">開發者日誌</s:String>
     <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">啟動時清除日誌</s:String>
@@ -282,6 +293,7 @@
     <s:String x:Key="Lang.Options.Labels.GamePathSave">儲存</s:String>
     <s:String x:Key="Lang.Options.Labels.PathReset">重設</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Steam安裝路徑</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPathManagedByConnectionHint">Steam連線開啟時，路徑會自動管理。要手動設定請先關閉連線。</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">未找到Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">未安裝Steam。請在Settings標籤中配置Steam。</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">確定</s:String>

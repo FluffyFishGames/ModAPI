@@ -33,6 +33,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <Grid Margin="0, 0, 0, 0">
@@ -44,7 +45,21 @@
                 <ProgressBar x:Name="ProgressBar" Height="25" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Value="55" Grid.Row="1" BorderBrush="#FF7C7C7C" BorderThickness="0" />
             </Grid>
         </StackPanel>
-        <StackPanel Margin="0, 10, 0, 0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <!-- 완료 시점(100%)에만 채워지고 보이는 상세 목록 영역 — 기본은 숨김(다른 작업들은 영향 없음).
+             SubWindow 스타일이 SizeToContent="WidthAndHeight"라서(FluentStyles.xaml) 창이 내용에
+             맞춰 자동으로 커지는데, 폭을 여기서 직접 고정해야 줄바꿈 기준이 생긴다 — ProgressBar와
+             가로 길이가 정확히 일치하도록 ProgressBar.ActualWidth에 바인딩한다.
+             TextBox의 PART_ContentHost(내부 ScrollViewer)는 TextWrapping을 계속 무시하는
+             문제가 있어서, 읽기 전용 표시 용도로는 더 예측 가능한 TextBlock+ScrollViewer로 대체. -->
+        <Border x:Name="DetailsBorder" Grid.Row="1" Visibility="Collapsed" Margin="0,10,0,0"
+                Width="{Binding ElementName=ProgressBar,Path=ActualWidth}" Height="200" HorizontalAlignment="Left"
+                Background="{DynamicResource FluentCardBrush}"
+                BorderThickness="1" BorderBrush="{DynamicResource FluentBorderBrush}" CornerRadius="4">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8">
+                <TextBlock x:Name="DetailsTextBox" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" />
+            </ScrollViewer>
+        </Border>
+        <StackPanel Margin="0, 10, 0, 0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Margin="0,0,5,0" IsEnabled="False" x:Name="CancelButton" Style="{StaticResource NormalButton}" Click="CancelButton_Click">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0,0,5,0" Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />

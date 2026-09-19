@@ -8,6 +8,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Components="clr-namespace:ModAPI.Components">
 
+    <ResourceDictionary.MergedDictionaries>
+        <!-- Slider / MultilingualTextField 스타일은 9개 Fluent 테마가 공통으로
+             이 파일을 공유한다 (v2.0.9623). 색상은 이 파일 아래에 정의된
+             FluentAccentBrush 등을 DynamicResource로 참조하므로 테마별로 자동 반영된다. -->
+        <ResourceDictionary Source="pack://application:,,,/ModAPI;component/Themes/FluentStylesShared.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <!-- ===== Fluent Color Palette (Ocean) ===== -->
     <Color x:Key="FluentAccentColor">#16CABD</Color>
     <Color x:Key="FluentAccentLightColor">#2191FF</Color>

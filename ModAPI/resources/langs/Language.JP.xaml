@@ -66,6 +66,7 @@
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">エラー!: Steamが終了しました。</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">アップデートをダウンロード中...</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">アップデートを展開中...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Done">アップデートの準備ができました — 下の変更内容を確認して「完了」を押してください。</s:String>
 
     <s:String x:Key="Lang.Windows.CreateModProject.Title">Modプロジェクトを作成</s:String>
     <s:String x:Key="Lang.Windows.CreateModProject.Text">新しいプロジェクトのIDを入力してください。IDは一意で、英数字と「_」のみ使用できます。</s:String>
@@ -105,20 +106,20 @@
     <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">いいえ</s:String>
 
     <s:String x:Key="Lang.Windows.FirstSetup.Title">ようこそ!</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Text">ModAPIの初回起動です。開始する前に以下のオプションを確認してください:</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">自動アップデート</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">自動アップデートを有効にすると、ModAPIの新しいバージョンが利用可能になったときに通知されます。ワンクリックで新しいアップデートを適用できます。</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Steam接続</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Steam接続を有効にするとゲーム内でSteam機能(例:Steamオーバーレイ)を使用できます。ゲームファイルが破損または変更された場合、ModAPIが自動復元することもできます。</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">バージョンテーブルを更新</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">バージョンテーブルの更新を有効にすると、起動時にModAPIがバージョンテーブルをダウンロードします。これにより手動更新なしでゲームの新しいアップデートが自動認識されます。新しいバージョンがテーブルに追加されるまで最大24時間かかる場合があります。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">ModAPIの初回起動です。下のこのバージョンの新機能をご確認ください。Steam接続/バージョンテーブルを最新に保つなどのオプションは、設定タブからいつでも有効にできます。</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewTitle">このバージョンの新機能</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewText" xml:space="preserve">■ 新機能&#10;&#10;▸ ModAPI 自己アップデート機能&#10;• 設定タブに新しく「アップデート」ボタンが追加されました。押すと GitHub で最新バージョンを確認し、新しいバージョンがあれば自動的にダウンロード・展開まで行います。&#10;• ダウンロードが終わると、まず変更内容(更新履歴)が表示され、「完了」を押して初めて ModAPI が再起動し、新バージョンが適用されます — 確認なしに突然終了することはありません。&#10;• 実際のダウンロードから再起動までの一連の流れを自分でテストし、正常に動作することを確認しました。&#10;&#10;▸ 初回起動画面の再設計&#10;• 初回起動時に表示されていた「Steam連携」「バージョンテーブルを最新に保つ」の質問を廃止しました — 設定タブからいつでもオンにできるため、重複していました。&#10;• その代わりに、「このバージョンでの変更点」を表示するスクロール可能な要約エリアを追加しました。&#10;• ウェルカムタブのタイトルをボタンに変更し、後からでもこの画面を再度開けるようにしました(再度開いた場合は「閉じる」ボタンとして表示され、初回セットアップの手順が再実行されることはありません)。&#10;&#10;▸ 4種類のチェックボックスにオン/オフの説明文を追加&#10;• 「バージョンテーブルを最新に保つ」と同様に、設定タブの「Steam連携」「開発者ログ」「ログ初期化」「常に最前面」のチェックボックスにも、マウスを乗せるとオン/オフそれぞれで何が起こるかを説明するツールチップを追加しました(13言語すべてに反映済み)。&#10;&#10;■ 改善&#10;&#10;▸ 「バージョンテーブルを最新に保つ」オプション&#10;• ゲームのインストールパスが設定されていない場合、このチェックボックスは無効化(グレー表示)されるようになりました — 以前はパスがなくてもオンにできましたが効果がありませんでした。今は現在の状況に応じてオンにできるかどうかがすぐに分かります。&#10;• マウスを乗せると、なぜ今オンにできないのか、またはオンにすると何が起こるのかを説明するツールチップが表示されます。&#10;• 韓国語表記が「최신버전 유지」から「버전 테이블 유지」に変更され、新しく追加された「アップデート」ボタンと混同しないよう整理されました。&#10;• 説明文が初めて使うユーザーには難しすぎるというフィードバックを受け、より分かりやすい言葉で書き直し、「なぜ必要なのか」(ゲームがパッチされると新バージョンが出るが、ModAPIがそれを認識できないと困るということ)も簡潔に伝えるよう文言を補強しました:「ゲームがパッチされると ModAPI は新バージョンかどうかを確認する必要がありますが、オンにしておくとこの情報を自動的に最新の状態に保ちます。」&#10;&#10;▸ 「Steam連携」の使いやすさ&#10;• 「Steam連携」をオンにした瞬間、レジストリから Steam のインストールパスを自動的に検出して入力します — Cドライブ以外にインストールされていても自動的に見つけます。&#10;&#10;▸ ゲーム起動時の案内&#10;• Green Hellのように元々デジタル署名がないゲームで、起動するたびに表示されていた「続行しますか？」という警告を廃止しました。署名がないという事実自体は、ファイルが破損している証拠にはならないためです。&#10;• 実際にゲームファイルが破損または改ざんされている場合は、これまで通り実行をブロックして警告を表示します — 安全対策はそのまま維持されます。&#10;• この検証プロセス全体を一目で把握できるよう、フローチャートを README に追加し、今後関連する議論が必要な際に参照できるようにしました。&#10;&#10;▸ テーマシステムの整理(クラシック ↔ Fluent系統一)&#10;• これまでデフォルト(クラシック)テーマと、その後作成された Fluent系テーマ(ダーク、オーシャン、サンセット、ノルディック、シトラス、ブルーム、ディアブロ、ネビュラ、ライトの計9種)が異なるコントロール構成を持っていないか、全数検証しました。&#10;• 実際に使われているのに Fluent テーマにはなかったもの(Mod一覧/プロジェクト一覧の幅調整スライダー、Mod名/説明の多言語入力欄)を9テーマすべてに追加しました。色を1つ変更するたびに9箇所を個別に修正しなくて済むよう、共通スタイルファイルを1つ作成し、9テーマがそれを共有参照する構造にしました。&#10;• 逆に、Fluent テーマにはあってクラシックテーマにはなかったリストサイズ調整用の区切り線(GridSplitter)スタイルも、クラシックテーマに合わせて追加しました。&#10;• アプリ全体で、無効化されたボタンは今後淡く表示され、「今は押せない状態」であることが一目で分かるようになりました(デフォルトのクラシックテーマにはこの視覚効果自体がなかったため、今回追加しました)。&#10;&#10;▸ ウェルカムポップアップ「このバージョンでの変更点」の更新&#10;• 初回起動/ウェルカムタブ再オープン時のポップアップの要約文を、このリリースノートに基づいて書き直しました。&#10;• この文言は GitHub のリリースページ(英語)と自動連携しておらず、別途手動で管理しているテキストです — 今後もリリースノートを更新するたびに、この要約も併せて手動で更新します。&#10;• 要約ボックスは縦横のサイズが固定(500×220)されており、内部に縦スクロールがあるため、文章が長くなってもポップアップウィンドウ自体のサイズは変わりません。&#10;&#10;■ 修正された点(不具合)&#10;&#10;• デフォルト(クラシック)テーマにはツールチップのデザイン自体がなく、新しく追加した説明文が白い既定スタイルで表示されていた問題を修正しました — この修正は特定のポップアップ1つではなく、クラシックテーマを使用しているアプリ全体のすべてのツールチップに適用されます。&#10;• 複数のポップアップウィンドウでテキストが折り返されず、枠の外にはみ出して見えていた問題を整理しました。&#10;• 複数のテーマ(ダーク系を含む)を切り替えてテストする中で見つかったウェルカムポップアップのウィンドウサイズの不具合を修正し、どのテーマを使ってもこの画面が常に正しいサイズで表示されるようにしました。&#10;• デフォルト(クラシック)テーマのウェルカムポップアップで文字が見えにくかった問題も、そのテーマに限定して修正しました(他のテーマには影響ありません)。&#10;• 「Steam連携」がオンの間は、パスを手動で入力・参照・保存・初期化する領域が無効化されるべきところ、見た目上は無効化されているように見えないまま、実際には初期化ボタンが押せてしまっていた不具合を修正しました。&#10;• ウェルカムポップアップの要約テキストに固定幅(450px)を指定していたことが、スクロールバーの手前に不要な余白を残す原因でした — アップデート確認ポップアップ(OperationPending)ですでに検証済みの方式に合わせ、固定幅の代わりにスクロール領域自体に余白(Padding)を設ける方式に統一して修正しました。&#10;• テーマシステムの整理の過程で、実際にはどこからも使われていないデッドコードを複数発見しました(ログイン関連のコントロール、ソーシャルログインボタン、未使用のスライダーなど — ログインシステムはすでに以前のバージョンで削除済みです)。原作者のコードを尊重する観点から削除はせず、無効化した状態でコメントアウトし、記録として残しました。&#10;• 開発過程で残っていた、実際にはアプリのどこにも接続されていない古い残留ファイル2つ(重複したテーマ定義ファイル、初期テーマシステムの試作ファイル)は削除しました — 必要であればいつでも git の履歴から復元できます。</s:String>
     <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">続行</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Close">閉じる</s:String>
 
 
     <s:String x:Key="Lang.Windows.UpdateAvailable.Title">アップデートがあります!</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Text">ModAPIの新しいバージョンがあります。今すぐアップデートしますか?</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">今すぐアップデート</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">後でアップデート</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Title">最新バージョンです</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Text">現在、最新バージョンのModAPIを使用しています。</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Buttons.OK">OK</s:String>
 
 
     <s:String x:Key="Lang.Languages.EN">英語</s:String>
@@ -192,7 +193,7 @@
     <s:String x:Key="Lang.Mods.Labels.Buttons">キー割り当て</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">対応バージョン:</s:String>
 
-    <s:String x:Key="Lang.Mods.Welcome.Title0">ようこそ!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Buttons.OpenWelcomePopup">ようこそ!</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text0">ゲームにModを適用するには、まずModを有効にする必要があります。Mod名の左にある丸いボタンをクリックしてください。キー割り当てを変更するにはリストからModを選択して「設定」タブに切り替えてください。</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">Modを適用してゲームを開始するには右下の「ゲーム開始」ボタンをクリックするだけです。</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">エラーが出たら?</s:String>
@@ -273,7 +274,17 @@
     <s:String x:Key="Lang.Options.Labels.Language">言語:</s:String>
     <s:String x:Key="Lang.Options.Labels.FontSize">フォントサイズ</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">バージョンテーブルを最新に保つ:</s:String>
-    <s:String x:Key="Lang.Options.Labels.AutoUpdate">アップデートを確認:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableDisabledHint">先にゲームのパスを設定してください。</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableEnabledHint">ゲームがパッチで更新されると、ModAPIは新しいバージョンを認識する必要があります。オンにすると、この情報が自動的に最新に保たれます。</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamEnabledHint">オンにすると、Steamのインストールパスを自動検出し、Steam経由でゲームを起動します。Steamオーバーレイにも対応します。</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamDisabledHint">オフにすると、Steamのパスを手動で入力できます。</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogEnabledHint">オンにすると、より詳細なログファイル(ModAPI.dev.log)が別に作成されます。エラーの原因究明に役立ちます。</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogDisabledHint">オフにすると、通常のログ(ModAPI.log)のみが残ります。</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartEnabledHint">オンにすると、ModAPIを起動するたびに以前のログを消去して新しく記録します。</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartDisabledHint">オフにすると、以前のログに追記し続けます。</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopEnabledHint">オンにすると、ModAPIのウィンドウが常に他のウィンドウより上に表示されます。</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopDisabledHint">オフにすると、他のウィンドウをクリックした際に後ろに隠れます。</s:String>
+    <s:String x:Key="Lang.Options.Buttons.Update">アップデート</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Steam接続:</s:String>
     <s:String x:Key="Lang.Options.Labels.DevLog">開発者ログ</s:String>
     <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">起動時にログを初期化</s:String>
@@ -282,6 +293,7 @@
     <s:String x:Key="Lang.Options.Labels.GamePathSave">保存</s:String>
     <s:String x:Key="Lang.Options.Labels.PathReset">リセット</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Steamインストールパス</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPathManagedByConnectionHint">Steam接続が有効な間はパスが自動管理されます。手動で設定するには接続を無効にしてください。</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Steamが見つかりません</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steamがインストールされていません。SettingsタブでSteamを設定してください。</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">OK</s:String>

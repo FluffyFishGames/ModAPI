@@ -66,6 +66,7 @@
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.RestoreGameFiles.Error.SteamClosed">Lỗi!: Steam đã bị đóng!</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Download">Đang tải bản cập nhật...</s:String>
     <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Extracting">Đang giải nén bản cập nhật...</s:String>
+    <s:String x:Key="Lang.Windows.OperationPending.Tasks.Update.Done">Bản cập nhật đã sẵn sàng — xem các thay đổi bên dưới rồi nhấn Hoàn tất.</s:String>
 
     <s:String x:Key="Lang.Windows.CreateModProject.Title">Tạo dự án mod</s:String>
     <s:String x:Key="Lang.Windows.CreateModProject.Text">Nhập ID của dự án mới. ID phải là duy nhất và chỉ chứa ký tự chữ-số và "_".</s:String>
@@ -105,20 +106,20 @@
     <s:String x:Key="Lang.Windows.RestoreGameFiles.Buttons.No">Không</s:String>
 
     <s:String x:Key="Lang.Windows.FirstSetup.Title">Chào mừng!</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Text">Đây là lần chạy đầu tiên của ModAPI. Trước khi bắt đầu, hãy kiểm tra các tùy chọn sau:</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdate">Tự động cập nhật</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.AutoUpdateText">Kích hoạt tự động cập nhật, bạn sẽ được thông báo khi có phiên bản ModAPI mới. Bạn có thể áp dụng bản cập nhật chỉ với một cú nhấp.</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.Steam">Kết nối Steam</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.SteamText">Kết nối Steam cho phép truy cập các tính năng Steam trong trò chơi (ví dụ: Steam overlay). ModAPI cũng có thể khôi phục tệp trò chơi nếu bị hỏng hoặc bị sửa đổi.</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersions">Cập nhật bảng phiên bản</s:String>
-    <s:String x:Key="Lang.Windows.FirstSetup.UpdateVersionsText">Kích hoạt cập nhật bảng phiên bản, ModAPI sẽ tải bảng phiên bản khi khởi động. Các bản cập nhật trò chơi mới sẽ được nhận diện tự động. Có thể mất đến 24 giờ để phiên bản mới được thêm vào.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Text">Đây là lần chạy đầu tiên của ModAPI. Xem những điểm mới trong phiên bản này bên dưới. Các tùy chọn như Kết nối Steam / Cập nhật bảng phiên bản có thể bật bất cứ lúc nào trong tab Cài đặt.</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewTitle">Có gì mới trong phiên bản này</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.WhatsNewText" xml:space="preserve">■ Tính năng mới&#10;&#10;▸ Tính năng tự cập nhật ModAPI&#10;• Kiểm tra và cài đặt phiên bản mới nhất bằng nút "Cập nhật" trong tab Cài đặt.&#10;• Sau khi tải xong, ghi chú thay đổi được hiển thị trước; ứng dụng chỉ khởi động lại sau khi nhấn "Xong".&#10;• Đã kiểm tra trực tiếp toàn bộ quy trình và hoạt động bình thường.&#10;&#10;▸ Màn hình khởi chạy lần đầu được thiết kế lại&#10;• Đã bỏ các câu hỏi "Kết nối Steam" và "Cập nhật bảng phiên bản" — không cần thiết vì có thể bật bất cứ lúc nào trong tab Cài đặt.&#10;• Thay vào đó là khu vực cuộn hiển thị "Có gì mới trong phiên bản này".&#10;• Có thể mở lại màn hình này bất cứ lúc nào từ nút trong tab Chào mừng.&#10;&#10;▸ Thêm chú thích BẬT/TẮT cho 4 hộp kiểm&#10;• Đã thêm chú thích giải thích "Kết nối Steam", "Nhật ký nhà phát triển", "Xóa nhật ký khi khởi động" và "Luôn hiển thị trên cùng" làm gì khi bật/tắt.&#10;&#10;■ Cập nhật (cải tiến)&#10;&#10;▸ Tùy chọn "Cập nhật bảng phiên bản"&#10;• Giờ sẽ bị tắt nếu thiếu đường dẫn game, kèm chú thích giải thích lý do.&#10;• Đổi tên từ "Giữ phiên bản mới nhất" thành "Cập nhật bảng phiên bản" để tránh nhầm với nút Cập nhật.&#10;• Đã đơn giản hóa nội dung giải thích và thêm ghi chú ngắn về lý do cần tính năng này.&#10;&#10;▸ Khả năng sử dụng "Kết nối Steam"&#10;• Khi bật, tự động phát hiện và điền đường dẫn cài đặt Steam (hoạt động cả với ổ đĩa khác).&#10;&#10;▸ Thông báo khi khởi chạy game&#10;• Đã bỏ hộp thoại xác nhận từng xuất hiện mỗi lần với game không có chữ ký (ví dụ Green Hell).&#10;• Tình trạng hỏng/giả mạo thực sự vẫn bị chặn như trước.&#10;• Đã thêm sơ đồ quy trình kiểm tra vào README.&#10;&#10;▸ Dọn dẹp hệ thống giao diện (hợp nhất Classic ↔ Fluent)&#10;• Đã so sánh toàn diện bố cục điều khiển giữa giao diện Classic và 9 giao diện Fluent.&#10;• Đã thêm thanh trượt và ô nhập đa ngôn ngữ vào cả 9 giao diện (quản lý chung qua một tệp kiểu dùng chung).&#10;• Đã thêm thanh chia danh sách (GridSplitter) vào giao diện Classic.&#10;• Đã thống nhất giao diện mờ của các nút bị vô hiệu hóa.&#10;&#10;▸ Cập nhật văn bản pop-up chào mừng&#10;• Đã viết lại nội dung tóm tắt này theo ghi chú phát hành (quản lý thủ công, không đồng bộ tự động).&#10;&#10;■ Sửa lỗi&#10;&#10;• Đã sửa chú thích hiển thị theo kiểu trắng mặc định do thiếu thiết kế riêng trong giao diện Classic.&#10;• Đã sửa lỗi ngắt dòng/cắt chữ trong nhiều pop-up.&#10;• Đã sửa lỗi kích thước cửa sổ pop-up chào mừng theo từng giao diện.&#10;• Đã sửa lỗi chữ không hiển thị trong pop-up chào mừng của giao diện Classic.&#10;• Đã sửa lỗi nút đặt lại vẫn hoạt động dù đã bật Kết nối Steam.&#10;• Đã bỏ khoảng trống thừa trước thanh cuộn do văn bản tóm tắt có chiều rộng cố định.&#10;• Đã giữ lại mã không dùng dưới dạng chú thích thay vì xóa.&#10;• Đã dọn dẹp 2 tệp thừa không sử dụng.</s:String>
     <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Confirm">Tiếp tục</s:String>
+    <s:String x:Key="Lang.Windows.FirstSetup.Buttons.Close">Đóng</s:String>
 
 
     <s:String x:Key="Lang.Windows.UpdateAvailable.Title">Có bản cập nhật!</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Text">Có phiên bản ModAPI mới. Bạn có muốn cập nhật ngay không?</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Update">Cập nhật ngay</s:String>
     <s:String x:Key="Lang.Windows.UpdateAvailable.Buttons.Later">Cập nhật sau</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Title">Bạn đang dùng bản mới nhất</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Text">Bạn đang sử dụng phiên bản ModAPI mới nhất.</s:String>
+    <s:String x:Key="Lang.Windows.NoUpdateAvailable.Buttons.OK">OK</s:String>
 
 
     <s:String x:Key="Lang.Languages.EN">Tiếng Anh</s:String>
@@ -192,7 +193,7 @@
     <s:String x:Key="Lang.Mods.Labels.Buttons">Gán phím</s:String>
     <s:String x:Key="Lang.Mods.Labels.Compatible">Tương thích với:</s:String>
 
-    <s:String x:Key="Lang.Mods.Welcome.Title0">Chào mừng!</s:String>
+    <s:String x:Key="Lang.Mods.Welcome.Buttons.OpenWelcomePopup">Chào mừng!</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text0">Để áp dụng mod vào trò chơi, trước tiên bạn cần kích hoạt mod. Nhấp vào nút tròn bên trái tên mod. Để thay đổi phím gán, chọn mod trong danh sách và chuyển sang tab "Cài đặt".</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Text1">Để bắt đầu trò chơi với mod, chỉ cần nhấp nút "Bắt đầu trò chơi" ở góc dưới bên phải.</s:String>
     <s:String x:Key="Lang.Mods.Welcome.Title1">Gặp lỗi?</s:String>
@@ -273,7 +274,17 @@
     <s:String x:Key="Lang.Options.Labels.Language">Ngôn ngữ:</s:String>
     <s:String x:Key="Lang.Options.Labels.FontSize">Cỡ chữ</s:String>
     <s:String x:Key="Lang.Options.Labels.UpdateVersionsTable">Cập nhật bảng phiên bản:</s:String>
-    <s:String x:Key="Lang.Options.Labels.AutoUpdate">Tìm bản cập nhật:</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableDisabledHint">Hãy thiết lập đường dẫn game trước để sử dụng.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UpdateVersionsTableEnabledHint">Khi game được vá bản cập nhật, ModAPI cần nhận diện phiên bản mới. Bật để thông tin này luôn được cập nhật tự động.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamEnabledHint">Khi bật, tự động tìm đường dẫn cài đặt Steam và khởi chạy game qua Steam. Hỗ trợ lớp phủ Steam.</s:String>
+    <s:String x:Key="Lang.Options.Labels.UseSteamDisabledHint">Khi tắt, bạn có thể nhập đường dẫn Steam thủ công.</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogEnabledHint">Khi bật, tạo tệp nhật ký chi tiết hơn (ModAPI.dev.log), giúp xác định nguyên nhân lỗi.</s:String>
+    <s:String x:Key="Lang.Options.Labels.DevLogDisabledHint">Khi tắt, chỉ giữ lại nhật ký thông thường (ModAPI.log).</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartEnabledHint">Khi bật, xóa nhật ký cũ mỗi khi ModAPI khởi động.</s:String>
+    <s:String x:Key="Lang.Options.Labels.ClearLogsOnStartDisabledHint">Khi tắt, tiếp tục ghi nối vào nhật ký cũ.</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopEnabledHint">Khi bật, cửa sổ ModAPI luôn hiển thị phía trên các cửa sổ khác.</s:String>
+    <s:String x:Key="Lang.Options.Labels.AlwaysOnTopDisabledHint">Khi tắt, các cửa sổ khác có thể che nó khi được nhấp.</s:String>
+    <s:String x:Key="Lang.Options.Buttons.Update">Cập nhật</s:String>
     <s:String x:Key="Lang.Options.Labels.UseSteam">Kết nối Steam:</s:String>
     <s:String x:Key="Lang.Options.Labels.DevLog">Nhật ký nhà phát triển</s:String>
     <s:String x:Key="Lang.Options.Labels.ClearLogsOnStart">Xóa nhật ký khi khởi động</s:String>
@@ -282,6 +293,7 @@
     <s:String x:Key="Lang.Options.Labels.GamePathSave">Lưu</s:String>
     <s:String x:Key="Lang.Options.Labels.PathReset">Đặt lại</s:String>
     <s:String x:Key="Lang.Options.Labels.SteamPath">Đường dẫn cài đặt Steam</s:String>
+    <s:String x:Key="Lang.Options.Labels.SteamPathManagedByConnectionHint">Đường dẫn được quản lý tự động khi Kết nối Steam đang bật. Tắt nó để tự đặt thủ công.</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Title">Không tìm thấy Steam</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Text">Steam chưa được cài đặt. Vui lòng cấu hình Steam trong tab Settings.</s:String>
     <s:String x:Key="Lang.Windows.SteamNotFound.Buttons.OK">OK</s:String>

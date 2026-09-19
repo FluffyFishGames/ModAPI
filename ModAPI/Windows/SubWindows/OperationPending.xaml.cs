@@ -18,6 +18,7 @@
  *  To contact me you can e-mail me at info@fluffyfish.de
  */
 
+using System;
 using System.ComponentModel;
 using System.Windows;
 using ModAPI.Utils;
@@ -40,6 +41,12 @@ namespace ModAPI.Windows.SubWindows
         protected string LangKey;
         public bool Completed;
         protected bool AutoClose;
+        protected string Details;
+
+        // 완료 버튼을 눌러 창을 닫기 직전에 호출된다 — "완료 후 이어서 무언가를 실행해야
+        // 하는" 흐름(예: 업데이트 적용 후 재시작)에서만 구독한다. 기존 호출부는 아무도
+        // 구독하지 않으므로 동작 변화 없음.
+        public event EventHandler Confirmed;
 
         public OperationPending(Schedule.Task task)
         {
@@ -57,7 +64,7 @@ namespace ModAPI.Windows.SubWindows
             Init();
         }
 
-        public OperationPending(string langKey, string taskName, ProgressHandler progressHandler, Cancel cancelCallback = null, bool autoClose = false)
+        public OperationPending(string langKey, string taskName, ProgressHandler progressHandler, Cancel cancelCallback = null, bool autoClose = false, string details = null)
             : base(langKey)
         {
             InitializeComponent();
@@ -65,9 +72,32 @@ namespace ModAPI.Windows.SubWindows
             TaskName = taskName;
             CancelCallback = cancelCallback;
             AutoClose = autoClose;
+            Details = details;
 
             LangKey = langKey;
             Init();
+        }
+
+        // 다운로드 단계에서는 아직 릴리스 노트가 없을 수 있어(백그라운드로 병렬 조회하는 경우),
+        // 나중에 별도로 채워 넣을 수 있도록 공개 메서드로도 제공한다.
+        public void SetDetails(string details)
+        {
+            Details = details;
+            if (Completed)
+            {
+                ShowDetailsIfAny();
+            }
+        }
+
+        private void ShowDetailsIfAny()
+        {
+            if (string.IsNullOrWhiteSpace(Details)) return;
+            DetailsTextBox.Text = Details;
+            DetailsBorder.Visibility = Visibility.Visible;
+            // 창 높이를 수동으로 조정하지 않는다 — SubWindow 스타일이
+            // SizeToContent="WidthAndHeight"이므로, DetailsBorder가 보이는 순간
+            // DetailsTextBox의 고정 Height(200)를 반영해서 창이 자동으로 커진다.
+            // 수동으로 Height를 건드리면 이 자동 계산과 충돌해서 오히려 깨진다.
         }
 
         private void Init()
@@ -114,6 +144,7 @@ namespace ModAPI.Windows.SubWindows
             {
                 ConfirmButton.Opacity = 1.0;
                 ConfirmButton.IsEnabled = true;
+                ShowDetailsIfAny();
             }
         }
 
@@ -134,6 +165,7 @@ namespace ModAPI.Windows.SubWindows
         {
             if (Completed)
             {
+                Confirmed?.Invoke(this, EventArgs.Empty);
                 if (Task != null)
                 {
                     Task.Complete();

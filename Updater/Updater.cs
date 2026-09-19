@@ -30,10 +30,27 @@ namespace Updater
         public static string RootPath;
         public static string UpdatePath;
 
+        // 진단용 — 동작 로직은 그대로 두고, ModAPI.exe 재실행이 왜 실패하는지 원인만
+        // 파악하기 위해 추가. 원작자 코드(Update()/CopyFiles())는 건드리지 않는다.
+        private static void LogDiag(string message)
+        {
+            try
+            {
+                File.AppendAllText(
+                    Path.Combine(RootPath ?? Path.GetFullPath("."), "Updater.diag.log"),
+                    $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
+            }
+            catch (Exception)
+            {
+                // 로그 기록 자체가 실패해도 무시 — 진단 목적이라 앱 동작에 영향을 주면 안 됨.
+            }
+        }
+
         public static void Update()
         {
             RootPath = Path.GetFullPath(".");
             UpdatePath = Path.GetFullPath("_update") + Path.DirectorySeparatorChar;
+            LogDiag($"Update() started. RootPath=\"{RootPath}\" UpdatePath=\"{UpdatePath}\"");
             var c = 100;
             while (c > 0)
             {
@@ -60,13 +77,25 @@ namespace Updater
                 c--;
             }
 
+            LogDiag($"Wait loop finished. c={c} (0 means ModAPI never exited) | Directory.Exists(UpdatePath)={Directory.Exists(UpdatePath)}");
+
             if (c > 0 && Directory.Exists(UpdatePath))
             {
                 CopyFiles(UpdatePath);
-                var p = new Process();
-                p.StartInfo.FileName = "ModAPI.exe";
-                p.StartInfo.Verb = "runas";
-                p.Start();
+                LogDiag("CopyFiles() completed. Attempting to relaunch ModAPI.exe...");
+                try
+                {
+                    var p = new Process();
+                    p.StartInfo.FileName = "ModAPI.exe";
+                    p.StartInfo.Verb = "runas";
+                    LogDiag($"Process.Start() about to run. Process working directory (Environment.CurrentDirectory)=\"{Environment.CurrentDirectory}\"");
+                    p.Start();
+                    LogDiag("Process.Start() returned successfully — ModAPI.exe should now be launching.");
+                }
+                catch (Exception ex)
+                {
+                    LogDiag("Process.Start() THREW an exception: " + ex);
+                }
             }
         }
 

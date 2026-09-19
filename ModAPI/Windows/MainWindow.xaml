@@ -63,12 +63,17 @@
                      IconSource="/resources/textures/Icons/IconTop_Informations.png"
                      SelectedIconSource="/resources/textures/Icons/IconTop_Informations_Selected.png"
                      Style="{StaticResource TopTab}">
-                     <Grid Margin="16">
+                     <Grid Margin="16" VerticalAlignment="Top">
                          <Components:PopupPanel Title="{DynamicResource Lang.Welcome.Tab}">
                              <ContentControl Style="{StaticResource PanelCenter}">
                                  <ScrollViewer Margin="16" VerticalScrollBarVisibility="Auto">
                                      <StackPanel Orientation="Vertical">
-                                         <TextBlock Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Mods.Welcome.Title0}" />
+                                         <Button x:Name="OpenWelcomePopupButton" Style="{StaticResource NormalButton}" HorizontalAlignment="Left" Click="OpenWelcomePopupButton_Click">
+                                             <StackPanel Orientation="Horizontal">
+                                                 <TextBlock Margin="0,0,5,0" Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
+                                                 <TextBlock Text="{DynamicResource Lang.Mods.Welcome.Buttons.OpenWelcomePopup}" />
+                                             </StackPanel>
+                                         </Button>
                                          <TextBlock TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Margin="0,8,0,0" Text="{DynamicResource Lang.Mods.Welcome.Text0}" />
                                          <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" Style="{StaticResource NormalLabel}" Text="{DynamicResource Lang.Mods.Welcome.Text1}" />
                                          <TextBlock Margin="0,16,0,0" Style="{StaticResource HeaderLabel}" Text="{DynamicResource Lang.Mods.Welcome.Title1}" />
@@ -958,33 +963,111 @@
                                             Background="{DynamicResource FluentCardBrush}"
                                             BorderThickness="1" BorderBrush="{DynamicResource FluentBorderBrush}">
                                         <WrapPanel x:Name="SettingsCheckboxes" Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center"
+                                                        IsEnabled="{Binding CanUpdateVersionsTable}"
+                                                        ToolTipService.ShowOnDisabled="True"
+                                                        ToolTipService.InitialShowDelay="0"
+                                                        ToolTipService.BetweenShowDelay="0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding CanUpdateVersionsTable}" Value="True">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.UpdateVersionsTableEnabledHint}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding CanUpdateVersionsTable}" Value="False">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.UpdateVersionsTableDisabledHint}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
                                                 <CheckBox IsChecked="{Binding UpdateVersionsTable,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.UpdateVersionsTable}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding AutoUpdate,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                                <TextBlock Text="{DynamicResource Lang.Options.Labels.AutoUpdate}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
-                                                <CheckBox IsChecked="{Binding UseSteam,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center"
+                                                        ToolTipService.InitialShowDelay="0"
+                                                        ToolTipService.BetweenShowDelay="0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding UseSteam}" Value="True">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.UseSteamEnabledHint}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding UseSteam}" Value="False">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.UseSteamDisabledHint}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                                <CheckBox IsChecked="{Binding UseSteam,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0"
+                                                          Checked="UseSteamCheckBox_Checked" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.UseSteam}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <!-- 개발자 로그 -->
-                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center"
+                                                        ToolTipService.InitialShowDelay="0"
+                                                        ToolTipService.BetweenShowDelay="0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding DevLog}" Value="True">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.DevLogEnabledHint}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DevLog}" Value="False">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.DevLogDisabledHint}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
                                                 <CheckBox IsChecked="{Binding DevLog,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.DevLog}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <!-- 로그 초기화 -->
-                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center"
+                                                        ToolTipService.InitialShowDelay="0"
+                                                        ToolTipService.BetweenShowDelay="0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ClearLogsOnStart}" Value="True">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.ClearLogsOnStartEnabledHint}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding ClearLogsOnStart}" Value="False">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.ClearLogsOnStartDisabledHint}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
                                                 <CheckBox IsChecked="{Binding ClearLogsOnStart,Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.ClearLogsOnStart}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
                                             </StackPanel>
                                             <!-- 항상 위에 -->
-                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,4" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,32,4" VerticalAlignment="Center"
+                                                        ToolTipService.InitialShowDelay="0"
+                                                        ToolTipService.BetweenShowDelay="0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsChecked, ElementName=AlwaysOnTopCheckBox}" Value="True">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.AlwaysOnTopEnabledHint}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsChecked, ElementName=AlwaysOnTopCheckBox}" Value="False">
+                                                                <Setter Property="ToolTip" Value="{DynamicResource Lang.Options.Labels.AlwaysOnTopDisabledHint}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
                                                 <CheckBox x:Name="AlwaysOnTopCheckBox" VerticalAlignment="Center" Margin="0,0,8,0"
                                                           Checked="AlwaysOnTop_Changed" Unchecked="AlwaysOnTop_Changed" />
                                                 <TextBlock Text="{DynamicResource Lang.Options.Labels.AlwaysOnTop}" Style="{StaticResource NormalLabel}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <!-- 업데이트 -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,4" VerticalAlignment="Center">
+                                                <Button x:Name="UpdateButton" Style="{StaticResource NormalButton}" Click="UpdateButton_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="0,0,5,0" Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" />
+                                                        <TextBlock Text="{DynamicResource Lang.Options.Buttons.Update}" />
+                                                    </StackPanel>
+                                                </Button>
                                             </StackPanel>
                                         </WrapPanel>
                                     </Border>
@@ -992,7 +1075,7 @@
 
                                 <!-- Row 2: 스팀 경로 + 게임 설치 경로 -->
                                 <ContentControl Grid.Row="2" Style="{StaticResource PanelButtons}">
-                                     <Grid Margin="10,7,10,10">
+                                     <Grid x:Name="SteamAndGamePathsPanel" Margin="10,7,10,10">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -1003,7 +1086,11 @@
                                         <TextBlock Grid.Row="0" Style="{StaticResource HeaderLabel}"
                                                    Text="{DynamicResource Lang.Options.Labels.SteamPath}"
                                                    Margin="0,0,0,6" />
-                                        <Grid Grid.Row="1" Margin="0,0,0,16">
+                                        <Grid Grid.Row="1" Margin="0,0,0,16"
+                                              IsEnabled="{Binding CanEditSteamPathManually}"
+                                              ToolTipService.ShowOnDisabled="True"
+                                              ToolTipService.InitialShowDelay="0"
+                                              ToolTip="{DynamicResource Lang.Options.Labels.SteamPathManagedByConnectionHint}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />

@@ -45,6 +45,101 @@ namespace ModAPI.Data
             //"http://modapi.cc/app/configs/games/{0}/Versions.xml", Outdated
         };
 
+        // ModAPI 자체의 신버전 확인(AutoUpdate)용 저장소.
+        // 일반 사용자는 항상 운영 저장소(FluffyFishGames)를 보고, --dev로 실행했을 때만
+        // (Debug.DevMode는 App.xaml.cs에서 --dev 플래그로만 켜지며, 설정 탭 "개발자 로그"
+        // 체크박스와는 별개다) 개발 저장소(zzangae)로 전환된다.
+        public static string UpdateRepoOwner => Debug.DevMode ? "zzangae" : "FluffyFishGames";
+
+        // GitHub Releases API에서 최신 릴리스 태그를 가져온다. 실패하면 null을 반환한다.
+        // releaseNotes에는 릴리스 노트("body" 필드, 변경 사항 설명)를 함께 담아준다 —
+        // 업데이트 완료 시 사용자에게 "무엇이 바뀌었는지" 보여주기 위해 사용.
+        public static string CheckForNewVersion(out string releaseNotes)
+        {
+            releaseNotes = null;
+            var url = $"https://api.github.com/repos/{UpdateRepoOwner}/ModAPI/releases/latest";
+
+            var prevProtocol = System.Net.ServicePointManager.SecurityProtocol;
+            System.Net.ServicePointManager.SecurityProtocol =
+                System.Net.SecurityProtocolType.Tls12 |
+                System.Net.SecurityProtocolType.Tls11 |
+                System.Net.SecurityProtocolType.Tls;
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    // GitHub API는 User-Agent 헤더가 없는 요청을 거부한다.
+                    client.Headers.Add("User-Agent", "ModAPI-UpdateChecker");
+                    var json = client.DownloadString(url);
+                    var match = System.Text.RegularExpressions.Regex.Match(json, "\"tag_name\"\\s*:\\s*\"([^\"]+)\"");
+                    if (!match.Success)
+                    {
+                        Debug.Log("Game", "[CheckForNewVersion] tag_name not found in response from " + url, Debug.Type.Error);
+                        return null;
+                    }
+                    var tag = match.Groups[1].Value.TrimStart('v', 'V');
+
+                    var bodyMatch = System.Text.RegularExpressions.Regex.Match(json, "\"body\"\\s*:\\s*\"((?:\\\\.|[^\"\\\\])*)\"");
+                    if (bodyMatch.Success)
+                    {
+                        releaseNotes = UnescapeJsonString(bodyMatch.Groups[1].Value);
+                    }
+
+                    Debug.Log("Game", "[CheckForNewVersion] Latest release: " + tag + " (repo: " + UpdateRepoOwner + ")", Debug.Type.Notice);
+                    return tag;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Game", "[CheckForNewVersion] Failed checking latest release from " + url + " | Error: " + e.Message, Debug.Type.Error);
+                return null;
+            }
+            finally
+            {
+                System.Net.ServicePointManager.SecurityProtocol = prevProtocol;
+            }
+        }
+
+        // GitHub API가 반환하는 JSON 문자열의 이스케이프 시퀀스(\n, \", \uXXXX 등)를 풀어준다.
+        // 외부 JSON 라이브러리 의존성을 추가하지 않기 위해 "body" 필드 하나만 최소한으로 처리.
+        private static string UnescapeJsonString(string s)
+        {
+            var sb = new System.Text.StringBuilder(s.Length);
+            for (var i = 0; i < s.Length; i++)
+            {
+                var c = s[i];
+                if (c == '\\' && i + 1 < s.Length)
+                {
+                    var next = s[++i];
+                    switch (next)
+                    {
+                        case 'n': sb.Append('\n'); break;
+                        case 'r': sb.Append('\r'); break;
+                        case 't': sb.Append('\t'); break;
+                        case '"': sb.Append('"'); break;
+                        case '\\': sb.Append('\\'); break;
+                        case '/': sb.Append('/'); break;
+                        case 'u':
+                            if (i + 4 < s.Length &&
+                                int.TryParse(s.Substring(i + 1, 4), System.Globalization.NumberStyles.HexNumber, null, out var code))
+                            {
+                                sb.Append((char)code);
+                                i += 4;
+                            }
+                            break;
+                        default:
+                            sb.Append(next);
+                            break;
+                    }
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+
         // Steam 라이브러리 자동탐색용: GameId → steamapps\common\ 아래 실제 폴더명
         // (README 설치 안내 표에 명시된 이름과 동일 — 여기서만 사용하는 로컬 매핑이며
         //  GameConfiguration이나 게임별 XML은 건드리지 않는다)

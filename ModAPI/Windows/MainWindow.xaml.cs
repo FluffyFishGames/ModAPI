@@ -353,6 +353,11 @@ namespace ModAPI
             Application.Current.Resources["AppBaseTinyFontSize"] = 10.0;
             Application.Current.Resources["AppBaseLargeFontSize"] = 20.0;
             InitializeComponent();
+            // Settings 탭으로 전환할 때마다 UpdateWindowHeight()가 창 높이를 다시 측정하는데,
+            // 측정 시작점을 현재(이미 커져 있을 수 있는) this.Height로 삼으면 방문할 때마다
+            // 계속 누적되어 커지는 문제가 있었다 — XAML에 선언된 원래 높이를 기준점으로
+            // 저장해두고, 매번 이 값부터 다시 측정한다.
+            _baseWindowHeight = Height;
             Instance = this;
             CheckDir();
 
@@ -435,6 +440,10 @@ namespace ModAPI
             SettingsVm = new SettingsViewModel();
             Settings.DataContext = SettingsVm;
             SettingsCheckboxes.DataContext = SettingsVm;
+            // 스팀 경로 영역(SteamAndGamePathsPanel)에도 DataContext를 설정해야
+            // {Binding CanEditSteamPathManually} 등이 실제로 값을 찾는다 — 이게 빠져있으면
+            // 바인딩이 조용히 실패해서 IsEnabled가 기본값(true, 항상 활성화)으로 남는다.
+            SteamAndGamePathsPanel.DataContext = SettingsVm;
             //LanguageSelector.SelectedIndex = Configuration.Languages.Values.ToList().IndexOf(Configuration.CurrentLanguage);
 
             InitializeThemeSelector();
@@ -975,6 +984,10 @@ namespace ModAPI
         // 최대화 전 원래 상태 저장용 필드
         private double _prevLeft, _prevTop, _prevWidth, _prevHeight, _prevMaxWidth;
 
+        // XAML에 선언된 원래 창 높이(650) — UpdateWindowHeight()가 매번 이 값부터 다시
+        // 측정해서, Settings 탭을 반복 방문해도 높이가 계속 누적되어 커지지 않도록 한다.
+        private double _baseWindowHeight;
+
         private void Maximize(object sender, RoutedEventArgs e)
         {
             // 현재 상태 저장
@@ -1137,6 +1150,16 @@ namespace ModAPI
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
             e.Handled = true;
+        }
+
+        // 환영 탭의 "환영합니다" 버튼 — 최초 실행 팝업(FirstSetup)을 언제든 다시 볼 수 있게
+        // 재오픈한다. 최초 실행 때와 달리 여기서는 설정 저장/FirstSetupDone() 같은 부수
+        // 효과 없이 그냥 정보 팝업으로만 동작해야 하므로 isReopen: true로 연다.
+        private void OpenWelcomePopupButton_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new FirstSetup("Lang.Windows.FirstSetup", isReopen: true);
+            win.ShowSubWindow();
+            win.Show();
         }
 
         protected ModProjectViewModel CurrentModProjectViewModel;
@@ -1868,62 +1891,15 @@ namespace ModAPI
                         Debug.Type.Notice);
                 }
 
-                // 검증 C: 디지털 서명 확인 (경고만 — 차단하지 않음)
+                // 검증 C: 디지털 서명 확인. 서명이 없다는 것 자체는 변조의 증거가 아니다 —
+                // Green Hell 같은 인디 게임은 애초에 실행파일에 서명을 안 하는 경우가 많다.
+                // 실제 손상/변조는 이미 위의 A(PE 헤더)/B(체크섬) 단계가 걸러서 차단하므로,
+                // C단계는 사용자에게 묻지 않고 로그만 남긴 채 조용히 통과시킨다 — 서명이 없는
+                // 게임을 실행할 때마다 "계속" 팝업을 눌러야 했던 불편을 없앤다.
                 if (!ModAPI.Utils.FileValidator.HasDigitalSignature(gameExePath))
                 {
                     Debug.Log("StartGame",
-                        $"[Integrity] Game executable has no digital signature: {gameExePath}",
-                        Debug.Type.Warning);
-
-                    bool userConfirmed;
-                    try
-                    {
-                        // 사용자에게 선택권 부여 — 계속 진행 여부
-                        string displayName;
-                        try
-                        {
-                            displayName = GameDisplayNames.ContainsKey(targetGame.GameConfiguration.Id)
-                                ? GameDisplayNames[targetGame.GameConfiguration.Id]
-                                : targetGame.GameConfiguration.Id;
-                        }
-                        catch (Exception exName)
-                        {
-                            Debug.Log("StartGame",
-                                $"[Integrity] Failed to resolve game display name: {exName.Message}",
-                                Debug.Type.Warning);
-                            displayName = targetGame?.GameConfiguration?.Id ?? "";
-                        }
-
-                        Debug.Log("StartGame",
-                            $"[Integrity] Opening GameIntegrityWarning popup. DisplayName: {displayName}",
-                            Debug.Type.Notice);
-
-                        var winNoSig = new Windows.SubWindows.GameIntegrityWarning(
-                            "Lang.Windows.GameNoSignature", displayName);
-                        winNoSig.ShowSubWindow();
-                        winNoSig.ShowDialog();
-                        userConfirmed = winNoSig.UserConfirmed;
-
-                        Debug.Log("StartGame",
-                            $"[Integrity] GameIntegrityWarning closed. UserConfirmed: {userConfirmed}",
-                            Debug.Type.Notice);
-                    }
-                    catch (Exception exPopup)
-                    {
-                        // 팝업 생성/표시 중 예외 발생 시 ModAPI 전체가 강제 종료되지 않도록 방어
-                        // 서명 없음은 경고일 뿐 차단 사유가 아니므로, 팝업 자체가 실패해도
-                        // 안전하게 통과시키고 원인을 로그로 남긴다.
-                        Debug.Log("StartGame",
-                            $"[Integrity] GameIntegrityWarning popup failed: {exPopup.GetType().Name}" +
-                            $" | {exPopup.Message} | {exPopup}",
-                            Debug.Type.Error);
-                        userConfirmed = true;
-                    }
-
-                    if (!userConfirmed)
-                        return;
-                    Debug.Log("StartGame",
-                        "[Integrity] User chose to continue despite missing signature.",
+                        $"[Integrity] Game executable has no digital signature (not necessarily tampered — many games ship unsigned): {gameExePath}",
                         Debug.Type.Notice);
                 }
                 else
@@ -2575,6 +2551,13 @@ namespace ModAPI
                         System.IO.File.Exists(exeCheck)
                             ? "Lang.Options.Labels.Installed"
                             : "Lang.Options.Labels.NotInstalled");
+                    // 지금 저장한 경로가 App.Game(현재 선택된 게임)의 경로라면, "버전 테이블
+                    // 유지" 체크박스의 활성/비활성 상태(CanUpdateVersionsTable)도 다시 계산해야 함
+                    if (App.Game != null && App.Game.GameConfiguration.Id == capturedId)
+                    {
+                        App.Game.GamePath = pathBox.Text;
+                        SettingsVm?.Changed();
+                    }
                 };
 
                 resetBtn.Click += (s, e) =>
@@ -2586,6 +2569,11 @@ namespace ModAPI
                     pathBox.Text = "";
                     saveBtn.IsEnabled = false;
                     pathSummary.SetResourceReference(TextBlock.TextProperty, "Lang.Options.Labels.NotInstalled");
+                    if (App.Game != null && App.Game.GameConfiguration.Id == capturedId)
+                    {
+                        App.Game.GamePath = "";
+                        SettingsVm?.Changed();
+                    }
                 };
 
                 var pathRow = new Grid { Margin = new Thickness(12, 0, 12, 10) };
@@ -2710,6 +2698,9 @@ namespace ModAPI
             SetProject(null);
             UpdateModlibVersion();
             Debug.Log("DevGameFilter", "Development context switched to: " + gameId);
+            // App.Game이 다른 게임으로 교체됐으므로 "버전 테이블 유지" 체크박스의
+            // 활성/비활성 상태(CanUpdateVersionsTable)도 새 게임 기준으로 다시 계산
+            SettingsVm?.Changed();
         }
 
         // ── Font Size ────────────────────────────────────────────────────────
@@ -2842,10 +2833,31 @@ namespace ModAPI
         // ── Screen Width MAX (해상도 기반, 시작 시 1회 계산) ─────────────────
         public static double ScreenMaxWidth { get; private set; } = 1200;
 
+        // UpdateWindowHeight()가 측정을 위해 잠깐 Settings 탭으로 전환하면 Tabs_SelectionChanged가
+        // 다시 UpdateWindowHeight()를 호출한다 — 이 재진입 호출이 큐에 쌓였다가, 원래 탭으로
+        // 되돌린 "이후"에 실행되면 설정 탭으로 또 한 번 깜빡이며 전환되는 문제가 생긴다.
+        // 측정이 진행 중일 때는 재진입 호출을 무시해서 막는다.
+        private bool _updatingWindowHeight;
+
         private void UpdateWindowHeight()
         {
+            if (_updatingWindowHeight) return;
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                _updatingWindowHeight = true;
+                try
+                {
+                    UpdateWindowHeightCore();
+                }
+                finally
+                {
+                    _updatingWindowHeight = false;
+                }
+            }), System.Windows.Threading.DispatcherPriority.Render);
+        }
+
+        private void UpdateWindowHeightCore()
+        {
                 // 배경 텍스처 활성 시 TextureLayer1 의 이미지 원본 크기(4K 등)가
                 // SizeToContent.Height 측정에 포함되어 창 높이가 비정상적으로 커지는 것 방지
                 // → 측정 구간에서만 Collapsed 처리 (Source 는 건드리지 않음)
@@ -2853,6 +2865,30 @@ namespace ModAPI
                 var layer = FindName("TextureLayer1") as System.Windows.Controls.Image;
                 bool wasVisible = layer != null && layer.Visibility == Visibility.Visible;
                 if (wasVisible) layer.Visibility = Visibility.Collapsed;
+
+                // 창 높이는 항상 "설정" 탭 콘텐츠 기준으로 고정한다 — 개별 탭마다 창
+                // 크기가 다르게 보이거나(요청사항: 설정 탭과 동일해야 함), 설정 탭을
+                // 처음 방문하기 전/후로 점프하듯 커지는 걸 막기 위함이다. 지금 보이는
+                // 탭이 설정 탭이 아니면(예: 앱 시작 시 기본 선택인 Welcome 탭) 아직 화면에
+                // 드러나지 않은 시점(오프닝 페이드인 이전)을 이용해 잠깐 설정 탭으로
+                // 전환해서 측정한 뒤 원래 탭으로 되돌린다 — 사용자 눈에는 보이지 않는다.
+                // Settings 탭 인덱스: Welcome(0), Mods(1), Downloads(2), Development(3), Themes(4), Settings(5)
+                const int settingsTabIndex = 5;
+                var originalTabIndex = Tabs.SelectedIndex;
+                var neededTabSwitch = originalTabIndex != settingsTabIndex;
+                if (neededTabSwitch)
+                {
+                    Tabs.SelectedIndex = settingsTabIndex;
+                    this.UpdateLayout();
+                }
+
+                // 매번 그때그때의(이미 커져 있을 수 있는) 창 높이를 기준으로 다시 측정하면
+                // 방문할 때마다 계속 누적되어 커진다 — 항상 원래 높이로 되돌린 뒤 다시
+                // 측정해서, 몇 번을 왔다갔다 해도 같은 결과가 나오도록(멱등하게) 한다.
+                if (_baseWindowHeight > 0)
+                {
+                    this.Height = _baseWindowHeight;
+                }
 
                 this.UpdateLayout();
                 this.SizeToContent = SizeToContent.Height;
@@ -2873,8 +2909,12 @@ namespace ModAPI
                     this.Top = 0;
                 }
 
+                if (neededTabSwitch)
+                {
+                    Tabs.SelectedIndex = originalTabIndex;
+                }
+
                 if (wasVisible) layer.Visibility = Visibility.Visible;
-            }), System.Windows.Threading.DispatcherPriority.Render);
         }
 
         public void NavigateToSettings()
@@ -3097,6 +3137,160 @@ namespace ModAPI
             var isOn = cb.IsChecked == true;
             this.Topmost = isOn;
             SaveUiCfg("AlwaysOnTop", isOn ? "true" : "false");
+        }
+
+        // "스팀 연결"을 켜는 순간 레지스트리에서 스팀 경로를 자동 탐지해서 채워 넣는다.
+        // 켜져 있는 동안은 경로 입력 영역 자체가 비활성화되므로(CanEditSteamPathManually),
+        // 사용자가 수동으로 값을 넣을 수 없다 — 여기서 자동으로 채워주지 않으면
+        // 체크박스만 켜고 경로는 빈 채로 남는 상태가 된다.
+        private void UseSteamCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var found = CheckSteam();
+            var steamPath = Configuration.GetPath("Steam", silent: true);
+            Debug.Log("MainWindow",
+                $"[UseSteam] Auto-detect on checkbox check. Found: {found} | Path: \"{steamPath}\"",
+                Debug.Type.Notice);
+            var box = FindName("SteamPathBox") as System.Windows.Controls.TextBox;
+            if (box != null)
+            {
+                box.Text = steamPath ?? "";
+            }
+        }
+
+        // ── 업데이트 (설정 탭 "업데이트" 버튼) ─────────────────────────────────
+        // 게임 런처 방식: 버튼 클릭 → 확인 → (구버전이면) 바로 다운로드/적용까지
+        // 원클릭으로 진행. "지금/나중에" 선택지는 없다 — 확인했다면 바로 적용한다.
+        private bool _checkingForUpdate;
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_checkingForUpdate) return;
+            _checkingForUpdate = true;
+            UpdateButton.IsEnabled = false;
+
+            var thread = new Thread(delegate ()
+            {
+                string latestTag = null;
+                string releaseNotes = null;
+                try
+                {
+                    latestTag = Game.CheckForNewVersion(out releaseNotes);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("MainWindow", "[Update] Unexpected error while checking for update: " + ex, Debug.Type.Error);
+                }
+
+                Dispatcher.Invoke(delegate
+                {
+                    _checkingForUpdate = false;
+                    UpdateButton.IsEnabled = true;
+
+                    var hasNewVersion = false;
+                    if (latestTag != null && System.Version.TryParse(latestTag, out var latestVersion) &&
+                        System.Version.TryParse(App.Version, out var currentVersion))
+                    {
+                        hasNewVersion = latestVersion > currentVersion;
+                    }
+
+                    if (hasNewVersion)
+                    {
+                        RunFullUpdate(latestTag, releaseNotes);
+                    }
+                    else
+                    {
+                        var win = new NoUpdateAvailable("Lang.Windows.NoUpdateAvailable");
+                        win.ShowSubWindow();
+                        win.Show();
+                    }
+                });
+            });
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        // 다운로드 → 압축 해제 → 진행률 100% 도달 시 릴리스 노트 표시 → 사용자가
+        // "완료" 버튼을 눌러야 그때 Updater.exe 실행(관리자 권한) → 현재 프로세스 종료.
+        // Updater.exe가 ModAPI 종료를 기다렸다가 파일을 덮어쓰고 자동으로 재시작한다
+        // (Updater\Updater.cs 참고 — 원작자가 이미 구현해 둔 로직을 그대로 사용).
+        private void RunFullUpdate(string newVersion, string releaseNotes)
+        {
+            var handler = new ProgressHandler();
+            var t = new Thread(delegate ()
+            {
+                try
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(
+                        "https://github.com/" + Game.UpdateRepoOwner + "/ModAPI/releases/download/" + newVersion + "/ModAPI.zip");
+                    request.AllowAutoRedirect = true;
+                    request.UserAgent = "ModAPI-Updater";
+                    var response = (HttpWebResponse)request.GetResponse();
+                    var s = response.GetResponseStream();
+                    var buffer = new byte[4096];
+                    var memory = new MemoryStream();
+                    var count = 0;
+                    long current = 0;
+                    var progress = 0f;
+                    handler.Task = "Download";
+                    while ((count = s.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        memory.Write(buffer, 0, count);
+                        current += count;
+                        progress = (float)(((current / (double)response.ContentLength)) * 70.0);
+                        handler.Progress = progress;
+                    }
+
+                    memory.Position = 0;
+                    var zip = Ionic.Zip.ZipFile.Read(memory);
+                    var directory = "./_update";
+                    var n = 0;
+                    handler.Task = "Extracting";
+                    foreach (var entry in zip)
+                    {
+                        try
+                        {
+                            entry.Extract(directory, Ionic.Zip.ExtractExistingFileAction.OverwriteSilently);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        n += 1;
+                        handler.Progress = 70f + (n / (float)zip.Count) * 30f;
+                    }
+
+                    // 여기서는 재시작하지 않는다 — 사용자가 완료 팝업에서 "완료" 버튼을
+                    // 눌러야 OperationPending.Confirmed 핸들러가 Updater.exe를 실행한다.
+                    handler.Task = "Done";
+                    handler.Progress = 100f;
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("MainWindow", "[Update] Failed to download/apply update: " + ex, Debug.Type.Error);
+                }
+            });
+
+            var window = new OperationPending("Lang.Windows.OperationPending", "Update", handler, null, false, releaseNotes);
+            window.Confirmed += (s, e) =>
+            {
+                try
+                {
+                    var p = new Process();
+                    p.StartInfo.FileName = "Updater.exe";
+                    p.StartInfo.Verb = "runas";
+                    p.Start();
+                    Environment.Exit(0);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("MainWindow", "[Update] Failed to launch Updater.exe: " + ex, Debug.Type.Error);
+                }
+            };
+            if (!window.Completed)
+            {
+                window.ShowSubWindow();
+                window.Show();
+            }
+            t.Start();
         }
 
         // ── Background Texture ───────────────────────────────────────────────
