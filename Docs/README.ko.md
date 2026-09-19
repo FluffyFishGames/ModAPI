@@ -12,9 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9622 - 20260808
-
-**더 포레스트 모드 관리 도구 — 업그레이드 에디션**
+# ModAPI(v1) v2.0.9623 - 20260920
 
 > 원작: FluffyFish / Philipp Mohrenstecher (독일 엥겔스키르헨)
 > 업그레이드: zzangae (대한민국)
@@ -254,7 +252,7 @@ builtin: false → true (langs.json)
 </details>
 
 <details>
-<summary><b>Theme System [Detailed Reference](v2.0.9613_themes_ko.md)</b></summary>
+<summary><b>테마 시스템 [상세 참조](v2.0.9613_themes_ko.md)</b></summary>
 
 v2.0.9613부터 테마 선택 UI가 설정 탭에서 전용 **테마 탭**으로 이동되었습니다. 새 테마 추가 시 `App.xaml.cs` 딕셔너리에 한 줄만 추가하면 됩니다.
 
@@ -627,7 +625,7 @@ LangTool UI 문자열, 다이얼로그 메시지, 상태 텍스트를 포함하�
 
 **위치**: `VersionTool\MODAPI_VersionTool.csproj`
 
-<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/d7d40dea-129e-457d-9978-4ca149487275" />
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
 
 **기능**
 - 현재 버전 자동 표시 (`App.xaml.cs`에서 읽음)
@@ -693,6 +691,142 @@ LangTool UI 문자열, 다이얼로그 메시지, 상태 텍스트를 포함하�
 </details>
 
 <details open>
+<summary><b>v2.0.9623 변경사항</b></summary>
+
+## v2.0.9623 변경사항
+
+### 업데이트 확인 및 적용 — 런처 방식, 수동 트리거, 강제 차단 없음
+
+첫 실행 팝업(`FirstSetup` 창)에는 원래 **최신버전 유지**, **업데이트 검색**, **스팀 연결** 3개 옵션이 있었는데, 개발이 한동안 보류돼 있었습니다. 재개하기 전 실제 코드 상태를 조사해보니 스팀 연결과 최신버전 유지는 이미 완전히 동작 중이었고, 업데이트 검색(ModAPI 신버전이 있는지 확인하는 기능)만 미완성이었습니다 — 다운로드/설치 파이프라인 자체는 있었지만, 그걸 호출하는 코드가 어디에도 없었습니다.
+
+**이번에 구현한 내용:**
+
+- **`Game.CheckForNewVersion(out releaseNotes)`** (`ModAPI_Shared\Data\Game.cs`) — GitHub Releases API(`/repos/{owner}/ModAPI/releases/latest`)를 호출해서 최신 태그와 릴리스 노트(`body` 필드, 별도 라이브러리 추가 없이 최소한의 JSON 문자열 이스케이프 해제 로직으로 파싱)를 함께 반환합니다. `UpdateRepoOwner`는 일반 사용자에겐 항상 `FluffyFishGames`(운영 저장소)를 가리키고, `--dev` 플래그로 실행했을 때만 유지보수자의 개발 저장소로 전환됩니다 — 설정 탭 "개발자 로그" 체크박스로는 절대 전환되지 않습니다. 그 체크박스는 크래시 로그 상세도만을 위한 것이고, 사용자가 로그만 켰을 뿐인데 미검증 테스트 채널로 조용히 옮겨지면 안 되기 때문입니다.
+- **설정 탭**: 동작하지 않던 "업데이트 검색" 체크박스를 없애고, **업데이트** 버튼 하나로 대체했습니다(백그라운드 토글이 아니라 런처 방식). 버튼을 누르면 신버전을 확인하고, 있으면 "지금/나중에" 같은 중간 선택 없이 바로 다운로드→압축해제→적용 흐름으로 진입합니다.
+- **첫 실행 팝업**: 죽은 "자동-업데이트" 옵션과 그 설정 저장 코드를 제거했습니다. 이제 스팀 연결과 최신버전 유지 2개만 물어봅니다.
+- **`OperationPending` 창**에 기본적으로 접혀있는 릴리스 노트 표시 영역과 `Confirmed` 이벤트를 추가했습니다. 다운로드/압축해제가 100%에 도달하면 릴리스 노트가 보이면서 "완료" 버튼이 활성화되고, 이 버튼을 눌러야 실제로 `Updater.exe`를 실행하고 ModAPI가 종료됩니다(이전에는 압축해제가 끝나는 즉시 자동으로 이 과정이 실행돼서 무엇이 바뀌었는지 확인할 기회가 없었습니다). `Updater.exe` 자체(원작자 코드, 수정 없음)는 ModAPI 종료를 기다렸다가 파일을 덮어쓰고 자동으로 재시작합니다.
+- ModAPI는 구버전이라고 해서 실행을 막지 않습니다. 신버전 확인은 오직 사용자가 "업데이트" 버튼을 눌렀을 때만 실행되고 앱 시작 시점엔 절대 끼어들지 않습니다 — 일반적인 게임 런처의 강제 업데이트 게이트와는 다릅니다.
+
+### UI 버그 수정 — 릴리스 노트 영역 줄바꿈 안 되던 문제
+
+`OperationPending` 진행률 창에 새로 추가한 릴리스 노트 영역이 처음엔 가로 스크롤이 필요한 한 줄로만 출력됐는데, 원인이 두 가지 겹쳐 있었습니다:
+
+1. `TextBox`의 `HorizontalScrollBarVisibility` 기본값은 `Hidden`이지 `Disabled`가 아닙니다 — 명시적으로 `Disabled`로 주지 않으면 WPF는 `TextWrapping="Wrap"`을 무시하고 줄을 계속 늘려버립니다.
+2. 모든 팝업 창이 쓰는 `SubWindow` 스타일이 `SizeToContent="WidthAndHeight"`(`FluentStyles.xaml`)라서, `*` 컬럼으로 늘어나는 영역은 줄바꿈 기준이 될 고정 폭이 없습니다 — 폭을 직접 지정해줘야 합니다.
+
+`ProgressBar.ActualWidth`에 바인딩한 고정 폭을 줘서(진행률 바 오른쪽 끝과 정렬되도록) 해결했고, `TextBox` 대신 읽기 전용 `TextBlock`+`ScrollViewer` 조합으로 바꿨습니다(`TextBox`의 `PART_ContentHost` 줄바꿈 무시 문제를 아예 피함). 배경도 기본적으로 창 투명도를 그대로 물려받고 있어서 `FluentCardBrush`로 불투명하게 지정했습니다. 창을 억지로 키우려고 넣었던 수동 `Height +=` 코드는 `SizeToContent`와 충돌만 일으켜서 제거했습니다 — 영역이 보이는 순간 창이 알아서 정확히 커집니다.
+
+### 실기 검증 (End-to-End 수동 테스트)
+
+폐기 가능한 더미 릴리스 데이터로 확인→다운로드→압축해제→완료 확인→재시작까지 전체 흐름을 실제로 돌려봤고, 원작자의 `Updater.exe`(수정 없음)까지 포함해서 전부 정상 동작함을 확인했습니다. 테스트하면서 알게 된 유용한 사실 하나: `App.xaml.cs`는 ModAPI **자체 시작 시점**에 이미 남아있는 `_update` 폴더를 자기가 먼저 정리(적용)해버립니다 — 그래서 ModAPI를 켜기 *전에* 가짜 `_update` 폴더를 미리 만들어두는 방식으로 테스트하면, `Updater.exe`가 보기도 전에 조용히 소비돼버립니다. `_update` 폴더는 반드시 **ModAPI가 이미 켜진 상태에서** 만들어야 실제 다운로드가 채우는 상황과 동일하게 재현됩니다. 앞으로 이런 문제를 원본 재시작 로직은 안 건드리고도 쉽게 진단할 수 있도록, `Updater.cs`에 선택적 진단 로그(`Updater.diag.log`, try/catch로 감싸 일반 로직과 분리)를 추가해뒀습니다.
+
+### 개발 노트 — `--dev`로 실행하기
+
+`App.DevMode`(`ModAPI\App.xaml.cs`)는 `--dev` 커맨드라인 인자로 실행했을 때만 `true`가 됩니다 — 설정 탭 "개발자 로그" 체크박스와는 별개이며, 그 체크박스는 로그 상세도에만 영향을 줘야 하고 그 외의 어떤 것도(예: 어떤 서버/저장소를 바라볼지) 좌우해서는 안 됩니다.
+
+로컬에서 `--dev`로 실행하려면:
+- **Visual Studio(F5 디버깅)**: `ModAPI` 프로젝트 → 속성 → Debug 탭 → "명령줄 인수"에 `--dev` 입력.
+- **빌드된 exe**: 터미널에서 `ModAPI.exe --dev`로 실행하거나, 바로가기의 대상(Target) 필드 끝에 `--dev`를 추가.
+
+### "버전 테이블 유지" 체크박스 — 아무것도 못 할 때는 비활성화
+
+`Game.Verify()`는 게임 경로가 유효할 때(`CheckGamePath()` 통과)만 실제로 버전 테이블을 다운로드하는 `VersionsData.Refresh()`까지 도달하고, 그렇지 않으면 그 전에 조기 종료됩니다. 즉 게임 경로가 설정 안 된 상태에서 "버전 테이블 유지"를 켜봐야 조용히 아무 일도 안 일어났습니다 — 실제로 게임 경로 없이 켜고 테스트해보니 `[UpdateVersions]` 로그가 한 줄도 안 남는 걸로 확인됐습니다.
+
+`SettingsViewModel.CanUpdateVersionsTable`(`App.Game != null && App.Game.CheckGamePath()`)을 추가해서 체크박스의 `IsEnabled`에 바인딩했습니다. 게임 경로를 저장/초기화하거나 개발 탭에서 게임을 전환할 때마다 다시 계산됩니다. 비활성화 상태에서 마우스를 올리면 왜 안 되는지, 활성화 상태에서는 켜면 뭘 하는지 설명하는 툴팁이 각각 뜹니다. 한국어 라벨도 "최신버전 유지"에서 "버전 테이블 유지"로 바꿨습니다 — 다른 모든 언어는 이미 "테이블"이라는 단어가 들어가 있었는데 한국어만 빠져 있어서 새로 만든 "업데이트" 버튼과 헷갈릴 수 있었습니다.
+
+### 전역 버그 수정 — 기본(classic) 테마에 툴팁 스타일 자체가 없었음
+
+이번 세션에서 추가한 툴팁이 앱 테마가 아니라 시스템 기본 흰색 툴팁으로 나왔습니다. 알고 보니 이 앱에서 툴팁을 쓴 게 이번이 처음이라 지금까지 아무도 발견 못 했던 문제였습니다 — `FluentStyles*.xaml`(classic이 아닌 다른 테마들)에는 각각 테마에 맞는 `ToolTip` 스타일이 있는데, 기본값인 classic 테마는 `Dictionary.xaml`만 단독으로 쓰고 이 파일엔 `ToolTip` 스타일이 아예 없었습니다. `Dictionary.xaml`에 동일한 스타일을 추가했습니다(배경은 불투명하게 — 이 테마의 다른 반투명 카드 색은 배경 이미지 위에 겹쳐지는 용도라 화면 아무 곳에나 뜨는 툴팁엔 안 맞음). 이 수정은 이 팝업 하나가 아니라 기본 테마를 쓰는 앱 전체의 툴팁에 적용됩니다.
+
+### 첫 실행 팝업 재설계
+
+첫 실행 팝업은 이제 스팀 연결 / 버전 테이블 유지를 아예 묻지 않습니다 — 둘 다 이미 설정 탭에 있어서 여기서 또 물어보는 건 중복이었습니다. 그 자리에 스크롤 가능한 "이번 버전에서 달라진 점" 요약을 넣었습니다. 안내문과 버튼도 함께 정리했습니다:
+
+- 스팀 연결 / 버전 테이블 유지 체크박스와 설명 문구를 없애고, 그 자리에 고정폭 스크롤 박스로 릴리스 하이라이트를 보여줍니다.
+- 환영 탭 자체의 "환영합니다!" 제목을 같은 이름의 버튼으로 바꿨습니다 — 누르면 언제든 첫 실행 팝업을 다시 열어서 이번 버전에 뭐가 바뀌었는지 다시 볼 수 있습니다. 이렇게 재오픈했을 때는 버튼이 "계속" 대신 "닫기"로 바뀌고, 최초 설정 처리(`SetupDone` 저장, `FirstSetupDone()` 호출)를 다시 실행하지 않으며, 닫아도 앱이 종료되지 않습니다(`FirstSetup` 생성자의 `isReopen: true`가 이 전부를 제어).
+- **테마 교차 테스트 중 발견한 창 크기 버그**: 이 팝업의 `SubWindow` 스타일은 `AllowsTransparency="True"` + `WindowStyle="None"` + `SizeToContent="WidthAndHeight"` 조합을 쓰는데, 이 조합에서는 WPF가 자동 크기 조절 시점에 `MaxWidth`를 안정적으로 지키지 못합니다. classic 테마에서는 우연히 괜찮아 보였지만, Diablo 같은 다른 테마에서는 창이 훨씬 넓게 렌더링되면서 글자가 줄바꿈 안 되고 잘렸습니다. 이 창에 한해 `SizeToContent="Height"`로 로컬 오버라이드해서 고쳤습니다(이 팝업의 카드들은 애초에 고정폭 디자인이라 가로 자동조절이 필요 없었음) — 테마별로 따로 패치할 필요 없이 모든 테마에 동일하게 적용됩니다.
+- **가독성 수정, classic 테마 한정**: classic 테마가 공유하는 `NormalLabel` 스타일(흰 글자+검은 그림자, 사진 배경 이미지 위에서 읽히도록 설계됨)이 이 팝업의 단색 `PanelCenter` 카드 배경과는 안 어울립니다. 앱 전체가 쓰는 공유 스타일을 건드리거나 다른 모든 테마에서 어색해 보일 색을 하드코딩하는 대신, `App.GetCurrentTheme() == "classic"`일 때만 통과하는 `FirstSetup.ApplyClassicThemeTextFix()`를 추가해서 이 팝업 한정으로, classic 테마 한정으로만 어둡고 그림자 없는 스타일을 적용합니다. 다른 테마는 전혀 손대지 않고 원래의(이미 올바른) `NormalLabel`/`PanelCenter` 색을 그대로 씁니다.
+
+### 게임 무결성 검사 — C단계는 더 이상 매번 묻지 않음
+
+Green Hell처럼 애초에 실행파일에 디지털 서명이 없는 인디 게임에서, "게임 시작"을 누를 때마다 서명 없음 경고 팝업이 떠서 매번 "계속"을 눌러야 했습니다 — 실제로 뭔가 잘못된 게 아닌데도요. 서명이 없다는 것 자체는 변조의 증거가 아니라서, 이건 진짜 안전장치라기보다는 순전한 불편함이었습니다.
+
+```mermaid
+flowchart LR
+    Start(["게임 시작 클릭"]) --> A{"A — PE 헤더\nIsValidGameExe()"}
+    A -- 실패 --> ABlock["🛑 실행 차단\nGameExeCorrupted 팝업"]
+    A -- 통과 --> B{"B — 어셈블리 체크섬\nMD5 vs Versions.xml"}
+    B -- 불일치 --> BBlock["🛑 실행 차단\nGameAssemblyTampered 팝업"]
+    B -- 일치 --> C{"C — 디지털 서명\nHasDigitalSignature()"}
+    C -- 없음 --> CLog["📝 로그만, 팝업 없음\n자동으로 계속 진행"]
+    C -- 있음 --> CLog2["📝 로그만"]
+    CLog --> Launch(["✅ 게임 실행"])
+    CLog2 --> Launch
+```
+
+- **A(PE 헤더)**, **B(어셈블리 체크섬)**는 그대로입니다 — 실제 손상/변조가 확인되면 여전히 경고 팝업(`NoProjectWarning`, 앱의 다른 팝업들과 마찬가지로 공유 `SubWindow` 스타일을 써서 현재 테마에 자동으로 맞춰짐)을 띄우고 실행을 차단합니다.
+- **C(디지털 서명)**는 이제 어느 방향이든 팝업이나 확인 요청 없이, `Notice` 레벨 로그 한 줄(`[Integrity] Game executable has no digital signature (not necessarily tampered — many games ship unsigned)`)만 남기고 게임을 실행시킵니다. 이전에 이 단계에서 띄우던 `GameIntegrityWarning` 팝업 클래스는 이제 어디서도 호출하지 않습니다(임의로 삭제하지 않고 그대로 남겨둠).
+- 이 다이어그램은 나중에 이 검사의 구조를 놓고 다시 논의할 때 기준점이 되도록 넣었습니다 — 예를 들어 C단계를 더 가벼운 형태로("다시 묻지 않음" 1회성 팝업 등) 부활시킬지 논의가 나올 경우, 이번엔 그 방식 대신 완전 제거 쪽으로 사용자 직접 지시에 따라 결정했다는 것도 함께 기록해둡니다.
+
+### 스팀 연결 — 경로 자동 탐지, 그리고 수동 편집 버그 수정
+
+원작자의 "스팀 연결" 기능이 실제로 무엇을 했는지(경로 선택 이상으로) 조사해보니, `Steam.exe -applaunch {AppId}`로 게임을 실행해서 스팀 오버레이를 지원하고, `steam://validate/{AppId}`로 손상된 파일을 복구하는 기능까지 이미 구현돼 있었습니다 — 이번엔 둘 다 그대로 두고 손대지 않았습니다.
+
+- "스팀 연결"을 켜는 순간 `MainWindow.UseSteamCheckBox_Checked`가 레지스트리(`HKEY_CURRENT_USER\Software\Valve\Steam`)에서 스팀 경로를 바로 읽어서 자동으로 채워 넣습니다 — C드라이브가 아닌 다른 드라이브에 설치돼 있어도 동일하게 동작합니다.
+- 스팀 연결이 켜져 있는 동안엔 경로가 자동 관리되므로 수동 편집 영역(입력란, 찾아보기, 저장, 초기화)이 비활성화되어야 합니다. **발견 및 수정한 버그**: 이 컨트롤들을 담은 컨테이너 Grid(`SteamAndGamePathsPanel`)에 코드 비하인드에서 `DataContext`가 한 번도 설정된 적이 없었습니다 — `Settings`와 `SettingsCheckboxes`는 설정돼 있었는데 이것만 빠져 있었습니다. 그래서 `{Binding CanEditSteamPathManually}`가 조용히 실패해서 기본값인 `IsEnabled="true"`로 남아 있었습니다. 겉보기엔 비활성화된 것처럼 안 보이는데 초기화 버튼은 실제로 눌렸던 이유입니다. `SteamAndGamePathsPanel.DataContext = SettingsVm;`을 다른 둘과 나란히 추가해서 고쳤습니다.
+- 별개로, 앱 전체적으로 비활성화된 컨트롤이 classic 테마에서는 시각적으로 전혀 티가 안 났습니다 — `NormalButton`의 `ControlTemplate`엔 `IsEnabled="False"` 트리거가 아예 없었습니다(Fluent 테마들엔 이미 있었음). 비활성화 시 40% 투명도로 흐려지는 트리거를 추가해서, classic 테마 전체에 적용되도록 했습니다.
+
+### 테마 시스템 통합 — 클래식 ↔ Fluent 파리티
+
+"둘이 실질적으로 다른 게 없다면 굳이 classic을 따로 둘 이유가 있나"라는 질문에서 시작해서, `Dictionary.xaml`(classic)과 9개 `FluentStyles*.xaml` 파일 사이의 명시적/암묵적 스타일을 전부 대조했습니다.
+
+- 실제로 쓰이는데 빠져 있던 것들을 발견했습니다: `Slider`(설정 탭 모드 목록/프로젝트 목록 너비 슬라이더)와 `ComponentsInputs:MultilingualTextField`(모드 이름/설명 입력란의 언어 아이콘+텍스트 콤보)가 classic에만 있고 Fluent엔 대응하는 게 없었습니다 — Fluent 테마에서는 이 두 컨트롤이 조용히 classic의 Scale9 이미지 스킨으로 되돌아가면서 플랫한 Fluent 룩을 깨고 있었습니다. `DynamicResource` 기반의 플랫 대체 스타일을 만들어서 새 공용 파일 **`ModAPI\Themes\FluentStylesShared.xaml`** 하나에 담고, `ResourceDictionary.MergedDictionaries`로 9개 `FluentStyles*.xaml` 전부에 병합했습니다 — 이제 색상 하나 바꿀 때 아홉 곳이 아니라 한 곳만 고치면 됩니다.
+- 반대 방향의 빈틈도 있었습니다: `GridSplitter`(`MainWindow.xaml`의 모드 목록/버전 목록 구분선)는 9개 Fluent 테마엔 스타일이 있는데 classic엔 없어서, classic에서는 그냥 OS 기본 회색 구분선으로 렌더링되고 있었습니다. `Dictionary.xaml`에 대응하는 플랫 스타일을 추가했습니다.
+- 조사 도중 진짜 죽은 코드도 여럿 발견했습니다 — 정의는 돼 있지만 실제 UI 어디에서도 참조되지 않는 스타일들: `PasswordBox`(`LoginWindow.xaml`에서만 쓰이는데, `LoginWindow` 자체를 앱 어디서도 생성하지 않음 — 로그인 시스템은 이미 v2.0.9400에서 제거됨), `Components:ModProjectButton`, 소셜 로그인 버튼 스타일 4종(`FacebookButton`/`TwitterButton`/`YoutubeButton`/`TwitchButton`), 그리고 `TimeSlider`/`TimeHorizontalSlider`/`TimeSliderThumbStyle` 묶음(출시되지 못한 낮/밤 주기 슬라이더로 추정). "원작자의 작업물은 삭제하지 않는다"는 이 프로젝트의 원칙에 따라 아무것도 지우지 않았습니다 — 각 블록을 XML 주석으로 감싸고 왜 미참조 상태인지 메모를 남겨서, 히스토리에서 사라지는 대신 파일 안에 기록으로 남도록 했습니다.
+- 빌드에 전혀 연결되지 않은 잔재 파일 2개도 발견했습니다: `ModAPI\Windows\Dictionary.xaml`(리팩터링 도중 만들어진 막다른 중복본으로, `App.xaml`이나 `.csproj` 어디에도 참조되지 않음)과 `ModAPI\Themes\FluentStylesClassic.xaml`(테마 시스템 초창기 프로토타입 — 각 테마가 전용 파일을 갖기 전, `light`를 제외한 모든 테마가 공유하던 임시 fallback 스킨이었다가 그 로직이 대체되며 참조를 잃음). 둘 다 git 이력으로 원작자 코드와 무관함이 확인돼서, 위의 죽은 스타일들과 달리 주석 처리 없이 완전히 삭제했고, `.csproj`에서 `FluentStylesClassic.xaml`을 가리키던 이제는 의미 없는 `<Page>` 항목도 같이 제거했습니다.
+- classic 자체의 `Slider`도 예전 Scale9 이미지 막대 대신, Fluent 공용 스타일과 동일한 플랫 디자인(같은 `Border`+`Track` 구조, classic의 금색/갈색 팔레트에 맞춰 손잡이 `#B8963E`, 트랙 반투명 `#40FFFFFF`로 재배색)으로 바꿨습니다 — 예전 구현(`SliderThumbStyle`, `SliderButtonStyle`, `HorizontalSlider`, `VerticalSlider`, 예전 implicit `Slider` 스타일)도 마찬가지로 삭제 대신 주석 처리했습니다.
+
+### 설정 탭 나머지 체크박스에도 ON/OFF 툴팁 추가
+
+"버전 테이블 유지"에 적용했던 "마우스를 올리면 뭘 하는지 보여주는" 패턴을 설정 탭의 나머지 4개 체크박스 — **스팀 연결**, **개발자 로그**, **로그 초기화**, **항상 위에** — 에도 똑같이 적용했습니다. 각각 지금 켜져 있는지/꺼져 있는지에 따라 다른 툴팁이 뜨고, 켜면/끄면 실제로 무슨 일이 일어나는지 설명합니다(예: 스팀 연결의 켜짐 상태 툴팁은 위에서 설명한 경로 자동 탐지와 오버레이 지원을 언급합니다). 새 언어 키 8개 × 13개 언어.
+
+### 환영 팝업 — 릴리스 노트와 동기화된 상세 본문
+
+"이번 버전에서 달라진 점" 패널은 이번 세션에서 여러 번 다듬어졌습니다: 짧은 불릿 요약 → `Docs/RELEASE_NOTES_2.0.9623.md`와 맞춘 섹션별 상세 본문(순수 텍스트 `■`/`▸`/`•` 마커 사용 — `TextBlock`은 마크다운을 렌더링 못 함)으로, 13개 언어 전체에 번역해 넣었습니다. 그 과정에서 관련된 레이아웃 버그 2개도 함께 발견하고 고쳤습니다:
+
+- 스크롤 가능한 텍스트에 원래 고정 `Width="450"`이 박혀 있어서 스크롤바 앞에 여백이 남았고(classic 테마에서는 줄바꿈도 조금 일찍 일어났습니다). 고정 폭을 없애고 `ScrollViewer`에 `Padding="14"`를 주는 방식으로 바꿔서 고쳤습니다 — `OperationPending`의 상세 영역에서 이미 검증된 방식과 동일합니다.
+- 그다음 이 텍스트를 담는 박스(`WhatsNewBorder`)에 폭을 줘야 했는데, 고정 픽셀 값은 결국 실패하는 접근이었습니다: `SubWindow` 템플릿 자체의 콘텐츠 여백이 테마마다 다릅니다(classic 32px vs Fluent 72px — Fluent 템플릿은 바깥쪽 `Border` 여백과 `ContentPresenter` 여백을 둘 다 가지고 있음). classic의 넉넉한 레이아웃에 딱 맞게 고른 폭은 Fluent 테마에서는 **스크롤바를 화면 밖으로 밀어내 버립니다.** 고정 폭과 `HorizontalAlignment="Left"`를 아예 없애서 고쳤습니다 — 이제 박스는 기본값인 `Stretch`로 동작해서, 어떤 테마든 실제로 남는 공간에 정확히 맞춰집니다.
+- 이 팝업 문구는 GitHub 릴리스 페이지에서 실시간으로 가져오지 않습니다 — 그러려면 영어 원문을 비영어권 사용자에게 그대로 보여주거나, 번역 파이프라인(릴리스마다 언어별 JSON 파일을 같이 배포하거나, 기계 번역 API를 붙이거나)을 새로 구축해야 하는데 둘 다 이 프로젝트엔 아직 없습니다. 대신 짧게 손으로 번역한 요약을 유지하고, 릴리스 노트가 갱신될 때마다 그 자리에서 다시 작성합니다(추가가 아니라 항상 전체 교체).
+
+### 신규/업데이트된 언어 키 (13개 언어)
+
+| 키 | 한국어 값 |
+|---|---|
+| `Lang.Options.Buttons.Update` | 업데이트 |
+| `Lang.Windows.OperationPending.Tasks.Update.Done` | 업데이트 준비 완료 — 아래 변경 내역을 확인 후 완료를 눌러주세요. |
+| `Lang.Windows.NoUpdateAvailable.Title` | 최신 버전입니다 |
+| `Lang.Windows.NoUpdateAvailable.Text` | 현재 최신 버전의 ModAPI를 사용하고 있습니다. |
+| `Lang.Windows.NoUpdateAvailable.Buttons.OK` | 확인 |
+| `Lang.Options.Labels.UpdateVersionsTableDisabledHint` | 게임 경로를 먼저 설정해야 사용할 수 있습니다. |
+| `Lang.Options.Labels.UpdateVersionsTableEnabledHint` | 게임이 패치되면 ModAPI가 새 버전인지 확인해야 하는데, 켜두면 이 정보를 자동으로 최신 상태로 유지합니다. |
+| `Lang.Options.Labels.UseSteamEnabledHint` / `UseSteamDisabledHint` | 스팀 경로 자동 탐지(또는 수동 입력)가 뭘 하는지 설명 |
+| `Lang.Options.Labels.DevLogEnabledHint` / `DevLogDisabledHint` | 추가 로그 파일(`ModAPI.dev.log`)과 기본 로그의 차이 설명 |
+| `Lang.Options.Labels.ClearLogsOnStartEnabledHint` / `ClearLogsOnStartDisabledHint` | 실행할 때마다 이전 로그를 지울지 이어쓸지 설명 |
+| `Lang.Options.Labels.AlwaysOnTopEnabledHint` / `AlwaysOnTopDisabledHint` | 창을 항상 위에 둘지, 다른 창에 가려지게 둘지 설명 |
+| `Lang.Windows.FirstSetup.WhatsNewTitle` | 이번 버전에서 달라진 점 |
+| `Lang.Windows.FirstSetup.WhatsNewText` | 섹션별 상세 요약(■/▸/• 마커) — 릴리스마다 전체 교체, 앱 내 현재 문구 참고 |
+| `Lang.Windows.FirstSetup.Buttons.Close` | 닫기 |
+| `Lang.Mods.Welcome.Buttons.OpenWelcomePopup` | 환영합니다 |
+
+**삭제됨** (동작하지 않던 "자동-업데이트" 기능 제거): `Lang.Options.Labels.AutoUpdate`(위 `Lang.Options.Buttons.Update`로 대체), `Lang.Windows.FirstSetup.AutoUpdate`, `Lang.Windows.FirstSetup.AutoUpdateText`.
+
+**삭제됨** (첫 실행 팝업 재설계): `Lang.Windows.FirstSetup.Steam`, `Lang.Windows.FirstSetup.SteamText`, `Lang.Windows.FirstSetup.UpdateVersions`, `Lang.Windows.FirstSetup.UpdateVersionsText`, `Lang.Mods.Welcome.Title0`(`Lang.Mods.Welcome.Buttons.OpenWelcomePopup`으로 대체).
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9622 변경사항</b></summary>
 
 ## v2.0.9622 변경사항
@@ -783,16 +917,16 @@ LangTool UI 문자열, 다이얼로그 메시지, 상태 텍스트를 포함하�
 
 ### 신규 언어 키 (13개 언어)
 
-| 키 | 영문 값 |
+| 키 | 한국어 값 |
 |---|---|
-| `Lang.Options.Labels.DevLog` | Developer Log |
-| `Lang.Options.Labels.ClearLogsOnStart` | Clear Logs on Start |
-| `Lang.Windows.IncompatibleModsExcluded.Title` | Some Mods Excluded |
-| `Lang.Windows.IncompatibleModsExcluded.Text` | The following mod(s) appear to be built for a different game and were excluded: {0} |
-| `Lang.Windows.IncompatibleModsExcluded.OK` | OK |
-| `Lang.Windows.NoModsApplied.Title` | No Mods Applied |
-| `Lang.Windows.NoModsApplied.Text` | No valid mods remained to apply, so the game was not started. |
-| `Lang.Windows.NoModsApplied.OK` | OK |
+| `Lang.Options.Labels.DevLog` | 개발자 로그 |
+| `Lang.Options.Labels.ClearLogsOnStart` | 로그 초기화 |
+| `Lang.Windows.IncompatibleModsExcluded.Title` | 모드 제외됨 |
+| `Lang.Windows.IncompatibleModsExcluded.Text` | 다음 모드는 다른 게임용으로 보여 제외되었습니다: {0} |
+| `Lang.Windows.IncompatibleModsExcluded.OK` | 확인 |
+| `Lang.Windows.NoModsApplied.Title` | 적용된 모드 없음 |
+| `Lang.Windows.NoModsApplied.Text` | 적용 가능한 모드가 없어 게임을 실행하지 않았습니다. |
+| `Lang.Windows.NoModsApplied.OK` | 확인 |
 
 ### 수정된 파일
 
@@ -990,19 +1124,19 @@ public static readonly string[] VersionUpdateDomains =
 
 ### 신규 언어 키 (13개 언어)
 
-| 키 | 영어 값 |
+| 키 | 한국어 값 |
 |---|---|
-| `Lang.Windows.SelectGame.Title` | Select Game |
-| `Lang.Windows.SelectGame.Message` | Select the game to launch: |
-| `Lang.Windows.GameExeCorrupted.Title` | Executable Corrupted |
-| `Lang.Windows.GameExeCorrupted.Text` | The game executable failed validation... |
-| `Lang.Windows.GameAssemblyTampered.Title` | Game Files Tampered |
-| `Lang.Windows.GameAssemblyTampered.Text` | The game assembly checksum does not match... |
-| `Lang.Windows.GameNoSignature.Title` | Integrity Warning |
-| `Lang.Windows.GameNoSignature.Text` | The game executable has no digital signature... |
-| `Lang.Windows.GameNoSignature.Continue` | Continue Anyway |
-| `Lang.Windows.GameNoSignature.Cancel` | Cancel |
-| `Lang.Savegames.*` (133개 키) | 12개 언어에 영어 값 추가 (DE는 이미 번역됨) |
+| `Lang.Windows.SelectGame.Title` | 게임 선택 |
+| `Lang.Windows.SelectGame.Message` | 실행할 게임을 선택하세요: |
+| `Lang.Windows.GameExeCorrupted.Title` | 실행파일 손상 |
+| `Lang.Windows.GameExeCorrupted.Text` | 게임 실행파일 검증에 실패했습니다. 파일이 손상되었거나 허가되지 않은 파일로 교체되었을 수 있습니다. 시스템 보호를 위해 실행이 차단되었습니다. |
+| `Lang.Windows.GameAssemblyTampered.Title` | 게임 파일 변조 감지 |
+| `Lang.Windows.GameAssemblyTampered.Text` | 게임 어셈블리의 체크섬이 예상값과 일치하지 않습니다. 게임 파일이 변조되었을 수 있습니다. 실행이 차단되었습니다. |
+| `Lang.Windows.GameNoSignature.Title` | 무결성 경고 |
+| `Lang.Windows.GameNoSignature.Text` | {0} 실행파일에 디지털 서명이 없습니다. 인디 게임에서는 흔한 경우이며 게임 진행에는 아무런 영향이 없습니다. |
+| `Lang.Windows.GameNoSignature.Continue` | 계속 진행 |
+| `Lang.Windows.GameNoSignature.Cancel` | 취소 |
+| `Lang.Savegames.*` (133개 키) | 12개 언어에 영어 값 추가 (DE는 이미 번역됨) — 세이브게임 관련 키라 한국어 번역 대상에서 제외, 영문 그대로 유지 |
 
 ---
 
@@ -1098,11 +1232,11 @@ public static readonly string[] VersionUpdateDomains =
 
 ### 신규 언어 키 (13개 언어)
 
-| 키 | 영어 값 |
+| 키 | 한국어 값 |
 |-----|---------------|
-| `Lang.Windows.DownloadEmpty.Title` | Download Failed |
-| `Lang.Windows.DownloadEmpty.Text` | The downloaded mod file is empty (0 bytes). The file may not exist on the server. |
-| `Lang.Windows.DownloadEmpty.Buttons.OK` | OK |
+| `Lang.Windows.DownloadEmpty.Title` | 다운로드 실패 |
+| `Lang.Windows.DownloadEmpty.Text` | 다운로드된 모드 파일이 비어 있습니다 (0 바이트). 서버에 파일이 존재하지 않을 수 있습니다. |
+| `Lang.Windows.DownloadEmpty.Buttons.OK` | 확인 |
 
 ### 수정 파일
 
@@ -1167,7 +1301,7 @@ Steam 설치 경로 및 각 게임 설치 경로 행에 **Reset** 버튼이 추�
 
 | 키 | 값 |
 |---|---|
-| `Lang.Options.Labels.PathReset` | Reset |
+| `Lang.Options.Labels.PathReset` | 초기화 |
 
 ---
 
@@ -1578,17 +1712,17 @@ Mod Library Regeneration 클릭 시 3단계 검증:
 
 #### 신규/업데이트된 언어 키
 
-| 키 | 영어 값 |
+| 키 | 한국어 값 |
 |-----|---------------|
-| `Lang.Downloads.Status.NoDownloads` | No downloadable files for this mod. |
-| `Lang.Options.Labels.ModListWidth` | Mod List Width |
-| `Lang.Options.Labels.ProjectListWidth` | Project List Width |
-| `Lang.Options.Labels.FontSize` | Font Size |
-| `Lang.Options.Labels.MaxWidth` | Max Width |
-| `Lang.Development.Labels.GameFilter` | Game Filter |
-| `Lang.Options.Labels.SteamPath` | Steam Installation Path |
-| `Lang.Windows.SteamNotFound.Title` | Steam Not Found |
-| `Lang.Windows.SteamNotFound.Text` | Steam is not installed. Please configure Steam in the Settings tab. |
+| `Lang.Downloads.Status.NoDownloads` | 이 모드에 다운로드 가능한 파일이 없습니다. |
+| `Lang.Options.Labels.ModListWidth` | 모드목록 너비 |
+| `Lang.Options.Labels.ProjectListWidth` | 프로젝트목록 너비 |
+| `Lang.Options.Labels.FontSize` | 폰트 크기 |
+| `Lang.Options.Labels.MaxWidth` | 최대 너비 |
+| `Lang.Development.Labels.GameFilter` | 게임 필터 |
+| `Lang.Options.Labels.SteamPath` | 스팀 설치 경로 |
+| `Lang.Windows.SteamNotFound.Title` | 스팀을 찾을 수 없음 |
+| `Lang.Windows.SteamNotFound.Text` | 설치된 스팀이 없습니다. Settings탭에서 스팀을 설정해주십시오. |
 | `Lang.Windows.GameModsMismatch.Title` | Game Mismatch |
 | `Lang.Windows.GameModsMismatch.Text` | The game in the mods folder does not match the game configured in the Settings tab. |
 | `Lang.Downloads.Offline.Manual2` | (e.g. mods/TheForest, mods/Subnautica, …) |

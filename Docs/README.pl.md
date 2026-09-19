@@ -12,9 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9622 - 20260808
-
-**Narzędzie do Zarządzania Modami dla The Forest — Wersja Rozszerzona**
+# ModAPI(v1) v2.0.9623 - 20260920
 
 > Oryginał: FluffyFish / Philipp Mohrenstecher (Engelskirchen, Niemcy)
 > Rozszerzenie: zzangae (Republika Korei)
@@ -254,7 +252,7 @@ Sprawdzany układ nagłówka PE:
 </details>
 
 <details>
-<summary><b>Theme System [Detailed Reference](v2.0.9613_themes_en.md)</b></summary>
+<summary><b>System Motywów [Szczegółowe Odniesienie](v2.0.9613_themes_en.md)</b></summary>
 
 Od wersji v2.0.9613 interfejs wyboru motywu został przeniesiony z zakładki Settings do dedykowanej zakładki **Themes**. Dodanie nowego motywu wymaga tylko jednej linii w słowniku `App.xaml.cs`.
 
@@ -627,7 +625,7 @@ Samodzielne narzędzie WPF do aktualizacji numeru wersji jednym kliknięciem.
 
 **Lokalizacja**: `VersionTool\MODAPI_VersionTool.csproj`
 
-<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/d7d40dea-129e-457d-9978-4ca149487275" />
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
 
 **Funkcje**
 - Automatycznie wyświetla aktualną wersję (odczytaną z `App.xaml.cs`)
@@ -693,6 +691,142 @@ Logi diagnostyczne przeznaczone wyłącznie dla deweloperów były wcześniej og
 </details>
 
 <details open>
+<summary><b>Zmiany w v2.0.9623</b></summary>
+
+## Zmiany w v2.0.9623
+
+### Sprawdzanie i Stosowanie Aktualizacji — Styl Launchera, Ręczne, Nieblokujące
+
+Okno pierwszego uruchomienia (`FirstSetup`) oferowało wcześniej 3 opcje — **Zachowaj Najnowszą Wersję**, **Szukaj Aktualizacji** i **Połączenie ze Steam** — których rozwój był wstrzymany. Zbadanie rzeczywistego stanu kodu przed wznowieniem prac wykazało, że Połączenie ze Steam i Zachowaj Najnowszą Wersję już w pełni działały; niedokończone było tylko Szukanie Aktualizacji (sprawdzanie, czy istnieje nowsze wydanie ModAPI) — potok pobierania/instalacji istniał, ale nic go nigdy nie wywoływało.
+
+**Co zostało zaimplementowane:**
+
+- **`Game.CheckForNewVersion(out releaseNotes)`** (`ModAPI_Shared\Data\Game.cs`) — wywołuje API GitHub Releases (`/repos/{owner}/ModAPI/releases/latest`) i zwraca najnowszy tag wraz z notatkami wydania (pole `body`, parsowane minimalnym mechanizmem odescapowania łańcuchów JSON — bez dodawania nowej zależności). `UpdateRepoOwner` dla zwykłych użytkowników zawsze wskazuje na `FluffyFishGames` i przełącza się na repozytorium deweloperskie opiekuna tylko przy uruchomieniu z `--dev` — nigdy na podstawie checkboksa "Dziennik dewelopera" w zakładce Ustawienia, ponieważ ten checkbox służy wyłącznie do poziomu szczegółowości logów awarii i nie może po cichu przenosić użytkownika na niewydany kanał testowy.
+- **Zakładka Ustawienia**: niedziałający checkbox "Szukaj Aktualizacji" zniknął, zastąpiony pojedynczym przyciskiem **Aktualizuj** (styl launchera, nie przełącznik w tle). Kliknięcie sprawdza nową wersję i, jeśli istnieje, od razu uruchamia przepływ pobierania/rozpakowania/zastosowania — bez pośredniego wyboru "teraz czy później".
+- **Okno pierwszego uruchomienia**: martwa opcja "Auto-aktualizacja" została usunięta wraz z jej już nieużywanym zapisem konfiguracji; okno pyta teraz tylko o Połączenie ze Steam i Zachowaj Najnowszą Wersję.
+- **Okno `OperationPending`** zyskało opcjonalny, domyślnie zwinięty panel notatek wydania oraz zdarzenie `Confirmed`. Gdy pobieranie/rozpakowywanie osiągnie 100%, notatki wydania stają się widoczne, a przycisk "Gotowe" aktywuje się — dopiero jego kliknięcie faktycznie uruchamia `Updater.exe` i zamyka ModAPI (wcześniej działo się to automatycznie w chwili zakończenia rozpakowywania, bez szansy zobaczenia, co się zmieniło). Sam `Updater.exe` (kod oryginalnego autora, niezmieniony) czeka na zamknięcie ModAPI, nadpisuje pliki i automatycznie uruchamia ModAPI ponownie.
+- ModAPI nigdy nie blokuje działania z powodu nieaktualnej wersji: sprawdzanie wersji uruchamia się wyłącznie po kliknięciu Aktualizuj przez użytkownika, nigdy przy starcie — aplikacja pozostaje w pełni użyteczna niezależnie od stanu aktualizacji, w przeciwieństwie do typowej bramki wymuszonej aktualizacji w launcherach gier.
+
+### Poprawka UI — Panel Notatek Wydania Nie Zawijał Tekstu
+
+Nowy panel notatek wydania w oknie postępu `OperationPending` początkowo renderował się jako jedna nieczytelna linia wymagająca przewijania poziomego, z dwóch nakładających się powodów:
+
+1. Domyślna wartość `HorizontalScrollBarVisibility` dla `TextBox` to `Hidden`, nie `Disabled` — i dopóki nie jest jawnie ustawiona na `Disabled`, WPF ignoruje `TextWrapping="Wrap"` i pozwala linii rosnąć w nieskończoność.
+2. Styl `SubWindow` używany przez wszystkie okna popup ustawia `SizeToContent="WidthAndHeight"` (`FluentStyles.xaml`), więc panel rozciągający się przez kolumnę siatki `*` nie ma stałej szerokości, do której mógłby się zawijać — trzeba nadać mu jawną szerokość.
+
+Naprawiono nadając panelowi stałą szerokość powiązaną z `ProgressBar.ActualWidth` (aby jego prawa krawędź wyrównywała się z paskiem postępu powyżej) i zmieniając `TextBox` na tylko-do-odczytu `TextBlock` wewnątrz `ScrollViewer` (`TextBlock` nie ma dziwactwa zawijania `PART_ContentHost` z `TextBox`). Panel otrzymał też nieprzezroczyste tło `FluentCardBrush` — wcześniej domyślnie dziedziczył przezroczystość okna. Usunięto ręczną poprawkę `Height +=`, która wcześniej wymuszała większą wysokość okna, ponieważ aktywnie kolidowała z `SizeToContent` — teraz okno poprawnie rośnie samodzielnie, gdy panel staje się widoczny.
+
+### Zweryfikowano od Początku do Końca (Test Ręczny)
+
+Przeprowadzono realnie pełny cykl sprawdź → pobierz → rozpakuj → potwierdź → uruchom ponownie (na jednorazowym, testowym pakiecie wydania), aby potwierdzić, że cały łańcuch działa, w tym oryginalny, niezmieniony `Updater.exe`. Jedna przydatna rzecz odkryta podczas testów: `App.xaml.cs` już przy własnym starcie ModAPI usuwa pozostały folder `_update` (jako krok samoczyszczenia) — więc każdy ręczny test, który wcześniej tworzy fałszywy folder `_update` *przed* uruchomieniem ModAPI, sprawi, że zostanie on po cichu pochłonięty, zanim `Updater.exe` w ogóle go zobaczy. Folder musi zostać utworzony *gdy ModAPI już działa*, zgodnie z tym, jak wypełnia go rzeczywiste pobieranie. Dodano opcjonalne logowanie diagnostyczne do `Updater.cs` (`Updater.diag.log`, opakowane w try/catch, poza normalną ścieżką logiki), aby ułatwić diagnozowanie tego typu przypadków w przyszłości bez konieczności dotykania oryginalnej logiki ponownego uruchamiania.
+
+### Notatki Deweloperskie — Uruchamianie z `--dev`
+
+`App.DevMode` (`ModAPI\App.xaml.cs`) ustawiane jest na `true` tylko wtedy, gdy aplikacja jest uruchamiana z argumentem wiersza poleceń `--dev` — jest to oddzielone od checkboksa "Dziennik dewelopera" w zakładce Ustawienia, który wpływa wyłącznie na szczegółowość logów i **nie** może być używany do warunkowania czegokolwiek poza logowaniem (np. nigdy nie może przełączać, z jakim serwerem/repozytorium łączy się dana funkcja — użytkownik włączający szczegółowe logowanie, by zgłosić awarię, nie powinien zostać po cichu przeniesiony na niewydany kanał testowy).
+
+Aby uruchomić lokalnie z `--dev`:
+- **Visual Studio (debugowanie F5)**: projekt `ModAPI` → Właściwości → zakładka Debugowanie → "Argumenty wiersza poleceń" → wpisz `--dev`.
+- **Zbudowany plik .exe**: uruchom z terminala jako `ModAPI.exe --dev`, lub dodaj `--dev` na końcu pola Cel skrótu.
+
+### "Zachowaj Tabelę Wersji" — Checkbox Wyłączony, Dopóki Faktycznie Nic Nie Robi
+
+`Game.Verify()` dochodzi do `VersionsData.Refresh()` (kodu, który faktycznie pobiera tabelę wersji) tylko wtedy, gdy ścieżka gry jest prawidłowa (`CheckGamePath()` przechodzi) — w przeciwnym razie kończy działanie wcześniej. Oznaczało to, że włączenie "Zachowaj Tabelę Wersji" bez skonfigurowanej ścieżki gry po cichu nic nie robiło, co było mylące (potwierdzone na trudny sposób: ręczny test bez ścieżki gry nie wyprodukował ani jednej linii logu `[UpdateVersions]`, mimo włączonego checkboksa).
+
+Dodano `SettingsViewModel.CanUpdateVersionsTable` (`App.Game != null && App.Game.CheckGamePath()`) i powiązano z `IsEnabled` checkboksa. Wartość jest ponownie obliczana za każdym razem, gdy ścieżka gry zostaje zapisana/zresetowana lub gdy filtr gry w zakładce Development zmienia grę. Gdy checkbox jest wyłączony, najechanie myszą pokazuje podpowiedź wyjaśniającą dlaczego; gdy włączony — podpowiedź wyjaśnia, co robi jego włączenie. Zmieniono też nazwę koreańskiej etykiety z "최신버전 유지" ("zachowaj najnowszą wersję") na "버전 테이블 유지" ("zachowaj tabelę wersji") — każdy inny język już zawierał tu słowo "tabela"; tylko koreański go pomijał, co powodowało pomylenie z niepowiązanym przyciskiem "Aktualizuj".
+
+### Globalna Poprawka — Podpowiedzi (Tooltip) Nie Miały Stylu w Domyślnym Motywie (classic)
+
+Podpowiedź z tej sesji (powyżej) wyświetlała się jako zwykła biała systemowa podpowiedź zamiast stylizowanego wyglądu aplikacji. Okazało się, że żadna podpowiedź w aplikacji nigdy wcześniej nie była testowana w domyślnym motywie "classic": pliki `FluentStyles*.xaml` (motywy inne niż domyślny) definiują stylizowany styl `ToolTip`, ale `classic` ładuje tylko `Dictionary.xaml`, który nigdy go nie miał. Dodano pasujący styl `ToolTip` do `Dictionary.xaml` (nieprzezroczyste tło, ponieważ pozostałe półprzezroczyste pędzle kart tego motywu są przeznaczone do umieszczenia na obrazie tła, a nie na pływającej podpowiedzi). Naprawia to podpowiedzi w całej aplikacji w domyślnym motywie, nie tylko tę jedną.
+
+### Przeprojektowanie Okna Pierwszego Uruchomienia
+
+Okno pierwszego uruchomienia nie pyta już wcale o Połączenie ze Steam / Zachowaj Tabelę Wersji — obie opcje są już dostępne w zakładce Settings, więc ponowne pytanie tutaj było zbędne. W ich miejsce okno pokazuje teraz przewijane podsumowanie "Co nowego w tej wersji". Tekst wprowadzający i przycisk zostały również przeprojektowane:
+
+- Checkboksy Połączenie ze Steam / Zachowaj Tabelę Wersji oraz ich opisy zniknęły; w ich miejsce pojawił się przewijany panel o stałej szerokości z najważniejszymi zmianami wydania.
+- Nagłówek zakładki Welcome "환영합니다!" ("Witaj!") został zastąpiony przyciskiem o tej samej nazwie — kliknięcie go otwiera ponownie okno pierwszego uruchomienia w dowolnym momencie, np. aby ponownie przeczytać, co zmieniło się w bieżącej wersji. Otwarte w ten sposób okno ma przycisk z napisem "Zamknij" zamiast "Continue", nie uruchamia ponownie pierwszej konfiguracji (brak zapisu `SetupDone`, brak wywołania `FirstSetupDone()`), a jego zamknięcie nigdy nie zamyka aplikacji (`isReopen: true` w konstruktorze `FirstSetup` warunkuje to wszystko).
+- **Błąd rozmiaru okna znaleziony podczas testów międzymotywowych**: styl `SubWindow` tego okna łączy `AllowsTransparency="True"` + `WindowStyle="None"` + `SizeToContent="WidthAndHeight"` — kombinację, w której WPF nie zawsze respektuje `MaxWidth` podczas automatycznego ustalania rozmiaru. Wyglądało to dobrze w motywie `classic` przez przypadek, ale renderowało się zbyt szeroko (z niezawiniętym, ucinanym tekstem) w innych motywach, jak Diablo. Naprawiono, nadpisując lokalnie `SizeToContent="Height"` dla tego okna (karty tego okna mają z założenia stałą szerokość, więc automatyczne ustalanie szerokości nigdy nie było potrzebne) — naprawia to układ identycznie we wszystkich motywach zamiast wymagać osobnej poprawki dla każdego motywu.
+- **Czytelność, tylko motyw `classic`**: współdzielony styl `NormalLabel` motywu `classic` (biały tekst + cień, zaprojektowany dla tekstu na panelach z obrazami fotograficznymi) nie prezentuje się dobrze na tle karty `PanelCenter` tego okna. Zamiast dotykać współdzielonego stylu (używanego wszędzie) lub kodować na sztywno kolory, które wyglądałyby źle w każdym innym motywie, dodano `FirstSetup.ApplyClassicThemeTextFix()`, ściśle warunkowane przez `App.GetCurrentTheme() == "classic"`, które podmienia ciemny, pozbawiony cienia wygląd tylko dla tego okna, tylko w tym jednym motywie. Każdy inny motyw pozostaje nietknięty i nadal używa swoich już poprawnych kolorów `NormalLabel`/`PanelCenter`.
+
+### Kontrola Integralności Gry — Krok C Nie Pyta Już Przy Każdym Uruchomieniu
+
+Użytkownicy zgłaszali prawdziwą frustrację związaną z kontrolą integralności przed uruchomieniem: w przypadku gier, które po prostu nie mają podpisu cyfrowego (typowe dla tytułów niezależnych, jak Green Hell), popup ostrzeżenia "brak podpisu" pojawiał się **za każdym razem**, gdy użytkownik klikał Start Game, wymagając ręcznego kliknięcia "Kontynuuj" za każdym razem — mimo że nic nie było faktycznie nie tak. Sam brak podpisu nie jest dowodem manipulacji, więc było to czyste tarcie, a nie rzeczywista kontrola bezpieczeństwa.
+
+```mermaid
+flowchart LR
+    Start(["Kliknij Start Game"]) --> A{"A — Nagłówek PE\nIsValidGameExe()"}
+    A -- niepowodzenie --> ABlock["🛑 Blokuj uruchomienie\npopup GameExeCorrupted"]
+    A -- powodzenie --> B{"B — Suma kontrolna assembly\nMD5 vs Versions.xml"}
+    B -- niezgodność --> BBlock["🛑 Blokuj uruchomienie\npopup GameAssemblyTampered"]
+    B -- zgodność --> C{"C — Podpis cyfrowy\nHasDigitalSignature()"}
+    C -- brak --> CLog["📝 Tylko log, bez popupu\nkontynuuje automatycznie"]
+    C -- obecny --> CLog2["📝 Tylko log"]
+    CLog --> Launch(["✅ Gra się uruchamia"])
+    CLog2 --> Launch
+```
+
+- **A (nagłówek PE)** i **B (suma kontrolna assembly)** pozostają bez zmian — rzeczywiste uszkodzenie lub manipulacja nadal blokują uruchomienie z popupem ostrzeżenia (`NoProjectWarning`, stylizowanym za pomocą współdzielonego stylu `SubWindow`, jak każdy inny popup w aplikacji, więc automatycznie dopasowuje się do aktualnie aktywnego motywu).
+- **C (podpis cyfrowy)** nie pokazuje już żadnego popupu ani nie prosi o potwierdzenie w żadnym kierunku — po prostu zapisuje linię logu na poziomie `Notice` (`[Integrity] Game executable has no digital signature (not necessarily tampered — many games ship unsigned)`) i pozwala grze się uruchomić. Klasa popupu `GameIntegrityWarning`, która wcześniej się otwierała, nie jest już wywoływana z żadnego miejsca (pozostawiona w kodzie, nieużywana, zamiast całkowicie usunięta).
+- Ten diagram ma ułatwić przyszłą dyskusję o kształcie tej kontroli — np. gdyby krok C miał kiedyś zostać przywrócony w lżejszej formie (opcja jednorazowego "nie pytaj ponownie" zamiast całkowitego usunięcia komunikatu była rozważana i odrzucona na rzecz pełnego usunięcia, zgodnie z decyzją użytkownika), powyższy przepływ jest punktem odniesienia.
+
+### Połączenie ze Steam — Automatycznie Wykrywana Ścieżka i Błąd Ręcznej Edycji
+
+Sprawdzenie, co faktycznie robiła funkcja "Połączenie ze Steam" oryginalnego autora (poza umożliwieniem wyboru ścieżki Steam przez użytkownika), ujawniło, że uruchamia ona też grę przez `Steam.exe -applaunch {AppId}` (dla wsparcia nakładki Steam) i przywraca uszkodzone pliki przez `steam://validate/{AppId}` — obie funkcje były już zaimplementowane i nietknięte w tej rundzie.
+
+- W momencie włączenia "Połączenie ze Steam" `MainWindow.UseSteamCheckBox_Checked` odczytuje ścieżkę Steam bezpośrednio z rejestru (`HKEY_CURRENT_USER\Software\Valve\Steam`) i wypełnia ją automatycznie — działa to niezależnie od tego, na którym dysku zainstalowany jest Steam, nie tylko na `C:`.
+- Gdy Połączenie ze Steam jest włączone, ręczne kontrolki ścieżki (pole tekstowe, Browse, Save, Reset) mają być wyłączone, ponieważ ścieżka jest zarządzana automatycznie. **Znaleziono i naprawiono błąd**: kontener Grid zawierający te kontrolki (`SteamAndGamePathsPanel`) nigdy nie miał ustawionego `DataContext` w kodzie zaplecza — miały go tylko `Settings` i `SettingsCheckboxes` — więc `{Binding CanEditSteamPathManually}` po cichu zawodziło i domyślnie ustawiało `IsEnabled="true"`. Kontrolki *wyglądały* na nieaktywne, ale przycisk Reset był w pełni klikalny. Naprawiono, ustawiając jawnie `SteamAndGamePathsPanel.DataContext = SettingsVm;` obok pozostałych dwóch.
+- Osobno, wyłączone kontrolki w całej aplikacji nie dawały żadnej wizualnej informacji zwrotnej w motywie classic — `ControlTemplate` stylu `NormalButton` nie miało wyzwalacza `IsEnabled="False"` (motywy Fluent już go miały). Dodano pasujący wyzwalacz, który przyciemnia przycisk do 40% nieprzezroczystości, gdy jest wyłączony, w całej aplikacji w motywie classic.
+
+### Unifikacja Systemu Motywów — Parytet Classic ↔ Fluent
+
+Zainspirowane pytaniem "dlaczego classic w ogóle musi być utrzymywany osobno od rodziny motywów Fluent, skoro nie różnią się znacząco" — przeprowadzono pełny audyt porównujący każdy jawny i domyślny styl między `Dictionary.xaml` (classic) a 9 plikami `FluentStyles*.xaml`.
+
+- Znaleziono realne, aktywne luki: `Slider` (używany przez suwaki szerokości list mod-list/project-list w zakładce Settings) i `ComponentsInputs:MultilingualTextField` (kombinacja flagi języka + pola tekstowego używana dla pól nazwy/opisu moda) istniały tylko w classic, bez odpowiednika w Fluent — pod motywem Fluent te dwie kontrolki po cichu wracały do skórki Scale9-image z classic, psując płaski wygląd Fluent. Zbudowano płaskie, oparte na `DynamicResource` zamienniki dla obu i umieszczono je w jednym nowym wspólnym pliku, **`ModAPI\Themes\FluentStylesShared.xaml`**, scalonym ze wszystkimi 9 plikami `FluentStyles*.xaml` przez `ResourceDictionary.MergedDictionaries` — poprawka koloru musi teraz nastąpić tylko w jednym miejscu zamiast w dziewięciu.
+- Znaleziono lukę działającą też w drugą stronę: `GridSplitter` (rozdzielacz listy modów/wersji w `MainWindow.xaml`) miał styl Fluent we wszystkich 9 motywach, ale żadnego w classic, więc renderował się jako zwykły, domyślny szary rozdzielacz systemu operacyjnego pod classic. Dodano pasujący płaski styl do `Dictionary.xaml`.
+- Znaleziono naprawdę martwy kod po drodze — style zdefiniowane, ale nieużywane nigdzie w faktycznym interfejsie: `PasswordBox` (używany tylko przez `LoginWindow.xaml`, które samo nigdy nigdzie nie jest tworzone — system logowania został już usunięty w v2.0.9400), `Components:ModProjectButton`, cztery style przycisków logowania społecznościowego (`FacebookButton`/`TwitterButton`/`YoutubeButton`/`TwitchButton`) oraz zestaw `TimeSlider`/`TimeHorizontalSlider`/`TimeSliderThumbStyle` (prawdopodobnie suwak cyklu dnia/nocy, który nigdy nie trafił do wydania). Zgodnie z zasadą projektu "nie usuwaj pracy oryginalnego autora" nic z tego nie zostało usunięte — każdy blok został owinięty komentarzem XML z notatką, dlaczego jest nieużywany, więc pozostaje w pliku jako zapis, zamiast znikać z historii.
+- Znaleziono dwa pozostałe pliki niepodłączone w ogóle do buildu: `ModAPI\Windows\Dictionary.xaml` (martwa duplikacja utworzona w trakcie refaktoryzacji we wczesnym commicie, nigdy nieprzywoływana przez `App.xaml` ani `.csproj`) oraz `ModAPI\Themes\FluentStylesClassic.xaml` (wczesny prototyp systemu motywów — pierwotnie skórka zapasowa dla każdego motywu oprócz `light`, zanim każdy motyw miał swój dedykowany plik; osierocony po zastąpieniu tej logiki zapasowej). Oba potwierdzono w historii git jako niezwiązane z kodem oryginalnego autora, więc — w przeciwieństwie do martwych stylów powyżej — zostały usunięte całkowicie zamiast zakomentowane, a powiązany, teraz wiszący wpis `<Page>` dla `FluentStylesClassic.xaml` usunięto z `.csproj`.
+- Własny `Slider` w classic został następnie przeprojektowany, aby dopasować płaski wygląd wspólnego stylu Fluent (ta sama struktura `Border`+`Track`, przekolorowana na złoto-brązową paletę classic: kciuk `#B8963E`, półprzezroczysty pasek `#40FFFFFF`) zamiast starego paska opartego na obrazie Scale9 — stara implementacja (`SliderThumbStyle`, `SliderButtonStyle`, `HorizontalSlider`, `VerticalSlider` i stary domyślny styl `Slider`) została podobnie zakomentowana zamiast usunięta.
+
+### Podpowiedzi WŁ/WYŁ dla Pozostałych Checkboksów w Zakładce Settings
+
+Rozszerzono ten sam wzorzec "najedź, by zobaczyć, co to robi" z "Zachowaj Tabelę Wersji" na pozostałe cztery checkboksy w zakładce Settings — **Połączenie ze Steam**, **Dziennik dewelopera**, **Czyść dzienniki przy starcie** i **Zawsze na wierzchu** — każdy pokazuje teraz inną podpowiedź w zależności od własnego stanu zaznaczenia, wyjaśniając, co faktycznie robi jego włączenie vs. wyłączenie (np. podpowiedź Połączenia ze Steam w stanie włączonym wyjaśnia automatyczne wykrywanie ścieżki i wsparcie nakładki opisane powyżej). 8 nowych kluczy językowych × 13 języków.
+
+### Okno Powitalne — Pełna Szczegółowa Treść, Zsynchronizowana z Notatkami Wydania
+
+Panel "Co nowego w tej wersji" ewoluował przez kilka iteracji w tej rundzie: krótkie podsumowanie punktowe → pełne, szczegółowe zestawienie sekcja po sekcji odpowiadające `Docs/RELEASE_NOTES_2.0.9623.md` (z użyciem zwykłych znaczników tekstowych `■`/`▸`/`•`, ponieważ `TextBlock` nie potrafi renderować Markdown), przetłumaczone na wszystkie 13 języków. Po drodze pojawiły się i zostały naprawione dwa powiązane błędy układu:
+
+- Przewijany tekst miał pierwotnie zakodowaną na sztywno `Width="450"`, co zostawiało lukę przed paskiem przewijania (a w motywie classic konkretnie zawijało tekst nieco za wcześnie). Naprawiono, usuwając stałą szerokość i nadając `ScrollViewer` `Padding="14"` zamiast tego — ten sam wzorzec sprawdzony już w panelu szczegółów `OperationPending`.
+- Otaczający box (`WhatsNewBorder`) potrzebował wtedy szerokości, a zakodowana na sztywno wartość w pikselach okazała się przegraną grą: margines treści szablonu `SubWindow` różni się w zależności od motywu (32px łącznie w classic vs. 72px w Fluent, ponieważ szablon Fluent dodaje zarówno margines zewnętrznego `Border`, jak i margines `ContentPresenter`). Szerokość dobrana tak, by dokładnie wypełnić bardziej przestronny układ classic, **obcinała pasek przewijania poza widoczną krawędzią** w motywach Fluent. Naprawiono, usuwając całkowicie jawną szerokość i `HorizontalAlignment="Left"` — box teraz domyślnie ustawia się na `Stretch` i wypełnia dowolną przestrzeń, jaką faktycznie pozostawia obudowa danego motywu, poprawnie, w każdym motywie.
+- Ten tekst popupu celowo **nie** jest pobierany na żywo ze strony GitHub Releases — oznaczałoby to albo pokazywanie surowego angielskiego tekstu osobom nieanglojęzycznym, albo stworzenie potoku tłumaczeń (osobny plik JSON dla każdego języka publikowany razem z każdym wydaniem, lub API tłumaczenia maszynowego), czego ten projekt obecnie nie ma. Pozostaje krótkim, ręcznie przetłumaczonym podsumowaniem, które jest przepisywane (w miejscu — cała wartość jest zastępowana, nigdy dopisywana) za każdym razem, gdy notatki wydania są aktualizowane dla bieżącej wersji.
+
+### Nowe/Zaktualizowane Klucze Językowe (13 języków)
+
+| Klucz | Wartość po polsku |
+|---|---|
+| `Lang.Options.Buttons.Update` | Aktualizuj |
+| `Lang.Windows.OperationPending.Tasks.Update.Done` | Aktualizacja gotowa — sprawdź zmiany poniżej i kliknij Gotowe. |
+| `Lang.Windows.NoUpdateAvailable.Title` | Masz najnowszą wersję |
+| `Lang.Windows.NoUpdateAvailable.Text` | Obecnie używasz najnowszej wersji ModAPI. |
+| `Lang.Windows.NoUpdateAvailable.Buttons.OK` | OK |
+| `Lang.Options.Labels.UpdateVersionsTableDisabledHint` | Najpierw ustaw ścieżkę gry, aby z tego skorzystać. |
+| `Lang.Options.Labels.UpdateVersionsTableEnabledHint` | Gdy gra otrzyma patcha, ModAPI musi rozpoznać nową wersję. Włącz to, aby te informacje były automatycznie aktualne. |
+| `Lang.Options.Labels.UseSteamEnabledHint` / `UseSteamDisabledHint` | Wyjaśnia, co robi automatyczne wykrywanie ścieżki Steam (lub jej ręczne wprowadzenie) |
+| `Lang.Options.Labels.DevLogEnabledHint` / `DevLogDisabledHint` | Wyjaśnia dodatkowy plik `ModAPI.dev.log` w porównaniu do zwykłego logu |
+| `Lang.Options.Labels.ClearLogsOnStartEnabledHint` / `ClearLogsOnStartDisabledHint` | Wyjaśnia czyszczenie vs. dopisywanie do poprzedniego logu przy każdym uruchomieniu |
+| `Lang.Options.Labels.AlwaysOnTopEnabledHint` / `AlwaysOnTopDisabledHint` | Wyjaśnia utrzymywanie okna nad innymi vs. pozwalanie na jego zasłonięcie |
+| `Lang.Windows.FirstSetup.WhatsNewTitle` | Co nowego w tej wersji |
+| `Lang.Windows.FirstSetup.WhatsNewText` | Pełne podsumowanie sekcja po sekcji (znaczniki ■/▸/•) — przepisywane w miejscu przy każdym wydaniu, zobacz aktualny tekst w aplikacji |
+| `Lang.Windows.FirstSetup.Buttons.Close` | Zamknij |
+| `Lang.Mods.Welcome.Buttons.OpenWelcomePopup` | Witaj! |
+
+**Usunięte** (martwa funkcja "Auto-aktualizacja"): `Lang.Options.Labels.AutoUpdate` (zastąpiony przez `Lang.Options.Buttons.Update` powyżej), `Lang.Windows.FirstSetup.AutoUpdate`, `Lang.Windows.FirstSetup.AutoUpdateText`.
+
+**Usunięte** (przeprojektowanie okna pierwszego uruchomienia): `Lang.Windows.FirstSetup.Steam`, `Lang.Windows.FirstSetup.SteamText`, `Lang.Windows.FirstSetup.UpdateVersions`, `Lang.Windows.FirstSetup.UpdateVersionsText`, `Lang.Mods.Welcome.Title0` (zastąpiony przez `Lang.Mods.Welcome.Buttons.OpenWelcomePopup`).
+
+---
+
+</details>
+
+<details>
 <summary><b>Zmiany w v2.0.9622</b></summary>
 
 ## Zmiany w v2.0.9622

@@ -12,9 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9622 - 20260808
-
-**Công Cụ Quản Lý Mod cho The Forest — Phiên Bản Nâng Cấp**
+# ModAPI(v1) v2.0.9623 - 20260920
 
 > Bản gốc: FluffyFish / Philipp Mohrenstecher (Engelskirchen, Đức)
 > Nâng cấp: zzangae (Hàn Quốc)
@@ -254,7 +252,7 @@ Bố cục header PE được kiểm tra:
 </details>
 
 <details>
-<summary><b>Theme System [Detailed Reference](v2.0.9613_themes_en.md)</b></summary>
+<summary><b>Hệ Thống Chủ Đề [Tài Liệu Tham Khảo Chi Tiết](v2.0.9613_themes_en.md)</b></summary>
 
 Kể từ v2.0.9613, giao diện chọn theme đã được chuyển từ tab Settings sang tab **Themes** riêng biệt. Việc thêm theme mới chỉ cần một dòng trong dictionary `App.xaml.cs`.
 
@@ -627,7 +625,7 @@ Công cụ WPF độc lập để cập nhật số phiên bản chỉ bằng m�
 
 **Vị trí**: `VersionTool\MODAPI_VersionTool.csproj`
 
-<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/d7d40dea-129e-457d-9978-4ca149487275" />
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
 
 **Tính Năng**
 - Tự động hiển thị phiên bản hiện tại (đọc từ `App.xaml.cs`)
@@ -693,6 +691,142 @@ Các log chẩn đoán chỉ dành cho nhà phát triển trước đây bị gi
 </details>
 
 <details open>
+<summary><b>Thay Đổi Trong v2.0.9623</b></summary>
+
+## Thay Đổi Trong v2.0.9623
+
+### Kiểm Tra & Áp Dụng Cập Nhật — Kiểu Launcher, Thủ Công, Không Chặn
+
+Popup khởi chạy lần đầu (cửa sổ `FirstSetup`) trước đây có 3 tùy chọn — **Giữ Phiên Bản Mới Nhất**, **Tìm Kiếm Cập Nhật** và **Kết Nối Steam** — việc phát triển các tùy chọn này đã bị tạm dừng. Khi kiểm tra tình trạng mã nguồn thực tế trước khi tiếp tục công việc, phát hiện ra Kết Nối Steam và Giữ Phiên Bản Mới Nhất đã hoạt động đầy đủ; chỉ có Tìm Kiếm Cập Nhật (kiểm tra xem có bản phát hành ModAPI mới hơn không) là chưa hoàn thiện — pipeline tải xuống/cài đặt đã tồn tại, nhưng không có đoạn mã nào gọi đến nó.
+
+**Những gì đã được xây dựng:**
+
+- **`Game.CheckForNewVersion(out releaseNotes)`** (`ModAPI_Shared\Data\Game.cs`) — gọi GitHub Releases API (`/repos/{owner}/ModAPI/releases/latest`) và trả về tag mới nhất cùng ghi chú phát hành (trường `body`, được phân tích bằng một bộ giải mã chuỗi JSON tối giản — không thêm phụ thuộc mới nào). `UpdateRepoOwner` luôn trỏ đến `FluffyFishGames` (kho vận hành) đối với người dùng thông thường và chỉ chuyển sang kho phát triển của người bảo trì khi ứng dụng được khởi chạy với `--dev` — không bao giờ dựa vào hộp kiểm "Nhật ký nhà phát triển" ở tab Cài đặt, vì hộp kiểm đó chỉ nhằm mục đích tăng mức chi tiết của log lỗi và không được phép âm thầm chuyển người dùng sang kênh thử nghiệm chưa phát hành.
+- **Tab Cài đặt**: hộp kiểm "Tìm Kiếm Cập Nhật" không hoạt động đã bị loại bỏ, thay bằng một nút **Cập nhật** duy nhất (kiểu launcher, không phải công tắc chạy nền). Nhấn vào đó sẽ kiểm tra phiên bản mới và, nếu có, ngay lập tức bắt đầu luồng tải xuống/giải nén/áp dụng — không có lựa chọn trung gian "ngay bây giờ hay để sau".
+- **Popup khởi chạy lần đầu**: tùy chọn "Tự động cập nhật" không còn tác dụng đã bị loại bỏ cùng với đoạn ghi cấu hình không còn được sử dụng; popup giờ chỉ hỏi về Kết Nối Steam và Giữ Phiên Bản Mới Nhất.
+- **Cửa sổ `OperationPending`** có thêm một bảng ghi chú phát hành tùy chọn (thu gọn theo mặc định) và sự kiện `Confirmed`. Khi tải xuống/giải nén đạt 100%, ghi chú phát hành sẽ hiển thị và nút "Hoàn tất" được kích hoạt — nhấn vào đó mới thực sự khởi chạy `Updater.exe` và thoát ModAPI (trước đây việc này xảy ra tự động ngay khi giải nén xong, không có cơ hội xem điều gì đã thay đổi). Bản thân `Updater.exe` (mã của tác giả gốc, không sửa đổi) sẽ chờ ModAPI thoát, ghi đè các tệp, rồi tự động khởi động lại ModAPI.
+- ModAPI không bao giờ chặn việc sử dụng vì lỗi thời: việc kiểm tra phiên bản chỉ chạy khi người dùng nhấn Cập nhật, không bao giờ chạy lúc khởi động — ứng dụng luôn có thể sử dụng đầy đủ bất kể trạng thái cập nhật, khác với cổng cập nhật bắt buộc thường thấy ở các launcher game.
+
+### Sửa Lỗi UI — Bảng Ghi Chú Phát Hành Không Tự Xuống Dòng
+
+Bảng ghi chú phát hành mới thêm vào cửa sổ tiến trình `OperationPending` ban đầu hiển thị thành một dòng khó đọc duy nhất cần cuộn ngang, do hai nguyên nhân chồng lên nhau:
+
+1. Giá trị mặc định của `HorizontalScrollBarVisibility` trên `TextBox` là `Hidden`, không phải `Disabled` — và trừ khi được đặt rõ ràng là `Disabled`, WPF sẽ bỏ qua `TextWrapping="Wrap"` và để dòng chữ kéo dài vô hạn.
+2. Style `SubWindow` mà mọi cửa sổ popup sử dụng đặt `SizeToContent="WidthAndHeight"` (`FluentStyles.xaml`), nên một bảng được kéo giãn qua cột lưới `*` không có chiều rộng cố định để làm căn cứ xuống dòng — cần phải gán chiều rộng rõ ràng cho nó.
+
+Đã khắc phục bằng cách gán cho bảng một chiều rộng cố định liên kết với `ProgressBar.ActualWidth` (để mép phải của nó thẳng hàng với thanh tiến trình phía trên) và chuyển từ `TextBox` sang `TextBlock` chỉ đọc bên trong `ScrollViewer` (`TextBlock` không gặp phải vấn đề xuống dòng kỳ lạ của `PART_ContentHost` như `TextBox`). Bảng cũng được gán nền `FluentCardBrush` không trong suốt — trước đó nó mặc định kế thừa độ trong suốt của cửa sổ. Đoạn điều chỉnh thủ công `Height +=` từng được thêm vào để ép cửa sổ cao hơn đã bị loại bỏ, vì nó xung đột trực tiếp với `SizeToContent` — giờ đây cửa sổ tự động tăng kích thước chính xác ngay khi bảng trở nên hiển thị.
+
+### Đã Xác Minh Toàn Trình (Kiểm Thử Thủ Công)
+
+Đã chạy thực tế toàn bộ chu trình kiểm tra → tải xuống → giải nén → xác nhận → khởi động lại (với dữ liệu bản phát hành giả dùng một lần) để xác nhận toàn bộ chuỗi hoạt động, bao gồm cả `Updater.exe` gốc không sửa đổi. Một điều hữu ích rút ra được trong quá trình kiểm thử: `App.xaml.cs` đã tự tiêu thụ thư mục `_update` còn sót lại ngay khi ModAPI tự khởi động (như một bước tự dọn dẹp) — vì vậy bất kỳ bài kiểm thử thủ công nào tạo trước một thư mục `_update` giả *trước khi* khởi chạy ModAPI sẽ bị âm thầm tiêu thụ trước khi `Updater.exe` kịp nhìn thấy nó. Thư mục phải được tạo ra *trong khi ModAPI đang chạy*, giống như cách tải xuống thực tế điền vào nó. Đã thêm ghi log chẩn đoán tùy chọn vào `Updater.cs` (`Updater.diag.log`, được bọc trong try/catch, nằm ngoài luồng logic thông thường) để việc chẩn đoán loại vấn đề này trong tương lai dễ dàng hơn mà không cần đụng đến logic khởi động lại gốc.
+
+### Ghi Chú Dành Cho Nhà Phát Triển — Chạy Với `--dev`
+
+`App.DevMode` (`ModAPI\App.xaml.cs`) chỉ được đặt thành `true` khi ứng dụng được khởi chạy với tham số dòng lệnh `--dev` — điều này tách biệt với hộp kiểm "Nhật ký nhà phát triển" ở tab Cài đặt, vốn chỉ ảnh hưởng đến mức chi tiết của log và **không được** dùng để quyết định bất kỳ điều gì khác ngoài việc ghi log (ví dụ: không bao giờ được dùng để chuyển đổi server/kho lưu trữ mà một tính năng kết nối tới — người dùng bật ghi log chi tiết để báo cáo lỗi crash không nên bị âm thầm chuyển sang kênh thử nghiệm chưa phát hành).
+
+Để chạy cục bộ với `--dev`:
+- **Visual Studio (gỡ lỗi F5)**: dự án `ModAPI` → Properties → tab Debug → "Command line arguments" → nhập `--dev`.
+- **Tệp .exe đã build**: chạy từ terminal bằng `ModAPI.exe --dev`, hoặc thêm `--dev` vào cuối trường Target của shortcut.
+
+### Checkbox "Giữ Bảng Phiên Bản" — Giờ Bị Vô Hiệu Hóa Cho Đến Khi Thực Sự Có Tác Dụng
+
+`Game.Verify()` chỉ chạy tới `VersionsData.Refresh()` (đoạn mã thực sự tải bảng phiên bản) nếu đường dẫn game hợp lệ (`CheckGamePath()` vượt qua) — nếu không nó sẽ thoát sớm. Điều đó có nghĩa là bật "Giữ Bảng Phiên Bản" khi chưa cấu hình đường dẫn game sẽ âm thầm không làm gì cả, gây khó hiểu (đã xác nhận thực tế: một bài kiểm thử thủ công không có đường dẫn game cho ra 0 dòng log `[UpdateVersions]` dù checkbox đang bật).
+
+Đã thêm `SettingsViewModel.CanUpdateVersionsTable` (`App.Game != null && App.Game.CheckGamePath()`) và liên kết nó với thuộc tính `IsEnabled` của checkbox. Giá trị này được đánh giá lại mỗi khi đường dẫn game được lưu/reset hoặc khi bộ lọc game ở tab Development chuyển sang game khác. Khi bị vô hiệu hóa, di chuột vào sẽ hiện tooltip giải thích lý do; khi được kích hoạt, di chuột vào sẽ giải thích việc bật nó làm gì. Ngoài ra, nhãn tiếng Hàn đã được đổi tên từ "최신버전 유지" ("giữ phiên bản mới nhất") thành "버전 테이블 유지" ("giữ bảng phiên bản") — mọi ngôn ngữ khác đều đã dùng từ "bảng" ở đây; chỉ riêng tiếng Hàn thiếu từ đó, gây nhầm lẫn với nút "Cập nhật" không liên quan.
+
+### Sửa Lỗi Toàn Cục — Tooltip Không Có Style Dưới Theme Mặc Định (classic)
+
+Tooltip của phiên làm việc này (ở trên) hiển thị dưới dạng tooltip hệ thống màu trắng đơn giản thay vì giao diện có theme của ứng dụng. Hóa ra chưa có tooltip nào trong ứng dụng từng được kiểm thử dưới theme mặc định "classic" trước đây: `FluentStyles*.xaml` (các theme không phải mặc định) mỗi cái đều định nghĩa một style `ToolTip` có theme, nhưng `classic` chỉ tải `Dictionary.xaml`, vốn chưa từng có style này. Đã thêm một style `ToolTip` tương ứng vào `Dictionary.xaml` (nền không trong suốt, vì các brush thẻ bán trong suốt khác của theme này vốn được thiết kế để nằm trên một hình nền, không phải một tooltip nổi). Điều này sửa lỗi tooltip trên toàn ứng dụng dưới theme mặc định, không chỉ riêng tooltip này.
+
+### Thiết Kế Lại Popup Khởi Chạy Lần Đầu
+
+Popup khởi chạy lần đầu không còn hỏi về Kết Nối Steam / Giữ Bảng Phiên Bản nữa — cả hai đã có sẵn trong tab Settings, nên hỏi lại ở đây là thừa. Thay vào đó, popup giờ hiển thị một bản tóm tắt cuộn "Có gì mới trong phiên bản này". Phần văn bản giới thiệu và nút cũng được thiết kế lại:
+
+- Các checkbox Kết Nối Steam / Giữ Bảng Phiên Bản cùng phần mô tả của chúng đã bị loại bỏ; một panel cuộn có chiều rộng cố định chứa các điểm nổi bật của bản phát hành thay thế vào đó.
+- Tiêu đề "환영합니다!" ("Chào mừng!") của chính tab Welcome đã được thay bằng một nút cùng tên — nhấn vào đó sẽ mở lại popup khởi chạy lần đầu bất cứ lúc nào, ví dụ để đọc lại những gì đã thay đổi trong phiên bản hiện tại. Khi được mở lại theo cách này, nút của popup hiển thị "Đóng" thay vì "Continue", không chạy lại thiết lập lần đầu (không ghi `SetupDone`, không gọi `FirstSetupDone()`), và việc đóng nó không bao giờ thoát ứng dụng (`isReopen: true` trên constructor của `FirstSetup` kiểm soát toàn bộ điều này).
+- **Lỗi kích thước cửa sổ phát hiện khi kiểm thử đa theme**: style `SubWindow` của popup kết hợp `AllowsTransparency="True"` + `WindowStyle="None"` + `SizeToContent="WidthAndHeight"` — một tổ hợp mà WPF không tôn trọng `MaxWidth` một cách đáng tin cậy khi tự động tính kích thước. Nó trông ổn dưới `classic` chỉ là trùng hợp, nhưng lại hiển thị quá rộng (với văn bản không xuống dòng, bị cắt) dưới các theme khác như Diablo. Đã sửa bằng cách ghi đè cục bộ `SizeToContent="Height"` cho cửa sổ này (các thẻ của popup vốn có chiều rộng cố định theo thiết kế, nên việc tự động tính chiều rộng chưa bao giờ thực sự cần thiết) — cách này sửa bố cục giống hệt nhau trên mọi theme thay vì cần vá riêng từng theme.
+- **Khả năng đọc, chỉ riêng theme `classic`**: style `NormalLabel` dùng chung của `classic` (văn bản trắng + đổ bóng, được thiết kế cho văn bản đè lên các panel ảnh) không dễ đọc trên nền thẻ `PanelCenter` đặc màu của popup này. Thay vì chỉnh sửa style dùng chung (được dùng ở khắp nơi) hoặc hardcode màu sắc mà sẽ trông sai trên mọi theme khác, đã thêm `FirstSetup.ApplyClassicThemeTextFix()`, được kiểm soát chặt chẽ bởi điều kiện `App.GetCurrentTheme() == "classic"`, để thay bằng một giao diện tối, không đổ bóng chỉ cho popup này, chỉ dưới theme đó. Mọi theme khác không bị ảnh hưởng và tiếp tục dùng màu `NormalLabel`/`PanelCenter` vốn đã đúng của riêng nó.
+
+### Kiểm Tra Tính Toàn Vẹn Game — Bước C Không Còn Hỏi Ở Mỗi Lần Khởi Động
+
+Người dùng phản ánh sự khó chịu thực sự với việc kiểm tra tính toàn vẹn trước khi khởi động: đối với các game vốn không đi kèm chữ ký số (phổ biến với các tựa game indie như Green Hell), popup cảnh báo "không có chữ ký" xuất hiện **mỗi lần** họ nhấn Start Game, yêu cầu nhấn "Continue" thủ công mỗi lần — dù thực chất không có gì sai cả. Việc thiếu chữ ký số một mình không phải là bằng chứng của việc bị can thiệp, nên đây thuần túy là sự phiền toái chứ không phải một kiểm tra an toàn thực sự.
+
+```mermaid
+flowchart LR
+    Start(["Nhấn Start Game"]) --> A{"A — Header PE\nIsValidGameExe()"}
+    A -- thất bại --> ABlock["🛑 Chặn khởi động\nPopup GameExeCorrupted"]
+    A -- hợp lệ --> B{"B — Checksum assembly\nMD5 so với Versions.xml"}
+    B -- không khớp --> BBlock["🛑 Chặn khởi động\nPopup GameAssemblyTampered"]
+    B -- khớp --> C{"C — Chữ ký số\nHasDigitalSignature()"}
+    C -- thiếu --> CLog["📝 Chỉ ghi log, không popup\ntự động tiếp tục"]
+    C -- có --> CLog2["📝 Chỉ ghi log"]
+    CLog --> Launch(["✅ Game khởi động"])
+    CLog2 --> Launch
+```
+
+- **A (header PE)** và **B (checksum assembly)** không thay đổi — hư hỏng hoặc can thiệp thật sự vẫn chặn khởi động kèm popup cảnh báo (`NoProjectWarning`, dùng theme thông qua style `SubWindow` dùng chung như mọi popup khác trong ứng dụng, nên tự động khớp với theme đang được kích hoạt).
+- **C (chữ ký số)** không còn hiển thị popup hay yêu cầu xác nhận theo bất kỳ hướng nào nữa — nó chỉ ghi một dòng log mức `Notice` (`[Integrity] Game executable has no digital signature (not necessarily tampered — many games ship unsigned)`) rồi để game khởi động. Lớp popup `GameIntegrityWarning` từng được dùng cho việc này không còn được gọi từ bất kỳ đâu (được giữ nguyên trong mã nguồn, không dùng, thay vì xóa hẳn).
+- Sơ đồ này nhằm giúp dễ dàng thảo luận về hình dạng của việc kiểm tra này sau này — ví dụ nếu bước C từng cần được khôi phục lại ở dạng nhẹ hơn (một lựa chọn "không hỏi lại lần nữa" thay vì loại bỏ hoàn toàn lời nhắc đã được cân nhắc và bị từ chối để chọn loại bỏ hoàn toàn, theo chỉ đạo của người dùng), sơ đồ trên chính là điểm tham chiếu.
+
+### Kết Nối Steam — Đường Dẫn Tự Động Phát Hiện, và Một Lỗi Chỉnh Sửa Thủ Công
+
+Khi kiểm tra xem tính năng "Kết Nối Steam" của tác giả gốc thực sự làm gì (ngoài việc cho phép người dùng chọn đường dẫn Steam), phát hiện ra nó còn khởi chạy game thông qua `Steam.exe -applaunch {AppId}` (để hỗ trợ overlay) và khôi phục các tệp bị hỏng qua `steam://validate/{AppId}` — cả hai đều đã được triển khai từ trước và không bị động chạm trong đợt này.
+
+- Ngay khi "Kết Nối Steam" được bật, `MainWindow.UseSteamCheckBox_Checked` đọc đường dẫn Steam trực tiếp từ registry (`HKEY_CURRENT_USER\Software\Valve\Steam`) và tự động điền vào — điều này hoạt động bất kể Steam được cài trên ổ đĩa nào, không chỉ riêng ổ `C:`.
+- Khi Kết Nối Steam đang bật, các điều khiển đường dẫn thủ công (ô văn bản, Browse, Save, Reset) đáng lẽ phải bị vô hiệu hóa, vì đường dẫn được quản lý tự động. **Lỗi được phát hiện và sửa**: Grid chứa các điều khiển đó (`SteamAndGamePathsPanel`) chưa bao giờ được gán `DataContext` trong code-behind — chỉ có `Settings` và `SettingsCheckboxes` được gán — nên `{Binding CanEditSteamPathManually}` âm thầm thất bại và mặc định về `IsEnabled="true"`. Các điều khiển *trông* như bị vô hiệu hóa nhưng nút Reset vẫn hoàn toàn có thể nhấn được. Đã sửa bằng cách gán rõ ràng `SteamAndGamePathsPanel.DataContext = SettingsVm;` cùng với hai đối tượng còn lại.
+- Ngoài ra, các điều khiển bị vô hiệu hóa trên toàn ứng dụng hoàn toàn không có phản hồi trực quan nào dưới theme classic — `ControlTemplate` của `NormalButton` không có trigger `IsEnabled="False"` (các theme Fluent đã có sẵn). Đã thêm một trigger tương ứng làm mờ nút xuống 40% độ mờ khi bị vô hiệu hóa, áp dụng toàn ứng dụng dưới classic.
+
+### Thống Nhất Hệ Thống Theme — Sự Tương Đồng Classic ↔ Fluent
+
+Được thúc đẩy bởi câu hỏi "tại sao classic cần phải tách biệt khỏi họ theme Fluent nếu chúng không thực sự khác biệt gì đáng kể" — đã thực hiện một cuộc kiểm tra toàn diện so sánh từng style tường minh và ngầm định giữa `Dictionary.xaml` (classic) và 9 tệp `FluentStyles*.xaml`.
+
+- Phát hiện các khoảng trống thực sự, đang tồn tại: `Slider` (được dùng bởi các thanh trượt chiều rộng danh sách mod/danh sách dự án ở tab Settings) và `ComponentsInputs:MultilingualTextField` (tổ hợp cờ ngôn ngữ + ô văn bản dùng cho các trường tên/mô tả mod) chỉ tồn tại trong classic, không có phiên bản Fluent tương ứng — dưới theme Fluent, hai điều khiển đó âm thầm rơi về giao diện skin ảnh Scale9 của classic, phá vỡ vẻ ngoài phẳng của Fluent. Đã xây dựng các bản thay thế phẳng, dùng `DynamicResource` cho cả hai, và đặt chúng vào một tệp dùng chung mới, **`ModAPI\Themes\FluentStylesShared.xaml`**, được hợp nhất vào cả 9 tệp `FluentStyles*.xaml` qua `ResourceDictionary.MergedDictionaries` — một điều chỉnh màu sắc giờ chỉ cần thực hiện ở một nơi thay vì chín nơi.
+- Phát hiện khoảng trống theo chiều ngược lại: `GridSplitter` (thanh chia danh sách mod/danh sách phiên bản trong `MainWindow.xaml`) có style Fluent trong cả 9 theme nhưng không có trong classic, nên nó hiển thị với thanh chia màu xám mặc định của hệ điều hành dưới classic. Đã thêm một style phẳng tương ứng vào `Dictionary.xaml`.
+- Phát hiện mã chết thực sự trong quá trình này — các style được định nghĩa nhưng không được tham chiếu ở đâu trong giao diện đang hoạt động: `PasswordBox` (chỉ được dùng bởi `LoginWindow.xaml`, vốn chưa từng được khởi tạo ở bất kỳ đâu — hệ thống đăng nhập đã bị loại bỏ từ v2.0.9400), `Components:ModProjectButton`, bốn style nút đăng nhập mạng xã hội (`FacebookButton`/`TwitterButton`/`YoutubeButton`/`TwitchButton`), và một bộ `TimeSlider`/`TimeHorizontalSlider`/`TimeSliderThumbStyle` (có lẽ là một thanh trượt chu kỳ ngày/đêm chưa từng được phát hành). Theo lập trường "không xóa công việc của tác giả gốc" của dự án, không có phần nào trong số này bị xóa — mỗi khối được bọc trong một comment XML kèm ghi chú lý do tại sao nó không được tham chiếu, để nó vẫn còn trong tệp như một bản ghi thay vì biến mất khỏi lịch sử.
+- Phát hiện hai tệp còn sót lại không được kết nối vào bản build: `ModAPI\Windows\Dictionary.xaml` (một bản sao ngõ cụt được tạo ra giữa chừng một lần tái cấu trúc trong một commit cũ, chưa bao giờ được `App.xaml` hay `.csproj` tham chiếu) và `ModAPI\Themes\FluentStylesClassic.xaml` (một bản mẫu thử nghiệm hệ thống theme ban đầu — vốn là giao diện dự phòng cho mọi theme trừ `light`, từ trước khi mỗi theme có tệp riêng của mình; trở nên mồ côi sau khi logic dự phòng đó được thay thế). Cả hai đã được xác nhận qua lịch sử git là không liên quan đến mã của tác giả gốc, nên — khác với các style chết ở trên — chúng đã bị xóa hẳn thay vì comment lại, kèm theo việc xóa mục `<Page>` giờ đã treo lơ lửng của `FluentStylesClassic.xaml` trong `.csproj`.
+- `Slider` của riêng classic sau đó được thiết kế lại để khớp với vẻ ngoài phẳng của style dùng chung Fluent (cùng cấu trúc `Border`+`Track`, đổi màu theo bảng màu vàng/nâu của classic: thumb `#B8963E`, track bán trong suốt `#40FFFFFF`) thay vì thanh trượt ảnh Scale9 cũ — phần triển khai cũ (`SliderThumbStyle`, `SliderButtonStyle`, `HorizontalSlider`, `VerticalSlider`, và style `Slider` ngầm định cũ) tương tự được comment lại thay vì xóa.
+
+### Tooltip BẬT/TẮT Cho Các Checkbox Còn Lại Ở Tab Settings
+
+Đã mở rộng cùng mẫu "di chuột để xem tác dụng" từ "Giữ Bảng Phiên Bản" sang bốn checkbox còn lại ở tab Settings — **Kết Nối Steam**, **Nhật Ký Nhà Phát Triển**, **Xóa Log Khi Khởi Động** và **Luôn Hiển Thị Trên Cùng** — mỗi checkbox giờ hiển thị tooltip khác nhau tùy theo trạng thái được đánh dấu của chính nó, giải thích việc bật so với tắt thực sự làm gì (ví dụ: tooltip trạng thái bật của Kết Nối Steam giải thích việc tự động phát hiện đường dẫn và hỗ trợ overlay đã nêu ở trên). 8 khóa ngôn ngữ mới × 13 ngôn ngữ.
+
+### Popup Chào Mừng — Nội Dung Chi Tiết Đầy Đủ, Đồng Bộ Với Ghi Chú Phát Hành
+
+Panel "Có gì mới trong phiên bản này" đã trải qua nhiều lần lặp trong đợt này: từ một bản tóm tắt gạch đầu dòng ngắn → một bản trình bày đầy đủ theo từng mục khớp với `Docs/RELEASE_NOTES_2.0.9623.md` (dùng các ký hiệu văn bản thuần `■`/`▸`/`•`, vì `TextBlock` không thể hiển thị Markdown), được dịch sang cả 13 ngôn ngữ. Hai lỗi bố cục liên quan đã xuất hiện và được sửa trong quá trình này:
+
+- Văn bản cuộn ban đầu có `Width="450"` cố định, để lại một khoảng trống trước thanh cuộn (và, riêng ở theme classic, xuống dòng văn bản hơi sớm). Đã sửa bằng cách bỏ chiều rộng cố định và gán `Padding="14"` cho `ScrollViewer` thay vào đó — cùng một mẫu đã được chứng minh trong panel chi tiết của `OperationPending`.
+- Khung bao quanh (`WhatsNewBorder`) sau đó cần một chiều rộng, và một giá trị pixel cố định hóa ra là một canh bạc thua: mẫu `SubWindow` có margin nội dung khác nhau theo từng theme (tổng 32px dưới classic so với 72px dưới Fluent, vì mẫu của Fluent thêm cả margin `Border` bên ngoài lẫn margin `ContentPresenter`). Một chiều rộng được chọn để lấp đầy chính xác bố cục rộng rãi hơn của classic đã **cắt mất thanh cuộn ra ngoài mép nhìn thấy** dưới các theme Fluent. Đã sửa bằng cách loại bỏ hoàn toàn chiều rộng tường minh và `HorizontalAlignment="Left"` — khung giờ mặc định về `Stretch` và lấp đầy bất kỳ không gian nào mà phần khung của theme thực sự để lại, chính xác, ở mọi theme.
+- Văn bản popup này cố tình **không** được lấy trực tiếp từ trang GitHub Releases — điều đó sẽ có nghĩa là hoặc hiển thị tiếng Anh thô cho người dùng không nói tiếng Anh, hoặc phải xây dựng một pipeline dịch thuật (một tệp JSON riêng theo từng ngôn ngữ được phát hành cùng mỗi bản release, hoặc một API dịch máy) mà dự án hiện chưa có. Nó vẫn là một bản tóm tắt ngắn, dịch thủ công, được viết lại (tại chỗ — toàn bộ giá trị được thay thế, không bao giờ được nối thêm) mỗi khi ghi chú phát hành được cập nhật cho phiên bản hiện tại.
+
+### Khóa Ngôn Ngữ Mới/Cập Nhật (13 ngôn ngữ)
+
+| Khóa | Giá trị tiếng Việt |
+|---|---|
+| `Lang.Options.Buttons.Update` | Cập nhật |
+| `Lang.Windows.OperationPending.Tasks.Update.Done` | Bản cập nhật đã sẵn sàng — xem các thay đổi bên dưới rồi nhấn Hoàn tất. |
+| `Lang.Windows.NoUpdateAvailable.Title` | Bạn đang dùng bản mới nhất |
+| `Lang.Windows.NoUpdateAvailable.Text` | Bạn đang sử dụng phiên bản ModAPI mới nhất. |
+| `Lang.Windows.NoUpdateAvailable.Buttons.OK` | OK |
+| `Lang.Options.Labels.UpdateVersionsTableDisabledHint` | Cần đặt đường dẫn game trước khi dùng tính năng này. |
+| `Lang.Options.Labels.UpdateVersionsTableEnabledHint` | Khi game được vá lỗi, ModAPI cần nhận diện phiên bản mới đó. Bật tùy chọn này để tự động cập nhật thông tin đó. |
+| `Lang.Options.Labels.UseSteamEnabledHint` / `UseSteamDisabledHint` | Giải thích việc tự động phát hiện đường dẫn Steam (hoặc nhập thủ công) làm gì |
+| `Lang.Options.Labels.DevLogEnabledHint` / `DevLogDisabledHint` | Giải thích tệp `ModAPI.dev.log` bổ sung so với log thông thường |
+| `Lang.Options.Labels.ClearLogsOnStartEnabledHint` / `ClearLogsOnStartDisabledHint` | Giải thích việc xóa so với nối thêm vào log trước đó ở mỗi lần khởi động |
+| `Lang.Options.Labels.AlwaysOnTopEnabledHint` / `AlwaysOnTopDisabledHint` | Giải thích việc giữ cửa sổ luôn trên cùng so với để nó bị cửa sổ khác che khuất |
+| `Lang.Windows.FirstSetup.WhatsNewTitle` | Có gì mới trong phiên bản này |
+| `Lang.Windows.FirstSetup.WhatsNewText` | Bản tóm tắt đầy đủ theo từng mục (ký hiệu ■/▸/•) — được viết lại tại chỗ theo từng bản phát hành, xem nội dung hiện tại trong ứng dụng |
+| `Lang.Windows.FirstSetup.Buttons.Close` | Đóng |
+| `Lang.Mods.Welcome.Buttons.OpenWelcomePopup` | Chào mừng! |
+
+**Đã xóa** (tính năng "Tự động cập nhật" không còn hoạt động): `Lang.Options.Labels.AutoUpdate` (được thay thế bằng `Lang.Options.Buttons.Update` ở trên), `Lang.Windows.FirstSetup.AutoUpdate`, `Lang.Windows.FirstSetup.AutoUpdateText`.
+
+**Đã xóa** (thiết kế lại popup khởi chạy lần đầu): `Lang.Windows.FirstSetup.Steam`, `Lang.Windows.FirstSetup.SteamText`, `Lang.Windows.FirstSetup.UpdateVersions`, `Lang.Windows.FirstSetup.UpdateVersionsText`, `Lang.Mods.Welcome.Title0` (được thay thế bằng `Lang.Mods.Welcome.Buttons.OpenWelcomePopup`).
+
+---
+
+</details>
+
+<details>
 <summary><b>Thay Đổi Trong v2.0.9622</b></summary>
 
 ## Thay Đổi Trong v2.0.9622

@@ -12,9 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9622 - 20260808
-
-**The Forest モッド管理ツール — アップグレード版**
+# ModAPI(v1) v2.0.9623 - 20260920
 
 > オリジナル: FluffyFish / Philipp Mohrenstecher (ドイツ・エンゲルスキルヒェン)
 > アップグレード: zzangae (大韓民国)
@@ -254,7 +252,7 @@ builtin: false → true (langs.json)
 </details>
 
 <details>
-<summary><b>Theme System [Detailed Reference](v2.0.9613_themes_ko.md)</b></summary>
+<summary><b>テーマシステム [詳細リファレンス](v2.0.9613_themes_en.md)</b></summary>
 
 v2.0.9613より、テーマ選択UIがSettingsタブから専用の**Themesタブ**へ移動されました。新しいテーマの追加は`App.xaml.cs`辞書に1行追加するだけで完了します。
 
@@ -627,7 +625,7 @@ LangToolのUI文字列、ダイアログメッセージ、ステータステキ�
 
 **場所**: `VersionTool\MODAPI_VersionTool.csproj`
 
-<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/d7d40dea-129e-457d-9978-4ca149487275" />
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
 
 **機能**
 - 現在のバージョンを自動表示 (`App.xaml.cs`から読み取り)
@@ -693,6 +691,142 @@ LangToolのUI文字列、ダイアログメッセージ、ステータステキ�
 </details>
 
 <details open>
+<summary><b>v2.0.9623の変更点</b></summary>
+
+## v2.0.9623の変更点
+
+### アップデート確認と適用 — ランチャー方式、手動、非強制
+
+初回起動ポップアップ(`FirstSetup`ウィンドウ)には元々**最新バージョンを維持**、**アップデート検索**、**Steam接続**の3つのオプションがありましたが、開発が一時保留になっていました。作業再開前に実際のコード状態を調査したところ、Steam接続と最新バージョンを維持はすでに完全に動作しており、アップデート検索(ModAPIの新バージョンがあるか確認する機能)だけが未完成でした — ダウンロード/インストールのパイプライン自体は存在していましたが、それを呼び出すコードがどこにもありませんでした。
+
+**今回実装した内容:**
+
+- **`Game.CheckForNewVersion(out releaseNotes)`**(`ModAPI_Shared\Data\Game.cs`)— GitHub Releases API(`/repos/{owner}/ModAPI/releases/latest`)を呼び出し、最新タグとリリースノート(`body`フィールド、新規依存関係を追加せず最小限のJSON文字列アンエスケープ処理でパース)を返します。`UpdateRepoOwner`は一般ユーザーには常に`FluffyFishGames`(運用リポジトリ)を指し、`--dev`フラグで起動したときのみメンテナーの開発用リポジトリに切り替わります — 設定タブの「開発者ログ」チェックボックスでは絶対に切り替わりません。このチェックボックスはクラッシュログの詳細度のためだけのものであり、ユーザーがログを有効にしただけで未検証のテストチャンネルに静かに移動させてはならないためです。
+- **設定タブ**: 動作していなかった「アップデート検索」チェックボックスを廃止し、**アップデート**ボタン1つに置き換えました(バックグラウンドのトグルではなくランチャー方式)。ボタンを押すと新バージョンを確認し、存在すれば「今すぐ/後で」のような中間選択なしにすぐダウンロード→展開→適用の流れに進みます。
+- **初回起動ポップアップ**: 機能していなかった「自動アップデート」オプションとその設定書き込みコードを削除しました。ポップアップはSteam接続と最新バージョンを維持の2つだけを尋ねます。
+- **`OperationPending`ウィンドウ**にデフォルトで折りたたまれたリリースノート表示エリアと`Confirmed`イベントを追加しました。ダウンロード/展開が100%に達するとリリースノートが表示され「完了」ボタンが有効になります — このボタンを押すことで実際に`Updater.exe`が起動しModAPIが終了します(以前は展開完了と同時に自動的にこの処理が実行され、何が変わったか確認する機会がありませんでした)。`Updater.exe`自体(原作者のコード、変更なし)はModAPIの終了を待ってからファイルを上書きし、自動的に再起動します。
+- ModAPIは旧バージョンだからといって実行をブロックしません — バージョン確認はユーザーが「アップデート」ボタンを押したときのみ実行され、起動時には一切割り込みません。一般的なゲームランチャーの強制アップデートゲートとは異なります。
+
+### UI修正 — リリースノート欄が折り返されない問題
+
+`OperationPending`進捗ウィンドウに新規追加したリリースノート欄は、当初は横スクロールが必要な1行だけで表示されていましたが、原因は2つ重なっていました:
+
+1. `TextBox`の`HorizontalScrollBarVisibility`の既定値は`Hidden`であり`Disabled`ではありません — 明示的に`Disabled`にしない限り、WPFは`TextWrapping="Wrap"`を無視して行を際限なく伸ばし続けます。
+2. すべてのポップアップウィンドウが使う`SubWindow`スタイルは`SizeToContent="WidthAndHeight"`(`FluentStyles.xaml`)なので、`*`グリッド列で伸びる領域には折り返しの基準となる固定幅がありません — 幅を明示的に指定する必要があります。
+
+`ProgressBar.ActualWidth`にバインドした固定幅を与えて(進捗バーの右端に揃うように)解決し、`TextBox`の代わりに読み取り専用の`TextBlock`+`ScrollViewer`の組み合わせに変更しました(`TextBox`の`PART_ContentHost`の折り返し無視の問題を完全に回避)。背景もデフォルトでウィンドウの透明度を継承していたため`FluentCardBrush`で不透明に指定しました。ウィンドウを強制的に大きくするために入れていた手動の`Height +=`コードは`SizeToContent`と競合するだけなので削除しました — 領域が表示された瞬間にウィンドウが正しく自動で大きくなります。
+
+### 実機検証(手動テスト、エンドツーエンド)
+
+使い捨てのダミーリリースデータを使って、確認→ダウンロード→展開→完了確認→再起動までの全体フローを実際に動かし、原作者の`Updater.exe`(変更なし)を含めてすべて正常に動作することを確認しました。テスト中にわかった有用な事実が1つあります: `App.xaml.cs`はModAPI**自体の起動時**にすでに残っている`_update`フォルダを自分で先に処理(適用)してしまいます — そのため、ModAPIを起動する*前に*偽の`_update`フォルダをあらかじめ作っておく方式でテストすると、`Updater.exe`が見る前に静かに消費されてしまいます。`_update`フォルダは必ず**ModAPIがすでに起動している状態**で作成しないと、実際のダウンロードが埋める状況と同じ再現になりません。今後こうした問題を元の再起動ロジックに手を加えずに簡単に診断できるよう、`Updater.cs`にオプションの診断ログ(`Updater.diag.log`、try/catchで囲み通常ロジックと分離)を追加しました。
+
+### 開発メモ — `--dev`での実行
+
+`App.DevMode`(`ModAPI\App.xaml.cs`)は`--dev`コマンドライン引数で起動したときのみ`true`になります — 設定タブの「開発者ログ」チェックボックスとは別物であり、そのチェックボックスはログの詳細度にのみ影響を与えるべきで、それ以外の何か(例えばどのサーバー/リポジトリを参照するか)を左右してはいけません。
+
+ローカルで`--dev`を使って実行するには:
+- **Visual Studio(F5デバッグ)**: `ModAPI`プロジェクト → プロパティ → デバッグタブ → 「コマンドライン引数」に`--dev`を入力。
+- **ビルド済みexe**: ターミナルから`ModAPI.exe --dev`で実行するか、ショートカットのリンク先(ターゲット)欄の末尾に`--dev`を追加。
+
+### 「バージョンテーブル維持」チェックボックス — 実際に機能する状態になるまで無効化
+
+`Game.Verify()`は、ゲームパスが有効な場合(`CheckGamePath()`が通過した場合)にのみ`VersionsData.Refresh()`(実際にバージョンテーブルをダウンロードする処理)に到達します — それ以外は早期リターンします。つまり、ゲームパスが未設定のまま「バージョンテーブル維持」をオンにしても静かに何も起きておらず、これは混乱の元でした(実際に手動テストで確認済み: ゲームパス未設定の状態でチェックボックスをオンにしても`[UpdateVersions]`ログが一行も出力されませんでした)。
+
+`SettingsViewModel.CanUpdateVersionsTable`(`App.Game != null && App.Game.CheckGamePath()`)を追加し、チェックボックスの`IsEnabled`にバインドしました。ゲームパスの保存/リセット時、またはDevelopmentタブのゲームフィルターでゲームを切り替えるたびに再評価されます。無効時はホバーで理由を説明するツールチップが表示され、有効時はオンにすると何が起きるかを説明します。また韓国語ラベルを「最新버전 유지」(「最新バージョンを維持」)から「버전 테이블 유지」(「バージョンテーブルを維持」)に変更しました — 他のすべての言語はすでに「テーブル」という語を含んでいましたが、韓国語だけがこの語を欠いており、無関係な「アップデート」ボタンと混同されていました。
+
+### 全体的な修正 — デフォルト(classic)テーマでツールチップにスタイルが無かった問題
+
+今回追加した上記のツールチップは、アプリのテーマに合ったデザインではなく、素のシステムツールチップとして表示されていました。調べたところ、デフォルトの「classic」テーマではアプリ内のどのツールチップも一度もテストされていなかったことが判明しました: `FluentStyles*.xaml`(非デフォルトテーマ)にはそれぞれテーマ化された`ToolTip`スタイルが定義されていますが、`classic`は`Dictionary.xaml`のみを読み込み、そこには一切定義がありませんでした。`Dictionary.xaml`に対応する`ToolTip`スタイルを追加しました(背景を不透明にしています — このテーマの他の半透明カードブラシは背景画像の上に重ねる前提のため、フローティングのツールチップには適さないためです)。これによりデフォルトテーマ下でアプリ全体のツールチップが修正され、今回追加した分だけにとどまりません。
+
+### 初回起動ポップアップの再設計
+
+初回起動ポップアップはもはやSteam接続 / バージョンテーブル維持について一切尋ねません — どちらもすでにSettingsタブにあるため、ここで再度尋ねるのは冗長でした。代わりに、ポップアップはスクロール可能な「このバージョンの変更点」の要約を表示するようになりました。導入テキストとボタンも見直されました:
+
+- Steam接続 / バージョンテーブル維持のチェックボックスとその説明は廃止され、代わりにリリースのハイライトを表示する固定幅のスクロールパネルが配置されました。
+- Welcomeタブ自体の「환영합니다!」(「ようこそ!」)という見出しは、同じ名前のボタンに置き換えられました — クリックすると初回起動ポップアップをいつでも再度開けます(例: 現在のバージョンで何が変わったかを読み返すため)。この方法で再度開いた場合、ポップアップのボタンは「Continue」ではなく「閉じる」と表示され、初回セットアップを再実行せず(`SetupDone`の書き込みも`FirstSetupDone()`の呼び出しも行わない)、閉じてもアプリは終了しません(`FirstSetup`コンストラクタの`isReopen: true`がこれらすべてをゲーティングしています)。
+- **クロステーマテストで発見したウィンドウサイズのバグ**: ポップアップの`SubWindow`スタイルは`AllowsTransparency="True"` + `WindowStyle="None"` + `SizeToContent="WidthAndHeight"`を組み合わせていますが、この組み合わせではWPFが自動サイズ計算時に`MaxWidth`を確実には尊重しません。`classic`では偶然問題なく見えていましたが、Diabloなど他のテーマでは大幅に幅が広くなりすぎ、テキストが折り返されずに切れて表示されていました。このウィンドウにローカルで`SizeToContent="Height"`を上書き指定することで修正しました(このポップアップのカードは設計上固定幅なので、幅の自動計算はそもそも不要でした) — これにより、テーマごとの個別パッチを必要とせず、すべてのテーマで同じようにレイアウトが修正されます。
+- **可読性、`classic`テーマのみ**: `classic`の共有`NormalLabel`スタイル(白文字 + ドロップシャドウ、写真調の画像パネルの上に表示するテキスト向けに設計)は、このポップアップの単色`PanelCenter`カード背景の上では読みにくくなっていました。あらゆる場所で使われる共有スタイルに手を入れたり、他のすべてのテーマで見た目がおかしくなる色をハードコードしたりする代わりに、`App.GetCurrentTheme() == "classic"`のときだけ厳密にゲーティングされる`FirstSetup.ApplyClassicThemeTextFix()`を追加し、このポップアップ・このテーマの場合だけ影のない濃色の見た目に切り替えるようにしました。他のすべてのテーマは変更されず、引き続きそれぞれ既に正しい`NormalLabel`/`PanelCenter`の配色を使用します。
+
+### ゲーム整合性チェック — ステップCが毎回のクリックでポップアップしなくなった
+
+起動前の整合性チェックについて、ユーザーから実際の不満が報告されていました: デジタル署名なしで配布されているゲーム(Green Hellのようなインディータイトルでは一般的)の場合、「署名がありません」という警告ポップアップが**Start Gameをクリックするたびに毎回**表示され、実際には何も問題がないにもかかわらず、その都度手動で「続行」をクリックする必要がありました。署名がないというだけでは改ざんの証拠にはならないため、これは実質的な安全チェックというより単なる摩擦でした。
+
+```mermaid
+flowchart LR
+    Start(["Start Gameをクリック"]) --> A{"A — PEヘッダー\nIsValidGameExe()"}
+    A -- 失敗 --> ABlock["🛑 起動をブロック\nGameExeCorruptedポップアップ"]
+    A -- 合格 --> B{"B — アセンブリチェックサム\nMD5 vs Versions.xml"}
+    B -- 不一致 --> BBlock["🛑 起動をブロック\nGameAssemblyTamperedポップアップ"]
+    B -- 一致 --> C{"C — デジタル署名\nHasDigitalSignature()"}
+    C -- なし --> CLog["📝 ログのみ、ポップアップなし\n自動的に続行"]
+    C -- あり --> CLog2["📝 ログのみ"]
+    CLog --> Launch(["✅ ゲーム起動"])
+    CLog2 --> Launch
+```
+
+- **A(PEヘッダー)**と**B(アセンブリチェックサム)**は変更なし — 実際の破損や改ざんは引き続き警告ポップアップとともに起動をブロックします(`NoProjectWarning`、アプリの他のすべてのポップアップと同様に共有`SubWindow`スタイルでテーマ化されており、有効なテーマに自動的に合わせられます)。
+- **C(デジタル署名)**はどちらの方向でもポップアップや確認を表示しなくなりました — `Notice`レベルの1行をログに記録するだけです(`[Integrity] Game executable has no digital signature (not necessarily tampered — many games ship unsigned)`)。ゲームはそのまま起動します。これまで開いていた`GameIntegrityWarning`ポップアップクラスはどこからも呼び出されなくなりました(削除はせずそのまま残しています)。
+- この図は、今後この検査の形について議論しやすくするためのものです — 例えばステップCを軽量な形で再導入する場合(プロンプトを完全に削除するのではなく「二度と表示しない」方式にすることも検討されましたが、ユーザーの方針により完全削除が採用されました)、上の図がその際の参照になります。
+
+### Steam接続 — 自動検出されるパスと、手動編集のバグ
+
+原作者の「Steam接続」機能が(ユーザーがSteamパスを選択できるようにする以外に)実際に何をしていたかを調べたところ、`Steam.exe -applaunch {AppId}`経由でゲームを起動する処理(オーバーレイ対応のため)と、`steam://validate/{AppId}`経由で破損ファイルを修復する処理もすでに実装済みで、今回は変更していないことがわかりました。
+
+- 「Steam接続」がオンになった瞬間、`MainWindow.UseSteamCheckBox_Checked`がレジストリ(`HKEY_CURRENT_USER\Software\Valve\Steam`)から直接Steamパスを読み取り、自動的に入力します — これはSteamがどのドライブにインストールされていても(`C:`だけでなく)動作します。
+- Steam接続がオンの間、手動パス操作コントロール(テキストボックス、Browse、Save、Reset)はパスが自動管理されるため無効化されるはずでした。**発見・修正したバグ**: それらのコントロールを含むコンテナGrid(`SteamAndGamePathsPanel`)は、コードビハインドで`DataContext`が設定されていませんでした — 設定されていたのは`Settings`と`SettingsCheckboxes`のみでした — そのため`{Binding CanEditSteamPathManually}`が静かに失敗し、既定の`IsEnabled="true"`のままになっていました。コントロールは見た目上は無効に見えても、Resetボタンは実際にはクリック可能なままでした。`SteamAndGamePathsPanel.DataContext = SettingsVm;`を他の2つと同様に明示的に設定して修正しました。
+- 別件として、classicテーマ下ではアプリ全体で無効化されたコントロールに視覚的なフィードバックが全くありませんでした — `NormalButton`の`ControlTemplate`には`IsEnabled="False"`トリガーがありませんでした(Fluentテーマにはすでにありました)。classic全体で、無効時にボタンを40%の不透明度に暗くする対応するトリガーを追加しました。
+
+### テーマシステムの統一 — ClassicとFluentのパリティ
+
+「そもそも意味のある違いがないなら、なぜclassicをFluentテーマファミリーと別に維持する必要があるのか」という疑問をきっかけに、`Dictionary.xaml`(classic)と9個の`FluentStyles*.xaml`ファイルの明示的・暗黙的なスタイルすべてを比較する全数監査を実施しました。
+
+- 実際に存在するギャップを発見: `Slider`(SettingsタブのMod List/Project List幅スライダーで使用)と`ComponentsInputs:MultilingualTextField`(Mod名/説明フィールドで使う言語フラグ+テキストのコンボ)はclassicにしか存在せず、Fluent側に相当するものがありませんでした — Fluentテーマ下ではこの2つのコントロールが静かにclassicのScale9画像スキンにフォールバックし、フラットなFluentの見た目が崩れていました。両方についてフラットな`DynamicResource`駆動の代替を新規作成し、共有ファイル**`ModAPI\Themes\FluentStylesShared.xaml`**にまとめ、`ResourceDictionary.MergedDictionaries`経由で9個の`FluentStyles*.xaml`すべてにマージしました — 色の調整が今後は9箇所ではなく1箇所で済むようになりました。
+- 逆方向のギャップも発見: `GridSplitter`(`MainWindow.xaml`のMod List/Version Listの分割線)は9つのテーマすべてにFluentスタイルがありましたが、classicには存在せず、classic下ではOS標準の灰色スプリッターのまま表示されていました。`Dictionary.xaml`に対応するフラットスタイルを追加しました。
+- その過程で本当に使われていないデッドコードも発見 — スタイルは定義されているが実際のUIではどこからも参照されていないもの: `PasswordBox`(`LoginWindow.xaml`でのみ使用されるが、そのウィンドウ自体がどこからもインスタンス化されていない — ログインシステムはv2.0.9400ですでに削除済み)、`Components:ModProjectButton`、4つのソーシャルログインボタンスタイル(`FacebookButton`/`TwitterButton`/`YoutubeButton`/`TwitchButton`)、そして`TimeSlider`/`TimeHorizontalSlider`/`TimeSliderThumbStyle`一式(おそらく実装されなかった昼夜サイクルスライダー)。プロジェクトの「原作者の作業を削除しない」という方針に従い、これらは一切削除せず、それぞれ未参照である理由を記したXMLコメントで囲んで、履歴から消えることなくファイルに残しました。
+- ビルドに一切組み込まれていない使われていないファイルも2つ発見: `ModAPI\Windows\Dictionary.xaml`(リファクタリングの途中で作られた行き止まりの重複ファイルで、初期のコミットで作成されて以降`App.xaml`や`.csproj`から一度も参照されていない)と`ModAPI\Themes\FluentStylesClassic.xaml`(テーマシステムの初期プロトタイプ — 各テーマが専用ファイルを持つようになる前、`light`以外のすべてのテーマのフォールバックスキンだった名残で、そのフォールバックロジックが置き換えられた後に孤立)。両方ともgit履歴で原作者のコードとは無関係であることを確認済みのため、上記のデッドスタイルとは異なり、コメントアウトではなく完全に削除し、`.csproj`内で宙に浮いていた`FluentStylesClassic.xaml`の`<Page>`エントリも合わせて削除しました。
+- classic自体の`Slider`は、古いScale9画像バーではなく、Fluent共有スタイルのフラットな見た目に合わせて再設計されました(同じ`Border`+`Track`構造で、classicの金/茶パレットに合わせて再配色: `#B8963E`のつまみ、半透明`#40FFFFFF`のトラック) — 旧実装(`SliderThumbStyle`、`SliderButtonStyle`、`HorizontalSlider`、`VerticalSlider`、および旧来の暗黙`Slider`スタイル)は同様に削除ではなくコメントアウトしました。
+
+### Settingsタブの残りのチェックボックス向けON/OFFツールチップ
+
+「ホバーで何をするか確認できる」というパターンを、「バージョンテーブル維持」から他の4つのSettingsタブのチェックボックス — **Steam接続**、**開発者ログ**、**起動時にログを初期化**、**常に最前面** — にも拡張しました。それぞれ自身のチェック状態に応じて異なるツールチップを表示し、オン/オフそれぞれで実際に何が起きるかを説明します(例: Steam接続の有効時のツールチップは、上記の自動パス検出とオーバーレイ対応について説明します)。新規言語キー8個 × 13言語。
+
+### Welcomeポップアップ — リリースノートと同期した詳細な全文コンテンツ
+
+「このバージョンの新機能」パネルは今回のセッション中に何段階か進化しました: 短い箇条書きの要約 → `Docs/RELEASE_NOTES_2.0.9623.md`に対応するセクションごとの詳細なまとめ(`TextBlock`はMarkdownを描画できないため、プレーンテキストの`■`/`▸`/`•`記号を使用)、13言語すべてに翻訳。この過程で関連する2つのレイアウトバグが見つかり、修正されました:
+
+- スクロール可能なテキストは元々`Width="450"`のハードコードされた幅を持っており、スクロールバーの手前に隙間ができていました(classicテーマでは特に、テキストの折り返しがやや早すぎる問題もありました)。固定幅を廃止し、代わりに`ScrollViewer`に`Padding="14"`を指定することで修正しました — これは`OperationPending`の詳細パネルですでに実証済みの同じパターンです。
+- 続いて周囲のボックス(`WhatsNewBorder`)にも幅が必要になりましたが、固定ピクセル値を指定するのは分の悪い賭けでした: `SubWindow`テンプレート自体のコンテンツマージンはテーマごとに異なり(classicでは合計32px、Fluentでは72px — Fluentのテンプレートは外側の`Border`マージンと`ContentPresenter`マージンの両方を追加するため)。classicの余裕あるレイアウトにぴったり合わせた幅を選ぶと、**Fluentテーマ下ではスクロールバーが可視領域の外にクリップされてしまいました**。明示的な幅指定と`HorizontalAlignment="Left"`を完全に削除することで修正しました — これによりボックスは既定で`Stretch`となり、各テーマのクロームが実際に残すスペースを正しく埋めるようになりました。
+- このポップアップのテキストは意図的にGitHub Releasesページから直接取得**していません** — それをすると、非英語話者に生の英語を表示するか、翻訳パイプライン(リリースごとに公開する言語別JSONファイル、または機械翻訳API)を新たに構築する必要がありますが、このプロジェクトには現状どちらもありません。今後も短い、手動翻訳の要約のままとし、現バージョンのリリースノートが更新されるたびに(その場で — 値全体を置き換え、追記はしない)書き直されます。
+
+### 新規/更新された言語キー(13言語)
+
+| キー | 日本語の値 |
+|---|---|
+| `Lang.Options.Buttons.Update` | アップデート |
+| `Lang.Windows.OperationPending.Tasks.Update.Done` | アップデートの準備ができました — 下の変更内容を確認して「完了」を押してください。 |
+| `Lang.Windows.NoUpdateAvailable.Title` | 最新バージョンです |
+| `Lang.Windows.NoUpdateAvailable.Text` | 現在、最新バージョンのModAPIを使用しています。 |
+| `Lang.Windows.NoUpdateAvailable.Buttons.OK` | OK |
+| `Lang.Options.Labels.UpdateVersionsTableDisabledHint` | まずゲームパスを設定してください。 |
+| `Lang.Options.Labels.UpdateVersionsTableEnabledHint` | ゲームがパッチ適用されると、ModAPIは新しいバージョンを認識する必要があります。この情報を自動的に最新の状態に保つには、これをオンにしてください。 |
+| `Lang.Options.Labels.UseSteamEnabledHint` / `UseSteamDisabledHint` | Steamパスの自動検出(または手動入力)が何を行うかを説明 |
+| `Lang.Options.Labels.DevLogEnabledHint` / `DevLogDisabledHint` | 通常のログに対して追加される`ModAPI.dev.log`ファイルについて説明 |
+| `Lang.Options.Labels.ClearLogsOnStartEnabledHint` / `ClearLogsOnStartDisabledHint` | 起動のたびに前回のログを消去するか、追記するかを説明 |
+| `Lang.Options.Labels.AlwaysOnTopEnabledHint` / `AlwaysOnTopDisabledHint` | ウィンドウを常に他より前面に保つか、隠れることを許すかを説明 |
+| `Lang.Windows.FirstSetup.WhatsNewTitle` | このバージョンの新機能 |
+| `Lang.Windows.FirstSetup.WhatsNewText` | セクションごとの詳細な要約(■/▸/•記号) — リリースごとにその場で書き直し、現在のテキストはアプリ内で確認可能 |
+| `Lang.Windows.FirstSetup.Buttons.Close` | 閉じる |
+| `Lang.Mods.Welcome.Buttons.OpenWelcomePopup` | ようこそ! |
+
+**削除**(機能していなかった「自動アップデート」機能): `Lang.Options.Labels.AutoUpdate`(上記`Lang.Options.Buttons.Update`に置き換え)、`Lang.Windows.FirstSetup.AutoUpdate`、`Lang.Windows.FirstSetup.AutoUpdateText`。
+
+**削除**(初回起動ポップアップの再設計): `Lang.Windows.FirstSetup.Steam`、`Lang.Windows.FirstSetup.SteamText`、`Lang.Windows.FirstSetup.UpdateVersions`、`Lang.Windows.FirstSetup.UpdateVersionsText`、`Lang.Mods.Welcome.Title0`(`Lang.Mods.Welcome.Buttons.OpenWelcomePopup`に置き換え)。
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9622の変更点</b></summary>
 
 ## v2.0.9622の変更点

@@ -12,9 +12,7 @@
 [![简体中文](https://img.shields.io/badge/简体中文-🇨🇳-red)](README.zh-CN.md)
 [![繁體中文](https://img.shields.io/badge/繁體中文-🇹🇼-blue)](README.zh-TW.md)
 
-# ModAPI(v1) v2.0.9622 - 20260808
-
-**The Forest 模組管理工具 — 升級版**
+# ModAPI(v1) v2.0.9623 - 20260920
 
 > 原作: FluffyFish / Philipp Mohrenstecher (德國 恩格爾斯基興)
 > 升級: zzangae (大韓民國)
@@ -254,7 +252,7 @@ builtin: false → true (langs.json)
 </details>
 
 <details>
-<summary><b>Theme System [Detailed Reference](v2.0.9613_themes_ko.md)</b></summary>
+<summary><b>主題系統 [詳細參考](v2.0.9613_themes_en.md)</b></summary>
 
 自 v2.0.9613 起，主題選擇 UI 已從 Settings 分頁移至專屬的 **Themes 分頁**。新增主題只需在 `App.xaml.cs` 字典中新增一行即可。
 
@@ -627,7 +625,7 @@ ISO代碼 (小寫) → flagcdn.com/h24/{iso}.png → Language.{LANGCODE}.png
 
 **位置**：`VersionTool\MODAPI_VersionTool.csproj`
 
-<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/d7d40dea-129e-457d-9978-4ca149487275" />
+<img width="331" height="220" alt="Image" src="https://github.com/user-attachments/assets/1310a99b-d4ac-4baa-89c3-cd0640fbbe26" />
 
 **功能**
 - 自動顯示目前版本 (從 `App.xaml.cs` 讀取)
@@ -693,6 +691,142 @@ ISO代碼 (小寫) → flagcdn.com/h24/{iso}.png → Language.{LANGCODE}.png
 </details>
 
 <details open>
+<summary><b>v2.0.9623 的變更內容</b></summary>
+
+## v2.0.9623 的變更內容
+
+### 更新檢查與套用 — 啟動器式、手動觸發、不強制
+
+首次啟動彈窗(`FirstSetup` 視窗)原本提供 3 個選項 —— **保持最新版本**、**搜尋更新**、**Steam 連接** —— 其開發曾被擱置。在恢復工作前調查實際程式碼狀態後發現，Steam 連接和保持最新版本其實早已完全可用；只有搜尋更新（檢查是否有更新的 ModAPI 版本）尚未完成 —— 下載/安裝流水線本身是存在的，但從來沒有任何程式碼呼叫過它。
+
+**本次實作的內容：**
+
+- **`Game.CheckForNewVersion(out releaseNotes)`**（`ModAPI_Shared\Data\Game.cs`）—— 呼叫 GitHub Releases API（`/repos/{owner}/ModAPI/releases/latest`），回傳最新標籤及其發行說明（`body` 欄位，以最簡 JSON 字串反轉義邏輯解析，未新增任何相依套件）。`UpdateRepoOwner` 對一般使用者永遠指向 `FluffyFishGames`，只有以 `--dev` 參數啟動時才會切換到維護者的開發儲存庫 —— 絕不會因為設定分頁的「開發者日誌」核取方塊而切換，因為該核取方塊純粹用於崩潰日誌的詳細程度，絕不能讓使用者悄悄被轉移到未發布的測試管道。
+- **設定分頁**：原本不起作用的「搜尋更新」核取方塊已移除，改為單一的**更新**按鈕（啟動器式，而非背景開關）。點擊後會檢查新版本，如果存在，會立即進入下載/解壓縮/套用流程，中間不會有「現在還是稍後」的選擇。
+- **首次啟動彈窗**：已失效的「自動更新」選項及其不再使用的設定寫入程式碼已被移除；彈窗現在只詢問 Steam 連接和保持最新版本這兩項。
+- **`OperationPending` 視窗** 新增了一個預設摺疊的發行說明面板及 `Confirmed` 事件。下載/解壓縮達到 100% 後，發行說明會顯示出來，「完成」按鈕隨之啟用 —— 只有點擊該按鈕才會真正啟動 `Updater.exe` 並結束 ModAPI（先前是解壓縮一結束就自動執行此流程，沒有機會先看看改了什麼）。`Updater.exe` 本身（原作者程式碼，未修改）會等待 ModAPI 結束後覆寫檔案並自動重新啟動 ModAPI。
+- ModAPI 永遠不會因為版本過舊而卡住無法使用：版本檢查只在使用者點擊「更新」時才會執行，啟動時絕不會執行 —— 無論更新狀態如何，應用程式始終可以正常使用，這與典型遊戲啟動器的強制更新門檻不同。
+
+### UI 修復 — 發行說明面板無法自動換行
+
+`OperationPending` 進度視窗新增的發行說明面板最初渲染成需要橫向捲動的單行難讀文字，原因有兩個疊加在一起：
+
+1. `TextBox` 的預設 `HorizontalScrollBarVisibility` 是 `Hidden`，而非 `Disabled` —— 除非明確設為 `Disabled`，否則 WPF 會忽略 `TextWrapping="Wrap"`，讓該行文字無限延伸下去。
+2. 所有彈窗共用的 `SubWindow` 樣式設定了 `SizeToContent="WidthAndHeight"`（`FluentStyles.xaml`），因此透過 `*` 網格欄拉伸的面板沒有固定寬度可作為換行依據 —— 必須明確給定寬度。
+
+解決方法是為該面板綁定一個綁定至 `ProgressBar.ActualWidth` 的固定寬度（使其右邊緣與上方的進度條對齊），並將 `TextBox` 改為 `ScrollViewer` 內的唯讀 `TextBlock`（`TextBlock` 沒有 `TextBox` 的 `PART_ContentHost` 換行怪癖）。同時為面板指定了不透明的 `FluentCardBrush` 背景 —— 它原本預設繼承視窗的透明度。先前為強行撐高視窗而加入的手動 `Height +=` 調整也被移除，因為它與 `SizeToContent` 互相牴觸 —— 面板一旦顯示，視窗現在會自動正確變高。
+
+### 端到端驗證（手動測試）
+
+實際跑完了完整的檢查 → 下載 → 解壓縮 → 確認 → 重新啟動流程（使用可捨棄的虛擬發行資料），以確認整條鏈路（包括原作者未修改的 `Updater.exe`）都能正常運作。測試過程中發現一個有用的事實：`App.xaml.cs` 已經會在 ModAPI 自身啟動時消化殘留的 `_update` 資料夾（作為自我清理步驟）—— 因此任何在啟動 ModAPI *之前* 就預先建立假的 `_update` 資料夾的手動測試，都會在 `Updater.exe` 看見它之前就被悄悄清除。這個資料夾必須在 **ModAPI 已經在執行時** 才建立，才能符合實際下載填入該資料夾的方式。為了讓未來更容易診斷這類問題，在不需要動到原有重新啟動邏輯的前提下，為 `Updater.cs` 加入了可選的診斷日誌（`Updater.diag.log`，以 try/catch 包裹，不在正常邏輯路徑上）。
+
+### 開發筆記 — 以 `--dev` 執行
+
+`App.DevMode`（`ModAPI\App.xaml.cs`）只有在以 `--dev` 命令列引數啟動應用程式時才會被設為 `true` —— 這與設定分頁的「開發者日誌」核取方塊是分開的，後者只影響日誌詳細程度，**絕不能**用來控制日誌以外的任何行為（例如絕不能切換某個功能所連接的伺服器/儲存庫 —— 使用者為了回報當機而開啟詳細日誌，不應該因此被悄悄切換到未發布的測試管道）。
+
+在本機以 `--dev` 執行：
+- **Visual Studio（F5 偵錯）**：`ModAPI` 專案 → Properties → Debug 分頁 → 「Command line arguments」中輸入 `--dev`。
+- **已建置的 .exe**：在終端機以 `ModAPI.exe --dev` 執行，或在捷徑的 Target 欄位末尾加上 `--dev`。
+
+### 「保持版本表最新」核取方塊 — 現在會在尚無作用時直接停用
+
+`Game.Verify()` 只有在遊戲路徑有效（`CheckGamePath()` 通過）時才會進入 `VersionsData.Refresh()`（真正下載版本表的程式碼）—— 否則會提早返回。這代表在未設定遊戲路徑的情況下開啟「保持版本表最新」其實什麼都不會發生，令人困惑（已透過實測確認：未設定遊戲路徑時，即使核取方塊已開啟，也完全沒有 `[UpdateVersions]` 日誌行）。
+
+新增了 `SettingsViewModel.CanUpdateVersionsTable`（`App.Game != null && App.Game.CheckGamePath()`），並綁定到該核取方塊的 `IsEnabled`。每當儲存/重設遊戲路徑，或 Development 分頁切換遊戲篩選時都會重新評估。停用時，滑鼠移到上方會顯示提示說明原因；啟用時，則會說明開啟後的作用。此外也將韓文標籤從「최신버전 유지」（「保持最新版本」）改名為「버전 테이블 유지」（「保持版本表」）—— 其他所有語言都已經有「表」這個字，只有韓文缺少，導致與另一個無關的「更新」按鈕混淆。
+
+### 全域修復 — Classic（預設）主題下的工具提示沒有樣式
+
+本次工作中出現的工具提示（如上）在預設「classic」主題下呈現為普通的系統白色工具提示，而非應用程式本身的主題外觀。原來應用程式中從未有任何工具提示在預設 classic 主題下測試過：`FluentStyles*.xaml`（非預設主題）各自都定義了主題化的 `ToolTip` 樣式，但 classic 僅載入 `Dictionary.xaml`，其中從未有過這個樣式。已為 `Dictionary.xaml` 加入相應的 `ToolTip` 樣式（不透明背景，因為該主題其他半透明的卡片筆刷是設計來疊在背景圖片上，而非浮動的工具提示上）。此修復讓預設主題下的工具提示全域生效，不只是這一個。
+
+### 首次啟動彈窗重新設計
+
+首次啟動彈窗現在完全不再詢問 Steam 連接 / 保持版本表 —— 這兩項都已經存在於設定分頁，在這裡重複詢問是多餘的。取而代之，彈窗現在會顯示可捲動的「此版本的新功能」摘要。開頭文字與按鈕也一併重新設計：
+
+- Steam 連接 / 保持版本表核取方塊及其說明文字已移除；取而代之的是固定寬度、可捲動、顯示本版重點的面板。
+- Welcome 分頁本身的「환영합니다!」（「歡迎!」）標題已改為同名的按鈕 —— 點擊後可隨時重新開啟首次啟動彈窗，例如想重新閱讀當前版本的變更內容。以這種方式重新開啟時，彈窗按鈕會顯示為「關閉」而非「Continue」，也不會重新執行首次設定流程（不寫入 `SetupDone`，不呼叫 `FirstSetupDone()`），關閉彈窗也絕不會退出應用程式（`FirstSetup` 建構函式的 `isReopen: true` 參數控制以上所有行為）。
+- **跨主題測試中發現的視窗尺寸錯誤**：該彈窗的 `SubWindow` 樣式同時使用了 `AllowsTransparency="True"` + `WindowStyle="None"` + `SizeToContent="WidthAndHeight"` —— 這種組合下 WPF 在自動調整尺寸時無法可靠地遵守 `MaxWidth`。在 classic 主題下碰巧看起來正常，但在 Diablo 等其他主題下卻渲染得過寬（文字未換行、被截斷）。修復方式是在此視窗上局部覆寫為 `SizeToContent="Height"`（此彈窗的卡片本來就是固定寬度設計，自動調整寬度從一開始就不必要）—— 這樣就能在所有主題下一致修復版面，而不必針對每個主題個別修補。
+- **僅限 classic 主題的可讀性問題**：classic 共用的 `NormalLabel` 樣式（白色文字 + 陰影，設計用於疊在照片式圖片面板上）在此彈窗實心的 `PanelCenter` 卡片背景上讀起來效果不佳。與其修改到處都在用的共用樣式，或是寫死顏色（那樣在其他主題下會顯得不對），改為新增了 `FirstSetup.ApplyClassicThemeTextFix()`，嚴格限定在 `App.GetCurrentTheme() == "classic"` 時才生效，只針對這個彈窗、只在該主題下，換成深色、無陰影的外觀。其他主題完全不受影響，繼續使用各自原本就正確的 `NormalLabel`/`PanelCenter` 顏色。
+
+### 遊戲完整性檢查 — 步驟 C 不再每次啟動都彈出提示
+
+有使用者反映對啟動前完整性檢查感到相當困擾：對於本來就沒有數位簽章的遊戲（例如 Green Hell 這類獨立製作遊戲很常見），「無簽章」警告彈窗**每次**點擊 Start Game 都會出現，需要手動點擊「Continue」，即使實際上並沒有任何問題。缺少簽章本身並不代表遭到竄改，因此這其實只是純粹的操作阻礙，而非真正的安全檢查。
+
+```mermaid
+flowchart LR
+    Start(["點擊 Start Game"]) --> A{"A — PE 標頭\nIsValidGameExe()"}
+    A -- 失敗 --> ABlock["🛑 阻止啟動\nGameExeCorrupted 彈窗"]
+    A -- 通過 --> B{"B — 組件校驗和\nMD5 對比 Versions.xml"}
+    B -- 不符 --> BBlock["🛑 阻止啟動\nGameAssemblyTampered 彈窗"]
+    B -- 相符 --> C{"C — 數位簽章\nHasDigitalSignature()"}
+    C -- 缺失 --> CLog["📝 僅記錄日誌，不彈窗\n自動繼續"]
+    C -- 存在 --> CLog2["📝 僅記錄日誌"]
+    CLog --> Launch(["✅ 遊戲啟動"])
+    CLog2 --> Launch
+```
+
+- **A（PE 標頭）** 及 **B（組件校驗和）** 維持不變 —— 真正的損毀或竄改仍會阻止啟動並顯示警告彈窗（`NoProjectWarning`，透過應用程式中每個彈窗共用的 `SubWindow` 樣式套用主題，因此會自動配合目前啟用的主題）。
+- **C（數位簽章）** 不再顯示任何彈窗，也不再要求任何方向的確認 —— 只會記錄一則 `Notice` 等級的日誌（`[Integrity] Game executable has no digital signature (not necessarily tampered — many games ship unsigned)`），並讓遊戲繼續啟動。過去用來開啟這個提示的 `GameIntegrityWarning` 彈窗類別，現在已經沒有任何地方呼叫它（保留在原地未刪除，僅是不再使用）。
+- 這張流程圖是為了讓這項檢查的結構日後容易討論 —— 例如若未來要以更輕量的形式恢復步驟 C（曾考慮過用「不再詢問」的一次性選項取代直接移除，但依使用者指示最終選擇完全移除），上圖即為討論的基準。
+
+### Steam 連接 — 自動偵測路徑，以及一個手動編輯的錯誤
+
+檢視原作者「Steam 連接」功能實際做了什麼（除了讓使用者選擇 Steam 路徑之外）後發現，它其實也會透過 `Steam.exe -applaunch {AppId}` 啟動遊戲（以支援疊加層），並透過 `steam://validate/{AppId}` 修復已損毀的檔案 —— 這兩項功能本輪都已存在且未被更動。
+
+- 一旦開啟「Steam 連接」，`MainWindow.UseSteamCheckBox_Checked` 就會直接從登錄檔（`HKEY_CURRENT_USER\Software\Valve\Steam`）讀取 Steam 路徑並自動填入 —— 無論 Steam 安裝在哪個磁碟機都能運作，不限於 `C:` 槽。
+- 當 Steam 連接開啟時，手動路徑控制項（文字方塊、Browse、Save、Reset）理應被停用，因為路徑已改為自動管理。**發現並修復的錯誤**：承載這些控制項的容器 Grid（`SteamAndGamePathsPanel`）在程式碼後置中從未設定過 `DataContext` —— 只有 `Settings` 及 `SettingsCheckboxes` 有設定 —— 因此 `{Binding CanEditSteamPathManually}` 悄悄失效，並預設回退為 `IsEnabled="true"`。這些控制項*看起來*是停用的，但 Reset 按鈕其實仍可完全點擊。修復方式是明確設定 `SteamAndGamePathsPanel.DataContext = SettingsVm;`，與另外兩者一致。
+- 另外，在 classic 主題下，應用程式中所有停用的控制項完全沒有任何視覺回饋 —— `NormalButton` 的 `ControlTemplate` 原本沒有 `IsEnabled="False"` 觸發器（Fluent 主題早已有）。新增了對應的觸發器，讓按鈕在停用時於 classic 主題下全域降低至 40% 不透明度。
+
+### 主題系統統一 — Classic 與 Fluent 對齊
+
+起因於「如果 classic 與 Fluent 主題家族沒有實質差異，為什麼還需要單獨維護」這個問題 —— 對 `Dictionary.xaml`（classic）與 9 個 `FluentStyles*.xaml` 檔案之間每一個顯式與隱式樣式進行了完整比對稽核。
+
+- 發現了真實存在的落差：`Slider`（用於設定分頁的 Mod 清單寬度 / Project 清單寬度滑桿）以及 `ComponentsInputs:MultilingualTextField`（用於 Mod 名稱/說明欄位的語言旗標 + 文字組合控制項）都只存在於 classic，Fluent 沒有對應項 —— 在 Fluent 主題下，這兩個控制項會悄悄退回 classic 的 Scale9 圖片外觀，破壞了扁平化的 Fluent 視覺風格。為兩者建立了扁平化、`DynamicResource` 驅動的替代樣式，放入一個新的共用檔案 **`ModAPI\Themes\FluentStylesShared.xaml`**，並透過 `ResourceDictionary.MergedDictionaries` 合併進全部 9 個 `FluentStyles*.xaml` —— 之後調整顏色只需要改一個地方，而不是九個。
+- 也發現了方向相反的落差：`GridSplitter`（`MainWindow.xaml` 中 Mod 清單 / 版本清單之間的分隔線）在全部 9 個主題中都有 Fluent 樣式，唯獨 classic 沒有，因此在 classic 下會渲染成純粹的 OS 預設灰色分隔線。已為 `Dictionary.xaml` 加入對應的扁平化樣式。
+- 順帶發現了確實已死的程式碼 —— 定義了樣式卻在實際 UI 中完全沒有被參照使用：`PasswordBox`（僅由 `LoginWindow.xaml` 使用，而該視窗本身從未被實例化過 —— 登入系統早在 v2.0.9400 就已被移除）、`Components:ModProjectButton`、四個社群登入按鈕樣式（`FacebookButton`/`TwitterButton`/`YoutubeButton`/`TwitchButton`），以及一組 `TimeSlider`/`TimeHorizontalSlider`/`TimeSliderThumbStyle`（很可能是一個從未上線的日夜循環滑桿）。依照本專案「不刪除原作者的成果」的方針，這些都沒有被移除 —— 每個區塊都以 XML 註解包裹並附上其未被參照的原因說明，讓它們以紀錄的形式留在檔案中，而非從歷史中消失。
+- 也發現了兩個完全沒有被納入建置的遺留檔案：`ModAPI\Windows\Dictionary.xaml`（早期重構過程中產生的死路徑重複檔案，`App.xaml` 或 `.csproj` 從未參照過）以及 `ModAPI\Themes\FluentStylesClassic.xaml`（早期主題系統的原型 —— 原本是除 `light` 以外所有主題的備援外觀，早於每個主題都有自己專屬檔案之前；該備援邏輯被取代後便成為孤兒檔案）。這兩者都經 git 歷史確認與原作者的程式碼無關，因此 — 與上方那些死程式碼不同 — 這兩個檔案被直接刪除而非註解保留，並同步移除了 `.csproj` 中指向 `FluentStylesClassic.xaml` 的、已失去對應目標的 `<Page>` 項目。
+- 接著將 classic 自身的 `Slider` 重新設計，使其符合 Fluent 共用樣式的扁平化外觀（同樣的 `Border` + `Track` 結構，重新配色為 classic 的金棕色調：`#B8963E` 滑塊、半透明 `#40FFFFFF` 軌道），取代原本的 Scale9 圖片型滑桿 —— 舊的實作（`SliderThumbStyle`、`SliderButtonStyle`、`HorizontalSlider`、`VerticalSlider`，以及舊的隱式 `Slider` 樣式）同樣以註解方式保留，而非刪除。
+
+### 其餘設定分頁核取方塊的開/關工具提示
+
+將「保持版本表最新」的「滑鼠移過去看說明」模式，延伸套用到設定分頁上其餘四個核取方塊 —— **Steam 連接**、**開發者日誌**、**啟動時清除日誌**、**始終置頂** —— 現在每個核取方塊都會依照目前的勾選狀態顯示不同的工具提示，說明開啟 vs. 關閉分別會做什麼（例如 Steam 連接開啟狀態的工具提示會說明上面提到的自動路徑偵測與疊加層支援）。新增了 8 個語言鍵 × 13 種語言。
+
+### 歡迎彈窗 — 完整詳細內容，與發行說明同步
+
+「此版本的新功能」面板在本輪經過了幾次迭代：從簡短的條列摘要 → 逐節對應 `Docs/RELEASE_NOTES_2.0.9623.md` 的完整說明（使用純文字 `■`/`▸`/`•` 符號，因為 `TextBlock` 無法渲染 Markdown），並翻譯成全部 13 種語言。過程中發現並修復了兩個相關的版面錯誤：
+
+- 可捲動文字原本寫死了 `Width="450"`，導致捲動軸前方留有空隙（在 classic 主題下，文字也會過早換行）。修復方式是移除固定寬度，改為給 `ScrollViewer` 加上 `Padding="14"` —— 這與 `OperationPending` 詳細內容面板已驗證過的做法一致。
+- 外層容器（`WhatsNewBorder`）接著也需要一個寬度，而寫死的像素值則是個輸不起的賭注：`SubWindow` 範本本身的內容邊界依主題而異（classic 下為總計 32px，Fluent 下為 72px，因為 Fluent 範本同時加上了外層 `Border` 邊界與 `ContentPresenter` 邊界）。一個為填滿 classic 較寬鬆版面而選定的寬度，在 Fluent 主題下會**把捲動軸裁切到可視範圍之外**。修復方式是完全移除明確的寬度與 `HorizontalAlignment="Left"` —— 該容器現在預設為 `Stretch`，能在每個主題下正確填滿其外殼實際留下的空間。
+- 此彈窗文字刻意**不**從 GitHub Releases 頁面即時抓取 —— 那樣做要麼會對非英語使用者顯示原始英文，要麼就得建立一套翻譯流水線（例如隨每次發行同時發布的、各語言獨立的 JSON 檔案，或機器翻譯 API），而本專案目前都沒有這些基礎設施。它會維持為一段手動翻譯的簡短摘要，每次更新目前版本的發行說明時就地重寫（整段值被完整取代，而非附加）。
+
+### 新增/更新的語言鍵（13 種語言）
+
+| 鍵 | 中文值 |
+|---|---|
+| `Lang.Options.Buttons.Update` | 更新 |
+| `Lang.Windows.OperationPending.Tasks.Update.Done` | 更新已就緒 — 請確認下方的變更內容後點擊完成。 |
+| `Lang.Windows.NoUpdateAvailable.Title` | 已是最新版本 |
+| `Lang.Windows.NoUpdateAvailable.Text` | 您目前使用的是最新版本的 ModAPI。 |
+| `Lang.Windows.NoUpdateAvailable.Buttons.OK` | 確定 |
+| `Lang.Options.Labels.UpdateVersionsTableDisabledHint` | 請先設定遊戲路徑才能使用。 |
+| `Lang.Options.Labels.UpdateVersionsTableEnabledHint` | 遊戲更新修補程式後，ModAPI 需要辨識新版本。開啟這項功能可自動保持該資訊最新。 |
+| `Lang.Options.Labels.UseSteamEnabledHint` / `UseSteamDisabledHint` | 說明自動偵測 Steam 路徑（或手動輸入）的作用 |
+| `Lang.Options.Labels.DevLogEnabledHint` / `DevLogDisabledHint` | 說明額外的 `ModAPI.dev.log` 檔案與一般日誌的差異 |
+| `Lang.Options.Labels.ClearLogsOnStartEnabledHint` / `ClearLogsOnStartDisabledHint` | 說明每次啟動時清除日誌，還是附加到先前的日誌 |
+| `Lang.Options.Labels.AlwaysOnTopEnabledHint` / `AlwaysOnTopDisabledHint` | 說明保持視窗置頂，還是允許被其他視窗蓋住 |
+| `Lang.Windows.FirstSetup.WhatsNewTitle` | 此版本的新功能 |
+| `Lang.Windows.FirstSetup.WhatsNewText` | 逐節完整摘要（■/▸/• 符號）—— 每次發行時就地重寫，實際文字請參閱應用程式內顯示內容 |
+| `Lang.Windows.FirstSetup.Buttons.Close` | 關閉 |
+| `Lang.Mods.Welcome.Buttons.OpenWelcomePopup` | 歡迎! |
+
+**已移除**（已失效的「自動更新」功能）：`Lang.Options.Labels.AutoUpdate`（已由上方的 `Lang.Options.Buttons.Update` 取代）、`Lang.Windows.FirstSetup.AutoUpdate`、`Lang.Windows.FirstSetup.AutoUpdateText`。
+
+**已移除**（首次啟動彈窗重新設計）：`Lang.Windows.FirstSetup.Steam`、`Lang.Windows.FirstSetup.SteamText`、`Lang.Windows.FirstSetup.UpdateVersions`、`Lang.Windows.FirstSetup.UpdateVersionsText`、`Lang.Mods.Welcome.Title0`（已由 `Lang.Mods.Welcome.Buttons.OpenWelcomePopup` 取代）。
+
+---
+
+</details>
+
+<details>
 <summary><b>v2.0.9622 的變更內容</b></summary>
 
 ## v2.0.9622 的變更內容
