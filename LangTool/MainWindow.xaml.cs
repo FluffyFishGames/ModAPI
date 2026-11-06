@@ -185,6 +185,7 @@ namespace MODAPI_LangTool
                 Languages = new List<LanguageEntry>
                 {
                     new LanguageEntry { IsoCode="us", LangCode="EN",    LangName="English",      Builtin=true, Active=true },
+                    new LanguageEntry { IsoCode="tr", LangCode="TR",    LangName="Türkçe",       Builtin=true, Active=true },
                     new LanguageEntry { IsoCode="kr", LangCode="KR",    LangName="한국어",        Builtin=true, Active=true },
                     new LanguageEntry { IsoCode="de", LangCode="DE",    LangName="Deutsch",      Builtin=true, Active=true },
                     new LanguageEntry { IsoCode="es", LangCode="ES",    LangName="Español",      Builtin=true, Active=true },

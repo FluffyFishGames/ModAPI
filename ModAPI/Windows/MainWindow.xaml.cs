@@ -416,7 +416,7 @@ namespace ModAPI
             Configuration.OnLanguageChanged += LanguageChanged;
 
             // Custom language order for Settings selector (KR after FR)
-            string[] preferredOrder = { "en", "de", "es", "fr", "ko", "it", "ja", "pl", "pt", "ru", "vi", "zh", "zh-tw" };
+            string[] preferredOrder = { "en", "de", "es", "fr", "tr", "ko", "it", "ja", "pl", "pt", "ru", "vi", "zh", "zh-tw" };
             LanguageOrder.Clear();
             foreach (var langCode in preferredOrder)
             {

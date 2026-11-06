@@ -1,4 +1,5 @@
 [![English](https://img.shields.io/badge/English-🇺🇸-blue)](README.md)
+[![Türkçe](https://img.shields.io/badge/Türkçe-🇹🇷-red)](Docs/README.tr.md)
 [![한국어](https://img.shields.io/badge/한국어-🇰🇷-red)](Docs/README.ko.md)
 [![Deutsch](https://img.shields.io/badge/Deutsch-🇩🇪-black)](Docs/README.de.md)
 [![Español](https://img.shields.io/badge/Español-🇪🇸-yellow)](Docs/README.es.md)
